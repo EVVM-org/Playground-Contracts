@@ -1,0 +1,28 @@
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+remappings = [
+    '@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts',
+    '@axelar-network/axelar-gmp-sdk-solidity/=node_modules/@axelar-network/axelar-gmp-sdk-solidity/',
+    '@layerzerolabs/=node_modules/@layerzerolabs/',
+    '@hyperlane-xyz/core/=node_modules/@hyperlane-xyz/core/',
+    '@chainlink/contracts-ccip/=node_modules/@chainlink/contracts-ccip/',
+    'solidity-bytes-utils/=node_modules/solidity-bytes-utils/',
+    '@uniswap/v3-periphery/contracts/=lib/v3-periphery/contracts/',
+    '@uniswap/v3-core/contracts/=lib/v3-core/contracts/',
+    '@RollAMate/interfaces/=src/interfaces/',
+    '@RollAMate/core/=src/production/core/',
+    '@RollAMate/libraries/=src/libraries/',
+    'mock-contracts/=src/mock/',
+    'Tesnet-contracts/=src/testnet/',
+]
+optimizer-runs = 400
+via_ir = true
+
+[fuzz]
+runs = 100
+seed = '0xdeadbeef'
+max_test_rejects = 1000
+
+# See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
