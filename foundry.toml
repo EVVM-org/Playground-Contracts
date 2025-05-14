@@ -11,11 +11,10 @@ remappings = [
     'solidity-bytes-utils/=node_modules/solidity-bytes-utils/',
     '@uniswap/v3-periphery/contracts/=lib/v3-periphery/contracts/',
     '@uniswap/v3-core/contracts/=lib/v3-core/contracts/',
-    '@RollAMate/interfaces/=src/interfaces/',
-    '@RollAMate/core/=src/production/core/',
-    '@RollAMate/libraries/=src/libraries/',
-    'mock-contracts/=src/mock/',
-    'Tesnet-contracts/=src/testnet/',
+    '@EVVM/interfaces/=src/interfaces/',
+    '@EVVM/core/=src/production/core/',
+    '@EVVM/libraries/=lib/EVVM-solidity-library/src/',
+    '@EVVM/Playground/=src/',
 ]
 optimizer-runs = 400
 via_ir = true

@@ -23,12 +23,12 @@ import "forge-std/console2.sol";
 
 import {Constants} from "test/Constants.sol";
 
-import {SMateMock} from "mock-contracts/SMateMock.sol";
-import {MateNameServiceMock} from "mock-contracts/MateNameServiceMock.sol";
-import {EvvmMock} from "mock-contracts/EvvmMock.sol";
-import {Erc191TestBuilder} from "@RollAMate/libraries/Erc191TestBuilder.sol";
-import {EstimatorMock} from "mock-contracts/EstimatorMock.sol";
-import {EvvmMockStorage} from "mock-contracts/EvvmMockStorage.sol";
+import {SMateMock} from "@EVVM/Playground/SMateMock.sol";
+import {MateNameServiceMock} from "@EVVM/Playground/MateNameServiceMock.sol";
+import {EvvmMock} from "@EVVM/Playground/EvvmMock.sol";
+import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
+import {EstimatorMock} from "@EVVM/Playground/EstimatorMock.sol";
+import {EvvmMockStorage} from "@EVVM/Playground/EvvmMockStorage.sol";
 
 contract fuzzTest_EVVM_payMateStaking_async is Test, Constants {
     SMateMock sMate;

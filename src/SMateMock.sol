@@ -20,10 +20,10 @@ Y8a 8 8 a8P  Y8a     a8P  88    `888'    88   d8'        `8b   88       88
  */
 
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
-import {EvvmMock} from "mock-contracts/EvvmMock.sol";
-import {SignatureRecover} from "@RollAMate/libraries/SignatureRecover.sol";
-import {MateNameServiceMock} from "mock-contracts/MateNameServiceMock.sol";
-import {EstimatorMock} from "mock-contracts/EstimatorMock.sol";
+import {EvvmMock} from "@EVVM/Playground/EvvmMock.sol";
+import {SignatureRecover} from "@EVVM/libraries/SignatureRecover.sol";
+import {MateNameServiceMock} from "@EVVM/Playground/MateNameServiceMock.sol";
+import {EstimatorMock} from "@EVVM/Playground/EstimatorMock.sol";
 
 contract SMateMock {
     error Time(uint256);
