@@ -19,12 +19,12 @@ import "forge-std/console2.sol";
 
 import {Constants} from "test/Constants.sol";
 
-import {SMateMock} from "@EVVM/Playground/SMateMock.sol";
-import {MateNameServiceMock} from "@EVVM/Playground/MateNameServiceMock.sol";
-import {EvvmMock} from "@EVVM/Playground/EvvmMock.sol";
+import {SMateMock} from "@EVVM/playground/SMateMock.sol";
+import {MateNameServiceMock} from "@EVVM/playground/MateNameServiceMock.sol";
+import {EvvmMock} from "@EVVM/playground/EvvmMock.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
-import {EstimatorMock} from "@EVVM/Playground/EstimatorMock.sol";
-import {EvvmMockStorage} from "@EVVM/Playground/EvvmMockStorage.sol";
+import {EstimatorMock} from "@EVVM/playground/EstimatorMock.sol";
+import {EvvmMockStorage} from "@EVVM/playground/EvvmMockStorage.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
 
 contract unitTestRevert_MateNameService_preRegistrationUsername is

@@ -2,8 +2,8 @@
 pragma solidity ^0.8.13;
 
 import {Script, console2} from "forge-std/Script.sol";
-import {EvvmMock} from "@EVVM/Playground/EvvmMock.sol";
-import {SMateMock} from "@EVVM/Playground/SMateMock.sol";
+import {EvvmMock} from "@EVVM/playground/EvvmMock.sol";
+import {SMateMock} from "@EVVM/playground/SMateMock.sol";
 
 contract DeployMock is Script {
     SMateMock sMate;

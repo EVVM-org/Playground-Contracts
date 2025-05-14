@@ -11,10 +11,8 @@ remappings = [
     'solidity-bytes-utils/=node_modules/solidity-bytes-utils/',
     '@uniswap/v3-periphery/contracts/=lib/v3-periphery/contracts/',
     '@uniswap/v3-core/contracts/=lib/v3-core/contracts/',
-    '@EVVM/interfaces/=src/interfaces/',
-    '@EVVM/core/=src/production/core/',
     '@EVVM/libraries/=lib/EVVM-solidity-library/src/',
-    '@EVVM/Playground/=src/',
+    '@EVVM/playground/=src/',
 ]
 optimizer-runs = 400
 via_ir = true

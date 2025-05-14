@@ -17,14 +17,14 @@ import "forge-std/Test.sol";
 import "forge-std/console2.sol";
 
 import {Constants} from "test/Constants.sol";
-import {EvvmMockStructs} from "@EVVM/Playground/EvvmMockStructs.sol";
+import {EvvmMockStructs} from "@EVVM/playground/EvvmMockStructs.sol";
 
-import {SMateMock} from "@EVVM/Playground/SMateMock.sol";
-import {MateNameServiceMock} from "@EVVM/Playground/MateNameServiceMock.sol";
-import {EvvmMock} from "@EVVM/Playground/EvvmMock.sol";
+import {SMateMock} from "@EVVM/playground/SMateMock.sol";
+import {MateNameServiceMock} from "@EVVM/playground/MateNameServiceMock.sol";
+import {EvvmMock} from "@EVVM/playground/EvvmMock.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
-import {EstimatorMock} from "@EVVM/Playground/EstimatorMock.sol";
-import {EvvmMockStorage} from "@EVVM/Playground/EvvmMockStorage.sol";
+import {EstimatorMock} from "@EVVM/playground/EstimatorMock.sol";
+import {EvvmMockStorage} from "@EVVM/playground/EvvmMockStorage.sol";
 
 contract unitTestRevert_SMate_publicStaking is Test, Constants {
     SMateMock sMate;

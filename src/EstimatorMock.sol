@@ -15,8 +15,8 @@ MMMMMMMMMMMM
  * @author jistro.eth ariutokintumi.eth
  */
 
-import {SMateMock} from "@EVVM/Playground/SMateMock.sol";
-import {EvvmMock} from "@EVVM/Playground/EvvmMock.sol";
+import {SMateMock} from "@EVVM/playground/SMateMock.sol";
+import {EvvmMock} from "@EVVM/playground/EvvmMock.sol";
 import "forge-std/console2.sol";
 
 contract EstimatorMock {
