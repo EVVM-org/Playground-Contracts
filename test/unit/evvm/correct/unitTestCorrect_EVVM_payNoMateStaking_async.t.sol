@@ -19,12 +19,12 @@ import "forge-std/console2.sol";
 
 import {Constants} from "test/Constants.sol";
 
-import {SMateMock} from "@EVVM/playground/SMateMock.sol";
-import {MateNameServiceMock} from "@EVVM/playground/MateNameServiceMock.sol";
-import {EvvmMock} from "@EVVM/playground/EvvmMock.sol";
+import {SMateMock} from "@EVVM/playground/core/staking/SMateMock.sol";
+import {MateNameServiceMock} from "@EVVM/playground/mateNameService/MateNameServiceMock.sol";
+import {EvvmMock} from "@EVVM/playground/core/EvvmMock.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
-import {EstimatorMock} from "@EVVM/playground/EstimatorMock.sol";
-import {EvvmMockStorage} from "@EVVM/playground/EvvmMockStorage.sol";
+import {EstimatorMock} from "@EVVM/playground/core/staking/EstimatorMock.sol";
+import {EvvmMockStorage} from "@EVVM/playground/core/EvvmMockStorage.sol";
 
 contract unitTestCorrect_EVVM_payNoMateStaking_async is Test, Constants {
     SMateMock sMate;
