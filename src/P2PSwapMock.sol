@@ -19,7 +19,6 @@ import {SignatureRecover} from "@EVVM/libraries/SignatureRecover.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
 import {EvvmMockStructs} from "@EVVM/playground/core/EvvmMockStructs.sol";
 
-
 contract P2PSwap {
     using SignatureRecover for *;
     using AdvancedStrings for *;
