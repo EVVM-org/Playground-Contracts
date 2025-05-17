@@ -207,6 +207,14 @@ unitTestCorrectSMatePublicStaking_SyncExecutionOnPay:
 	@echo "Running PublicStaking (sync execution on pay) unit correct tests"
 	@forge test --match-path test/unit/smate/correct/unitTestCorrect_SMate_publicStaking_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
+unitTestCorrectSMatePublicServiceStaking_AsyncExecutionOnPay:
+	@echo "Running PublicServiceStaking (async execution on pay) unit correct tests"
+	@forge test --match-path test/unit/smate/correct/unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+
+unitTestCorrectSMatePublicServiceStaking_SyncExecutionOnPay:
+	@echo "Running PublicServiceStaking (sync execution on pay) unit correct tests"
+	@forge test --match-path test/unit/smate/correct/unitTestCorrect_SMate_publicServiceStaking_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+
 unitTestCorrectSMateAdminFunctions:
 	@echo "Running AdminFunctions unit correct tests"
 	@forge test --match-path test/unit/smate/correct/unitTestCorrect_SMate_adminFunctions.t.sol --summary --detailed --gas-report -vvv --show-progress
