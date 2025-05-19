@@ -237,6 +237,10 @@ unitTestRevertSMatePublicStaking:
 	@echo "Running PublicStaking unit revert tests"
 	@forge test --match-path test/unit/smate/revert/unitTestRevert_SMate_publicStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
 
+unitTestRevertSMatePublicServiceStaking:
+	@echo "Running PublicServiceStaking unit revert tests"
+	@forge test --match-path test/unit/smate/revert/unitTestRevert_SMate_publicServiceStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
+
 unitTestRevertSMateAdminFunctions:
 	@echo "Running AdminFunctions unit revert tests"
 	@forge test --match-path test/unit/smate/revert/unitTestRevert_SMate_adminFunctions.t.sol --summary --detailed --gas-report -vvv --show-progress

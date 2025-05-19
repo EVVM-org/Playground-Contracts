@@ -71,6 +71,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
     }
 
     function makeSignature(
+        address serviceAddress,
         bool isStaking,
         uint256 amountOfSmate,
         uint256 priorityFee,
@@ -120,7 +121,8 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
-            Erc191TestBuilder.buildMessageSignedForPublicStaking(
+            Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                serviceAddress,
                 isStaking,
                 amountOfSmate,
                 nonceSmate
@@ -154,6 +156,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         bytes memory signatureSMate;
 
         (signatureEVVM, signatureSMate) = makeSignature(
+            address(mock),
             true,
             10,
             totalOfPriorityFee,
@@ -212,6 +215,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         bytes memory signatureSMate;
 
         (signatureEVVM, signatureSMate) = makeSignature(
+            address(mock),
             true,
             10,
             totalOfPriorityFee,
@@ -277,6 +281,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         bytes memory signatureSMate;
 
         (signatureEVVM, signatureSMate) = makeSignature(
+            address(mock),
             true,
             10,
             totalOfPriorityFee,
@@ -347,6 +352,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         bytes memory signatureSMate;
 
         (signatureEVVM, signatureSMate) = makeSignature(
+            address(mock),
             true,
             10,
             totalOfPriorityFee,
@@ -379,6 +385,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         skip(sMate.getSecondsToUnlockStaking());
 
         (signatureEVVM, signatureSMate) = makeSignature(
+            address(mock),
             true,
             10,
             totalOfPriorityFee,
@@ -453,6 +460,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         bytes memory signatureSMate;
 
         (signatureEVVM, signatureSMate) = makeSignature(
+            address(mock),
             true,
             10,
             totalOfPriorityFee,
@@ -511,6 +519,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         bytes memory signatureSMate;
 
         (signatureEVVM, signatureSMate) = makeSignature(
+            address(mock),
             true,
             10,
             0.001 ether,
@@ -576,6 +585,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         bytes memory signatureSMate;
 
         (signatureEVVM, signatureSMate) = makeSignature(
+            address(mock),
             true,
             10,
             0.001 ether,
@@ -646,6 +656,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         bytes memory signatureSMate;
 
         (signatureEVVM, signatureSMate) = makeSignature(
+            address(mock),
             true,
             10,
             0.001 ether,
@@ -678,6 +689,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         skip(sMate.getSecondsToUnlockStaking());
 
         (signatureEVVM, signatureSMate) = makeSignature(
+            address(mock),
             true,
             10,
             0.001 ether,
@@ -752,6 +764,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         bytes memory signatureSMate;
 
         (signatureEVVM, signatureSMate) = makeSignature(
+            address(mock),
             true,
             10,
             totalOfPriorityFee,
@@ -815,6 +828,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         bytes memory signatureSMate;
 
         (signatureEVVM, signatureSMate) = makeSignature(
+            address(mock),
             true,
             10,
             totalOfPriorityFee,
@@ -885,6 +899,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         bytes memory signatureSMate;
 
         (signatureEVVM, signatureSMate) = makeSignature(
+            address(mock),
             true,
             10,
             totalOfPriorityFee,
@@ -961,6 +976,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         bytes memory signatureSMate;
 
         (signatureEVVM, signatureSMate) = makeSignature(
+            address(mock),
             true,
             10,
             totalOfPriorityFee,
@@ -993,6 +1009,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         skip(sMate.getSecondsToUnlockStaking());
 
         (signatureEVVM, signatureSMate) = makeSignature(
+            address(mock),
             true,
             10,
             totalOfPriorityFee,
@@ -1073,6 +1090,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         bytes memory signatureSMate;
 
         (signatureEVVM, signatureSMate) = makeSignature(
+            address(mock),
             true,
             10,
             totalOfPriorityFee,
@@ -1137,6 +1155,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         bytes memory signatureSMate;
 
         (signatureEVVM, signatureSMate) = makeSignature(
+            address(mock),
             true,
             10,
             0.002 ether,
@@ -1208,6 +1227,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         bytes memory signatureSMate;
 
         (signatureEVVM, signatureSMate) = makeSignature(
+            address(mock),
             true,
             10,
             0.002 ether,
@@ -1284,6 +1304,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         bytes memory signatureSMate;
 
         (signatureEVVM, signatureSMate) = makeSignature(
+            address(mock),
             true,
             10,
             0.002 ether,
@@ -1316,6 +1337,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         skip(sMate.getSecondsToUnlockStaking());
 
         (signatureEVVM, signatureSMate) = makeSignature(
+            address(mock),
             true,
             10,
             0.001 ether,

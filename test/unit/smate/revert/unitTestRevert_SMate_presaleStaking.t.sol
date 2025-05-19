@@ -1733,7 +1733,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
     }
 
-    function test__unit_correct__presaleStaking_AsyncExecution__fullUnstakeDosentRespectTimeLimit()
+    function test__unit_revert__presaleStaking_AsyncExecution__fullUnstakeDosentRespectTimeLimit()
         external
     {
         (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
@@ -1841,7 +1841,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
     }
 
-    function test__unit_correct__presaleStaking_AsyncExecution__notInTimeToRestake()
+    function test__unit_revert__presaleStaking_AsyncExecution__notInTimeToRestake()
         external
     {
         vm.startPrank(ADMIN.Address);

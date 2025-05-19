@@ -20,6 +20,7 @@ Y8a 8 8 a8P  Y8a     a8P  88    `888'    88   d8'        `8b   88       88
  */
 
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
+import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
 import {EvvmMock} from "@EVVM/playground/core/EvvmMock.sol";
 import {SignatureRecover} from "@EVVM/libraries/SignatureRecover.sol";
 import {MateNameServiceMock} from "@EVVM/playground/mateNameService/MateNameServiceMock.sol";
@@ -349,9 +350,9 @@ contract SMateMock {
 
         if (_isStaking) {
             if (
-                !verifyMessageSignedForStake(
-                    true,
+                !verifyMessageSignedForPublicServiceStake(
                     _user,
+                    _service,
                     _isStaking,
                     _amountOfSMate,
                     _nonce,
@@ -361,7 +362,7 @@ contract SMateMock {
                 revert Logic(1);
             }
         } else {
-            if (_service != _user ) {
+            if (_service != _user) {
                 revert();
             }
         }
@@ -814,6 +815,32 @@ contract SMateMock {
                      * else is for presaleInternalExecution
                      */
                     isExternalStaking ? "21cc1749" : "6257deec",
+                    ",",
+                    _isStaking ? "true" : "false",
+                    ",",
+                    Strings.toString(_amountOfSMate),
+                    ",",
+                    Strings.toString(_nonce)
+                ),
+                signature,
+                signer
+            );
+    }
+
+    function verifyMessageSignedForPublicServiceStake(
+        address signer,
+        address _serviceAddress,
+        bool _isStaking,
+        uint256 _amountOfSMate,
+        uint256 _nonce,
+        bytes memory signature
+    ) internal pure returns (bool) {
+        return
+            SignatureRecover.signatureVerification(
+                string.concat(
+                    "21cc1749",
+                    ",",
+                    AdvancedStrings.addressToString(_serviceAddress),
                     ",",
                     _isStaking ? "true" : "false",
                     ",",
