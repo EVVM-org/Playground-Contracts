@@ -28,7 +28,7 @@ import {EstimatorMock} from "@EVVM/playground/core/staking/EstimatorMock.sol";
 
 contract SMateMock {
     error Time(uint256);
-    error Logic(uint256 code);
+    error Logic(string code);
 
     using SignatureRecover for *;
 
@@ -197,10 +197,10 @@ contract SMateMock {
                 _signature
             )
         ) {
-            revert Logic(1);
+            revert Logic("sig");
         }
         if (checkIfStakeNonceUsed(_user, _nonce)) {
-            revert Logic(2);
+            revert Logic("nonce");
         }
 
         presaleClaims(_isStaking, _user);
@@ -301,11 +301,11 @@ contract SMateMock {
                 _signature
             )
         ) {
-            revert Logic(1);
+            revert Logic("sig");
         }
 
         if (checkIfStakeNonceUsed(_user, _nonce)) {
-            revert Logic(2);
+            revert Logic("nonce");
         }
 
         stakingUserProcess(
@@ -359,7 +359,7 @@ contract SMateMock {
                     _signature
                 )
             ) {
-                revert Logic(1);
+                revert Logic("sig");
             }
         } else {
             if (_service != _user) {
@@ -368,7 +368,7 @@ contract SMateMock {
         }
 
         if (checkIfStakeNonceUsed(_user, _nonce)) {
-            revert Logic(2);
+            revert Logic("nonce");
         }
 
         stakingServiceProcess(
@@ -376,10 +376,10 @@ contract SMateMock {
             _user,
             _service,
             _amountOfSMate,
-            _priorityFee_Evvm,
-            _nonce_Evvm,
-            _priority_Evvm,
-            _signature_Evvm
+            _isStaking ? _priorityFee_Evvm : 0,
+            _isStaking ? _nonce_Evvm : 0,
+            _isStaking ? _priority_Evvm : false,
+            _isStaking ? _signature_Evvm : bytes("")
         );
 
         stakingNonce[_user][_nonce] = true;
@@ -492,7 +492,7 @@ contract SMateMock {
                     getTimeToUserUnlockFullUnstakingTime(_stakingAccount) >
                     block.timestamp
                 ) {
-                    revert Logic(secondsToUnllockFullUnstaking.actual);
+                    revert();
                 }
 
                 EvvmMock(EVVM_ADDRESS).pointStaker(_stakingAccount, 0x00);
