@@ -263,6 +263,10 @@ fuzzTestSMatePublicStaking:
 	@echo "Running PublicStaking unit fuzz tests"
 	@forge test --match-path test/fuzz/sMate/fuzzTest_SMate_publicStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
 
+fuzzTestSMatePublicServiceStaking:
+	@echo "Running PublicServiceStaking unit fuzz tests"
+	@forge test --match-path test/fuzz/sMate/fuzzTest_SMate_publicServiceStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
+
 ## Estimator
 
 ### Unit tests
