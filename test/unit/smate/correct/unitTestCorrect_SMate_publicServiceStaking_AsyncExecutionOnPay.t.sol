@@ -16,7 +16,7 @@ pragma abicoder v2;
 import "forge-std/Test.sol";
 import "forge-std/console2.sol";
 
-import {Constants} from "test/Constants.sol";
+import {Constants, MockContract} from "test/Constants.sol";
 import {EvvmMockStructs} from "@EVVM/playground/core/EvvmMockStructs.sol";
 
 import {SMateMock} from "@EVVM/playground/core/staking/SMateMock.sol";
@@ -239,7 +239,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        mock.unstake(5, 1002);
+        mock.unstake(5, 1002, address(mock));
 
         assert(evvm.isMateStaker(address(mock)));
         assertEq(
@@ -307,7 +307,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
 
         skip(sMate.getSecondsToUnlockFullUnstaking());
 
-        mock.unstake(10, 1002);
+        mock.unstake(10, 1002, address(mock));
 
         assert(!evvm.isMateStaker(address(mock)));
         assertEq(
@@ -378,7 +378,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
 
         skip(sMate.getSecondsToUnlockFullUnstaking());
 
-        mock.unstake(10, 1002);
+        mock.unstake(10, 1002, address(mock));
 
         mock.getBackMate(COMMON_USER_NO_STAKER_1.Address);
 
@@ -543,7 +543,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        mock.unstake(5, 1002);
+        mock.unstake(5, 1002, address(mock));
 
         assert(evvm.isMateStaker(address(mock)));
         assertEq(
@@ -611,7 +611,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
 
         skip(sMate.getSecondsToUnlockFullUnstaking());
 
-        mock.unstake(10, 1002);
+        mock.unstake(10, 1002, address(mock));
 
         assert(!evvm.isMateStaker(address(mock)));
         assertEq(
@@ -682,7 +682,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
 
         skip(sMate.getSecondsToUnlockFullUnstaking());
 
-        mock.unstake(10, 1002);
+        mock.unstake(10, 1002, address(mock));
 
         mock.getBackMate(COMMON_USER_NO_STAKER_1.Address);
 
@@ -852,7 +852,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        mock.unstake(5, 1002);
+        mock.unstake(5, 1002, address(mock));
 
         assert(evvm.isMateStaker(address(mock)));
         assertEq(
@@ -925,7 +925,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
 
         skip(sMate.getSecondsToUnlockFullUnstaking());
 
-        mock.unstake(10, 1002);
+        mock.unstake(10, 1002, address(mock));
 
         assert(!evvm.isMateStaker(address(mock)));
         assertEq(
@@ -1002,7 +1002,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
 
         skip(sMate.getSecondsToUnlockFullUnstaking());
 
-        mock.unstake(10, 1002);
+        mock.unstake(10, 1002, address(mock));
 
         mock.getBackMate(COMMON_USER_NO_STAKER_1.Address);
 
@@ -1179,7 +1179,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        mock.unstake(5, 1002);
+        mock.unstake(5, 1002, address(mock));
 
         assert(evvm.isMateStaker(address(mock)));
         assertEq(
@@ -1253,7 +1253,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
 
         skip(sMate.getSecondsToUnlockFullUnstaking());
 
-        mock.unstake(10, 1002);
+        mock.unstake(10, 1002, address(mock));
 
         assert(!evvm.isMateStaker(address(mock)));
         assertEq(
@@ -1330,7 +1330,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
 
         skip(sMate.getSecondsToUnlockFullUnstaking());
 
-        mock.unstake(10, 1002);
+        mock.unstake(10, 1002, address(mock));
 
         mock.getBackMate(COMMON_USER_NO_STAKER_1.Address);
 
@@ -1405,41 +1405,5 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         assert(history[2].transactionType == DEPOSIT_HISTORY_SMATE_IDENTIFIER);
         assertEq(history[2].amount, 10);
         assertEq(history[2].totalStaked, 10);
-    }
-}
-
-contract MockContract {
-    SMateMock sMate;
-    EvvmMock evvm;
-
-    constructor(address sMateAddress) {
-        sMate = SMateMock(sMateAddress);
-        evvm = EvvmMock(sMate.getEvvmAddress());
-    }
-
-    function unstake(uint256 amount, uint256 nonceSMate) public {
-        sMate.publicServiceStaking(
-            false,
-            address(this),
-            address(this),
-            nonceSMate,
-            amount,
-            bytes(""),
-            0,
-            0,
-            false,
-            bytes("")
-        );
-    }
-
-    function getBackMate(address user) public {
-        evvm.caPay(
-            user,
-            0x0000000000000000000000000000000000000001,
-            evvm.seeBalance(
-                address(this),
-                0x0000000000000000000000000000000000000001
-            )
-        );
     }
 }

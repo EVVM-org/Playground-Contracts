@@ -15,6 +15,9 @@ pragma solidity ^0.8.0;
  *         the same storage layout.
  */
 
+import {EvvmMock} from "@EVVM/playground/core/EvvmMock.sol";
+import {SMateMock} from "@EVVM/playground/core/staking/SMateMock.sol";
+
 abstract contract Constants {
     bytes32 constant DEPOSIT_HISTORY_SMATE_IDENTIFIER = bytes32(uint256(1));
     bytes32 constant WITHDRAW_HISTORY_SMATE_IDENTIFIER = bytes32(uint256(2));
@@ -24,7 +27,6 @@ abstract contract Constants {
 
     address constant ETHER_ADDRESS = 0x0000000000000000000000000000000000000000;
 
-    
     /*
         | ACCOUNT       |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  | 
         | ADMIN         |  X  |     |     |     |     |     |     |     |
@@ -137,4 +139,40 @@ abstract contract Constants {
             Address: ACCOUNT8.Address,
             PrivateKey: ACCOUNT8.PrivateKey
         });
+}
+
+contract MockContract {
+    SMateMock sMate;
+    EvvmMock evvm;
+
+    constructor(address sMateAddress) {
+        sMate = SMateMock(sMateAddress);
+        evvm = EvvmMock(sMate.getEvvmAddress());
+    }
+
+    function unstake(uint256 amount, uint256 nonceSMate, address _user) public {
+        sMate.publicServiceStaking(
+            false,
+            _user,
+            address(this),
+            nonceSMate,
+            amount,
+            bytes(""),
+            0,
+            0,
+            false,
+            bytes("")
+        );
+    }
+
+    function getBackMate(address user) public {
+        evvm.caPay(
+            user,
+            0x0000000000000000000000000000000000000001,
+            evvm.seeBalance(
+                address(this),
+                0x0000000000000000000000000000000000000001
+            )
+        );
+    }
 }

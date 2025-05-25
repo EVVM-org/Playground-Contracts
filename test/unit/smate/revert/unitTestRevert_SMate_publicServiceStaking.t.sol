@@ -16,7 +16,7 @@ pragma abicoder v2;
 import "forge-std/Test.sol";
 import "forge-std/console2.sol";
 
-import {Constants} from "test/Constants.sol";
+import {Constants, MockContract} from "test/Constants.sol";
 import {EvvmMockStructs} from "@EVVM/playground/core/EvvmMockStructs.sol";
 
 import {SMateMock} from "@EVVM/playground/core/staking/SMateMock.sol";
@@ -1518,38 +1518,3 @@ contract unitTestRevert_SMate_publicServiceStaking is Test, Constants {
     }
 }
 
-contract MockContract {
-    SMateMock sMate;
-    EvvmMock evvm;
-
-    constructor(address sMateAddress) {
-        sMate = SMateMock(sMateAddress);
-        evvm = EvvmMock(sMate.getEvvmAddress());
-    }
-
-    function unstake(uint256 amount, uint256 nonceSMate, address _user) public {
-        sMate.publicServiceStaking(
-            false,
-            _user,
-            address(this),
-            nonceSMate,
-            amount,
-            bytes(""),
-            0,
-            0,
-            false,
-            bytes("")
-        );
-    }
-
-    function getBackMate(address user) public {
-        evvm.caPay(
-            user,
-            0x0000000000000000000000000000000000000001,
-            evvm.seeBalance(
-                address(this),
-                0x0000000000000000000000000000000000000001
-            )
-        );
-    }
-}
