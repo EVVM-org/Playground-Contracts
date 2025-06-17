@@ -20,7 +20,8 @@ anvil:
 	@echo "Starting Anvil, remember to use another terminal to run tests"
 	@anvil -m 'test test test test test test test test test test test junk' \
 		--steps-tracing \
-		--host 0.0.0.0 --chain-id 1337 
+		--host 0.0.0.0 --chain-id 1337 \
+		--disable-code-size-limit
 
 # Deployment commands
 mock: mockToken mockTreasury mockEvvm
