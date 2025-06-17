@@ -1175,6 +1175,7 @@ contract MateNameServiceMock {
         });
     }
 
+    /*
     function proposeChangePhoneNumberRegistery(
         address _newAddress
     ) public onlyAdmin {
@@ -1237,13 +1238,14 @@ contract MateNameServiceMock {
         addressAutority.proposal = address(0);
         addressAutority.timeToAccept = 0;
 
-        /*IPhoneNumberRegistery(addressPhoneNumberRegistery.current)
-            .changeAutority(addressAutority.current);
+        //PhoneNumberRegistery(addressPhoneNumberRegistery.current)
+        //    .changeAutority(addressAutority.current);
 
-        IEmailRegistery(addressEmailRegistery.current).changeAutority(
-            addressAutority.current
-        );*/
+        //IEmailRegistery(addressEmailRegistery.current).changeAutority(
+        //    addressAutority.current
+        //);
     }
+    
 
     function proposeSetStopChangeVerificationsAddress() public onlyAdmin {
         if (stopChangeVerificationsAddress.flag) {
@@ -1269,6 +1271,7 @@ contract MateNameServiceMock {
             timeToAcceptChange: 0
         });
     }
+    */
 
     //█Tools███████████████████████████████████████████████████████████████████████████████████████
 
