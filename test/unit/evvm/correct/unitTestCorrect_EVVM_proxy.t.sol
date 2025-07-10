@@ -26,6 +26,7 @@ import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {EstimatorMock} from "@EVVM/playground/core/staking/EstimatorMock.sol";
 import {EvvmMockStorage} from "@EVVM/playground/core/EvvmMockStorage.sol";
 
+
 contract unitTestCorrect_EVVM_proxy is Test, Constants {
     /**
      * Naming Convention for Init Test Functions
@@ -59,6 +60,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
     SMateMock sMate;
     EvvmMock evvm;
     EstimatorMock estimator;
+    MateNameServiceMock mns;
 
     TartarusV1 v1;
     address addressV1;
@@ -73,9 +75,18 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
     address addressCounter;
 
     function setUp() public {
-        sMate = new SMateMock(ADMIN.Address);
-        evvm = EvvmMock(sMate.getEvvmAddress());
-        estimator = EstimatorMock(sMate.getEstimatorAddress());
+        sMate = new SMateMock(ADMIN.Address, GOLDEN_STAKER.Address);
+        evvm = new EvvmMock(ADMIN.Address, address(sMate));
+        estimator = new EstimatorMock(
+            ACTIVATOR.Address,
+            address(evvm),
+            address(sMate),
+            ADMIN.Address
+        );
+        mns = new MateNameServiceMock(address(evvm), ADMIN.Address);
+
+        sMate._setupEstimatorAndEvvm(address(estimator), address(evvm));
+        evvm._setupMateNameServiceAddress(address(mns));
 
         v1 = new TartarusV1();
         addressV1 = address(v1);

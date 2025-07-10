@@ -42,10 +42,19 @@ contract fuzzTest_MateNameService_makeOffer is Test, Constants {
     AccountData COMMON_USER_NO_STAKER_3 = WILDCARD_USER;
 
     function setUp() public {
-        sMate = new SMateMock(ADMIN.Address);
-        evvm = EvvmMock(sMate.getEvvmAddress());
-        estimator = EstimatorMock(sMate.getEstimatorAddress());
-        mns = MateNameServiceMock(evvm.getMateNameServiceAddress());
+        sMate = new SMateMock(ADMIN.Address, GOLDEN_STAKER.Address);
+        evvm = new EvvmMock(ADMIN.Address, address(sMate));
+        estimator = new EstimatorMock(
+            ACTIVATOR.Address,
+            address(evvm),
+            address(sMate),
+            ADMIN.Address
+        );
+        mns = new MateNameServiceMock(address(evvm), ADMIN.Address);
+
+        sMate._setupEstimatorAndEvvm(address(estimator), address(evvm));
+        evvm._setupMateNameServiceAddress(address(mns));
+        
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
     }

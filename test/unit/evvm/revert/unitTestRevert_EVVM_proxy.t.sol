@@ -59,6 +59,7 @@ contract unitTestRevert_EVVM_proxy is Test, Constants {
     SMateMock sMate;
     EvvmMock evvm;
     EstimatorMock estimator;
+    MateNameServiceMock mns;
 
     ExtraFunctionsV1 v1;
     address addressV1;
@@ -67,9 +68,18 @@ contract unitTestRevert_EVVM_proxy is Test, Constants {
     bytes32 constant WITHDRAW_IDENTIFIER = bytes32(uint256(2));
 
     function setUp() public {
-        sMate = new SMateMock(ADMIN.Address);
-        evvm = EvvmMock(sMate.getEvvmAddress());
-        estimator = EstimatorMock(sMate.getEstimatorAddress());
+        sMate = new SMateMock(ADMIN.Address, GOLDEN_STAKER.Address);
+        evvm = new EvvmMock(ADMIN.Address, address(sMate));
+        estimator = new EstimatorMock(
+            ACTIVATOR.Address,
+            address(evvm),
+            address(sMate),
+            ADMIN.Address
+        );
+        mns = new MateNameServiceMock(address(evvm), ADMIN.Address);
+
+        sMate._setupEstimatorAndEvvm(address(estimator), address(evvm));
+        evvm._setupMateNameServiceAddress(address(mns));
 
         v1 = new ExtraFunctionsV1();
         addressV1 = address(v1);
