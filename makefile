@@ -147,7 +147,7 @@ unitTestRevertEvvmProxy:
 
 unitTestFuzzEvvm:
 	@echo "Running all EVVM unit fuzz tests"
-	@forge test --match-contract unitTestFuzz_EVVM --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-contract fuzzTest_EVVM --summary --detailed --gas-report -vvv --show-progress
 
 fuzzTestEvvmPayNoMateStaking_sync:
 	@echo "Running NoMateStaking_sync unit fuzz tests"
@@ -253,7 +253,7 @@ unitTestRevertSMateAdminFunctions:
 
 fuzzTestSMate:
 	@echo "Running SMate unit fuzz tests"
-	@forge test --match-path test/fuzz/smate/fuzzTest_SMate.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-contract fuzzTest_SMate --summary --detailed --gas-report -vvv --show-progress
 
 fuzzTestSMateGoldenStaking:
 	@echo "Running GoldenStaking unit fuzz tests"
@@ -448,7 +448,7 @@ unitTestRevertMateNameServiceAdminFunctions:
 
 fuzzTestMateNameServicePreRegistrationUsername:
 	@echo "Running MateNameService fuzz tests for preRegistrationUsername"
-	@forge test --match-path test/fuzz/mns/fuzzTest_MateNameService_preRegistrationUsername.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-contract fuzzTest_MateNameService_preRegistrationUsername --summary --detailed --gas-report -vvv --show-progress
 
 fuzzTestMateNameServiceRegistrationUsername:
 	@echo "Running MateNameService fuzz tests for registrationUsername"
