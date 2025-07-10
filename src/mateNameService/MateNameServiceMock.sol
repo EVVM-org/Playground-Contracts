@@ -1175,7 +1175,7 @@ contract MateNameServiceMock {
         });
     }
 
-    /*
+
     function proposeChangePhoneNumberRegistery(
         address _newAddress
     ) public onlyAdmin {
@@ -1271,7 +1271,7 @@ contract MateNameServiceMock {
             timeToAcceptChange: 0
         });
     }
-    */
+    
 
     //█Tools███████████████████████████████████████████████████████████████████████████████████████
 

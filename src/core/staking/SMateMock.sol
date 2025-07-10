@@ -71,7 +71,7 @@ contract SMateMock {
         uint256 timeToAccept;
     }
 
-    address private immutable EVVM_ADDRESS;
+    address private EVVM_ADDRESS;
 
     uint256 private constant LIMIT_PRESALE_STAKER = 800;
     uint256 private presaleStakerCount;
@@ -88,6 +88,8 @@ contract SMateMock {
     address private constant MATE_TOKEN_ADDRESS =
         0x0000000000000000000000000000000000000001;
 
+    bytes1 private breakerSetupEstimatorAndEvvm;
+
     mapping(address => mapping(uint256 => bool)) private stakingNonce;
 
     mapping(address => presaleStakerMetadata) private userPresaleStaker;
@@ -101,14 +103,10 @@ contract SMateMock {
         _;
     }
 
-    constructor(address initialAdmin) {
+    constructor(address initialAdmin, address initialGoldenFisher) {
         admin.actual = initialAdmin;
 
-        EvvmMock evvm = new EvvmMock(initialAdmin, address(this));
-
-        EVVM_ADDRESS = address(evvm);
-
-        goldenFisher.actual = 0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc;
+        goldenFisher.actual = initialGoldenFisher;
 
         allowPublicStaking.flag = false;
         allowPresaleStaking.flag = false;
@@ -117,14 +115,19 @@ contract SMateMock {
 
         secondsToUnllockFullUnstaking.actual = 21 days;
 
-        estimator.actual = address(
-            new EstimatorMock(
-                0x976EA74026E726554dB657fA54763abd0C3a0aa9,
-                EVVM_ADDRESS,
-                address(this),
-                initialAdmin
-            )
-        );
+        breakerSetupEstimatorAndEvvm = 0x01;
+    }
+
+    function _setupEstimatorAndEvvm(
+        address _estimator,
+        address _evvm
+    ) external {
+        if (breakerSetupEstimatorAndEvvm == 0x00) {
+            revert();
+        }
+        estimator.actual = _estimator;
+        EVVM_ADDRESS = _evvm;
+        breakerSetupEstimatorAndEvvm = 0x00;
     }
 
     /**

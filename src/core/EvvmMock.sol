@@ -34,21 +34,25 @@ contract EvvmMock is EvvmMockStorage {
 
         maxAmountToWithdraw.current = 0.1 ether;
 
-        MateNameServiceMock mateNameService = new MateNameServiceMock(
-            address(this),
-            _initialOwner
-        );
+        balances[_sMateContractAddress][mate.mateAddress] = seeMateReward() * 2;
 
-        balances[address(mateNameService)][mate.mateAddress] = 10000 * 10 ** 18;
+        
+        stakerList[_sMateContractAddress] = 0x01;
 
-        balances[_sMateContractAddress][mate.mateAddress] = seeMateReward() * 2 ;
-
-        mateNameServiceAddress = address(mateNameService);
-
-        pointStaker(mateNameServiceAddress, 0x01);
-
-        pointStaker(sMateContractAddress, 0x01);
+        breakerSetupMateNameServiceAddress = 0x01;
     }
+
+    function _setupMateNameServiceAddress(
+        address _mateNameServiceAddress
+    ) external {
+        if (breakerSetupMateNameServiceAddress == 0x00) {
+            revert();
+        }
+        mateNameServiceAddress = _mateNameServiceAddress;
+        balances[mateNameServiceAddress][mate.mateAddress] = 10000 * 10 ** 18;
+        stakerList[mateNameServiceAddress] = 0x01;
+    }
+
 
     fallback() external {
         if (currentImplementation == address(0)) revert();
