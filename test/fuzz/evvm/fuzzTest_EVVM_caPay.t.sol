@@ -21,20 +21,20 @@ import {Constants} from "test/Constants.sol";
 
 import {SMateMock} from "@EVVM/playground/staking/SMateMock.sol";
 import {MateNameServiceMock} from "@EVVM/playground/mns/MateNameServiceMock.sol";
-import {EvvmMock} from "@EVVM/playground/evvm/EvvmMock.sol";
+import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {EstimatorMock} from "@EVVM/playground/staking/EstimatorMock.sol";
-import {EvvmMockStorage} from "@EVVM/playground/evvm/lib/EvvmMockStorage.sol";
+import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 
 contract fuzzTest_EVVM_caPay is Test, Constants {
     SMateMock sMate;
-    EvvmMock evvm;
+    Evvm evvm;
     EstimatorMock estimator;
     MateNameServiceMock mns;
 
     function setUp() public {
         sMate = new SMateMock(ADMIN.Address, GOLDEN_STAKER.Address);
-        evvm = new EvvmMock(ADMIN.Address, address(sMate));
+        evvm = new Evvm(ADMIN.Address, address(sMate));
         estimator = new EstimatorMock(
             ACTIVATOR.Address,
             address(evvm),
@@ -87,10 +87,10 @@ contract fuzzTest_EVVM_caPay is Test, Constants {
 }
 
 contract HelperCa {
-    EvvmMock evvm;
+    Evvm evvm;
 
     constructor(address _evvm) {
-        evvm = EvvmMock(_evvm);
+        evvm = Evvm(_evvm);
     }
 
     function makeCaPay(address user, address token, uint256 amount) public {

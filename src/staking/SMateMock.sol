@@ -21,7 +21,7 @@ Y8a 8 8 a8P  Y8a     a8P  88    `888'    88   d8'        `8b   88       88
 
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
-import {EvvmMock} from "@EVVM/playground/evvm/EvvmMock.sol";
+import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {SignatureRecover} from "@EVVM/libraries/SignatureRecover.sol";
 import {MateNameServiceMock} from "@EVVM/playground/mns/MateNameServiceMock.sol";
 import {EstimatorMock} from "@EVVM/playground/staking/EstimatorMock.sol";
@@ -153,7 +153,7 @@ contract SMateMock {
             goldenFisher.actual,
             _amountOfSMate,
             0,
-            EvvmMock(EVVM_ADDRESS).getNextCurrentSyncNonce(msg.sender),
+            Evvm(EVVM_ADDRESS).getNextCurrentSyncNonce(msg.sender),
             false,
             _signature_Evvm
         );
@@ -482,7 +482,7 @@ contract SMateMock {
                 _signature_Evvm
             );
 
-            EvvmMock(EVVM_ADDRESS).pointStaker(_stakingAccount, 0x01);
+            Evvm(EVVM_ADDRESS).pointStaker(_stakingAccount, 0x01);
 
             auxSMsteBalance = userHistory[_stakingAccount].length == 0
                 ? _amountOfSMate
@@ -498,7 +498,7 @@ contract SMateMock {
                     revert();
                 }
 
-                EvvmMock(EVVM_ADDRESS).pointStaker(_stakingAccount, 0x00);
+                Evvm(EVVM_ADDRESS).pointStaker(_stakingAccount, 0x00);
             }
 
             // Only for user unstaking, not service
@@ -537,11 +537,11 @@ contract SMateMock {
             })
         );
 
-        if (EvvmMock(EVVM_ADDRESS).isMateStaker(msg.sender)) {
+        if (Evvm(EVVM_ADDRESS).isMateStaker(msg.sender)) {
             makeCaPay(
                 MATE_TOKEN_ADDRESS,
                 msg.sender,
-                (EvvmMock(EVVM_ADDRESS).seeMateReward() * 2) + _priorityFee_Evvm
+                (Evvm(EVVM_ADDRESS).seeMateReward() * 2) + _priorityFee_Evvm
             );
         }
     }
@@ -577,11 +577,11 @@ contract SMateMock {
                 userHistory[user][idToOverwriteUserHistory]
                     .timestamp = timestampToBeOverwritten;
 
-                if (EvvmMock(EVVM_ADDRESS).isMateStaker(msg.sender)) {
+                if (Evvm(EVVM_ADDRESS).isMateStaker(msg.sender)) {
                     makeCaPay(
                         MATE_TOKEN_ADDRESS,
                         msg.sender,
-                        (EvvmMock(EVVM_ADDRESS).seeMateReward() * 1)
+                        (Evvm(EVVM_ADDRESS).seeMateReward() * 1)
                     );
                 }
             }
@@ -601,7 +601,7 @@ contract SMateMock {
         bytes memory _signature_Evvm
     ) internal {
         if (_priority_Evvm) {
-            EvvmMock(EVVM_ADDRESS).payMateStaking_async(
+            Evvm(EVVM_ADDRESS).payMateStaking_async(
                 _user_Evvm,
                 address(this),
                 "",
@@ -613,7 +613,7 @@ contract SMateMock {
                 _signature_Evvm
             );
         } else {
-            EvvmMock(EVVM_ADDRESS).payMateStaking_sync(
+            Evvm(EVVM_ADDRESS).payMateStaking_sync(
                 _user_Evvm,
                 address(this),
                 "",
@@ -631,7 +631,7 @@ contract SMateMock {
         address _user_Evvm,
         uint256 _amount_Evvm
     ) internal {
-        EvvmMock(EVVM_ADDRESS).caPay(
+        Evvm(EVVM_ADDRESS).caPay(
             _user_Evvm,
             _tokenAddress_Evvm,
             _amount_Evvm

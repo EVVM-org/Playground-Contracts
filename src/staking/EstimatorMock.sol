@@ -16,7 +16,7 @@ MMMMMMMMMMMM
  */
 
 import {SMateMock} from "@EVVM/playground/staking/SMateMock.sol";
-import {EvvmMock} from "@EVVM/playground/evvm/EvvmMock.sol";
+import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import "forge-std/console2.sol";
 
 contract EstimatorMock {

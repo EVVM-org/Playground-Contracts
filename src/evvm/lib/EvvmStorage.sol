@@ -3,13 +3,13 @@
 
 pragma solidity ^0.8.0;
 
-import {EvvmMockStructs} from "./EvvmMockStructs.sol";
+import {EvvmStructs} from "./EvvmStructs.sol";
 
 /**
- * @title EvvmMockStorage
+ * @title EvvmStorage
  * @author jistro.eth
  * @dev Storage layout contract for EVVM proxy pattern implementation.
- *      This contract inherits all structures from EvvmMockStructs and
+ *      This contract inherits all structures from EvvmStructs and
  *      defines the storage layout that will be used by the proxy pattern.
  *      
  * @notice This contract should not be deployed directly, it's meant to be
@@ -17,7 +17,7 @@ import {EvvmMockStructs} from "./EvvmMockStructs.sol";
  *         the same storage layout.
  */
 
-abstract contract EvvmMockStorage is EvvmMockStructs {
+abstract contract EvvmStorage is EvvmStructs {
     error InvalidSignature();
     error InvalidAsyncNonce();
     error NotAuthorizedOnExecutor();

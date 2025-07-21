@@ -17,18 +17,18 @@ import "forge-std/Test.sol";
 import "forge-std/console2.sol";
 
 import {Constants} from "test/Constants.sol";
-import {EvvmMockStructs} from "@EVVM/playground/evvm/lib/EvvmMockStructs.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 import {SMateMock} from "@EVVM/playground/staking/SMateMock.sol";
 import {MateNameServiceMock} from "@EVVM/playground/mns/MateNameServiceMock.sol";
-import {EvvmMock} from "@EVVM/playground/evvm/EvvmMock.sol";
+import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {EstimatorMock} from "@EVVM/playground/staking/EstimatorMock.sol";
-import {EvvmMockStorage} from "@EVVM/playground/evvm/lib/EvvmMockStorage.sol";
+import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 
 contract unitTestRevert_EVVM_disperseCaPay is Test, Constants {
     SMateMock sMate;
-    EvvmMock evvm;
+    Evvm evvm;
     EstimatorMock estimator;
     MateNameServiceMock mns;
 
@@ -36,7 +36,7 @@ contract unitTestRevert_EVVM_disperseCaPay is Test, Constants {
 
     function setUp() public {
         sMate = new SMateMock(ADMIN.Address, GOLDEN_STAKER.Address);
-        evvm = new EvvmMock(ADMIN.Address, address(sMate));
+        evvm = new Evvm(ADMIN.Address, address(sMate));
         estimator = new EstimatorMock(
             ACTIVATOR.Address,
             address(evvm),
@@ -65,15 +65,15 @@ contract unitTestRevert_EVVM_disperseCaPay is Test, Constants {
     function test__unit_revert__disperseCaPay__addressHasZeroOpcode() external {
         addBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS, 0.02 ether);
 
-        EvvmMockStructs.DisperseCaPayMetadata[]
-            memory toData = new EvvmMockStructs.DisperseCaPayMetadata[](2);
+        EvvmStructs.DisperseCaPayMetadata[]
+            memory toData = new EvvmStructs.DisperseCaPayMetadata[](2);
 
-        toData[0] = EvvmMockStructs.DisperseCaPayMetadata({
+        toData[0] = EvvmStructs.DisperseCaPayMetadata({
             amount: 0.01 ether,
             toAddress: COMMON_USER_NO_STAKER_2.Address
         });
 
-        toData[1] = EvvmMockStructs.DisperseCaPayMetadata({
+        toData[1] = EvvmStructs.DisperseCaPayMetadata({
             amount: 0.01 ether,
             toAddress: COMMON_USER_NO_STAKER_3.Address
         });
@@ -96,15 +96,15 @@ contract unitTestRevert_EVVM_disperseCaPay is Test, Constants {
     {
         addBalance(address(this), ETHER_ADDRESS, 0.002 ether);
 
-        EvvmMockStructs.DisperseCaPayMetadata[]
-            memory toData = new EvvmMockStructs.DisperseCaPayMetadata[](2);
+        EvvmStructs.DisperseCaPayMetadata[]
+            memory toData = new EvvmStructs.DisperseCaPayMetadata[](2);
 
-        toData[0] = EvvmMockStructs.DisperseCaPayMetadata({
+        toData[0] = EvvmStructs.DisperseCaPayMetadata({
             amount: 0.01 ether,
             toAddress: COMMON_USER_NO_STAKER_2.Address
         });
 
-        toData[1] = EvvmMockStructs.DisperseCaPayMetadata({
+        toData[1] = EvvmStructs.DisperseCaPayMetadata({
             amount: 0.01 ether,
             toAddress: COMMON_USER_NO_STAKER_3.Address
         });
@@ -120,15 +120,15 @@ contract unitTestRevert_EVVM_disperseCaPay is Test, Constants {
     {
         addBalance(address(this), ETHER_ADDRESS, 0.02 ether);
 
-        EvvmMockStructs.DisperseCaPayMetadata[]
-            memory toData = new EvvmMockStructs.DisperseCaPayMetadata[](2);
+        EvvmStructs.DisperseCaPayMetadata[]
+            memory toData = new EvvmStructs.DisperseCaPayMetadata[](2);
 
-        toData[0] = EvvmMockStructs.DisperseCaPayMetadata({
+        toData[0] = EvvmStructs.DisperseCaPayMetadata({
             amount: 0.1 ether,
             toAddress: COMMON_USER_NO_STAKER_2.Address
         });
 
-        toData[1] = EvvmMockStructs.DisperseCaPayMetadata({
+        toData[1] = EvvmStructs.DisperseCaPayMetadata({
             amount: 0.1 ether,
             toAddress: COMMON_USER_NO_STAKER_3.Address
         });
@@ -144,15 +144,15 @@ contract unitTestRevert_EVVM_disperseCaPay is Test, Constants {
     {
         addBalance(address(this), ETHER_ADDRESS, 0.02 ether);
 
-        EvvmMockStructs.DisperseCaPayMetadata[]
-            memory toData = new EvvmMockStructs.DisperseCaPayMetadata[](2);
+        EvvmStructs.DisperseCaPayMetadata[]
+            memory toData = new EvvmStructs.DisperseCaPayMetadata[](2);
 
-        toData[0] = EvvmMockStructs.DisperseCaPayMetadata({
+        toData[0] = EvvmStructs.DisperseCaPayMetadata({
             amount: 0.01 ether,
             toAddress: COMMON_USER_NO_STAKER_2.Address
         });
 
-        toData[1] = EvvmMockStructs.DisperseCaPayMetadata({
+        toData[1] = EvvmStructs.DisperseCaPayMetadata({
             amount: 0.01 ether,
             toAddress: COMMON_USER_NO_STAKER_3.Address
         });

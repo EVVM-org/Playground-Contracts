@@ -17,18 +17,18 @@ import "forge-std/Test.sol";
 import "forge-std/console2.sol";
 
 import {Constants} from "test/Constants.sol";
-import {EvvmMockStructs} from "@EVVM/playground/evvm/lib/EvvmMockStructs.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 import {SMateMock} from "@EVVM/playground/staking/SMateMock.sol";
 import {MateNameServiceMock} from "@EVVM/playground/mns/MateNameServiceMock.sol";
-import {EvvmMock} from "@EVVM/playground/evvm/EvvmMock.sol";
+import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {EstimatorMock} from "@EVVM/playground/staking/EstimatorMock.sol";
-import {EvvmMockStorage} from "@EVVM/playground/evvm/lib/EvvmMockStorage.sol";
+import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 
 contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
     SMateMock sMate;
-    EvvmMock evvm;
+    Evvm evvm;
     EstimatorMock estimator;
     MateNameServiceMock mns;
 
@@ -36,7 +36,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
 
     function setUp() public {
         sMate = new SMateMock(ADMIN.Address, GOLDEN_STAKER.Address);
-        evvm = new EvvmMock(ADMIN.Address, address(sMate));
+        evvm = new Evvm(ADMIN.Address, address(sMate));
         estimator = new EstimatorMock(
             ACTIVATOR.Address,
             address(evvm),
@@ -89,8 +89,8 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             0.01 ether
         );
 
-        EvvmMockStructs.PayData[]
-            memory payData = new EvvmMockStructs.PayData[](1);
+        EvvmStructs.PayData[]
+            memory payData = new EvvmStructs.PayData[](1);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -111,7 +111,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             s
         );
 
-        payData[0] = EvvmMockStructs.PayData({
+        payData[0] = EvvmStructs.PayData({
             from: COMMON_USER_NO_STAKER_3.Address,
             to_address: COMMON_USER_NO_STAKER_2.Address,
             to_identity: "",
@@ -157,8 +157,8 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             0.01 ether
         );
 
-        EvvmMockStructs.PayData[]
-            memory payData = new EvvmMockStructs.PayData[](1);
+        EvvmStructs.PayData[]
+            memory payData = new EvvmStructs.PayData[](1);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -179,7 +179,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             s
         );
 
-        payData[0] = EvvmMockStructs.PayData({
+        payData[0] = EvvmStructs.PayData({
             from: COMMON_USER_NO_STAKER_1.Address,
             to_address: COMMON_USER_NO_STAKER_3.Address,
             to_identity: "",
@@ -225,8 +225,8 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             0.01 ether
         );
 
-        EvvmMockStructs.PayData[]
-            memory payData = new EvvmMockStructs.PayData[](1);
+        EvvmStructs.PayData[]
+            memory payData = new EvvmStructs.PayData[](1);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -247,7 +247,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             s
         );
 
-        payData[0] = EvvmMockStructs.PayData({
+        payData[0] = EvvmStructs.PayData({
             from: COMMON_USER_NO_STAKER_1.Address,
             to_address: address(0),
             to_identity: "fake",
@@ -293,8 +293,8 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             0.01 ether
         );
 
-        EvvmMockStructs.PayData[]
-            memory payData = new EvvmMockStructs.PayData[](1);
+        EvvmStructs.PayData[]
+            memory payData = new EvvmStructs.PayData[](1);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -315,7 +315,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             s
         );
 
-        payData[0] = EvvmMockStructs.PayData({
+        payData[0] = EvvmStructs.PayData({
             from: COMMON_USER_NO_STAKER_1.Address,
             to_address: COMMON_USER_NO_STAKER_2.Address,
             to_identity: "",
@@ -361,8 +361,8 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             0.01 ether
         );
 
-        EvvmMockStructs.PayData[]
-            memory payData = new EvvmMockStructs.PayData[](1);
+        EvvmStructs.PayData[]
+            memory payData = new EvvmStructs.PayData[](1);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -383,7 +383,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             s
         );
 
-        payData[0] = EvvmMockStructs.PayData({
+        payData[0] = EvvmStructs.PayData({
             from: COMMON_USER_NO_STAKER_1.Address,
             to_address: COMMON_USER_NO_STAKER_2.Address,
             to_identity: "",
@@ -429,8 +429,8 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             0.01 ether
         );
 
-        EvvmMockStructs.PayData[]
-            memory payData = new EvvmMockStructs.PayData[](1);
+        EvvmStructs.PayData[]
+            memory payData = new EvvmStructs.PayData[](1);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -451,7 +451,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             s
         );
 
-        payData[0] = EvvmMockStructs.PayData({
+        payData[0] = EvvmStructs.PayData({
             from: COMMON_USER_NO_STAKER_1.Address,
             to_address: COMMON_USER_NO_STAKER_2.Address,
             to_identity: "",
@@ -497,8 +497,8 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             0.01 ether
         );
 
-        EvvmMockStructs.PayData[]
-            memory payData = new EvvmMockStructs.PayData[](1);
+        EvvmStructs.PayData[]
+            memory payData = new EvvmStructs.PayData[](1);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -519,7 +519,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             s
         );
 
-        payData[0] = EvvmMockStructs.PayData({
+        payData[0] = EvvmStructs.PayData({
             from: COMMON_USER_NO_STAKER_1.Address,
             to_address: COMMON_USER_NO_STAKER_2.Address,
             to_identity: "",
@@ -565,8 +565,8 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             0.01 ether
         );
 
-        EvvmMockStructs.PayData[]
-            memory payData = new EvvmMockStructs.PayData[](1);
+        EvvmStructs.PayData[]
+            memory payData = new EvvmStructs.PayData[](1);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -587,7 +587,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             s
         );
 
-        payData[0] = EvvmMockStructs.PayData({
+        payData[0] = EvvmStructs.PayData({
             from: COMMON_USER_NO_STAKER_1.Address,
             to_address: COMMON_USER_NO_STAKER_2.Address,
             to_identity: "",
@@ -633,8 +633,8 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             0.01 ether
         );
 
-        EvvmMockStructs.PayData[]
-            memory payData = new EvvmMockStructs.PayData[](1);
+        EvvmStructs.PayData[]
+            memory payData = new EvvmStructs.PayData[](1);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -655,7 +655,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             s
         );
 
-        payData[0] = EvvmMockStructs.PayData({
+        payData[0] = EvvmStructs.PayData({
             from: COMMON_USER_NO_STAKER_1.Address,
             to_address: COMMON_USER_NO_STAKER_2.Address,
             to_identity: "",
@@ -701,8 +701,8 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             0.01 ether
         );
 
-        EvvmMockStructs.PayData[]
-            memory payData = new EvvmMockStructs.PayData[](1);
+        EvvmStructs.PayData[]
+            memory payData = new EvvmStructs.PayData[](1);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -723,7 +723,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             s
         );
 
-        payData[0] = EvvmMockStructs.PayData({
+        payData[0] = EvvmStructs.PayData({
             from: COMMON_USER_NO_STAKER_1.Address,
             to_address: COMMON_USER_NO_STAKER_2.Address,
             to_identity: "",
@@ -770,8 +770,8 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             0.01 ether
         );
 
-        EvvmMockStructs.PayData[]
-            memory payData = new EvvmMockStructs.PayData[](1);
+        EvvmStructs.PayData[]
+            memory payData = new EvvmStructs.PayData[](1);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -792,7 +792,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             s
         );
 
-        payData[0] = EvvmMockStructs.PayData({
+        payData[0] = EvvmStructs.PayData({
             from: COMMON_USER_NO_STAKER_1.Address,
             to_address: COMMON_USER_NO_STAKER_2.Address,
             to_identity: "",
@@ -839,8 +839,8 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             0.01 ether
         );
 
-        EvvmMockStructs.PayData[]
-            memory payData = new EvvmMockStructs.PayData[](1);
+        EvvmStructs.PayData[]
+            memory payData = new EvvmStructs.PayData[](1);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -861,7 +861,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             s
         );
 
-        payData[0] = EvvmMockStructs.PayData({
+        payData[0] = EvvmStructs.PayData({
             from: COMMON_USER_NO_STAKER_1.Address,
             to_address: COMMON_USER_NO_STAKER_2.Address,
             to_identity: "",

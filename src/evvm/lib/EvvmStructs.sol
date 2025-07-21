@@ -4,7 +4,7 @@
 pragma solidity ^0.8.0;
 
 /**
- * @title EvvmMockStructs
+ * @title EvvmStructs
  * @dev Library of common structures used across EVVM and its services.
  *      This contract serves as a shared type system for the entire ecosystem,
  *      ensuring consistency in data structures between the core EVVM and
@@ -14,7 +14,7 @@ pragma solidity ^0.8.0;
  *         that need to interact with these data structures.
  */
 
-abstract contract EvvmMockStructs {
+abstract contract EvvmStructs {
     struct PayData {
         address from;
         address to_address;

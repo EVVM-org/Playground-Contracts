@@ -2,14 +2,14 @@
 pragma solidity ^0.8.13;
 
 import {Script, console2} from "forge-std/Script.sol";
-import {EvvmMock} from "@EVVM/playground/evvm/EvvmMock.sol";
+import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {SMateMock} from "@EVVM/playground/staking/SMateMock.sol";
 import {EstimatorMock} from "@EVVM/playground/staking/EstimatorMock.sol";
 import {MateNameServiceMock} from "@EVVM/playground/mns/MateNameServiceMock.sol";
 
 contract DeployScript is Script {
     SMateMock sMate;
-    EvvmMock evvm;
+    Evvm evvm;
     EstimatorMock estimator;
     MateNameServiceMock mateNameService;
     address admin = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
@@ -22,7 +22,7 @@ contract DeployScript is Script {
         vm.startBroadcast();
 
         sMate = new SMateMock(admin, goldenFisher);
-        evvm = new EvvmMock(admin, address(sMate));
+        evvm = new Evvm(admin, address(sMate));
         estimator = new EstimatorMock(
             activator,
             address(evvm),

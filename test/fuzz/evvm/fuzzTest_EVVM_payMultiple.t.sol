@@ -25,15 +25,15 @@ import {Constants} from "test/Constants.sol";
 
 import {SMateMock} from "@EVVM/playground/staking/SMateMock.sol";
 import {MateNameServiceMock} from "@EVVM/playground/mns/MateNameServiceMock.sol";
-import {EvvmMock} from "@EVVM/playground/evvm/EvvmMock.sol";
+import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {EstimatorMock} from "@EVVM/playground/staking/EstimatorMock.sol";
-import {EvvmMockStorage} from "@EVVM/playground/evvm/lib/EvvmMockStorage.sol";
-import {EvvmMockStructs} from "@EVVM/playground/evvm/lib/EvvmMockStructs.sol";
+import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
-contract fuzzTest_EVVM_payMultiple is Test, Constants, EvvmMockStructs {
+contract fuzzTest_EVVM_payMultiple is Test, Constants, EvvmStructs {
     SMateMock sMate;
-    EvvmMock evvm;
+    Evvm evvm;
     EstimatorMock estimator;
     MateNameServiceMock mns;
 
@@ -41,7 +41,7 @@ contract fuzzTest_EVVM_payMultiple is Test, Constants, EvvmMockStructs {
 
     function setUp() public {
         sMate = new SMateMock(ADMIN.Address, GOLDEN_STAKER.Address);
-        evvm = new EvvmMock(ADMIN.Address, address(sMate));
+        evvm = new Evvm(ADMIN.Address, address(sMate));
         estimator = new EstimatorMock(
             ACTIVATOR.Address,
             address(evvm),
@@ -138,8 +138,8 @@ contract fuzzTest_EVVM_payMultiple is Test, Constants, EvvmMockStructs {
                 input.token[1] != MATE_TOKEN_ADDRESS
         );
 
-        EvvmMockStructs.PayData[]
-            memory payData = new EvvmMockStructs.PayData[](2);
+        EvvmStructs.PayData[]
+            memory payData = new EvvmStructs.PayData[](2);
 
         AccountData memory FISHER = input.useStaker
             ? COMMON_USER_STAKER
@@ -195,7 +195,7 @@ contract fuzzTest_EVVM_payMultiple is Test, Constants, EvvmMockStructs {
                 input.priorityFee[i]
             );
 
-            payData[i] = EvvmMockStructs.PayData({
+            payData[i] = EvvmStructs.PayData({
                 from: COMMON_USER_NO_STAKER_1.Address,
                 to_address: input.useToAddress[i]
                     ? COMMON_USER_NO_STAKER_2.Address

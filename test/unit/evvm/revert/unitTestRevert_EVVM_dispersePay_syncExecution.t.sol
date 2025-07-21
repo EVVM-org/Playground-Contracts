@@ -17,18 +17,18 @@ import "forge-std/Test.sol";
 import "forge-std/console2.sol";
 
 import {Constants} from "test/Constants.sol";
-import {EvvmMockStructs} from "@EVVM/playground/evvm/lib/EvvmMockStructs.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 import {SMateMock} from "@EVVM/playground/staking/SMateMock.sol";
 import {MateNameServiceMock} from "@EVVM/playground/mns/MateNameServiceMock.sol";
-import {EvvmMock} from "@EVVM/playground/evvm/EvvmMock.sol";
+import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {EstimatorMock} from "@EVVM/playground/staking/EstimatorMock.sol";
-import {EvvmMockStorage} from "@EVVM/playground/evvm/lib/EvvmMockStorage.sol";
+import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 
 contract unitTestRevert_EVVM_dispersePay_syncExecution is Test, Constants {
     SMateMock sMate;
-    EvvmMock evvm;
+    Evvm evvm;
     EstimatorMock estimator;
     MateNameServiceMock mns;
 
@@ -36,7 +36,7 @@ contract unitTestRevert_EVVM_dispersePay_syncExecution is Test, Constants {
 
     function setUp() public {
         sMate = new SMateMock(ADMIN.Address, GOLDEN_STAKER.Address);
-        evvm = new EvvmMock(ADMIN.Address, address(sMate));
+        evvm = new Evvm(ADMIN.Address, address(sMate));
         estimator = new EstimatorMock(
             ACTIVATOR.Address,
             address(evvm),
@@ -91,31 +91,31 @@ contract unitTestRevert_EVVM_dispersePay_syncExecution is Test, Constants {
             0.2 ether,
             0.01 ether
         );
-        EvvmMockStructs.DispersePayMetadata[]
-            memory correctToData = new EvvmMockStructs.DispersePayMetadata[](2);
+        EvvmStructs.DispersePayMetadata[]
+            memory correctToData = new EvvmStructs.DispersePayMetadata[](2);
 
-        EvvmMockStructs.DispersePayMetadata[]
-            memory badToData = new EvvmMockStructs.DispersePayMetadata[](2);
+        EvvmStructs.DispersePayMetadata[]
+            memory badToData = new EvvmStructs.DispersePayMetadata[](2);
 
-        correctToData[0] = EvvmMockStructs.DispersePayMetadata({
+        correctToData[0] = EvvmStructs.DispersePayMetadata({
             amount: 0.1 ether,
             to_address: COMMON_USER_NO_STAKER_2.Address,
             to_identity: ""
         });
 
-        correctToData[1] = EvvmMockStructs.DispersePayMetadata({
+        correctToData[1] = EvvmStructs.DispersePayMetadata({
             amount: 0.1 ether,
             to_address: address(0),
             to_identity: "dummy"
         });
 
-        badToData[0] = EvvmMockStructs.DispersePayMetadata({
+        badToData[0] = EvvmStructs.DispersePayMetadata({
             amount: 0.9 ether,
             to_address: COMMON_USER_NO_STAKER_2.Address,
             to_identity: ""
         });
 
-        badToData[1] = EvvmMockStructs.DispersePayMetadata({
+        badToData[1] = EvvmStructs.DispersePayMetadata({
             amount: 1 ether,
             to_address: address(0),
             to_identity: "dummy"
@@ -171,31 +171,31 @@ contract unitTestRevert_EVVM_dispersePay_syncExecution is Test, Constants {
             0.2 ether,
             0.01 ether
         );
-        EvvmMockStructs.DispersePayMetadata[]
-            memory correctToData = new EvvmMockStructs.DispersePayMetadata[](2);
+        EvvmStructs.DispersePayMetadata[]
+            memory correctToData = new EvvmStructs.DispersePayMetadata[](2);
 
-        EvvmMockStructs.DispersePayMetadata[]
-            memory badToData = new EvvmMockStructs.DispersePayMetadata[](2);
+        EvvmStructs.DispersePayMetadata[]
+            memory badToData = new EvvmStructs.DispersePayMetadata[](2);
 
-        correctToData[0] = EvvmMockStructs.DispersePayMetadata({
+        correctToData[0] = EvvmStructs.DispersePayMetadata({
             amount: 0.1 ether,
             to_address: COMMON_USER_NO_STAKER_2.Address,
             to_identity: ""
         });
 
-        correctToData[1] = EvvmMockStructs.DispersePayMetadata({
+        correctToData[1] = EvvmStructs.DispersePayMetadata({
             amount: 0.1 ether,
             to_address: address(0),
             to_identity: "dummy"
         });
 
-        badToData[0] = EvvmMockStructs.DispersePayMetadata({
+        badToData[0] = EvvmStructs.DispersePayMetadata({
             amount: 0.1 ether,
             to_address: COMMON_USER_NO_STAKER_3.Address,
             to_identity: ""
         });
 
-        badToData[1] = EvvmMockStructs.DispersePayMetadata({
+        badToData[1] = EvvmStructs.DispersePayMetadata({
             amount: 0.1 ether,
             to_address: address(0),
             to_identity: "dummy"
@@ -251,31 +251,31 @@ contract unitTestRevert_EVVM_dispersePay_syncExecution is Test, Constants {
             0.2 ether,
             0.01 ether
         );
-        EvvmMockStructs.DispersePayMetadata[]
-            memory correctToData = new EvvmMockStructs.DispersePayMetadata[](2);
+        EvvmStructs.DispersePayMetadata[]
+            memory correctToData = new EvvmStructs.DispersePayMetadata[](2);
 
-        EvvmMockStructs.DispersePayMetadata[]
-            memory badToData = new EvvmMockStructs.DispersePayMetadata[](2);
+        EvvmStructs.DispersePayMetadata[]
+            memory badToData = new EvvmStructs.DispersePayMetadata[](2);
 
-        correctToData[0] = EvvmMockStructs.DispersePayMetadata({
+        correctToData[0] = EvvmStructs.DispersePayMetadata({
             amount: 0.1 ether,
             to_address: COMMON_USER_NO_STAKER_2.Address,
             to_identity: ""
         });
 
-        correctToData[1] = EvvmMockStructs.DispersePayMetadata({
+        correctToData[1] = EvvmStructs.DispersePayMetadata({
             amount: 0.1 ether,
             to_address: address(0),
             to_identity: "dummy"
         });
 
-        badToData[0] = EvvmMockStructs.DispersePayMetadata({
+        badToData[0] = EvvmStructs.DispersePayMetadata({
             amount: 0.1 ether,
             to_address: COMMON_USER_NO_STAKER_2.Address,
             to_identity: ""
         });
 
-        badToData[1] = EvvmMockStructs.DispersePayMetadata({
+        badToData[1] = EvvmStructs.DispersePayMetadata({
             amount: 0.1 ether,
             to_address: address(0),
             to_identity: "fake"
@@ -331,16 +331,16 @@ contract unitTestRevert_EVVM_dispersePay_syncExecution is Test, Constants {
             0.2 ether,
             0.01 ether
         );
-        EvvmMockStructs.DispersePayMetadata[]
-            memory toData = new EvvmMockStructs.DispersePayMetadata[](2);
+        EvvmStructs.DispersePayMetadata[]
+            memory toData = new EvvmStructs.DispersePayMetadata[](2);
 
-        toData[0] = EvvmMockStructs.DispersePayMetadata({
+        toData[0] = EvvmStructs.DispersePayMetadata({
             amount: 0.1 ether,
             to_address: COMMON_USER_NO_STAKER_2.Address,
             to_identity: ""
         });
 
-        toData[1] = EvvmMockStructs.DispersePayMetadata({
+        toData[1] = EvvmStructs.DispersePayMetadata({
             amount: 0.1 ether,
             to_address: address(0),
             to_identity: "dummy"
@@ -396,16 +396,16 @@ contract unitTestRevert_EVVM_dispersePay_syncExecution is Test, Constants {
             0.2 ether,
             0.01 ether
         );
-        EvvmMockStructs.DispersePayMetadata[]
-            memory toData = new EvvmMockStructs.DispersePayMetadata[](2);
+        EvvmStructs.DispersePayMetadata[]
+            memory toData = new EvvmStructs.DispersePayMetadata[](2);
 
-        toData[0] = EvvmMockStructs.DispersePayMetadata({
+        toData[0] = EvvmStructs.DispersePayMetadata({
             amount: 0.1 ether,
             to_address: COMMON_USER_NO_STAKER_2.Address,
             to_identity: ""
         });
 
-        toData[1] = EvvmMockStructs.DispersePayMetadata({
+        toData[1] = EvvmStructs.DispersePayMetadata({
             amount: 0.1 ether,
             to_address: address(0),
             to_identity: "dummy"
@@ -461,16 +461,16 @@ contract unitTestRevert_EVVM_dispersePay_syncExecution is Test, Constants {
             0.2 ether,
             0.01 ether
         );
-        EvvmMockStructs.DispersePayMetadata[]
-            memory toData = new EvvmMockStructs.DispersePayMetadata[](2);
+        EvvmStructs.DispersePayMetadata[]
+            memory toData = new EvvmStructs.DispersePayMetadata[](2);
 
-        toData[0] = EvvmMockStructs.DispersePayMetadata({
+        toData[0] = EvvmStructs.DispersePayMetadata({
             amount: 0.1 ether,
             to_address: COMMON_USER_NO_STAKER_2.Address,
             to_identity: ""
         });
 
-        toData[1] = EvvmMockStructs.DispersePayMetadata({
+        toData[1] = EvvmStructs.DispersePayMetadata({
             amount: 0.1 ether,
             to_address: address(0),
             to_identity: "dummy"
@@ -526,16 +526,16 @@ contract unitTestRevert_EVVM_dispersePay_syncExecution is Test, Constants {
             0.2 ether,
             0.01 ether
         );
-        EvvmMockStructs.DispersePayMetadata[]
-            memory toData = new EvvmMockStructs.DispersePayMetadata[](2);
+        EvvmStructs.DispersePayMetadata[]
+            memory toData = new EvvmStructs.DispersePayMetadata[](2);
 
-        toData[0] = EvvmMockStructs.DispersePayMetadata({
+        toData[0] = EvvmStructs.DispersePayMetadata({
             amount: 0.1 ether,
             to_address: COMMON_USER_NO_STAKER_2.Address,
             to_identity: ""
         });
 
-        toData[1] = EvvmMockStructs.DispersePayMetadata({
+        toData[1] = EvvmStructs.DispersePayMetadata({
             amount: 0.1 ether,
             to_address: address(0),
             to_identity: "dummy"
@@ -591,16 +591,16 @@ contract unitTestRevert_EVVM_dispersePay_syncExecution is Test, Constants {
             0.2 ether,
             0.01 ether
         );
-        EvvmMockStructs.DispersePayMetadata[]
-            memory toData = new EvvmMockStructs.DispersePayMetadata[](2);
+        EvvmStructs.DispersePayMetadata[]
+            memory toData = new EvvmStructs.DispersePayMetadata[](2);
 
-        toData[0] = EvvmMockStructs.DispersePayMetadata({
+        toData[0] = EvvmStructs.DispersePayMetadata({
             amount: 0.1 ether,
             to_address: COMMON_USER_NO_STAKER_2.Address,
             to_identity: ""
         });
 
-        toData[1] = EvvmMockStructs.DispersePayMetadata({
+        toData[1] = EvvmStructs.DispersePayMetadata({
             amount: 0.1 ether,
             to_address: address(0),
             to_identity: "dummy"
@@ -656,16 +656,16 @@ contract unitTestRevert_EVVM_dispersePay_syncExecution is Test, Constants {
             0.2 ether,
             0.01 ether
         );
-        EvvmMockStructs.DispersePayMetadata[]
-            memory toData = new EvvmMockStructs.DispersePayMetadata[](2);
+        EvvmStructs.DispersePayMetadata[]
+            memory toData = new EvvmStructs.DispersePayMetadata[](2);
 
-        toData[0] = EvvmMockStructs.DispersePayMetadata({
+        toData[0] = EvvmStructs.DispersePayMetadata({
             amount: 0.1 ether,
             to_address: COMMON_USER_NO_STAKER_2.Address,
             to_identity: ""
         });
 
-        toData[1] = EvvmMockStructs.DispersePayMetadata({
+        toData[1] = EvvmStructs.DispersePayMetadata({
             amount: 0.1 ether,
             to_address: address(0),
             to_identity: "dummy"
@@ -721,16 +721,16 @@ contract unitTestRevert_EVVM_dispersePay_syncExecution is Test, Constants {
             0.2 ether,
             0.01 ether
         );
-        EvvmMockStructs.DispersePayMetadata[]
-            memory toData = new EvvmMockStructs.DispersePayMetadata[](2);
+        EvvmStructs.DispersePayMetadata[]
+            memory toData = new EvvmStructs.DispersePayMetadata[](2);
 
-        toData[0] = EvvmMockStructs.DispersePayMetadata({
+        toData[0] = EvvmStructs.DispersePayMetadata({
             amount: 0.1 ether,
             to_address: COMMON_USER_NO_STAKER_2.Address,
             to_identity: ""
         });
 
-        toData[1] = EvvmMockStructs.DispersePayMetadata({
+        toData[1] = EvvmStructs.DispersePayMetadata({
             amount: 0.1 ether,
             to_address: address(0),
             to_identity: "dummy"
@@ -786,16 +786,16 @@ contract unitTestRevert_EVVM_dispersePay_syncExecution is Test, Constants {
             0.2 ether,
             0.01 ether
         );
-        EvvmMockStructs.DispersePayMetadata[]
-            memory toData = new EvvmMockStructs.DispersePayMetadata[](2);
+        EvvmStructs.DispersePayMetadata[]
+            memory toData = new EvvmStructs.DispersePayMetadata[](2);
 
-        toData[0] = EvvmMockStructs.DispersePayMetadata({
+        toData[0] = EvvmStructs.DispersePayMetadata({
             amount: 1 ether,
             to_address: COMMON_USER_NO_STAKER_2.Address,
             to_identity: ""
         });
 
-        toData[1] = EvvmMockStructs.DispersePayMetadata({
+        toData[1] = EvvmStructs.DispersePayMetadata({
             amount: 1 ether,
             to_address: address(0),
             to_identity: "dummy"
@@ -851,16 +851,16 @@ contract unitTestRevert_EVVM_dispersePay_syncExecution is Test, Constants {
             0.5 ether,
             0.01 ether
         );
-        EvvmMockStructs.DispersePayMetadata[]
-            memory toData = new EvvmMockStructs.DispersePayMetadata[](2);
+        EvvmStructs.DispersePayMetadata[]
+            memory toData = new EvvmStructs.DispersePayMetadata[](2);
 
-        toData[0] = EvvmMockStructs.DispersePayMetadata({
+        toData[0] = EvvmStructs.DispersePayMetadata({
             amount: 0.3 ether,
             to_address: COMMON_USER_NO_STAKER_2.Address,
             to_identity: ""
         });
 
-        toData[1] = EvvmMockStructs.DispersePayMetadata({
+        toData[1] = EvvmStructs.DispersePayMetadata({
             amount: 0.1 ether,
             to_address: address(0),
             to_identity: "dummy"

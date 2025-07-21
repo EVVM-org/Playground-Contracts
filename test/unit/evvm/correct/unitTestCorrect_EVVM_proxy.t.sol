@@ -21,10 +21,10 @@ import {Constants} from "test/Constants.sol";
 
 import {SMateMock} from "@EVVM/playground/staking/SMateMock.sol";
 import {MateNameServiceMock} from "@EVVM/playground/mns/MateNameServiceMock.sol";
-import {EvvmMock} from "@EVVM/playground/evvm/EvvmMock.sol";
+import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {EstimatorMock} from "@EVVM/playground/staking/EstimatorMock.sol";
-import {EvvmMockStorage} from "@EVVM/playground/evvm/lib/EvvmMockStorage.sol";
+import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 
 
 contract unitTestCorrect_EVVM_proxy is Test, Constants {
@@ -58,7 +58,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
      */
 
     SMateMock sMate;
-    EvvmMock evvm;
+    Evvm evvm;
     EstimatorMock estimator;
     MateNameServiceMock mns;
 
@@ -76,7 +76,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
 
     function setUp() public {
         sMate = new SMateMock(ADMIN.Address, GOLDEN_STAKER.Address);
-        evvm = new EvvmMock(ADMIN.Address, address(sMate));
+        evvm = new Evvm(ADMIN.Address, address(sMate));
         estimator = new EstimatorMock(
             ACTIVATOR.Address,
             address(evvm),
@@ -658,7 +658,7 @@ interface ITartarusV1 {
     function burnToken(address user, address token, uint256 amount) external;
 }
 
-contract TartarusV1 is EvvmMockStorage {
+contract TartarusV1 is EvvmStorage {
     function burnToken(address user, address token, uint256 amount) external {
         if (balances[user][token] < amount) {
             revert();
@@ -674,7 +674,7 @@ interface ITartarusV2 {
     function fullTransfer(address from, address to, address token) external;
 }
 
-contract TartarusV2 is EvvmMockStorage {
+contract TartarusV2 is EvvmStorage {
     function fullTransfer(address from, address to, address token) external {
         balances[to][token] += balances[from][token];
         balances[from][token] -= balances[from][token];
@@ -694,7 +694,7 @@ interface ICounter {
     function getCounter() external view returns (uint256);
 }
 
-contract TartarusV3 is EvvmMockStorage {
+contract TartarusV3 is EvvmStorage {
     address public immutable counterAddress;
 
     constructor(address _counterAddress) {

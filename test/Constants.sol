@@ -4,10 +4,10 @@
 pragma solidity ^0.8.0;
 
 /**
- * @title EvvmMockStorage
+ * @title EvvmStorage
  * @author jistro.eth
  * @dev Storage layout contract for EVVM proxy pattern implementation.
- *      This contract inherits all structures from EvvmMockStructs and
+ *      This contract inherits all structures from EvvmStructs and
  *      defines the storage layout that will be used by the proxy pattern.
  *
  * @notice This contract should not be deployed directly, it's meant to be
@@ -15,7 +15,7 @@ pragma solidity ^0.8.0;
  *         the same storage layout.
  */
 
-import {EvvmMock} from "@EVVM/playground/evvm/EvvmMock.sol";
+import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {SMateMock} from "@EVVM/playground/staking/SMateMock.sol";
 
 abstract contract Constants {
@@ -143,11 +143,11 @@ abstract contract Constants {
 
 contract MockContract {
     SMateMock sMate;
-    EvvmMock evvm;
+    Evvm evvm;
 
     constructor(address sMateAddress) {
         sMate = SMateMock(sMateAddress);
-        evvm = EvvmMock(sMate.getEvvmAddress());
+        evvm = Evvm(sMate.getEvvmAddress());
     }
 
     function unstake(uint256 amount, uint256 nonceSMate, address _user) public {

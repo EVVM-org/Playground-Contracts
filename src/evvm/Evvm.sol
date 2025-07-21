@@ -17,9 +17,9 @@ import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {MateNameServiceMock} from "@EVVM/playground/mns/MateNameServiceMock.sol";
 import {SignatureRecover} from "@EVVM/libraries/SignatureRecover.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
-import {EvvmMockStorage} from "@EVVM/playground/evvm/lib/EvvmMockStorage.sol";
+import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 
-contract EvvmMock is EvvmMockStorage {
+contract Evvm is EvvmStorage {
     modifier onlyAdmin() {
         if (msg.sender != admin.current) {
             revert();

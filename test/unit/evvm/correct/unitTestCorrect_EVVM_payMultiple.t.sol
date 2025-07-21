@@ -19,23 +19,23 @@ import "forge-std/console2.sol";
 
 import {Constants} from "test/Constants.sol";
 
-import {EvvmMockStructs} from "@EVVM/playground/evvm/lib/EvvmMockStructs.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 import {SMateMock} from "@EVVM/playground/staking/SMateMock.sol";
 import {MateNameServiceMock} from "@EVVM/playground/mns/MateNameServiceMock.sol";
-import {EvvmMock} from "@EVVM/playground/evvm/EvvmMock.sol";
+import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {EstimatorMock} from "@EVVM/playground/staking/EstimatorMock.sol";
-import {EvvmMockStorage} from "@EVVM/playground/evvm/lib/EvvmMockStorage.sol";
+import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 
-contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmMockStructs {
+contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
     SMateMock sMate;
-    EvvmMock evvm;
+    Evvm evvm;
     EstimatorMock estimator;
     MateNameServiceMock mns;
 
     function setUp() public {
         sMate = new SMateMock(ADMIN.Address, GOLDEN_STAKER.Address);
-        evvm = new EvvmMock(ADMIN.Address, address(sMate));
+        evvm = new Evvm(ADMIN.Address, address(sMate));
         estimator = new EstimatorMock(
             ACTIVATOR.Address,
             address(evvm),
@@ -98,8 +98,8 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmMockStructs {
 
         PaymultipleSignatureMetadata[]
             memory payDataSignature = new PaymultipleSignatureMetadata[](8);
-        EvvmMockStructs.PayData[]
-            memory payData = new EvvmMockStructs.PayData[](8);
+        EvvmStructs.PayData[]
+            memory payData = new EvvmStructs.PayData[](8);
 
         (
             payDataSignature[0].v,
@@ -125,7 +125,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmMockStructs {
                 payDataSignature[0].s
             );
 
-        payData[0] = EvvmMockStructs.PayData({
+        payData[0] = EvvmStructs.PayData({
             from: COMMON_USER_NO_STAKER_1.Address,
             to_address: COMMON_USER_NO_STAKER_2.Address,
             to_identity: "",
@@ -162,7 +162,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmMockStructs {
                 payDataSignature[1].s
             );
 
-        payData[1] = EvvmMockStructs.PayData({
+        payData[1] = EvvmStructs.PayData({
             from: COMMON_USER_NO_STAKER_1.Address,
             to_address: COMMON_USER_NO_STAKER_2.Address,
             to_identity: "",
@@ -199,7 +199,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmMockStructs {
                 payDataSignature[2].s
             );
 
-        payData[2] = EvvmMockStructs.PayData({
+        payData[2] = EvvmStructs.PayData({
             from: COMMON_USER_NO_STAKER_1.Address,
             to_address: address(0),
             to_identity: "dummy",
@@ -236,7 +236,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmMockStructs {
                 payDataSignature[3].s
             );
 
-        payData[3] = EvvmMockStructs.PayData({
+        payData[3] = EvvmStructs.PayData({
             from: COMMON_USER_NO_STAKER_1.Address,
             to_address: address(0),
             to_identity: "dummy",
@@ -273,7 +273,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmMockStructs {
                 payDataSignature[4].s
             );
 
-        payData[4] = EvvmMockStructs.PayData({
+        payData[4] = EvvmStructs.PayData({
             from: COMMON_USER_NO_STAKER_1.Address,
             to_address: COMMON_USER_NO_STAKER_2.Address,
             to_identity: "",
@@ -310,7 +310,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmMockStructs {
                 payDataSignature[5].s
             );
 
-        payData[5] = EvvmMockStructs.PayData({
+        payData[5] = EvvmStructs.PayData({
             from: COMMON_USER_NO_STAKER_1.Address,
             to_address: COMMON_USER_NO_STAKER_2.Address,
             to_identity: "",
@@ -347,7 +347,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmMockStructs {
                 payDataSignature[6].s
             );
 
-        payData[6] = EvvmMockStructs.PayData({
+        payData[6] = EvvmStructs.PayData({
             from: COMMON_USER_NO_STAKER_1.Address,
             to_address: address(0),
             to_identity: "dummy",
@@ -384,7 +384,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmMockStructs {
                 payDataSignature[7].s
             );
 
-        payData[7] = EvvmMockStructs.PayData({
+        payData[7] = EvvmStructs.PayData({
             from: COMMON_USER_NO_STAKER_1.Address,
             to_address: address(0),
             to_identity: "dummy",
@@ -447,8 +447,8 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmMockStructs {
         );
         PaymultipleSignatureMetadata[]
             memory payDataSignature = new PaymultipleSignatureMetadata[](8);
-        EvvmMockStructs.PayData[]
-            memory payData = new EvvmMockStructs.PayData[](8);
+        EvvmStructs.PayData[]
+            memory payData = new EvvmStructs.PayData[](8);
 
         (
             payDataSignature[0].v,
@@ -474,7 +474,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmMockStructs {
                 payDataSignature[0].s
             );
 
-        payData[0] = EvvmMockStructs.PayData({
+        payData[0] = EvvmStructs.PayData({
             from: COMMON_USER_NO_STAKER_1.Address,
             to_address: COMMON_USER_NO_STAKER_2.Address,
             to_identity: "",
@@ -511,7 +511,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmMockStructs {
                 payDataSignature[1].s
             );
 
-        payData[1] = EvvmMockStructs.PayData({
+        payData[1] = EvvmStructs.PayData({
             from: COMMON_USER_NO_STAKER_1.Address,
             to_address: COMMON_USER_NO_STAKER_2.Address,
             to_identity: "",
@@ -548,7 +548,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmMockStructs {
                 payDataSignature[2].s
             );
 
-        payData[2] = EvvmMockStructs.PayData({
+        payData[2] = EvvmStructs.PayData({
             from: COMMON_USER_NO_STAKER_1.Address,
             to_address: address(0),
             to_identity: "dummy",
@@ -585,7 +585,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmMockStructs {
                 payDataSignature[3].s
             );
 
-        payData[3] = EvvmMockStructs.PayData({
+        payData[3] = EvvmStructs.PayData({
             from: COMMON_USER_NO_STAKER_1.Address,
             to_address: address(0),
             to_identity: "dummy",
@@ -622,7 +622,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmMockStructs {
                 payDataSignature[4].s
             );
 
-        payData[4] = EvvmMockStructs.PayData({
+        payData[4] = EvvmStructs.PayData({
             from: COMMON_USER_NO_STAKER_1.Address,
             to_address: COMMON_USER_NO_STAKER_2.Address,
             to_identity: "",
@@ -659,7 +659,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmMockStructs {
                 payDataSignature[5].s
             );
 
-        payData[5] = EvvmMockStructs.PayData({
+        payData[5] = EvvmStructs.PayData({
             from: COMMON_USER_NO_STAKER_1.Address,
             to_address: COMMON_USER_NO_STAKER_2.Address,
             to_identity: "",
@@ -696,7 +696,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmMockStructs {
                 payDataSignature[6].s
             );
 
-        payData[6] = EvvmMockStructs.PayData({
+        payData[6] = EvvmStructs.PayData({
             from: COMMON_USER_NO_STAKER_1.Address,
             to_address: address(0),
             to_identity: "dummy",
@@ -733,7 +733,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmMockStructs {
                 payDataSignature[7].s
             );
 
-        payData[7] = EvvmMockStructs.PayData({
+        payData[7] = EvvmStructs.PayData({
             from: COMMON_USER_NO_STAKER_1.Address,
             to_address: address(0),
             to_identity: "dummy",

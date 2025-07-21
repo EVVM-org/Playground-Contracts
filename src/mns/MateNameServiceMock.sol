@@ -13,7 +13,7 @@ pragma solidity ^0.8.0;
 888       888  "Y88P"   "Y8888P 888  888       "Y8888P"   "Y88P"  888  888  "Y888 888    "Y888888  "Y8888P  "Y888                                                                                                          
  */
 
-import {EvvmMock} from "@EVVM/playground/evvm/EvvmMock.sol";
+import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {SignatureRecover} from "@EVVM/libraries/SignatureRecover.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
@@ -211,10 +211,10 @@ contract MateNameServiceMock {
 
         mateNameServiceNonce[_user][_nonce] = true;
 
-        if (EvvmMock(evvmAddress.current).isMateStaker(msg.sender)) {
+        if (Evvm(evvmAddress.current).isMateStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
-                EvvmMock(evvmAddress.current).seeMateReward() +
+                Evvm(evvmAddress.current).seeMateReward() +
                     _priorityFeeForFisher
             );
         }
@@ -302,10 +302,10 @@ contract MateNameServiceMock {
 
         mateNameServiceNonce[_user][_nonce] = true;
 
-        if (EvvmMock(evvmAddress.current).isMateStaker(msg.sender)) {
+        if (Evvm(evvmAddress.current).isMateStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
-                (50 * EvvmMock(evvmAddress.current).seeMateReward()) +
+                (50 * Evvm(evvmAddress.current).seeMateReward()) +
                     _priorityFeeForFisher
             );
         }
@@ -359,10 +359,10 @@ contract MateNameServiceMock {
             });
         }
 
-        if (EvvmMock(evvmAddress.current).isMateStaker(msg.sender)) {
+        if (Evvm(evvmAddress.current).isMateStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
-                (multiple * EvvmMock(evvmAddress.current).seeMateReward()) +
+                (multiple * Evvm(evvmAddress.current).seeMateReward()) +
                     _priorityFeeForFisher
             );
         }
@@ -385,10 +385,10 @@ contract MateNameServiceMock {
             addressPhoneNumberRegistery.current
         ).reverseTransfer(_user, _phoneNumber, _timestamp, _signature);
 
-        if (EvvmMock(evvmAddress.current).isMateStaker(msg.sender)) {
+        if (Evvm(evvmAddress.current).isMateStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
-                (multiple * EvvmMock(evvmAddress.current).seeMateReward())
+                (multiple * Evvm(evvmAddress.current).seeMateReward())
             );
         }
 
@@ -406,10 +406,10 @@ contract MateNameServiceMock {
 
         identityDetails[_phoneNumber].owner = newOwner;
 
-        if (EvvmMock(evvmAddress.current).isMateStaker(msg.sender)) {
+        if (Evvm(evvmAddress.current).isMateStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
-                (multiple * EvvmMock(evvmAddress.current).seeMateReward())
+                (multiple * Evvm(evvmAddress.current).seeMateReward())
             );
         }
     }
@@ -458,10 +458,10 @@ contract MateNameServiceMock {
             });
         }
 
-        if (EvvmMock(evvmAddress.current).isMateStaker(msg.sender)) {
+        if (Evvm(evvmAddress.current).isMateStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
-                (multiple * EvvmMock(evvmAddress.current).seeMateReward()) +
+                (multiple * Evvm(evvmAddress.current).seeMateReward()) +
                     _priorityFeeForFisher
             );
         }
@@ -483,10 +483,10 @@ contract MateNameServiceMock {
         uint256 multiple = IEmailRegistery(addressEmailRegistery.current)
             .reverseTransfer(_user, _email, _timestamp, _signature);
 
-        if (EvvmMock(evvmAddress.current).isMateStaker(msg.sender)) {
+        if (Evvm(evvmAddress.current).isMateStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
-                (multiple * EvvmMock(evvmAddress.current).seeMateReward())
+                (multiple * Evvm(evvmAddress.current).seeMateReward())
             );
         }
 
@@ -503,10 +503,10 @@ contract MateNameServiceMock {
 
         identityDetails[_email].owner = newOwner;
 
-        if (EvvmMock(evvmAddress.current).isMateStaker(msg.sender)) {
+        if (Evvm(evvmAddress.current).isMateStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
-                (multiple * EvvmMock(evvmAddress.current).seeMateReward())
+                (multiple * Evvm(evvmAddress.current).seeMateReward())
             );
         }
     }
@@ -566,7 +566,7 @@ contract MateNameServiceMock {
 
         makeCaPay(
             msg.sender,
-            EvvmMock(evvmAddress.current).seeMateReward() +
+            Evvm(evvmAddress.current).seeMateReward() +
                 ((_amount * 125) / 100_000) +
                 _priorityFeeForFisher
         );
@@ -624,7 +624,7 @@ contract MateNameServiceMock {
 
         makeCaPay(
             msg.sender,
-            EvvmMock(evvmAddress.current).seeMateReward() +
+            Evvm(evvmAddress.current).seeMateReward() +
                 //obtenemos el 0.5% y dividimos entre 4 para obtener el 0.125%
                 //+ ((usernameOffers[_username][_offerID].amount  * 1 / 199)/4)
                 //mas simplificado
@@ -708,10 +708,10 @@ contract MateNameServiceMock {
 
         usernameOffers[_username][_offerID].offerer = address(0);
 
-        if (EvvmMock(evvmAddress.current).isMateStaker(msg.sender)) {
+        if (Evvm(evvmAddress.current).isMateStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
-                (EvvmMock(evvmAddress.current).seeMateReward()) +
+                (Evvm(evvmAddress.current).seeMateReward()) +
                     (((usernameOffers[_username][_offerID].amount * 1) / 199) /
                         4) +
                     _priorityFeeForFisher
@@ -791,10 +791,10 @@ contract MateNameServiceMock {
             _signature_Evvm
         );
 
-        if (EvvmMock(evvmAddress.current).isMateStaker(msg.sender)) {
+        if (Evvm(evvmAddress.current).isMateStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
-                EvvmMock(evvmAddress.current).seeMateReward() +
+                Evvm(evvmAddress.current).seeMateReward() +
                     ((priceOfRenew * 50) / 100) + //? no estamos siendo muy generosos con el priority fee
                     _priorityFeeForFisher
             );
@@ -804,40 +804,40 @@ contract MateNameServiceMock {
         mateNameServiceNonce[_user][_nonce] = true;
     }
 
-    /* 
-    * How to use identityCustomMetadata:
-    *
-    * identityCustomMetadata["username"][key] = "value";
-    *
-    * Parameters:
-    * 
-    * - key (numberKey):
-    *   Should be treated as a nonce (unique number) to avoid overwriting existing values.
-    *   The value 0 is used as a header to check for the absence of a value in case the user
-    *   does not enter one.
-    *
-    * - value (customValue):
-    *   Is a text string that allows storing any type of data.
-    *   The data follows a standard to facilitate reading, although it is not mandatory
-    *   to fully comply with it.
-    *
-    * Standard value format:
-    * [schema]:[subschema]>[value]
-    *
-    * Examples:
-    * memberOf:>EVVM
-    * socialMedia:x     >jistro       // LinkedIn without subschema
-    * email:dev   >jistro@evvm.org    // Email with "dev" subschema
-    * email:callme>contact@jistro.xyz  // Email with "callme" subschema
-    *
-    * Important notes:
-    * - 'schema' is based on https://schema.org/docs/schemas.html
-    * - ':' is the separator between schema and subschema
-    * - '>' is the separator between metadata and value
-    * - If 'schema' or 'subschema' have fewer than 5 characters, they should be padded with spaces:
-    *   Example: vk   :job  >jane-doe
-    * - In case of social networks, the 'schema' should be "socialMedia" and the 'subschema' should be the social network name
-    */
+    /*
+     * How to use identityCustomMetadata:
+     *
+     * identityCustomMetadata["username"][key] = "value";
+     *
+     * Parameters:
+     *
+     * - key (numberKey):
+     *   Should be treated as a nonce (unique number) to avoid overwriting existing values.
+     *   The value 0 is used as a header to check for the absence of a value in case the user
+     *   does not enter one.
+     *
+     * - value (customValue):
+     *   Is a text string that allows storing any type of data.
+     *   The data follows a standard to facilitate reading, although it is not mandatory
+     *   to fully comply with it.
+     *
+     * Standard value format:
+     * [schema]:[subschema]>[value]
+     *
+     * Examples:
+     * memberOf:>EVVM
+     * socialMedia:x     >jistro       // LinkedIn without subschema
+     * email:dev   >jistro@evvm.org    // Email with "dev" subschema
+     * email:callme>contact@jistro.xyz  // Email with "callme" subschema
+     *
+     * Important notes:
+     * - 'schema' is based on https://schema.org/docs/schemas.html
+     * - ':' is the separator between schema and subschema
+     * - '>' is the separator between metadata and value
+     * - If 'schema' or 'subschema' have fewer than 5 characters, they should be padded with spaces:
+     *   Example: vk   :job  >jane-doe
+     * - In case of social networks, the 'schema' should be "socialMedia" and the 'subschema' should be the social network name
+     */
     function addCustomMetadata(
         address _user,
         uint256 _nonce,
@@ -878,10 +878,10 @@ contract MateNameServiceMock {
             _signature_Evvm_forAddCustomMetadata
         );
 
-        if (EvvmMock(evvmAddress.current).isMateStaker(msg.sender)) {
+        if (Evvm(evvmAddress.current).isMateStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
-                (5 * EvvmMock(evvmAddress.current).seeMateReward()) +
+                (5 * Evvm(evvmAddress.current).seeMateReward()) +
                     ((getPriceToAddCustomMetadata() * 50) / 100) +
                     _priorityFeeForFisher
             );
@@ -954,10 +954,10 @@ contract MateNameServiceMock {
         }
         identityDetails[_identity].customMetadataMaxSlots--;
         mateNameServiceNonce[_user][_nonce] = true;
-        if (EvvmMock(evvmAddress.current).isMateStaker(msg.sender)) {
+        if (Evvm(evvmAddress.current).isMateStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
-                (5 * EvvmMock(evvmAddress.current).seeMateReward()) +
+                (5 * Evvm(evvmAddress.current).seeMateReward()) +
                     _priorityFeeForFisher
             );
         }
@@ -1009,10 +1009,10 @@ contract MateNameServiceMock {
             delete identityCustomMetadata[_identity][i];
         }
 
-        if (EvvmMock(evvmAddress.current).isMateStaker(msg.sender)) {
+        if (Evvm(evvmAddress.current).isMateStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
-                ((5 * EvvmMock(evvmAddress.current).seeMateReward()) *
+                ((5 * Evvm(evvmAddress.current).seeMateReward()) *
                     identityDetails[_identity].customMetadataMaxSlots) +
                     _priorityFeeForFisher
             );
@@ -1068,7 +1068,7 @@ contract MateNameServiceMock {
 
         makeCaPay(
             msg.sender,
-            ((5 * EvvmMock(evvmAddress.current).seeMateReward()) *
+            ((5 * Evvm(evvmAddress.current).seeMateReward()) *
                 identityDetails[_identity].customMetadataMaxSlots) +
                 _priorityFeeForFisher
         );
@@ -1116,12 +1116,12 @@ contract MateNameServiceMock {
 
     function proposeWithdrawMateTokens(uint256 _amount) public onlyAdmin {
         if (
-            EvvmMock(evvmAddress.current).seeBalance(
+            Evvm(evvmAddress.current).seeBalance(
                 address(this),
                 MATE_TOKEN
             ) -
                 (5083 +
-                    EvvmMock(evvmAddress.current).seeMateReward() +
+                    Evvm(evvmAddress.current).seeMateReward() +
                     mateTokenLockedForWithdrawOffers) <
             _amount ||
             _amount == 0
@@ -1174,7 +1174,6 @@ contract MateNameServiceMock {
             timeToAccept: 0
         });
     }
-
 
     function proposeChangePhoneNumberRegistery(
         address _newAddress
@@ -1245,7 +1244,6 @@ contract MateNameServiceMock {
         //    addressAutority.current
         //);
     }
-    
 
     function proposeSetStopChangeVerificationsAddress() public onlyAdmin {
         if (stopChangeVerificationsAddress.flag) {
@@ -1271,7 +1269,6 @@ contract MateNameServiceMock {
             timeToAcceptChange: 0
         });
     }
-    
 
     //█Tools███████████████████████████████████████████████████████████████████████████████████████
 
@@ -1286,7 +1283,7 @@ contract MateNameServiceMock {
         bytes memory _signature_Evvm
     ) internal {
         if (_priority_Evvm) {
-            EvvmMock(evvmAddress.current).payMateStaking_async(
+            Evvm(evvmAddress.current).payMateStaking_async(
                 _user_Evvm,
                 address(this),
                 "",
@@ -1298,7 +1295,7 @@ contract MateNameServiceMock {
                 _signature_Evvm
             );
         } else {
-            EvvmMock(evvmAddress.current).payMateStaking_sync(
+            Evvm(evvmAddress.current).payMateStaking_sync(
                 _user_Evvm,
                 address(this),
                 "",
@@ -1312,7 +1309,7 @@ contract MateNameServiceMock {
     }
 
     function makeCaPay(address _user_Evvm, uint256 _ammount_Evvm) internal {
-        EvvmMock(evvmAddress.current).caPay(
+        Evvm(evvmAddress.current).caPay(
             _user_Evvm,
             MATE_TOKEN,
             _ammount_Evvm
@@ -1800,7 +1797,7 @@ contract MateNameServiceMock {
             if (price == 0) {
                 price = 500 * 10 ** 18;
             } else {
-                uint256 mateReward = EvvmMock(evvmAddress.current)
+                uint256 mateReward = Evvm(evvmAddress.current)
                     .seeMateReward();
                 ///coloca el precio del username en un 0.5% del precio de la oferta más alta, con tope en 500,000 * mateReward
                 price = ((price * 5) / 1000) > (500000 * mateReward)
@@ -1808,12 +1805,12 @@ contract MateNameServiceMock {
                     : ((price * 5) / 1000);
             }
         } else {
-            price = 500_000 * EvvmMock(evvmAddress.current).seeMateReward();
+            price = 500_000 * Evvm(evvmAddress.current).seeMateReward();
         }
     }
 
     function getPriceToAddCustomMetadata() public view returns (uint256 price) {
-        price = 10 * EvvmMock(evvmAddress.current).seeMateReward();
+        price = 10 * Evvm(evvmAddress.current).seeMateReward();
     }
 
     function getPriceToRemoveCustomMetadata()
@@ -1821,14 +1818,14 @@ contract MateNameServiceMock {
         view
         returns (uint256 price)
     {
-        price = 10 * EvvmMock(evvmAddress.current).seeMateReward();
+        price = 10 * Evvm(evvmAddress.current).seeMateReward();
     }
 
     function getPriceToFlushCustomMetadata(
         string memory _identity
     ) public view returns (uint256 price) {
         price =
-            (10 * EvvmMock(evvmAddress.current).seeMateReward()) *
+            (10 * Evvm(evvmAddress.current).seeMateReward()) *
             identityDetails[_identity].customMetadataMaxSlots;
     }
 
@@ -1836,9 +1833,9 @@ contract MateNameServiceMock {
         string memory _identity
     ) public view returns (uint256 price) {
         price =
-            ((10 * EvvmMock(evvmAddress.current).seeMateReward()) *
+            ((10 * Evvm(evvmAddress.current).seeMateReward()) *
                 identityDetails[_identity].customMetadataMaxSlots) +
-            EvvmMock(evvmAddress.current).seeMateReward();
+            Evvm(evvmAddress.current).seeMateReward();
     }
 
     //█User██████████████████████████████████████████████████████████████████████████████
@@ -1945,7 +1942,7 @@ contract MateNameServiceMock {
     }
 
     function getPricePerRegistration() public view returns (uint256) {
-        return EvvmMock(evvmAddress.current).seeMateReward() * 100;
+        return Evvm(evvmAddress.current).seeMateReward() * 100;
     }
 
     function getAdmin() public view returns (address) {

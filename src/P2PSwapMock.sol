@@ -13,11 +13,11 @@ pragma solidity ^0.8.0;
 888       888  "Y88P"   "Y8888P 888  888       "Y8888P"   "Y88P"  888  888  "Y888 888    "Y888888  "Y8888P  "Y888                                                                                                          
  */
 
-import {EvvmMock} from "@EVVM/playground/evvm/EvvmMock.sol";
+import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {SignatureRecover} from "@EVVM/libraries/SignatureRecover.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
-import {EvvmMockStructs} from "@EVVM/playground/evvm/lib/EvvmMockStructs.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 contract P2PSwap {
     using SignatureRecover for *;
@@ -192,7 +192,7 @@ contract P2PSwap {
             metadata.amountB
         );
 
-        if (EvvmMock(evvmAddress).isMateStaker(msg.sender)) {
+        if (Evvm(evvmAddress).isMateStaker(msg.sender)) {
             if (_priorityFee_Evvm > 0) {
                 makeCaPay(msg.sender, metadata.tokenA, _priorityFee_Evvm);
             }
@@ -201,8 +201,8 @@ contract P2PSwap {
                 msg.sender,
                 MATE_TOKEN_ADDRESS,
                 _priorityFee_Evvm > 0
-                    ? (EvvmMock(evvmAddress).seeMateReward() * 3)
-                    : (EvvmMock(evvmAddress).seeMateReward() * 2)
+                    ? (Evvm(evvmAddress).seeMateReward() * 3)
+                    : (Evvm(evvmAddress).seeMateReward() * 2)
             );
         }
 
@@ -260,14 +260,14 @@ contract P2PSwap {
 
         ordersInsideMarket[market][metadata.orderId].seller = address(0);
 
-        if (EvvmMock(evvmAddress).isMateStaker(msg.sender)) {
+        if (Evvm(evvmAddress).isMateStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
                 MATE_TOKEN_ADDRESS,
                 _priorityFee_Evvm > 0
-                    ? ((EvvmMock(evvmAddress).seeMateReward() * 3) +
+                    ? ((Evvm(evvmAddress).seeMateReward() * 3) +
                         _priorityFee_Evvm)
-                    : (EvvmMock(evvmAddress).seeMateReward() * 2)
+                    : (Evvm(evvmAddress).seeMateReward() * 2)
             );
         }
         marketMetadata[market].ordersAvailable--;
@@ -339,15 +339,15 @@ contract P2PSwap {
             );
         }
 
-        EvvmMockStructs.DisperseCaPayMetadata[]
-            memory toData = new EvvmMockStructs.DisperseCaPayMetadata[](2);
+        EvvmStructs.DisperseCaPayMetadata[]
+            memory toData = new EvvmStructs.DisperseCaPayMetadata[](2);
 
-        toData[0] = EvvmMockStructs.DisperseCaPayMetadata(
+        toData[0] = EvvmStructs.DisperseCaPayMetadata(
             ordersInsideMarket[market][metadata.orderId].amountB +
                 (fee * (rewardPersentage.seller / 10_000)),
             ordersInsideMarket[market][metadata.orderId].seller
         );
-        toData[1] = EvvmMockStructs.DisperseCaPayMetadata(
+        toData[1] = EvvmStructs.DisperseCaPayMetadata(
             _priorityFee_Evvm + (fee * (rewardPersentage.mateStaker / 10_000)),
             msg.sender
         );
@@ -364,14 +364,14 @@ contract P2PSwap {
             ordersInsideMarket[market][metadata.orderId].amountA
         );
 
-        if (EvvmMock(evvmAddress).isMateStaker(msg.sender)) {
+        if (Evvm(evvmAddress).isMateStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
                 MATE_TOKEN_ADDRESS,
                 metadata.amountOfTokenBToFill >
                     ordersInsideMarket[market][metadata.orderId].amountB + fee
-                    ? EvvmMock(evvmAddress).seeMateReward() * 5
-                    : EvvmMock(evvmAddress).seeMateReward() * 4
+                    ? Evvm(evvmAddress).seeMateReward() * 5
+                    : Evvm(evvmAddress).seeMateReward() * 4
             );
         }
 
@@ -458,15 +458,15 @@ contract P2PSwap {
             );
         }
 
-        EvvmMockStructs.DisperseCaPayMetadata[]
-            memory toData = new EvvmMockStructs.DisperseCaPayMetadata[](2);
+        EvvmStructs.DisperseCaPayMetadata[]
+            memory toData = new EvvmStructs.DisperseCaPayMetadata[](2);
 
-        toData[0] = EvvmMockStructs.DisperseCaPayMetadata(
+        toData[0] = EvvmStructs.DisperseCaPayMetadata(
             ordersInsideMarket[market][metadata.orderId].amountB +
                 (finalFee * (rewardPersentage.seller / 10_000)),
             ordersInsideMarket[market][metadata.orderId].seller
         );
-        toData[1] = EvvmMockStructs.DisperseCaPayMetadata(
+        toData[1] = EvvmStructs.DisperseCaPayMetadata(
             _priorityFee_Evvm +
                 (finalFee * (rewardPersentage.mateStaker / 10_000)),
             msg.sender
@@ -484,14 +484,14 @@ contract P2PSwap {
             ordersInsideMarket[market][metadata.orderId].amountA
         );
 
-        if (EvvmMock(evvmAddress).isMateStaker(msg.sender)) {
+        if (Evvm(evvmAddress).isMateStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
                 MATE_TOKEN_ADDRESS,
                 metadata.amountOfTokenBToFill >
                     ordersInsideMarket[market][metadata.orderId].amountB + fee
-                    ? EvvmMock(evvmAddress).seeMateReward() * 5
-                    : EvvmMock(evvmAddress).seeMateReward() * 4
+                    ? Evvm(evvmAddress).seeMateReward() * 5
+                    : Evvm(evvmAddress).seeMateReward() * 4
             );
         }
 
@@ -515,7 +515,7 @@ contract P2PSwap {
     ) internal view returns (uint256 fee, uint256 fee10) {
         if (token != ETH_ADDRESS) {
             if (
-                EvvmMock(evvmAddress).getTokenUniswapPool(token) == address(0)
+                Evvm(evvmAddress).getTokenUniswapPool(token) == address(0)
             ) {
                 fee = calculateFillPropotionalFee(amount);
             } else {
@@ -561,7 +561,7 @@ contract P2PSwap {
         bytes memory _signature_Evvm
     ) internal {
         if (_priority_Evvm) {
-            EvvmMock(evvmAddress).payMateStaking_async(
+            Evvm(evvmAddress).payMateStaking_async(
                 _user_Evvm,
                 address(this),
                 "",
@@ -573,7 +573,7 @@ contract P2PSwap {
                 _signature_Evvm
             );
         } else {
-            EvvmMock(evvmAddress).payMateStaking_sync(
+            Evvm(evvmAddress).payMateStaking_sync(
                 _user_Evvm,
                 address(this),
                 "",
@@ -591,15 +591,15 @@ contract P2PSwap {
         address _token_Evvm,
         uint256 _ammount_Evvm
     ) internal {
-        EvvmMock(evvmAddress).caPay(_user_Evvm, _token_Evvm, _ammount_Evvm);
+        Evvm(evvmAddress).caPay(_user_Evvm, _token_Evvm, _ammount_Evvm);
     }
 
     function makeDisperseCaPay(
-        EvvmMockStructs.DisperseCaPayMetadata[] memory toData,
+        EvvmStructs.DisperseCaPayMetadata[] memory toData,
         address token,
         uint256 amount
     ) internal {
-        EvvmMock(evvmAddress).disperseCaPay(toData, token, amount);
+        Evvm(evvmAddress).disperseCaPay(toData, token, amount);
     }
 
     //◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢
