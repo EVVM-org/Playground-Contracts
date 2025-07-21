@@ -2,10 +2,10 @@
 pragma solidity ^0.8.13;
 
 import {Script, console2} from "forge-std/Script.sol";
-import {EvvmMock} from "@EVVM/playground/core/EvvmMock.sol";
-import {SMateMock} from "@EVVM/playground/core/staking/SMateMock.sol";
-import {EstimatorMock} from "@EVVM/playground/core/staking/EstimatorMock.sol";
-import {MateNameServiceMock} from "@EVVM/playground/mateNameService/MateNameServiceMock.sol";
+import {EvvmMock} from "@EVVM/playground/evvm/EvvmMock.sol";
+import {SMateMock} from "@EVVM/playground/staking/SMateMock.sol";
+import {EstimatorMock} from "@EVVM/playground/staking/EstimatorMock.sol";
+import {MateNameServiceMock} from "@EVVM/playground/mns/MateNameServiceMock.sol";
 
 contract DeployScript is Script {
     SMateMock sMate;

@@ -15,8 +15,8 @@ pragma solidity ^0.8.0;
  *         the same storage layout.
  */
 
-import {EvvmMock} from "@EVVM/playground/core/EvvmMock.sol";
-import {SMateMock} from "@EVVM/playground/core/staking/SMateMock.sol";
+import {EvvmMock} from "@EVVM/playground/evvm/EvvmMock.sol";
+import {SMateMock} from "@EVVM/playground/staking/SMateMock.sol";
 
 abstract contract Constants {
     bytes32 constant DEPOSIT_HISTORY_SMATE_IDENTIFIER = bytes32(uint256(1));

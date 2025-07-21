@@ -19,12 +19,12 @@ import "forge-std/console2.sol";
 
 import {Constants} from "test/Constants.sol";
 
-import {SMateMock} from "@EVVM/playground/core/staking/SMateMock.sol";
-import {MateNameServiceMock} from "@EVVM/playground/mateNameService/MateNameServiceMock.sol";
-import {EvvmMock} from "@EVVM/playground/core/EvvmMock.sol";
+import {SMateMock} from "@EVVM/playground/staking/SMateMock.sol";
+import {MateNameServiceMock} from "@EVVM/playground/mns/MateNameServiceMock.sol";
+import {EvvmMock} from "@EVVM/playground/evvm/EvvmMock.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
-import {EstimatorMock} from "@EVVM/playground/core/staking/EstimatorMock.sol";
-import {EvvmMockStorage} from "@EVVM/playground/core/EvvmMockStorage.sol";
+import {EstimatorMock} from "@EVVM/playground/staking/EstimatorMock.sol";
+import {EvvmMockStorage} from "@EVVM/playground/evvm/lib/EvvmMockStorage.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
 
 contract unitTestCorrect_MateNameService_addCustomMetadata_SyncExecutionOnPay is

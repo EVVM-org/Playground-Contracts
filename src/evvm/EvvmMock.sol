@@ -14,10 +14,10 @@ pragma solidity ^0.8.0;
  */
 
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
-import {MateNameServiceMock} from "@EVVM/playground/mateNameService/MateNameServiceMock.sol";
+import {MateNameServiceMock} from "@EVVM/playground/mns/MateNameServiceMock.sol";
 import {SignatureRecover} from "@EVVM/libraries/SignatureRecover.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
-import {EvvmMockStorage} from "@EVVM/playground/core/EvvmMockStorage.sol";
+import {EvvmMockStorage} from "@EVVM/playground/evvm/lib/EvvmMockStorage.sol";
 
 contract EvvmMock is EvvmMockStorage {
     modifier onlyAdmin() {

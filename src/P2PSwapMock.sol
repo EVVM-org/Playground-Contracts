@@ -13,11 +13,11 @@ pragma solidity ^0.8.0;
 888       888  "Y88P"   "Y8888P 888  888       "Y8888P"   "Y88P"  888  888  "Y888 888    "Y888888  "Y8888P  "Y888                                                                                                          
  */
 
-import {EvvmMock} from "@EVVM/playground/core/EvvmMock.sol";
+import {EvvmMock} from "@EVVM/playground/evvm/EvvmMock.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {SignatureRecover} from "@EVVM/libraries/SignatureRecover.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
-import {EvvmMockStructs} from "@EVVM/playground/core/EvvmMockStructs.sol";
+import {EvvmMockStructs} from "@EVVM/playground/evvm/lib/EvvmMockStructs.sol";
 
 contract P2PSwap {
     using SignatureRecover for *;
