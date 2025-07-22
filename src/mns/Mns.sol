@@ -18,7 +18,7 @@ import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {SignatureRecover} from "@EVVM/libraries/SignatureRecover.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
 
-contract MateNameServiceMock {
+contract Mns {
     using SignatureRecover for *;
     using AdvancedStrings for *;
 
@@ -1116,10 +1116,7 @@ contract MateNameServiceMock {
 
     function proposeWithdrawMateTokens(uint256 _amount) public onlyAdmin {
         if (
-            Evvm(evvmAddress.current).seeBalance(
-                address(this),
-                MATE_TOKEN
-            ) -
+            Evvm(evvmAddress.current).seeBalance(address(this), MATE_TOKEN) -
                 (5083 +
                     Evvm(evvmAddress.current).seeMateReward() +
                     mateTokenLockedForWithdrawOffers) <
@@ -1309,11 +1306,7 @@ contract MateNameServiceMock {
     }
 
     function makeCaPay(address _user_Evvm, uint256 _ammount_Evvm) internal {
-        Evvm(evvmAddress.current).caPay(
-            _user_Evvm,
-            MATE_TOKEN,
-            _ammount_Evvm
-        );
+        Evvm(evvmAddress.current).caPay(_user_Evvm, MATE_TOKEN, _ammount_Evvm);
     }
 
     //█Tools for identity validation███████████████████████████████████████████████████████████████
@@ -1797,8 +1790,7 @@ contract MateNameServiceMock {
             if (price == 0) {
                 price = 500 * 10 ** 18;
             } else {
-                uint256 mateReward = Evvm(evvmAddress.current)
-                    .seeMateReward();
+                uint256 mateReward = Evvm(evvmAddress.current).seeMateReward();
                 ///coloca el precio del username en un 0.5% del precio de la oferta más alta, con tope en 500,000 * mateReward
                 price = ((price * 5) / 1000) > (500000 * mateReward)
                     ? (500000 * mateReward)

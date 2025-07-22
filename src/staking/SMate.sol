@@ -23,10 +23,10 @@ import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
 import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {SignatureRecover} from "@EVVM/libraries/SignatureRecover.sol";
-import {MateNameServiceMock} from "@EVVM/playground/mns/MateNameServiceMock.sol";
-import {EstimatorMock} from "@EVVM/playground/staking/EstimatorMock.sol";
+import {Mns} from "@EVVM/playground/mns/Mns.sol";
+import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 
-contract SMateMock {
+contract SMate {
     error Time(uint256);
     error Logic(string code);
 
@@ -565,7 +565,7 @@ contract SMateMock {
                 amountTotalToBeRewarded,
                 idToOverwriteUserHistory,
                 timestampToBeOverwritten
-            ) = EstimatorMock(estimator.actual).makeEstimation(user);
+            ) = Estimator(estimator.actual).makeEstimation(user);
 
             if (amountTotalToBeRewarded > 0) {
                 makeCaPay(tokenToBeRewarded, user, amountTotalToBeRewarded);

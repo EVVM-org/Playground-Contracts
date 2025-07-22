@@ -20,11 +20,11 @@ import "forge-std/console2.sol";
 import {Constants} from "test/Constants.sol";
 import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
-import {SMateMock} from "@EVVM/playground/staking/SMateMock.sol";
-import {MateNameServiceMock} from "@EVVM/playground/mns/MateNameServiceMock.sol";
+import {SMate} from "@EVVM/playground/staking/SMate.sol";
+import {Mns} from "@EVVM/playground/mns/Mns.sol";
 import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
-import {EstimatorMock} from "@EVVM/playground/staking/EstimatorMock.sol";
+import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 
 contract unitTestCorrect_EVVM_dispersePay_async is
@@ -32,21 +32,21 @@ contract unitTestCorrect_EVVM_dispersePay_async is
     Constants,
     EvvmStructs
 {
-    SMateMock sMate;
+    SMate sMate;
     Evvm evvm;
-    EstimatorMock estimator;
-    MateNameServiceMock mns;
+    Estimator estimator;
+    Mns mns;
 
     function setUp() public {
-        sMate = new SMateMock(ADMIN.Address, GOLDEN_STAKER.Address);
+        sMate = new SMate(ADMIN.Address, GOLDEN_STAKER.Address);
         evvm = new Evvm(ADMIN.Address, address(sMate));
-        estimator = new EstimatorMock(
+        estimator = new Estimator(
             ACTIVATOR.Address,
             address(evvm),
             address(sMate),
             ADMIN.Address
         );
-        mns = new MateNameServiceMock(address(evvm), ADMIN.Address);
+        mns = new Mns(address(evvm), ADMIN.Address);
 
         sMate._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupMateNameServiceAddress(address(mns));
@@ -79,7 +79,7 @@ contract unitTestCorrect_EVVM_dispersePay_async is
     function test__unit_correct__dispersePay_async__nS_nPF_nEX() external {
         mns._setIdentityBaseMetadata(
             "dummy",
-            MateNameServiceMock.IdentityBaseMetadata({
+            Mns.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,
@@ -157,7 +157,7 @@ contract unitTestCorrect_EVVM_dispersePay_async is
     function test__unit_correct__dispersePay_async__nS_PF_nEX() external {
         mns._setIdentityBaseMetadata(
             "dummy",
-            MateNameServiceMock.IdentityBaseMetadata({
+            Mns.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,
@@ -231,7 +231,7 @@ contract unitTestCorrect_EVVM_dispersePay_async is
     function test__unit_correct__dispersePay_async__nS_nPF_EX() external {
         mns._setIdentityBaseMetadata(
             "dummy",
-            MateNameServiceMock.IdentityBaseMetadata({
+            Mns.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,
@@ -307,7 +307,7 @@ contract unitTestCorrect_EVVM_dispersePay_async is
     function test__unit_correct__dispersePay_async__nS_PF_EX() external {
         mns._setIdentityBaseMetadata(
             "dummy",
-            MateNameServiceMock.IdentityBaseMetadata({
+            Mns.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,
@@ -383,7 +383,7 @@ contract unitTestCorrect_EVVM_dispersePay_async is
     function test__unit_correct__dispersePay_async__S_nPF_nEX() external {
         mns._setIdentityBaseMetadata(
             "dummy",
-            MateNameServiceMock.IdentityBaseMetadata({
+            Mns.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,
@@ -464,7 +464,7 @@ contract unitTestCorrect_EVVM_dispersePay_async is
     function test__unit_correct__dispersePay_async__S_PF_nEX() external {
         mns._setIdentityBaseMetadata(
             "dummy",
-            MateNameServiceMock.IdentityBaseMetadata({
+            Mns.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,
@@ -547,7 +547,7 @@ contract unitTestCorrect_EVVM_dispersePay_async is
     function test__unit_correct__dispersePay_async__S_nPF_EX() external {
         mns._setIdentityBaseMetadata(
             "dummy",
-            MateNameServiceMock.IdentityBaseMetadata({
+            Mns.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,
@@ -627,7 +627,7 @@ contract unitTestCorrect_EVVM_dispersePay_async is
     function test__unit_correct__dispersePay_async__S_PF_EX() external {
         mns._setIdentityBaseMetadata(
             "dummy",
-            MateNameServiceMock.IdentityBaseMetadata({
+            Mns.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,

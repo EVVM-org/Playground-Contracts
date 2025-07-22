@@ -19,11 +19,11 @@ import "forge-std/console2.sol";
 
 import {Constants} from "test/Constants.sol";
 
-import {SMateMock} from "@EVVM/playground/staking/SMateMock.sol";
-import {MateNameServiceMock} from "@EVVM/playground/mns/MateNameServiceMock.sol";
+import {SMate} from "@EVVM/playground/staking/SMate.sol";
+import {Mns} from "@EVVM/playground/mns/Mns.sol";
 import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
-import {EstimatorMock} from "@EVVM/playground/staking/EstimatorMock.sol";
+import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 
 contract unitTestRevert_EVVM_proxy is Test, Constants {
@@ -56,10 +56,10 @@ contract unitTestRevert_EVVM_proxy is Test, Constants {
      * - xU: Evvm updates x number of times
      */
 
-    SMateMock sMate;
+    SMate sMate;
     Evvm evvm;
-    EstimatorMock estimator;
-    MateNameServiceMock mns;
+    Estimator estimator;
+    Mns mns;
 
     ExtraFunctionsV1 v1;
     address addressV1;
@@ -68,15 +68,15 @@ contract unitTestRevert_EVVM_proxy is Test, Constants {
     bytes32 constant WITHDRAW_IDENTIFIER = bytes32(uint256(2));
 
     function setUp() public {
-        sMate = new SMateMock(ADMIN.Address, GOLDEN_STAKER.Address);
+        sMate = new SMate(ADMIN.Address, GOLDEN_STAKER.Address);
         evvm = new Evvm(ADMIN.Address, address(sMate));
-        estimator = new EstimatorMock(
+        estimator = new Estimator(
             ACTIVATOR.Address,
             address(evvm),
             address(sMate),
             ADMIN.Address
         );
-        mns = new MateNameServiceMock(address(evvm), ADMIN.Address);
+        mns = new Mns(address(evvm), ADMIN.Address);
 
         sMate._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupMateNameServiceAddress(address(mns));

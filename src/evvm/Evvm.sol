@@ -14,7 +14,7 @@ pragma solidity ^0.8.0;
  */
 
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
-import {MateNameServiceMock} from "@EVVM/playground/mns/MateNameServiceMock.sol";
+import {Mns} from "@EVVM/playground/mns/Mns.sol";
 import {SignatureRecover} from "@EVVM/libraries/SignatureRecover.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
@@ -254,7 +254,7 @@ contract Evvm is EvvmStorage {
         }
 
         address to = !Strings.equal(to_identity, "")
-            ? MateNameServiceMock(mateNameServiceAddress)
+            ? Mns(mateNameServiceAddress)
                 .verifyStrictAndGetOwnerOfIdentity(to_identity)
             : to_address;
 
@@ -315,7 +315,7 @@ contract Evvm is EvvmStorage {
         }
 
         address to = !Strings.equal(to_identity, "")
-            ? MateNameServiceMock(mateNameServiceAddress)
+            ? Mns(mateNameServiceAddress)
                 .verifyStrictAndGetOwnerOfIdentity(to_identity)
             : to_address;
 
@@ -374,7 +374,7 @@ contract Evvm is EvvmStorage {
         }
 
         address to = !Strings.equal(to_identity, "")
-            ? MateNameServiceMock(mateNameServiceAddress)
+            ? Mns(mateNameServiceAddress)
                 .verifyStrictAndGetOwnerOfIdentity(to_identity)
             : to_address;
 
@@ -445,7 +445,7 @@ contract Evvm is EvvmStorage {
         }
 
         address to = !Strings.equal(to_identity, "")
-            ? MateNameServiceMock(mateNameServiceAddress)
+            ? Mns(mateNameServiceAddress)
                 .verifyStrictAndGetOwnerOfIdentity(to_identity)
             : to_address;
 
@@ -537,7 +537,7 @@ contract Evvm is EvvmStorage {
             }
 
             to_aux = !Strings.equal(payData[iteration].to_identity, "")
-                ? MateNameServiceMock(mateNameServiceAddress)
+                ? Mns(mateNameServiceAddress)
                     .verifyStrictAndGetOwnerOfIdentity(
                         payData[iteration].to_identity
                     )
@@ -643,10 +643,10 @@ contract Evvm is EvvmStorage {
 
             if (!Strings.equal(toData[i].to_identity, "")) {
                 if (
-                    MateNameServiceMock(mateNameServiceAddress)
+                    Mns(mateNameServiceAddress)
                         .strictVerifyIfIdentityExist(toData[i].to_identity)
                 ) {
-                    to_aux = MateNameServiceMock(mateNameServiceAddress)
+                    to_aux = Mns(mateNameServiceAddress)
                         .getOwnerOfIdentity(toData[i].to_identity);
                 }
             } else {

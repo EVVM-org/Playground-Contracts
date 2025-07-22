@@ -19,32 +19,32 @@ import "forge-std/console2.sol";
 
 import {Constants} from "test/Constants.sol";
 
-import {SMateMock} from "@EVVM/playground/staking/SMateMock.sol";
-import {MateNameServiceMock} from "@EVVM/playground/mns/MateNameServiceMock.sol";
+import {SMate} from "@EVVM/playground/staking/SMate.sol";
+import {Mns} from "@EVVM/playground/mns/Mns.sol";
 import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
-import {EstimatorMock} from "@EVVM/playground/staking/EstimatorMock.sol";
+import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
 
 contract unitTestRevert_MateNameService_makeOffer is Test, Constants {
-    SMateMock sMate;
+    SMate sMate;
     Evvm evvm;
-    EstimatorMock estimator;
-    MateNameServiceMock mns;
+    Estimator estimator;
+    Mns mns;
 
     AccountData COMMON_USER_NO_STAKER_3 = WILDCARD_USER;
 
     function setUp() public {
-        sMate = new SMateMock(ADMIN.Address, GOLDEN_STAKER.Address);
+        sMate = new SMate(ADMIN.Address, GOLDEN_STAKER.Address);
         evvm = new Evvm(ADMIN.Address, address(sMate));
-        estimator = new EstimatorMock(
+        estimator = new Estimator(
             ACTIVATOR.Address,
             address(evvm),
             address(sMate),
             ADMIN.Address
         );
-        mns = new MateNameServiceMock(address(evvm), ADMIN.Address);
+        mns = new Mns(address(evvm), ADMIN.Address);
 
         sMate._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupMateNameServiceAddress(address(mns));
@@ -273,7 +273,7 @@ contract unitTestRevert_MateNameService_makeOffer is Test, Constants {
 
         vm.stopPrank();
 
-        MateNameServiceMock.OfferMetadata memory checkData = mns
+        Mns.OfferMetadata memory checkData = mns
             .getSingleOfferOfUsername("test", 0);
 
         assertEq(checkData.offerer, address(0));
@@ -333,7 +333,7 @@ contract unitTestRevert_MateNameService_makeOffer is Test, Constants {
 
         vm.stopPrank();
         
-        MateNameServiceMock.OfferMetadata memory checkData = mns
+        Mns.OfferMetadata memory checkData = mns
             .getSingleOfferOfUsername("test", 0);
 
         assertEq(checkData.offerer, address(0));
@@ -412,7 +412,7 @@ contract unitTestRevert_MateNameService_makeOffer is Test, Constants {
 
         vm.stopPrank();
 
-        MateNameServiceMock.OfferMetadata memory checkData = mns
+        Mns.OfferMetadata memory checkData = mns
             .getSingleOfferOfUsername("test", 0);
 
         assertEq(checkData.offerer, address(0));
@@ -489,7 +489,7 @@ contract unitTestRevert_MateNameService_makeOffer is Test, Constants {
 
         vm.stopPrank();
 
-        MateNameServiceMock.OfferMetadata memory checkData = mns
+        Mns.OfferMetadata memory checkData = mns
             .getSingleOfferOfUsername("test", 0);
 
         assertEq(checkData.offerer, address(0));
@@ -566,7 +566,7 @@ contract unitTestRevert_MateNameService_makeOffer is Test, Constants {
 
         vm.stopPrank();
 
-        MateNameServiceMock.OfferMetadata memory checkData = mns
+        Mns.OfferMetadata memory checkData = mns
             .getSingleOfferOfUsername("test", 0);
 
         assertEq(checkData.offerer, address(0));
@@ -643,7 +643,7 @@ contract unitTestRevert_MateNameService_makeOffer is Test, Constants {
 
         vm.stopPrank();
 
-        MateNameServiceMock.OfferMetadata memory checkData = mns
+        Mns.OfferMetadata memory checkData = mns
             .getSingleOfferOfUsername("test", 0);
 
         assertEq(checkData.offerer, address(0));
@@ -720,7 +720,7 @@ contract unitTestRevert_MateNameService_makeOffer is Test, Constants {
 
         vm.stopPrank();
 
-        MateNameServiceMock.OfferMetadata memory checkData = mns
+        Mns.OfferMetadata memory checkData = mns
             .getSingleOfferOfUsername("test", 0);
 
         assertEq(checkData.offerer, address(0));
@@ -797,7 +797,7 @@ contract unitTestRevert_MateNameService_makeOffer is Test, Constants {
 
         vm.stopPrank();
 
-        MateNameServiceMock.OfferMetadata memory checkData = mns
+        Mns.OfferMetadata memory checkData = mns
             .getSingleOfferOfUsername("test", 0);
 
         assertEq(checkData.offerer, address(0));
@@ -874,7 +874,7 @@ contract unitTestRevert_MateNameService_makeOffer is Test, Constants {
 
         vm.stopPrank();
 
-        MateNameServiceMock.OfferMetadata memory checkData = mns
+        Mns.OfferMetadata memory checkData = mns
             .getSingleOfferOfUsername("test", 0);
 
         assertEq(checkData.offerer, address(0));
@@ -951,7 +951,7 @@ contract unitTestRevert_MateNameService_makeOffer is Test, Constants {
 
         vm.stopPrank();
 
-        MateNameServiceMock.OfferMetadata memory checkData = mns
+        Mns.OfferMetadata memory checkData = mns
             .getSingleOfferOfUsername("test", 0);
 
         assertEq(checkData.offerer, address(0));
@@ -1028,7 +1028,7 @@ contract unitTestRevert_MateNameService_makeOffer is Test, Constants {
 
         vm.stopPrank();
 
-        MateNameServiceMock.OfferMetadata memory checkData = mns
+        Mns.OfferMetadata memory checkData = mns
             .getSingleOfferOfUsername("test", 0);
 
         assertEq(checkData.offerer, address(0));
@@ -1105,7 +1105,7 @@ contract unitTestRevert_MateNameService_makeOffer is Test, Constants {
 
         vm.stopPrank();
 
-        MateNameServiceMock.OfferMetadata memory checkData = mns
+        Mns.OfferMetadata memory checkData = mns
             .getSingleOfferOfUsername("test", 0);
 
         assertEq(checkData.offerer, address(0));
@@ -1184,7 +1184,7 @@ contract unitTestRevert_MateNameService_makeOffer is Test, Constants {
 
         vm.stopPrank();
 
-        MateNameServiceMock.OfferMetadata memory checkData = mns
+        Mns.OfferMetadata memory checkData = mns
             .getSingleOfferOfUsername("test", 0);
 
         assertEq(checkData.offerer, address(0));
@@ -1261,7 +1261,7 @@ contract unitTestRevert_MateNameService_makeOffer is Test, Constants {
 
         vm.stopPrank();
 
-        MateNameServiceMock.OfferMetadata memory checkData = mns
+        Mns.OfferMetadata memory checkData = mns
             .getSingleOfferOfUsername("test", 0);
 
         assertEq(checkData.offerer, address(0));
@@ -1338,7 +1338,7 @@ contract unitTestRevert_MateNameService_makeOffer is Test, Constants {
 
         vm.stopPrank();
 
-        MateNameServiceMock.OfferMetadata memory checkData = mns
+        Mns.OfferMetadata memory checkData = mns
             .getSingleOfferOfUsername("test", 0);
 
         assertEq(checkData.offerer, address(0));
@@ -1415,7 +1415,7 @@ contract unitTestRevert_MateNameService_makeOffer is Test, Constants {
 
         vm.stopPrank();
 
-        MateNameServiceMock.OfferMetadata memory checkData = mns
+        Mns.OfferMetadata memory checkData = mns
             .getSingleOfferOfUsername("test", 0);
 
         assertEq(checkData.offerer, address(0));
@@ -1473,7 +1473,7 @@ contract unitTestRevert_MateNameService_makeOffer is Test, Constants {
 
         vm.stopPrank();
 
-        MateNameServiceMock.OfferMetadata memory checkData = mns
+        Mns.OfferMetadata memory checkData = mns
             .getSingleOfferOfUsername("test", 0);
 
         assertEq(checkData.offerer, address(0));
@@ -1531,7 +1531,7 @@ contract unitTestRevert_MateNameService_makeOffer is Test, Constants {
 
         vm.stopPrank();
 
-        MateNameServiceMock.OfferMetadata memory checkData = mns
+        Mns.OfferMetadata memory checkData = mns
             .getSingleOfferOfUsername("test", 0);
 
         assertEq(checkData.offerer, address(0));
@@ -1554,7 +1554,7 @@ contract unitTestRevert_MateNameService_makeOffer is Test, Constants {
     function test__unit_revert__makeOffer__identityIsNotAUsername() external {
         mns._setIdentityBaseMetadata(
             "test@mail.com",
-            MateNameServiceMock.IdentityBaseMetadata(
+            Mns.IdentityBaseMetadata(
                 COMMON_USER_NO_STAKER_1.Address,
                 block.timestamp + 366 days,
                 0,
@@ -1599,7 +1599,7 @@ contract unitTestRevert_MateNameService_makeOffer is Test, Constants {
 
         vm.stopPrank();
 
-        MateNameServiceMock.OfferMetadata memory checkData = mns
+        Mns.OfferMetadata memory checkData = mns
             .getSingleOfferOfUsername("test@mail.com", 0);
 
         assertEq(checkData.offerer, address(0));
@@ -1657,7 +1657,7 @@ contract unitTestRevert_MateNameService_makeOffer is Test, Constants {
 
         vm.stopPrank();
 
-        MateNameServiceMock.OfferMetadata memory checkData = mns
+        Mns.OfferMetadata memory checkData = mns
             .getSingleOfferOfUsername("test", 0);
 
         assertEq(checkData.offerer, address(0));
@@ -1715,7 +1715,7 @@ contract unitTestRevert_MateNameService_makeOffer is Test, Constants {
 
         vm.stopPrank();
 
-        MateNameServiceMock.OfferMetadata memory checkData = mns
+        Mns.OfferMetadata memory checkData = mns
             .getSingleOfferOfUsername("test", 0);
 
         assertEq(checkData.offerer, address(0));

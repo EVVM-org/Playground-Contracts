@@ -15,11 +15,11 @@ MMMMMMMMMMMM
  * @author jistro.eth ariutokintumi.eth
  */
 
-import {SMateMock} from "@EVVM/playground/staking/SMateMock.sol";
+import {SMate} from "@EVVM/playground/staking/SMate.sol";
 import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import "forge-std/console2.sol";
 
-contract EstimatorMock {
+contract Estimator {
     struct AddressTypeProposal {
         address actual;
         address proposal;
@@ -120,13 +120,13 @@ contract EstimatorMock {
         //uint256 tTotal = epoch.tFinal - epoch.tStart;
 
         uint256 tLast = epoch.tStart;
-        SMateMock.HistoryMetadata memory h;
-        uint256 size = SMateMock(addressSMate.actual).getSizeOfAddressHistory(
+        SMate.HistoryMetadata memory h;
+        uint256 size = SMate(addressSMate.actual).getSizeOfAddressHistory(
             _user
         );
 
         for (uint256 i = 0; i < size; i++) {
-            h = SMateMock(addressSMate.actual).getAddressHistoryByIndex(
+            h = SMate(addressSMate.actual).getAddressHistoryByIndex(
                 _user,
                 i
             );
@@ -338,13 +338,13 @@ contract EstimatorMock {
         uint256 sumSmT;
 
         uint256 tLast = epoch.tStart;
-        SMateMock.HistoryMetadata memory h;
-        uint256 size = SMateMock(addressSMate.actual).getSizeOfAddressHistory(
+        SMate.HistoryMetadata memory h;
+        uint256 size = SMate(addressSMate.actual).getSizeOfAddressHistory(
             _user
         );
 
         for (uint256 i = 0; i < size; i++) {
-            h = SMateMock(addressSMate.actual).getAddressHistoryByIndex(
+            h = SMate(addressSMate.actual).getAddressHistoryByIndex(
                 _user,
                 i
             );

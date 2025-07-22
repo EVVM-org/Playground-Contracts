@@ -19,29 +19,29 @@ import "forge-std/console2.sol";
 
 import {Constants} from "test/Constants.sol";
 
-import {SMateMock} from "@EVVM/playground/staking/SMateMock.sol";
-import {MateNameServiceMock} from "@EVVM/playground/mns/MateNameServiceMock.sol";
+import {SMate} from "@EVVM/playground/staking/SMate.sol";
+import {Mns} from "@EVVM/playground/mns/Mns.sol";
 import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
-import {EstimatorMock} from "@EVVM/playground/staking/EstimatorMock.sol";
+import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 
 contract unitTestCorrect_EVVM_payMateStaking_sync is Test, Constants {
-    SMateMock sMate;
+    SMate sMate;
     Evvm evvm;
-    EstimatorMock estimator;
-    MateNameServiceMock mns;
+    Estimator estimator;
+    Mns mns;
 
     function setUp() public {
-        sMate = new SMateMock(ADMIN.Address, GOLDEN_STAKER.Address);
+        sMate = new SMate(ADMIN.Address, GOLDEN_STAKER.Address);
         evvm = new Evvm(ADMIN.Address, address(sMate));
-        estimator = new EstimatorMock(
+        estimator = new Estimator(
             ACTIVATOR.Address,
             address(evvm),
             address(sMate),
             ADMIN.Address
         );
-        mns = new MateNameServiceMock(address(evvm), ADMIN.Address);
+        mns = new Mns(address(evvm), ADMIN.Address);
 
         sMate._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupMateNameServiceAddress(address(mns));
@@ -306,7 +306,7 @@ contract unitTestCorrect_EVVM_payMateStaking_sync is Test, Constants {
     function test__unit_correct__payMateStaking_sync__nPF_nEX_ID() external {
         mns._setIdentityBaseMetadata(
             "dummy",
-            MateNameServiceMock.IdentityBaseMetadata({
+            Mns.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,
@@ -371,7 +371,7 @@ contract unitTestCorrect_EVVM_payMateStaking_sync is Test, Constants {
     function test__unit_correct__payMateStaking_sync__PF_nEX_ID() external {
         mns._setIdentityBaseMetadata(
             "dummy",
-            MateNameServiceMock.IdentityBaseMetadata({
+            Mns.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,
@@ -441,7 +441,7 @@ contract unitTestCorrect_EVVM_payMateStaking_sync is Test, Constants {
     function test__unit_correct__payMateStaking_sync__nPF_EX_ID() external {
         mns._setIdentityBaseMetadata(
             "dummy",
-            MateNameServiceMock.IdentityBaseMetadata({
+            Mns.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,
@@ -508,7 +508,7 @@ contract unitTestCorrect_EVVM_payMateStaking_sync is Test, Constants {
     function test__unit_correct__payMateStaking_sync__PF_EX_ID() external {
         mns._setIdentityBaseMetadata(
             "dummy",
-            MateNameServiceMock.IdentityBaseMetadata({
+            Mns.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,

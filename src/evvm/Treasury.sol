@@ -18,7 +18,7 @@ import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {SignatureRecover} from "@EVVM/libraries/SignatureRecover.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
 
-contract TreasuryMock {
+contract Treasury {
     using SignatureRecover for *;
     using AdvancedStrings for *;
 
