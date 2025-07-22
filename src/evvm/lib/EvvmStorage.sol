@@ -11,20 +11,13 @@ import {EvvmStructs} from "./EvvmStructs.sol";
  * @dev Storage layout contract for EVVM proxy pattern implementation.
  *      This contract inherits all structures from EvvmStructs and
  *      defines the storage layout that will be used by the proxy pattern.
- *      
+ *
  * @notice This contract should not be deployed directly, it's meant to be
  *         inherited by the implementation contracts to ensure they maintain
  *         the same storage layout.
  */
 
 abstract contract EvvmStorage is EvvmStructs {
-    error InvalidSignature();
-    error InvalidAsyncNonce();
-    error NotAuthorizedOnExecutor();
-    error InvalidAmount(uint256, uint256);
-    error invalidIdentity();
-    error LogicPay(uint256);
-
     address gasServiceAddress;
     address routerCCIP;
 
@@ -55,8 +48,8 @@ abstract contract EvvmStorage is EvvmStructs {
     AddressTypeProposal admin;
 
     /**
-     * @dev The address of the implementation contract is stored 
-     *      separately because of the way the proxy pattern works, 
+     * @dev The address of the implementation contract is stored
+     *      separately because of the way the proxy pattern works,
      *      rather than in a struct.
      */
     address currentImplementation;

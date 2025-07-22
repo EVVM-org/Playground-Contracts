@@ -18,6 +18,7 @@ import {Mns} from "@EVVM/playground/mns/Mns.sol";
 import {SignatureRecover} from "@EVVM/libraries/SignatureRecover.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
+import {ErrorsLib} from "@EVVM/playground/evvm/lib/ErrorsLib.sol";
 
 contract Evvm is EvvmStorage {
     modifier onlyAdmin() {
@@ -36,7 +37,6 @@ contract Evvm is EvvmStorage {
 
         balances[_sMateContractAddress][mate.mateAddress] = seeMateReward() * 2;
 
-        
         stakerList[_sMateContractAddress] = 0x01;
 
         breakerSetupMateNameServiceAddress = 0x01;
@@ -52,7 +52,6 @@ contract Evvm is EvvmStorage {
         balances[mateNameServiceAddress][mate.mateAddress] = 10000 * 10 ** 18;
         stakerList[mateNameServiceAddress] = 0x01;
     }
-
 
     fallback() external {
         if (currentImplementation == address(0)) revert();
@@ -137,7 +136,7 @@ contract Evvm is EvvmStorage {
                 signature
             )
         ) {
-            revert InvalidSignature();
+            revert ErrorsLib.InvalidSignature();
         }
 
         if (token == mate.mateAddress || balances[user][token] < amount) {
@@ -182,7 +181,7 @@ contract Evvm is EvvmStorage {
                 signature
             )
         ) {
-            revert InvalidSignature();
+            revert ErrorsLib.InvalidSignature();
         }
 
         if (
@@ -243,24 +242,21 @@ contract Evvm is EvvmStorage {
                 executor,
                 signature
             )
-        ) {
-            revert();
-        }
+        ) revert ErrorsLib.InvalidSignature();
 
         if (executor != address(0)) {
-            if (msg.sender != executor) {
-                revert();
-            }
+            if (msg.sender != executor)
+                revert ErrorsLib.SenderIsNotTheExecutor();
         }
 
         address to = !Strings.equal(to_identity, "")
-            ? Mns(mateNameServiceAddress)
-                .verifyStrictAndGetOwnerOfIdentity(to_identity)
+            ? Mns(mateNameServiceAddress).verifyStrictAndGetOwnerOfIdentity(
+                to_identity
+            )
             : to_address;
 
-        if (!_updateBalance(from, to, token, amount)) {
-            revert();
-        }
+        if (!_updateBalance(from, to, token, amount))
+            revert ErrorsLib.UpdateBalanceFailed();
 
         nextSyncUsedNonce[from]++;
     }
@@ -300,28 +296,23 @@ contract Evvm is EvvmStorage {
                 executor,
                 signature
             )
-        ) {
-            revert();
-        }
+        ) revert ErrorsLib.InvalidSignature();
 
         if (executor != address(0)) {
-            if (msg.sender != executor) {
-                revert();
-            }
+            if (msg.sender != executor)
+                revert ErrorsLib.SenderIsNotTheExecutor();
         }
 
-        if (asyncUsedNonce[from][nonce]) {
-            revert();
-        }
+        if (asyncUsedNonce[from][nonce]) revert ErrorsLib.InvalidAsyncNonce();
 
         address to = !Strings.equal(to_identity, "")
-            ? Mns(mateNameServiceAddress)
-                .verifyStrictAndGetOwnerOfIdentity(to_identity)
+            ? Mns(mateNameServiceAddress).verifyStrictAndGetOwnerOfIdentity(
+                to_identity
+            )
             : to_address;
 
-        if (!_updateBalance(from, to, token, amount)) {
-            revert();
-        }
+        if (!_updateBalance(from, to, token, amount))
+            revert ErrorsLib.UpdateBalanceFailed();
 
         asyncUsedNonce[from][nonce] = true;
     }
@@ -359,32 +350,27 @@ contract Evvm is EvvmStorage {
                 executor,
                 signature
             )
-        ) {
-            revert();
-        }
+        ) revert ErrorsLib.InvalidSignature();
 
         if (executor != address(0)) {
-            if (msg.sender != executor) {
-                revert();
-            }
+            if (msg.sender != executor)
+                revert ErrorsLib.SenderIsNotTheExecutor();
         }
 
-        if (!isMateStaker(msg.sender)) {
-            revert();
-        }
+        if (!isMateStaker(msg.sender)) revert ErrorsLib.NotAnStaker();
 
         address to = !Strings.equal(to_identity, "")
-            ? Mns(mateNameServiceAddress)
-                .verifyStrictAndGetOwnerOfIdentity(to_identity)
+            ? Mns(mateNameServiceAddress).verifyStrictAndGetOwnerOfIdentity(
+                to_identity
+            )
             : to_address;
 
-        if (!_updateBalance(from, to, token, amount)) {
-            revert();
-        }
+        if (!_updateBalance(from, to, token, amount))
+            revert ErrorsLib.UpdateBalanceFailed();
+
         if (priorityFee > 0) {
-            if (!_updateBalance(from, msg.sender, token, priorityFee)) {
-                revert();
-            }
+            if (!_updateBalance(from, msg.sender, token, priorityFee))
+                revert ErrorsLib.UpdateBalanceFailed();
         }
         _giveMateReward(msg.sender, 1);
 
@@ -426,41 +412,33 @@ contract Evvm is EvvmStorage {
                 executor,
                 signature
             )
-        ) {
-            revert InvalidSignature();
-        }
+        ) revert ErrorsLib.InvalidSignature();
 
         if (executor != address(0)) {
-            if (msg.sender != executor) {
-                revert NotAuthorizedOnExecutor();
-            }
+            if (msg.sender != executor)
+                revert ErrorsLib.SenderIsNotTheExecutor();
         }
 
-        if (!isMateStaker(msg.sender)) {
-            revert();
-        }
+        if (!isMateStaker(msg.sender)) revert ErrorsLib.NotAnStaker();
 
-        if (asyncUsedNonce[from][nonce]) {
-            revert();
-        }
+        if (asyncUsedNonce[from][nonce]) revert ErrorsLib.InvalidAsyncNonce();
 
         address to = !Strings.equal(to_identity, "")
-            ? Mns(mateNameServiceAddress)
-                .verifyStrictAndGetOwnerOfIdentity(to_identity)
+            ? Mns(mateNameServiceAddress).verifyStrictAndGetOwnerOfIdentity(
+                to_identity
+            )
             : to_address;
 
-        if (!_updateBalance(from, to, token, amount)) {
-            revert();
-        }
+        if (!_updateBalance(from, to, token, amount))
+            revert ErrorsLib.UpdateBalanceFailed();
+
         if (priorityFee > 0) {
-            if (!_updateBalance(from, msg.sender, token, priorityFee)) {
-                revert();
-            }
+            if (!_updateBalance(from, msg.sender, token, priorityFee))
+                revert ErrorsLib.UpdateBalanceFailed();
         }
 
-        if (!_giveMateReward(msg.sender, 1)) {
-            revert();
-        }
+        if (!_giveMateReward(msg.sender, 1))
+            revert ErrorsLib.UpdateBalanceFailed();
 
         asyncUsedNonce[from][nonce] = true;
     }
@@ -493,9 +471,7 @@ contract Evvm is EvvmStorage {
                     payData[iteration].executor,
                     payData[iteration].signature
                 )
-            ) {
-                revert();
-            }
+            ) revert ErrorsLib.InvalidSignature();
 
             if (payData[iteration].executor != address(0)) {
                 if (msg.sender != payData[iteration].executor) {
@@ -537,10 +513,9 @@ contract Evvm is EvvmStorage {
             }
 
             to_aux = !Strings.equal(payData[iteration].to_identity, "")
-                ? Mns(mateNameServiceAddress)
-                    .verifyStrictAndGetOwnerOfIdentity(
-                        payData[iteration].to_identity
-                    )
+                ? Mns(mateNameServiceAddress).verifyStrictAndGetOwnerOfIdentity(
+                    payData[iteration].to_identity
+                )
                 : payData[iteration].to_address;
 
             if (
@@ -615,25 +590,20 @@ contract Evvm is EvvmStorage {
                 executor,
                 signature
             )
-        ) {
-            revert InvalidSignature();
-        }
+        ) revert ErrorsLib.InvalidSignature();
 
         if (executor != address(0)) {
-            if (msg.sender != executor) {
-                revert NotAuthorizedOnExecutor();
-            }
+            if (msg.sender != executor)
+                revert ErrorsLib.SenderIsNotTheExecutor();
         }
 
         if (priority) {
-            if (asyncUsedNonce[from][nonce]) {
-                revert InvalidAsyncNonce();
-            }
+            if (asyncUsedNonce[from][nonce])
+                revert ErrorsLib.InvalidAsyncNonce();
         }
 
-        if (balances[from][token] < amount + priorityFee) {
-            revert();
-        }
+        if (balances[from][token] < amount + priorityFee)
+            revert ErrorsLib.InsufficientBalance();
 
         uint256 acomulatedAmount = 0;
         balances[from][token] -= (amount + priorityFee);
@@ -643,11 +613,13 @@ contract Evvm is EvvmStorage {
 
             if (!Strings.equal(toData[i].to_identity, "")) {
                 if (
-                    Mns(mateNameServiceAddress)
-                        .strictVerifyIfIdentityExist(toData[i].to_identity)
+                    Mns(mateNameServiceAddress).strictVerifyIfIdentityExist(
+                        toData[i].to_identity
+                    )
                 ) {
-                    to_aux = Mns(mateNameServiceAddress)
-                        .getOwnerOfIdentity(toData[i].to_identity);
+                    to_aux = Mns(mateNameServiceAddress).getOwnerOfIdentity(
+                        toData[i].to_identity
+                    );
                 }
             } else {
                 to_aux = toData[i].to_address;
@@ -656,9 +628,8 @@ contract Evvm is EvvmStorage {
             balances[to_aux][token] += toData[i].amount;
         }
 
-        if (acomulatedAmount != amount) {
-            revert();
-        }
+        if (acomulatedAmount != amount)
+            revert ErrorsLib.InvalidAmount(acomulatedAmount, amount);
 
         if (isMateStaker(msg.sender)) {
             _giveMateReward(msg.sender, 1);
@@ -683,13 +654,10 @@ contract Evvm is EvvmStorage {
             size := extcodesize(from)
         }
 
-        if (size == 0) {
-            revert();
-        }
+        if (size == 0) revert ErrorsLib.NotAnCA();
 
-        if (!_updateBalance(from, to, token, amount)) {
-            revert();
-        }
+        if (!_updateBalance(from, to, token, amount))
+            revert ErrorsLib.UpdateBalanceFailed();
 
         if (isMateStaker(msg.sender)) {
             _giveMateReward(msg.sender, 1);
@@ -709,29 +677,24 @@ contract Evvm is EvvmStorage {
             size := extcodesize(from)
         }
 
-        if (size == 0) {
-            revert();
-        }
+        if (size == 0) revert ErrorsLib.NotAnCA();
 
         uint256 acomulatedAmount = 0;
-        if (balances[msg.sender][token] < amount) {
-            revert();
-        }
+        if (balances[msg.sender][token] < amount)
+            revert ErrorsLib.InsufficientBalance();
 
         balances[msg.sender][token] -= amount;
 
         for (uint256 i = 0; i < toData.length; i++) {
             acomulatedAmount += toData[i].amount;
-            if (acomulatedAmount > amount) {
-                revert();
-            }
+            if (acomulatedAmount > amount)
+                revert ErrorsLib.InvalidAmount(acomulatedAmount, amount);
 
             balances[toData[i].toAddress][token] += toData[i].amount;
         }
 
-        if (acomulatedAmount != amount) {
-            revert();
-        }
+        if (acomulatedAmount != amount)
+            revert ErrorsLib.InvalidAmount(acomulatedAmount, amount);
 
         if (isMateStaker(msg.sender)) {
             _giveMateReward(msg.sender, 1);
@@ -760,21 +723,19 @@ contract Evvm is EvvmStorage {
                 amount,
                 signature
             )
-        ) {
-            revert InvalidSignature();
-        }
+        ) revert ErrorsLib.InvalidSignature();
 
         if (
             token == mate.mateAddress ||
             balances[user][token] < amount + priorityFee
-        ) {
-            revert();
-        }
+        ) revert ErrorsLib.InsufficientBalance();
 
         if (token == ETH_ADDRESS) {
-            if (amount > maxAmountToWithdraw.current) {
-                revert();
-            }
+            if (amount > maxAmountToWithdraw.current)
+                revert ErrorsLib.InvalidAmount(
+                    amount,
+                    maxAmountToWithdraw.current
+                );
         }
 
         balances[user][token] -= (amount + priorityFee);
