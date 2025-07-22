@@ -23,8 +23,6 @@ anvil:
 		--host 0.0.0.0 --chain-id 1337 \
 		--disable-code-size-limit
 
-# Deployment commands
-mock: mockToken mockTreasury mockEvvm
 
 deploy: 
 	@forge clean
@@ -148,6 +146,10 @@ unitTestRevertEvvmProxy:
 unitTestFuzzEvvm:
 	@echo "Running all EVVM unit fuzz tests"
 	@forge test --match-contract fuzzTest_EVVM --summary --detailed --gas-report -vvv --show-progress
+
+fuzzTestEvvmPay:
+	@echo "Running NoMateStaking_sync unit fuzz tests"
+	@forge test --match-path test/fuzz/evvm/fuzzTest_EVVM_pay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 fuzzTestEvvmPayNoMateStaking_sync:
 	@echo "Running NoMateStaking_sync unit fuzz tests"
