@@ -488,7 +488,7 @@ contract EVVM is EvvmStorage {
 
         if (executor != address(0)) {
             if (msg.sender != executor) {
-                revert ErrorsLib.NotAuthorizedOnExecutor();
+                revert();
             }
         }
 
