@@ -41,6 +41,12 @@ deploy:
 
 ### Unit tests
 
+unitTestEvvm:
+	@echo "Running all EVVM unit correct tests"
+	@forge test --match-contract unitTestCorrect_EVVM --summary --detailed --gas-report -vvv --show-progress 
+	@echo "Running all EVVM unit revert tests"
+	@forge test --match-contract unitTestRevert_EVVM --summary --detailed --gas-report -vvv --show-progress
+
 #### Correct Tests
 
 unitTestCorrectEvvm:
