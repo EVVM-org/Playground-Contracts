@@ -39,11 +39,22 @@ deploy:
 
 ## EVVM
 
+testEvvm:
+	@echo "Running all EVVM unit correct tests"
+	@forge test --match-contract unitTestCorrect_EVVM --summary --detailed --gas-report -vvv --show-progress
+	@sleep 3
+	@echo "Running all EVVM unit revert tests"
+	@forge test --match-contract unitTestRevert_EVVM --summary --detailed --gas-report -vvv --show-progress
+	@sleep 3
+	@echo "Running all EVVM unit fuzz tests"
+	@forge test --match-contract fuzzTest_EVVM --summary --detailed --gas-report -vvv --show-progress
+
 ### Unit tests
 
 unitTestEvvm:
 	@echo "Running all EVVM unit correct tests"
 	@forge test --match-contract unitTestCorrect_EVVM --summary --detailed --gas-report -vvv --show-progress 
+	@sleep 3
 	@echo "Running all EVVM unit revert tests"
 	@forge test --match-contract unitTestRevert_EVVM --summary --detailed --gas-report -vvv --show-progress
 
@@ -191,7 +202,24 @@ fuzzTestEvvmDisperseCaPay:
 
 ## SMate
 
+testSMate:
+	@echo "Running all SMate unit correct tests"
+	@forge test --match-contract unitTestCorrect_SMate --summary --detailed --gas-report -vvv --show-progress
+	@sleep 3
+	@echo "Running all SMate unit revert tests"
+	@forge test --match-contract unitTestRevert_SMate --summary --detailed --gas-report -vvv --show-progress
+	@sleep 3
+	@echo "Running all SMate unit fuzz tests"
+	@forge test --match-contract fuzzTest_SMate --summary --detailed --gas-report -vvv --show-progress
+
 ### Unit tests
+
+unitTestSMate:
+	@echo "Running all SMate unit correct tests"
+	@forge test --match-contract unitTestCorrect_SMate --summary --detailed --gas-report -vvv --show-progress
+	@sleep 3
+	@echo "Running all SMate unit revert tests"
+	@forge test --match-contract unitTestRevert_SMate --summary --detailed --gas-report -vvv --show-progress
 
 #### Correct Tests
 
@@ -310,7 +338,24 @@ unitTestRevertEstimator:
 
 ## MateNameService
 
+testMateNameService:
+	@echo "Running all MateNameService unit correct tests"
+	@forge test --match-contract unitTestCorrect_MateNameService --summary --detailed --gas-report -vvv --show-progress
+	@sleep 3
+	@echo "Running all MateNameService unit revert tests"
+	@forge test --match-contract unitTestRevert_MateNameService --summary --detailed --gas-report -vvv --show-progress
+	@sleep 3
+	@echo "Running all MateNameService unit fuzz tests"
+	@forge test --match-contract fuzzTest_MateNameService --summary --detailed --gas-report -vvv --show-progress
+
 ### Unit tests
+
+unitTestMateNameService:
+	@echo "Running all MateNameService unit correct tests"
+	@forge test --match-contract unitTestCorrect_MateNameService --summary --detailed --gas-report -vvv --show-progress
+	@sleep 3
+	@echo "Running all MateNameService unit revert tests"
+	@forge test --match-contract unitTestRevert_MateNameService --summary --detailed --gas-report -vvv --show-progress
 
 #### Correct Tests
 
