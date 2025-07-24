@@ -35,12 +35,16 @@ abstract contract EvvmStorage is EvvmStructs {
 
     bytes1 breakerSetupMateNameServiceAddress;
 
-    MateTokenomicsMetadata mate =
-        MateTokenomicsMetadata({
+    EvvmMetadata evvmMetadata =
+        EvvmMetadata({
+            EvvmName: "EVVM",
+            EvvmID: "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+            stakingTokenName: "EVVM Staking Token",
+            stakingTokenSymbol: "EVVM-STK",
+            stakingTokenAddress: 0x0000000000000000000000000000000000000001,
             totalSupply: 2033333333000000000000000000,
             eraTokens: 2033333333000000000000000000 / 2,
-            reward: 5000000000000000000,
-            mateAddress: 0x0000000000000000000000000000000000000001
+            reward: 5000000000000000000
         });
 
     TreasuryMetadata treasuryMetadata;

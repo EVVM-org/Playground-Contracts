@@ -35,7 +35,7 @@ contract EVVM is EvvmStorage {
 
         maxAmountToWithdraw.current = 0.1 ether;
 
-        balances[_sMateContractAddress][mate.mateAddress] = seeMateReward() * 2;
+        balances[_sMateContractAddress][evvmMetadata.stakingTokenAddress] = seeMateReward() * 2;
 
         stakerList[_sMateContractAddress] = 0x01;
 
@@ -49,7 +49,7 @@ contract EVVM is EvvmStorage {
             revert();
         }
         mateNameServiceAddress = _mateNameServiceAddress;
-        balances[mateNameServiceAddress][mate.mateAddress] = 10000 * 10 ** 18;
+        balances[mateNameServiceAddress][evvmMetadata.stakingTokenAddress] = 10000 * 10 ** 18;
         stakerList[mateNameServiceAddress] = 0x01;
     }
 
@@ -109,7 +109,7 @@ contract EVVM is EvvmStorage {
     }
 
     function _addMateToTotalSupply(uint256 amount) external {
-        mate.totalSupply += amount;
+        evvmMetadata.totalSupply += amount;
     }
 
     //░▒▓█Withdrawal functions██████████████████████████████████████████████████▓▒░
@@ -139,7 +139,7 @@ contract EVVM is EvvmStorage {
             revert ErrorsLib.InvalidSignature();
         }
 
-        if (token == mate.mateAddress || balances[user][token] < amount) {
+        if (token == evvmMetadata.stakingTokenAddress || balances[user][token] < amount) {
             revert();
         }
 
@@ -185,7 +185,7 @@ contract EVVM is EvvmStorage {
         }
 
         if (
-            token == mate.mateAddress ||
+            token == evvmMetadata.stakingTokenAddress ||
             asyncUsedNonce[user][nonce] ||
             balances[user][token] < amount
         ) {
@@ -634,7 +634,7 @@ contract EVVM is EvvmStorage {
         }
 
         if (
-            token == mate.mateAddress ||
+            token == evvmMetadata.stakingTokenAddress ||
             balances[user][token] < amount + priorityFee
         ) {
             revert();
@@ -650,7 +650,7 @@ contract EVVM is EvvmStorage {
 
         balances[msg.sender][token] += priorityFee;
 
-        balances[msg.sender][mate.mateAddress] += mate.reward;
+        balances[msg.sender][evvmMetadata.stakingTokenAddress] += evvmMetadata.reward;
 
         nextFisherWithdrawalNonce[user]++;
 
@@ -683,12 +683,12 @@ contract EVVM is EvvmStorage {
         address user,
         uint256 amount
     ) internal returns (bool) {
-        uint256 mateReward = mate.reward * amount;
-        uint256 userBalance = balances[user][mate.mateAddress];
+        uint256 mateReward = evvmMetadata.reward * amount;
+        uint256 userBalance = balances[user][evvmMetadata.stakingTokenAddress];
 
-        balances[user][mate.mateAddress] = userBalance + mateReward;
+        balances[user][evvmMetadata.stakingTokenAddress] = userBalance + mateReward;
 
-        return (userBalance + mateReward == balances[user][mate.mateAddress]);
+        return (userBalance + mateReward == balances[user][evvmMetadata.stakingTokenAddress]);
     }
 
     //░▒▓█Signature functions████████████████████████▓▒░
@@ -1016,12 +1016,12 @@ contract EVVM is EvvmStorage {
     //░▒▓█reward functions██████████████████████████████████████████████████████▓▒░
 
     function recalculateReward() public {
-        if (mate.totalSupply > mate.eraTokens) {
-            mate.eraTokens += ((mate.totalSupply - mate.eraTokens) / 2);
-            balances[msg.sender][mate.mateAddress] +=
-                mate.reward *
+        if (evvmMetadata.totalSupply > evvmMetadata.eraTokens) {
+            evvmMetadata.eraTokens += ((evvmMetadata.totalSupply - evvmMetadata.eraTokens) / 2);
+            balances[msg.sender][evvmMetadata.stakingTokenAddress] +=
+                evvmMetadata.reward *
                 getRandom(1, 5083);
-            mate.reward = mate.reward / 2;
+            evvmMetadata.reward = evvmMetadata.reward / 2;
         } else {
             revert();
         }
@@ -1085,7 +1085,7 @@ contract EVVM is EvvmStorage {
     ) external view returns (uint256) {
         return nextFisherDepositNonce[user];
     }
-
+    
     function seeBalance(
         address user,
         address token
@@ -1098,15 +1098,15 @@ contract EVVM is EvvmStorage {
     }
 
     function seeMateEraTokens() public view returns (uint256) {
-        return mate.eraTokens;
+        return evvmMetadata.eraTokens;
     }
 
     function seeMateReward() public view returns (uint256) {
-        return mate.reward;
+        return evvmMetadata.reward;
     }
 
     function seeMateTotalSupply() public view returns (uint256) {
-        return mate.totalSupply;
+        return evvmMetadata.totalSupply;
     }
 
     function seeIfTokenIsWhitelisted(address token) public view returns (bool) {

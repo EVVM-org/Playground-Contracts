@@ -890,6 +890,8 @@ contract Mns {
         identityCustomMetadata[_identity][
             identityDetails[_identity].customMetadataMaxSlots
         ] = _value;
+
+        
         identityDetails[_identity].customMetadataMaxSlots++;
         mateNameServiceNonce[_user][_nonce] = true;
     }

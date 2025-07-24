@@ -55,12 +55,18 @@ abstract contract EvvmStructs {
         address uniswapPool;
     }
 
-    struct MateTokenomicsMetadata {
+    struct EvvmMetadata {
+        string EvvmName;
+        bytes EvvmID;
+        string stakingTokenName;
+        string stakingTokenSymbol;
+        address stakingTokenAddress;
         uint256 totalSupply;
         uint256 eraTokens;
         uint256 reward;
-        address mateAddress;
     }
+
+
 
     struct AddressTypeProposal {
         address current;
