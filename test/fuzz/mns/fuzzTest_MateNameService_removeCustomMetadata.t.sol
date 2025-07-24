@@ -57,7 +57,6 @@ contract fuzzTest_MateNameService_removeCustomMetadata is Test, Constants {
 
         sMate._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupMateNameServiceAddress(address(mns));
-        
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
 
@@ -68,7 +67,17 @@ contract fuzzTest_MateNameService_removeCustomMetadata is Test, Constants {
             10101,
             20202
         );
-        
+
+        for (uint256 i = 0; i <  MAX_AMOUNT_SLOTS_REGISTERED; i++) {
+            makeAddCustomMetadata(
+                COMMON_USER_NO_STAKER_1,
+                "test",
+                string.concat("test>", Strings.toString(i)),
+                 uint256(type(uint32).max)+1 + i,
+                 uint256(type(uint32).max)+1 + i,
+                true
+            );
+        }
     }
 
     function addBalance(
@@ -539,6 +548,13 @@ contract fuzzTest_MateNameService_removeCustomMetadata is Test, Constants {
 
         uint256 priorityFeeAmountEVVM = addBalance(COMMON_USER_NO_STAKER_1, 0);
 
+        string memory customMetadata = mns.getSingleCustomMetadataOfIdentity(
+            "test",
+            input.indexToRemove
+        );
+
+        console2.log("customMetadata: ", customMetadata);
+
         (
             bytes memory signatureMNS,
             bytes memory signatureEVVM
@@ -568,7 +584,7 @@ contract fuzzTest_MateNameService_removeCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        string memory customMetadata = mns.getSingleCustomMetadataOfIdentity(
+         customMetadata = mns.getSingleCustomMetadataOfIdentity(
             "test",
             input.indexToRemove
         );
