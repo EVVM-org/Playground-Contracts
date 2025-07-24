@@ -174,7 +174,7 @@ contract fuzzTest_SMate_publicServiceStaking is Test, Constants {
     function calculateRewardPerExecution(
         uint256 numberOfTx
     ) private view returns (uint256) {
-        return (evvm.seeMateReward() * 2) * numberOfTx;
+        return (evvm.getRewardAmount() * 2) * numberOfTx;
     }
 
     /**
@@ -248,12 +248,12 @@ contract fuzzTest_SMate_publicServiceStaking is Test, Constants {
                 : COMMON_USER_NO_STAKER_2;
 
             amountBefore = AmountBeforeMetadata({
-                fisher: evvm.seeBalance(FISHER.Address, MATE_TOKEN_ADDRESS),
-                user: evvm.seeBalance(
+                fisher: evvm.getBalance(FISHER.Address, MATE_TOKEN_ADDRESS),
+                user: evvm.getBalance(
                     COMMON_USER_NO_STAKER_1.Address,
                     MATE_TOKEN_ADDRESS
                 ),
-                service: evvm.seeBalance(
+                service: evvm.getBalance(
                     address(mockContract),
                     MATE_TOKEN_ADDRESS
                 )
@@ -358,7 +358,7 @@ contract fuzzTest_SMate_publicServiceStaking is Test, Constants {
 
             if (input[i].usingStaker && input[i].isStaking) {
                 assertEq(
-                    evvm.seeBalance(FISHER.Address, MATE_TOKEN_ADDRESS),
+                    evvm.getBalance(FISHER.Address, MATE_TOKEN_ADDRESS),
                     amountBefore.fisher +
                         calculateRewardPerExecution(1) +
                         (
@@ -369,13 +369,13 @@ contract fuzzTest_SMate_publicServiceStaking is Test, Constants {
                 );
             } else {
                 assertEq(
-                    evvm.seeBalance(FISHER.Address, MATE_TOKEN_ADDRESS),
+                    evvm.getBalance(FISHER.Address, MATE_TOKEN_ADDRESS),
                     amountBefore.fisher
                 );
             }
 
             assertEq(
-                evvm.seeBalance(
+                evvm.getBalance(
                     COMMON_USER_NO_STAKER_1.Address,
                     MATE_TOKEN_ADDRESS
                 ),
@@ -385,7 +385,7 @@ contract fuzzTest_SMate_publicServiceStaking is Test, Constants {
             if (!input[i].isStaking) {
                 if (sMate.getUserAmountStaked(address(mockContract)) == 0) {
                     assert(
-                        evvm.seeBalance(
+                        evvm.getBalance(
                             address(mockContract),
                             MATE_TOKEN_ADDRESS
                         ) ==
@@ -395,14 +395,14 @@ contract fuzzTest_SMate_publicServiceStaking is Test, Constants {
                 } else {
 
                     assert(
-                        evvm.seeBalance(
+                        evvm.getBalance(
                             address(mockContract),
                             MATE_TOKEN_ADDRESS
                         ) ==
                             ((amountBefore.service +
                                 (input[i].stakingAmount *
                                     sMate.priceOfSMate())) +
-                                (evvm.seeMateReward() * 2))
+                                (evvm.getRewardAmount() * 2))
                     );
                 }
             }

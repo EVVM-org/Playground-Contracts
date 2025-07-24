@@ -89,18 +89,18 @@ contract fuzzTest_EVVM_disperseCaPay is Test, Constants {
         c.makeDisperseCaPay(toData, input.token, amountTotal);
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, input.token),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, input.token),
             input.amountA
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_2.Address, input.token),
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, input.token),
             input.amountB
         );
 
         assertEq(
-            evvm.seeBalance(address(c), MATE_TOKEN_ADDRESS),
-            input.isCaStaker ? evvm.seeMateReward() : 0
+            evvm.getBalance(address(c), MATE_TOKEN_ADDRESS),
+            input.isCaStaker ? evvm.getRewardAmount() : 0
         );
     }
 }

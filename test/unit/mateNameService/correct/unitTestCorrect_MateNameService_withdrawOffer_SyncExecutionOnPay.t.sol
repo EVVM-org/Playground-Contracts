@@ -326,18 +326,18 @@ contract unitTestCorrect_MateNameService_withdrawOffer_SyncExecutionOnPay is
         assertEq(checkDataAfter.expireDate, checkDataBefore.expireDate);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
             checkDataBefore.amount
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_3.Address,
                 MATE_TOKEN_ADDRESS
             ),
-            evvm.seeMateReward() + (((checkDataBefore.amount * 1) / 796))
+            evvm.getRewardAmount() + (((checkDataBefore.amount * 1) / 796))
         );
     }
 
@@ -388,18 +388,18 @@ contract unitTestCorrect_MateNameService_withdrawOffer_SyncExecutionOnPay is
         assertEq(checkDataAfter.expireDate, checkDataBefore.expireDate);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
             checkDataBefore.amount
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_3.Address,
                 MATE_TOKEN_ADDRESS
             ),
-            evvm.seeMateReward() +
+            evvm.getRewardAmount() +
                 (((checkDataBefore.amount * 1) / 796)) +
                 totalPriorityFee
         );
@@ -444,15 +444,15 @@ contract unitTestCorrect_MateNameService_withdrawOffer_SyncExecutionOnPay is
         assertEq(checkDataAfter.expireDate, checkDataBefore.expireDate);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
             checkDataBefore.amount
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            evvm.seeMateReward() + (((checkDataBefore.amount * 1) / 796))
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount() + (((checkDataBefore.amount * 1) / 796))
         );
     }
 
@@ -503,15 +503,15 @@ contract unitTestCorrect_MateNameService_withdrawOffer_SyncExecutionOnPay is
         assertEq(checkDataAfter.expireDate, checkDataBefore.expireDate);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
             checkDataBefore.amount
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            evvm.seeMateReward() +
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount() +
                 (((checkDataBefore.amount * 1) / 796)) +
                 totalPriorityFee
         );

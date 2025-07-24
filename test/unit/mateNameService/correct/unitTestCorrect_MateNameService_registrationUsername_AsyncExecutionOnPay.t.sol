@@ -193,14 +193,14 @@ contract unitTestCorrect_MateNameService_registrationUsername_AsyncExecutionOnPa
         assertEq(user, COMMON_USER_NO_STAKER_1.Address);
         assertEq(expirationDate, block.timestamp + 366 days);
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -253,14 +253,14 @@ contract unitTestCorrect_MateNameService_registrationUsername_AsyncExecutionOnPa
         assertEq(user, COMMON_USER_NO_STAKER_1.Address);
         assertEq(expirationDate, block.timestamp + 366 days);
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -313,15 +313,15 @@ contract unitTestCorrect_MateNameService_registrationUsername_AsyncExecutionOnPa
         assertEq(user, COMMON_USER_NO_STAKER_1.Address);
         assertEq(expirationDate, block.timestamp + 366 days);
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            evvm.seeMateReward() * 50
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount() * 50
         );
     }
 
@@ -370,18 +370,18 @@ contract unitTestCorrect_MateNameService_registrationUsername_AsyncExecutionOnPa
         assertEq(user, COMMON_USER_NO_STAKER_1.Address);
         assertEq(expirationDate, block.timestamp + 366 days);
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_STAKER.Address,
                 MATE_TOKEN_ADDRESS
             ),
-            (evvm.seeMateReward() * 50) + 0.001 ether
+            (evvm.getRewardAmount() * 50) + 0.001 ether
         );
     }
 }

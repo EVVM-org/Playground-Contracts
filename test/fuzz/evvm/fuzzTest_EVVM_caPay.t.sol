@@ -75,13 +75,13 @@ contract fuzzTest_EVVM_caPay is Test, Constants {
         c.makeCaPay(COMMON_USER_NO_STAKER_1.Address, input.token, input.amount);
     
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, input.token),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, input.token),
             input.amount
         );
 
         assertEq(
-            evvm.seeBalance(address(c), MATE_TOKEN_ADDRESS),
-            input.isCaStaker ? evvm.seeMateReward() : 0
+            evvm.getBalance(address(c), MATE_TOKEN_ADDRESS),
+            input.isCaStaker ? evvm.getRewardAmount() : 0
         );
     }
 }

@@ -81,7 +81,7 @@ contract unitTestRevert_SMate_publicServiceStaking is Test, Constants {
     function getAmountOfRewardsPerExecution(
         uint256 numberOfTx
     ) private view returns (uint256) {
-        return (evvm.seeMateReward() * 2) * numberOfTx;
+        return (evvm.getRewardAmount() * 2) * numberOfTx;
     }
 
     function makeSignature(
@@ -215,7 +215,7 @@ contract unitTestRevert_SMate_publicServiceStaking is Test, Constants {
 
         assert(!evvm.isMateStaker(address(mock)));
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -283,7 +283,7 @@ contract unitTestRevert_SMate_publicServiceStaking is Test, Constants {
 
         assert(!evvm.isMateStaker(address(mock)));
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -354,7 +354,7 @@ contract unitTestRevert_SMate_publicServiceStaking is Test, Constants {
 
         assert(!evvm.isMateStaker(address(mock)));
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -424,7 +424,7 @@ contract unitTestRevert_SMate_publicServiceStaking is Test, Constants {
 
         assert(!evvm.isMateStaker(address(mock)));
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -494,7 +494,7 @@ contract unitTestRevert_SMate_publicServiceStaking is Test, Constants {
 
         assert(!evvm.isMateStaker(address(mock)));
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -564,7 +564,7 @@ contract unitTestRevert_SMate_publicServiceStaking is Test, Constants {
 
         assert(!evvm.isMateStaker(address(mock)));
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -634,7 +634,7 @@ contract unitTestRevert_SMate_publicServiceStaking is Test, Constants {
 
         assert(!evvm.isMateStaker(address(mock)));
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -704,7 +704,7 @@ contract unitTestRevert_SMate_publicServiceStaking is Test, Constants {
 
         assert(!evvm.isMateStaker(address(mock)));
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -774,7 +774,7 @@ contract unitTestRevert_SMate_publicServiceStaking is Test, Constants {
 
         assert(!evvm.isMateStaker(address(mock)));
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -844,7 +844,7 @@ contract unitTestRevert_SMate_publicServiceStaking is Test, Constants {
 
         assert(!evvm.isMateStaker(address(mock)));
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -914,7 +914,7 @@ contract unitTestRevert_SMate_publicServiceStaking is Test, Constants {
 
         assert(!evvm.isMateStaker(address(mock)));
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -984,7 +984,7 @@ contract unitTestRevert_SMate_publicServiceStaking is Test, Constants {
 
         assert(!evvm.isMateStaker(address(mock)));
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -1054,7 +1054,7 @@ contract unitTestRevert_SMate_publicServiceStaking is Test, Constants {
 
         assert(!evvm.isMateStaker(address(mock)));
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -1124,7 +1124,7 @@ contract unitTestRevert_SMate_publicServiceStaking is Test, Constants {
 
         assert(!evvm.isMateStaker(address(mock)));
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -1194,7 +1194,7 @@ contract unitTestRevert_SMate_publicServiceStaking is Test, Constants {
 
         assert(!evvm.isMateStaker(address(mock)));
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -1264,7 +1264,7 @@ contract unitTestRevert_SMate_publicServiceStaking is Test, Constants {
 
         assert(!evvm.isMateStaker(address(mock)));
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -1377,7 +1377,7 @@ contract unitTestRevert_SMate_publicServiceStaking is Test, Constants {
 
         assert(evvm.isMateStaker(address(mock)));
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -1447,7 +1447,7 @@ contract unitTestRevert_SMate_publicServiceStaking is Test, Constants {
 
         assert(!evvm.isMateStaker(address(mock)));
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),

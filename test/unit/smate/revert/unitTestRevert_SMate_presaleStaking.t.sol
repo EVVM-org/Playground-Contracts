@@ -77,7 +77,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
     function getAmountOfRewardsPerExecution(
         uint256 numberOfTx
     ) private view returns (uint256) {
-        return (evvm.seeMateReward() * 2) * numberOfTx;
+        return (evvm.getRewardAmount() * 2) * numberOfTx;
     }
 
     function makeSignature(
@@ -211,7 +211,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -219,7 +219,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -288,7 +288,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -296,7 +296,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -369,7 +369,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -377,7 +377,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -446,7 +446,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -454,7 +454,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -523,7 +523,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -531,7 +531,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -600,7 +600,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -608,7 +608,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -677,7 +677,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -685,7 +685,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -754,7 +754,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -762,7 +762,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -831,7 +831,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -839,7 +839,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -908,7 +908,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -916,7 +916,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -987,7 +987,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -995,7 +995,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -1064,7 +1064,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -1072,7 +1072,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -1137,7 +1137,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -1145,7 +1145,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -1215,7 +1215,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -1223,7 +1223,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_STAKER.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -1296,7 +1296,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_2.Address));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -1304,7 +1304,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -1388,7 +1388,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         assert(evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -1396,7 +1396,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -1474,7 +1474,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -1482,7 +1482,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -1553,7 +1553,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -1561,7 +1561,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -1650,7 +1650,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         assert(evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -1658,7 +1658,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -1729,7 +1729,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -1737,7 +1737,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -1842,7 +1842,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
 
         assert(evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -1978,7 +1978,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
 
         assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),

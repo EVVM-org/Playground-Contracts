@@ -159,12 +159,12 @@ contract fuzzTest_EVVM_payNoMateStaking_async is Test, Constants {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, input.token),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, input.token),
             0
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_2.Address, input.token),
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, input.token),
             totalAmount
         );
     }
@@ -222,12 +222,12 @@ contract fuzzTest_EVVM_payNoMateStaking_async is Test, Constants {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, input.token),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, input.token),
             totalPriorityFee
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_2.Address, input.token),
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, input.token),
             totalAmount
         );
     }

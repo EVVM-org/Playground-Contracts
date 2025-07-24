@@ -236,7 +236,7 @@ contract fuzzTest_EVVM_payMultiple is Test, Constants, EvvmStructs {
 
         for (uint256 i = 0; i < 2; i++) {
             assertEq(
-                evvm.seeBalance(
+                evvm.getBalance(
                     COMMON_USER_NO_STAKER_2.Address,
                     input.token[i]
                 ),
@@ -247,19 +247,19 @@ contract fuzzTest_EVVM_payMultiple is Test, Constants, EvvmStructs {
         if (FISHER.Address == COMMON_USER_STAKER.Address) {
             for (uint256 i = 0; i < 2; i++) {
                 assertEq(
-                    evvm.seeBalance(COMMON_USER_STAKER.Address, input.token[i]),
+                    evvm.getBalance(COMMON_USER_STAKER.Address, input.token[i]),
                     input.priorityFee[i]
                 );
             }
 
             assertEq(
-                evvm.seeBalance(FISHER.Address, MATE_TOKEN_ADDRESS),
-                evvm.seeMateReward() * 2
+                evvm.getBalance(FISHER.Address, MATE_TOKEN_ADDRESS),
+                evvm.getRewardAmount() * 2
             );
         } else {
             for (uint256 i = 0; i < 2; i++) {
                 assertEq(
-                    evvm.seeBalance(
+                    evvm.getBalance(
                         COMMON_USER_NO_STAKER_1.Address,
                         input.token[i]
                     ),
@@ -268,7 +268,7 @@ contract fuzzTest_EVVM_payMultiple is Test, Constants, EvvmStructs {
             }
 
             assertEq(
-                evvm.seeBalance(
+                evvm.getBalance(
                     COMMON_USER_NO_STAKER_3.Address,
                     MATE_TOKEN_ADDRESS
                 ),
@@ -278,7 +278,7 @@ contract fuzzTest_EVVM_payMultiple is Test, Constants, EvvmStructs {
 
         for (uint256 i = 0; i < 2; i++) {
             assertEq(
-                evvm.seeBalance(
+                evvm.getBalance(
                     COMMON_USER_NO_STAKER_2.Address,
                     input.token[i]
                 ),

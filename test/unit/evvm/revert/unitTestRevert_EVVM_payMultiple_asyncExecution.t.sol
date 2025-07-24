@@ -124,7 +124,7 @@ contract unitTestRevert_EVVM_payMultiple_asyncExecution is Test, Constants {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.11 ether
         );
     }
@@ -182,7 +182,7 @@ contract unitTestRevert_EVVM_payMultiple_asyncExecution is Test, Constants {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.11 ether
         );
     }
@@ -250,7 +250,7 @@ contract unitTestRevert_EVVM_payMultiple_asyncExecution is Test, Constants {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.11 ether
         );
     }
@@ -308,7 +308,7 @@ contract unitTestRevert_EVVM_payMultiple_asyncExecution is Test, Constants {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.11 ether
         );
     }
@@ -366,7 +366,7 @@ contract unitTestRevert_EVVM_payMultiple_asyncExecution is Test, Constants {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.11 ether
         );
     }
@@ -424,7 +424,7 @@ contract unitTestRevert_EVVM_payMultiple_asyncExecution is Test, Constants {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.11 ether
         );
     }
@@ -482,7 +482,7 @@ contract unitTestRevert_EVVM_payMultiple_asyncExecution is Test, Constants {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.11 ether
         );
     }
@@ -540,7 +540,7 @@ contract unitTestRevert_EVVM_payMultiple_asyncExecution is Test, Constants {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.11 ether
         );
     }
@@ -598,7 +598,7 @@ contract unitTestRevert_EVVM_payMultiple_asyncExecution is Test, Constants {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.11 ether
         );
     }
@@ -657,7 +657,7 @@ contract unitTestRevert_EVVM_payMultiple_asyncExecution is Test, Constants {
         assertEq(failTx, 1);
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.11 ether
         );
     }
@@ -716,7 +716,7 @@ contract unitTestRevert_EVVM_payMultiple_asyncExecution is Test, Constants {
         assertEq(failTx, 1);
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.11 ether
         );
     }
@@ -775,7 +775,7 @@ contract unitTestRevert_EVVM_payMultiple_asyncExecution is Test, Constants {
         assertEq(failTx, 1);
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.11 ether
         );
     }
@@ -849,7 +849,7 @@ contract unitTestRevert_EVVM_payMultiple_asyncExecution is Test, Constants {
         assertEq(results[1], false);
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.11 ether
         );
     }

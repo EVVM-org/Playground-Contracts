@@ -86,7 +86,7 @@ contract unitTestRevert_EVVM_disperseCaPay is Test, Constants {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.02 ether
         );
     }
@@ -112,7 +112,7 @@ contract unitTestRevert_EVVM_disperseCaPay is Test, Constants {
         vm.expectRevert();
         evvm.disperseCaPay(toData, ETHER_ADDRESS, 0.02 ether);
 
-        assertEq(evvm.seeBalance(address(this), ETHER_ADDRESS), 0.002 ether);
+        assertEq(evvm.getBalance(address(this), ETHER_ADDRESS), 0.002 ether);
     }
 
     function test__unit_revert__disperseCaPay__AmountDeclaredLessThanMetadataTot()
@@ -136,7 +136,7 @@ contract unitTestRevert_EVVM_disperseCaPay is Test, Constants {
         vm.expectRevert();
         evvm.disperseCaPay(toData, ETHER_ADDRESS, 0.02 ether);
 
-        assertEq(evvm.seeBalance(address(this), ETHER_ADDRESS), 0.02 ether);
+        assertEq(evvm.getBalance(address(this), ETHER_ADDRESS), 0.02 ether);
     }
 
     function test__unit_revert__disperseCaPay__MetadataTotLessThanAmountDeclared()
@@ -160,6 +160,6 @@ contract unitTestRevert_EVVM_disperseCaPay is Test, Constants {
         vm.expectRevert();
         evvm.disperseCaPay(toData, ETHER_ADDRESS, 0.2 ether);
 
-        assertEq(evvm.seeBalance(address(this), ETHER_ADDRESS), 0.02 ether);
+        assertEq(evvm.getBalance(address(this), ETHER_ADDRESS), 0.02 ether);
     }
 }

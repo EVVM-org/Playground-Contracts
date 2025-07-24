@@ -69,7 +69,7 @@ contract unitTestCorrect_SMate_goldenStaking is Test, Constants {
     function calculateRewardPerExecution(
         uint256 numberOfTx
     ) private view returns (uint256) {
-        return (evvm.seeMateReward() * 2) * numberOfTx;
+        return (evvm.getRewardAmount() * 2) * numberOfTx;
     }
 
     function test__unit_correct__unit_correct__goldenStaking__staking() external {
@@ -109,7 +109,7 @@ contract unitTestCorrect_SMate_goldenStaking is Test, Constants {
         history = sMate.getAddressHistory(GOLDEN_STAKER.Address);
 
         assertEq(
-            evvm.seeBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
             calculateRewardPerExecution(1)
         );
         assertEq(history[0].timestamp, block.timestamp);
@@ -156,7 +156,7 @@ contract unitTestCorrect_SMate_goldenStaking is Test, Constants {
         assert(evvm.isMateStaker(GOLDEN_STAKER.Address));
 
         assertEq(
-            evvm.seeBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
             calculateRewardPerExecution(2) + sMate.priceOfSMate()
         );
 
@@ -202,7 +202,7 @@ contract unitTestCorrect_SMate_goldenStaking is Test, Constants {
         );
 
         console2.log(
-            evvm.seeBalance(address(sMate), MATE_TOKEN_ADDRESS)
+            evvm.getBalance(address(sMate), MATE_TOKEN_ADDRESS)
         );
 
         sMate.goldenStaking(false, 2, "");
@@ -210,7 +210,7 @@ contract unitTestCorrect_SMate_goldenStaking is Test, Constants {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
             (calculateRewardPerExecution(1)) + (sMate.priceOfSMate() * 2)
         );
 

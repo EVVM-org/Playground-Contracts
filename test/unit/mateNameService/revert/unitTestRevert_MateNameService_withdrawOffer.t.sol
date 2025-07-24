@@ -350,14 +350,14 @@ contract unitTestRevert_MateNameService_withdrawOffer is Test, Constants {
         assertEq(checkDataAfter.expireDate, checkDataBefore.expireDate);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
             totalPriorityFee
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -412,14 +412,14 @@ contract unitTestRevert_MateNameService_withdrawOffer is Test, Constants {
         assertEq(checkDataAfter.expireDate, checkDataBefore.expireDate);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
             totalPriorityFee
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -490,14 +490,14 @@ contract unitTestRevert_MateNameService_withdrawOffer is Test, Constants {
         assertEq(checkDataAfter.expireDate, checkDataBefore.expireDate);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
             totalPriorityFee
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -567,14 +567,14 @@ contract unitTestRevert_MateNameService_withdrawOffer is Test, Constants {
         assertEq(checkDataAfter.expireDate, checkDataBefore.expireDate);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
             totalPriorityFee
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -644,14 +644,14 @@ contract unitTestRevert_MateNameService_withdrawOffer is Test, Constants {
         assertEq(checkDataAfter.expireDate, checkDataBefore.expireDate);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
             totalPriorityFee
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -717,14 +717,14 @@ contract unitTestRevert_MateNameService_withdrawOffer is Test, Constants {
         assertEq(checkDataAfter.expireDate, checkDataBefore.expireDate);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
             totalPriorityFee
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -794,14 +794,14 @@ contract unitTestRevert_MateNameService_withdrawOffer is Test, Constants {
         assertEq(checkDataAfter.expireDate, checkDataBefore.expireDate);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
             totalPriorityFee
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -871,14 +871,14 @@ contract unitTestRevert_MateNameService_withdrawOffer is Test, Constants {
         assertEq(checkDataAfter.expireDate, checkDataBefore.expireDate);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
             totalPriorityFee
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -948,14 +948,14 @@ contract unitTestRevert_MateNameService_withdrawOffer is Test, Constants {
         assertEq(checkDataAfter.expireDate, checkDataBefore.expireDate);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
             totalPriorityFee
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -1027,14 +1027,14 @@ contract unitTestRevert_MateNameService_withdrawOffer is Test, Constants {
         assertEq(checkDataAfter.expireDate, checkDataBefore.expireDate);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
             totalPriorityFee
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -1104,14 +1104,14 @@ contract unitTestRevert_MateNameService_withdrawOffer is Test, Constants {
         assertEq(checkDataAfter.expireDate, checkDataBefore.expireDate);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
             totalPriorityFee
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -1183,14 +1183,14 @@ contract unitTestRevert_MateNameService_withdrawOffer is Test, Constants {
         assertEq(checkDataAfter.expireDate, checkDataBefore.expireDate);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
             totalPriorityFee
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -1260,14 +1260,14 @@ contract unitTestRevert_MateNameService_withdrawOffer is Test, Constants {
         assertEq(checkDataAfter.expireDate, checkDataBefore.expireDate);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
             totalPriorityFee
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -1339,14 +1339,14 @@ contract unitTestRevert_MateNameService_withdrawOffer is Test, Constants {
         assertEq(checkDataAfter.expireDate, checkDataBefore.expireDate);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
             totalPriorityFee
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -1416,14 +1416,14 @@ contract unitTestRevert_MateNameService_withdrawOffer is Test, Constants {
         assertEq(checkDataAfter.expireDate, checkDataBefore.expireDate);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
             totalPriorityFee
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -1476,14 +1476,14 @@ contract unitTestRevert_MateNameService_withdrawOffer is Test, Constants {
         assertEq(checkDataAfter.expireDate, checkDataBefore.expireDate);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_3.Address,
                 MATE_TOKEN_ADDRESS
             ),
             totalPriorityFee
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -1536,14 +1536,14 @@ contract unitTestRevert_MateNameService_withdrawOffer is Test, Constants {
         assertEq(checkDataAfter.expireDate, checkDataBefore.expireDate);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
             totalPriorityFee
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -1596,14 +1596,14 @@ contract unitTestRevert_MateNameService_withdrawOffer is Test, Constants {
         assertEq(checkDataAfter.expireDate, checkDataBefore.expireDate);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
             totalPriorityFee
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }

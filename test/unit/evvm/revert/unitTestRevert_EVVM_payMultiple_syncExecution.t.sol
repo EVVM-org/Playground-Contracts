@@ -132,7 +132,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.11 ether
         );
     }
@@ -200,7 +200,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.11 ether
         );
     }
@@ -268,7 +268,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.11 ether
         );
     }
@@ -336,7 +336,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.11 ether
         );
     }
@@ -404,7 +404,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.11 ether
         );
     }
@@ -472,7 +472,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.11 ether
         );
     }
@@ -540,7 +540,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.11 ether
         );
     }
@@ -608,7 +608,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.11 ether
         );
     }
@@ -676,7 +676,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.11 ether
         );
     }
@@ -745,7 +745,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
         assertEq(failTx, 1);
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.11 ether
         );
     }
@@ -814,7 +814,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
         assertEq(failTx, 1);
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.11 ether
         );
     }
@@ -883,7 +883,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
         assertEq(failTx, 1);
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.11 ether
         );
     }

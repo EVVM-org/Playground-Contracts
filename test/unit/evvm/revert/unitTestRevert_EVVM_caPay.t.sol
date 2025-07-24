@@ -73,7 +73,7 @@ contract unitTestRevert_EVVM_caPay is Test, Constants {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.001 ether
         );
     }
@@ -84,6 +84,6 @@ contract unitTestRevert_EVVM_caPay is Test, Constants {
         vm.expectRevert();
         evvm.caPay(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS, 0.1 ether);
 
-        assertEq(evvm.seeBalance(address(this), ETHER_ADDRESS), 0.001 ether);
+        assertEq(evvm.getBalance(address(this), ETHER_ADDRESS), 0.001 ether);
     }
 }

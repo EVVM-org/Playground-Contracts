@@ -373,12 +373,12 @@ contract fuzzTest_MateNameService_withdrawOffer is Test, Constants {
         assertEq(checkDataAfter.expireDate, checkDataBefore.expireDate);
 
         assertEq(
-            evvm.seeBalance(selectedUser.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(selectedUser.Address, MATE_TOKEN_ADDRESS),
             checkDataBefore.amount
         );
         assertEq(
-            evvm.seeBalance(selectedExecuter.Address, MATE_TOKEN_ADDRESS),
-            evvm.seeMateReward() + (((checkDataBefore.amount * 1) / 796))
+            evvm.getBalance(selectedExecuter.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount() + (((checkDataBefore.amount * 1) / 796))
         );
     }
 
@@ -468,12 +468,12 @@ contract fuzzTest_MateNameService_withdrawOffer is Test, Constants {
         assertEq(checkDataAfter.expireDate, checkDataBefore.expireDate);
 
         assertEq(
-            evvm.seeBalance(selectedUser.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(selectedUser.Address, MATE_TOKEN_ADDRESS),
             checkDataBefore.amount
         );
         assertEq(
-            evvm.seeBalance(selectedExecuter.Address, MATE_TOKEN_ADDRESS),
-            evvm.seeMateReward() +
+            evvm.getBalance(selectedExecuter.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount() +
                 (((checkDataBefore.amount * 1) / 796)) +
                 input.priorityFeeAmountEVVM
         );

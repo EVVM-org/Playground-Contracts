@@ -197,24 +197,24 @@ contract fuzzTest_EVVM_dispersePay is Test, Constants, EvvmStructs {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, input.token),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, input.token),
             0
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_2.Address, input.token),
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, input.token),
             input.amountB
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_3.Address, input.token),
+            evvm.getBalance(COMMON_USER_NO_STAKER_3.Address, input.token),
             input.amountA
         );
 
         if (selectedExecuter.Address == COMMON_USER_STAKER.Address) {
             assertEq(
-                evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-                evvm.seeMateReward()
+                evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+                evvm.getRewardAmount()
             );
         }
     }
@@ -289,28 +289,28 @@ contract fuzzTest_EVVM_dispersePay is Test, Constants, EvvmStructs {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, input.token),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, input.token),
             (input.useStaker ? 0 : input.priorityFee)
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_3.Address, input.token),
+            evvm.getBalance(COMMON_USER_NO_STAKER_3.Address, input.token),
             input.amountA
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_2.Address, input.token),
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, input.token),
             input.amountB
         );
 
         if (selectedExecuter.Address == COMMON_USER_STAKER.Address) {
             assertEq(
-                evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-                evvm.seeMateReward()
+                evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+                evvm.getRewardAmount()
             );
 
             assertEq(
-                evvm.seeBalance(COMMON_USER_STAKER.Address, input.token),
+                evvm.getBalance(COMMON_USER_STAKER.Address, input.token),
                 input.priorityFee
             );
         }

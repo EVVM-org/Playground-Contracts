@@ -541,7 +541,7 @@ contract SMate {
             makeCaPay(
                 MATE_TOKEN_ADDRESS,
                 msg.sender,
-                (Evvm(EVVM_ADDRESS).seeMateReward() * 2) + _priorityFee_Evvm
+                (Evvm(EVVM_ADDRESS).getRewardAmount() * 2) + _priorityFee_Evvm
             );
         }
     }
@@ -581,7 +581,7 @@ contract SMate {
                     makeCaPay(
                         MATE_TOKEN_ADDRESS,
                         msg.sender,
-                        (Evvm(EVVM_ADDRESS).seeMateReward() * 1)
+                        (Evvm(EVVM_ADDRESS).getRewardAmount() * 1)
                     );
                 }
             }

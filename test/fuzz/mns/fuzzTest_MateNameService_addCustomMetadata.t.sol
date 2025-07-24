@@ -342,14 +342,14 @@ contract fuzzTest_MateNameService_addCustomMetadata is Test, Constants {
             );
 
             assertEq(
-                evvm.seeBalance(
+                evvm.getBalance(
                     COMMON_USER_NO_STAKER_1.Address,
                     MATE_TOKEN_ADDRESS
                 ),
                 0
             );
             assertEq(
-                evvm.seeBalance(
+                evvm.getBalance(
                     COMMON_USER_NO_STAKER_2.Address,
                     MATE_TOKEN_ADDRESS
                 ),
@@ -421,14 +421,14 @@ contract fuzzTest_MateNameService_addCustomMetadata is Test, Constants {
             );
 
             assertEq(
-                evvm.seeBalance(
+                evvm.getBalance(
                     COMMON_USER_NO_STAKER_1.Address,
                     MATE_TOKEN_ADDRESS
                 ),
                 0
             );
             assertEq(
-                evvm.seeBalance(
+                evvm.getBalance(
                     COMMON_USER_NO_STAKER_2.Address,
                     MATE_TOKEN_ADDRESS
                 ),
@@ -475,7 +475,7 @@ contract fuzzTest_MateNameService_addCustomMetadata is Test, Constants {
                 input.priorityFlagEVVM
             );
 
-            amountBeforeExecution = evvm.seeBalance(
+            amountBeforeExecution = evvm.getBalance(
                 COMMON_USER_STAKER.Address,
                 MATE_TOKEN_ADDRESS
             );
@@ -506,16 +506,16 @@ contract fuzzTest_MateNameService_addCustomMetadata is Test, Constants {
             );
 
             assertEq(
-                evvm.seeBalance(
+                evvm.getBalance(
                     COMMON_USER_NO_STAKER_1.Address,
                     MATE_TOKEN_ADDRESS
                 ),
                 0
             );
             assertEq(
-                evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+                evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
                 amountBeforeExecution +
-                    ((5 * evvm.seeMateReward()) +
+                    ((5 * evvm.getRewardAmount()) +
                         ((mns.getPriceToAddCustomMetadata() * 50) / 100))
             );
         }
@@ -559,7 +559,7 @@ contract fuzzTest_MateNameService_addCustomMetadata is Test, Constants {
                 input.priorityFlagEVVM
             );
 
-            amountBeforeExecution = evvm.seeBalance(
+            amountBeforeExecution = evvm.getBalance(
                 COMMON_USER_STAKER.Address,
                 MATE_TOKEN_ADDRESS
             );
@@ -590,16 +590,16 @@ contract fuzzTest_MateNameService_addCustomMetadata is Test, Constants {
             );
 
             assertEq(
-                evvm.seeBalance(
+                evvm.getBalance(
                     COMMON_USER_NO_STAKER_1.Address,
                     MATE_TOKEN_ADDRESS
                 ),
                 0
             );
             assertEq(
-                evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+                evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
                 amountBeforeExecution +
-                    ((5 * evvm.seeMateReward()) +
+                    ((5 * evvm.getRewardAmount()) +
                         ((mns.getPriceToAddCustomMetadata() * 50) / 100) +
                         input.priorityFee)
             );

@@ -144,12 +144,12 @@ contract unitTestCorrect_EVVM_dispersePay_async is
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.001 ether
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
             0.002 ether
         );
     }
@@ -218,12 +218,12 @@ contract unitTestCorrect_EVVM_dispersePay_async is
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.00100001 ether
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
             0.002 ether
         );
     }
@@ -294,12 +294,12 @@ contract unitTestCorrect_EVVM_dispersePay_async is
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.001 ether
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
             0.002 ether
         );
     }
@@ -370,12 +370,12 @@ contract unitTestCorrect_EVVM_dispersePay_async is
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.00100001 ether
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
             0.002 ether
         );
     }
@@ -446,18 +446,18 @@ contract unitTestCorrect_EVVM_dispersePay_async is
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.001 ether
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
             0.002 ether
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            evvm.seeMateReward()
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount()
         );
     }
 
@@ -527,20 +527,20 @@ contract unitTestCorrect_EVVM_dispersePay_async is
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.001 ether
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
             0.002 ether
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, ETHER_ADDRESS),
             0.00000001 ether
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            evvm.seeMateReward()
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount()
         );
     }
 
@@ -610,17 +610,17 @@ contract unitTestCorrect_EVVM_dispersePay_async is
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.001 ether
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
             0.002 ether
         );
-        assertEq(evvm.seeBalance(COMMON_USER_STAKER.Address, ETHER_ADDRESS), 0);
+        assertEq(evvm.getBalance(COMMON_USER_STAKER.Address, ETHER_ADDRESS), 0);
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            evvm.seeMateReward()
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount()
         );
     }
 
@@ -690,20 +690,20 @@ contract unitTestCorrect_EVVM_dispersePay_async is
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.001 ether
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
             0.002 ether
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, ETHER_ADDRESS),
             0.00000001 ether
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            evvm.seeMateReward()
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount()
         );
     }
 }

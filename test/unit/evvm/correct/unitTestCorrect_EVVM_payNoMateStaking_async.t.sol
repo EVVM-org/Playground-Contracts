@@ -96,12 +96,12 @@ contract unitTestCorrect_EVVM_payNoMateStaking_async is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
             0.001 ether
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.002 ether
         );
     }
@@ -144,12 +144,12 @@ contract unitTestCorrect_EVVM_payNoMateStaking_async is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
             0.001 ether
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.00200001 ether
         );
     }
@@ -196,12 +196,12 @@ contract unitTestCorrect_EVVM_payNoMateStaking_async is Test, Constants {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
             0.001 ether
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.002 ether
         );
     }
@@ -248,12 +248,12 @@ contract unitTestCorrect_EVVM_payNoMateStaking_async is Test, Constants {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
             0.001 ether
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.00200001 ether
         );
     }
@@ -306,12 +306,12 @@ contract unitTestCorrect_EVVM_payNoMateStaking_async is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
             0.001 ether
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.002 ether
         );
     }
@@ -364,12 +364,12 @@ contract unitTestCorrect_EVVM_payNoMateStaking_async is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
             0.001 ether
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.00200001 ether
         );
     }
@@ -426,12 +426,12 @@ contract unitTestCorrect_EVVM_payNoMateStaking_async is Test, Constants {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
             0.001 ether
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.002 ether
         );
     }
@@ -488,12 +488,12 @@ contract unitTestCorrect_EVVM_payNoMateStaking_async is Test, Constants {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
             0.001 ether
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.00200001 ether
         );
     }

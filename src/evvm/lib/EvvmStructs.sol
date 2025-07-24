@@ -58,9 +58,9 @@ abstract contract EvvmStructs {
     struct EvvmMetadata {
         string EvvmName;
         bytes EvvmID;
-        string stakingTokenName;
-        string stakingTokenSymbol;
-        address stakingTokenAddress;
+        string principalTokenName;
+        string principalTokenSymbol;
+        address principalTokenAddress;
         uint256 totalSupply;
         uint256 eraTokens;
         uint256 reward;

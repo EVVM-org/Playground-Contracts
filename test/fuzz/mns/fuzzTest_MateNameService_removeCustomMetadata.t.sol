@@ -382,14 +382,14 @@ contract fuzzTest_MateNameService_removeCustomMetadata is Test, Constants {
         }
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -402,7 +402,7 @@ contract fuzzTest_MateNameService_removeCustomMetadata is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -410,7 +410,7 @@ contract fuzzTest_MateNameService_removeCustomMetadata is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -498,14 +498,14 @@ contract fuzzTest_MateNameService_removeCustomMetadata is Test, Constants {
         }
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -518,7 +518,7 @@ contract fuzzTest_MateNameService_removeCustomMetadata is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -526,7 +526,7 @@ contract fuzzTest_MateNameService_removeCustomMetadata is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -618,14 +618,14 @@ contract fuzzTest_MateNameService_removeCustomMetadata is Test, Constants {
         }
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -638,7 +638,7 @@ contract fuzzTest_MateNameService_removeCustomMetadata is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -646,8 +646,8 @@ contract fuzzTest_MateNameService_removeCustomMetadata is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            (5 * evvm.seeMateReward()) + priorityFeeAmountEVVM
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            (5 * evvm.getRewardAmount()) + priorityFeeAmountEVVM
         );
     }
 
@@ -731,14 +731,14 @@ contract fuzzTest_MateNameService_removeCustomMetadata is Test, Constants {
         }
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -751,7 +751,7 @@ contract fuzzTest_MateNameService_removeCustomMetadata is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -759,8 +759,8 @@ contract fuzzTest_MateNameService_removeCustomMetadata is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            (5 * evvm.seeMateReward()) + priorityFeeAmountEVVM
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            (5 * evvm.getRewardAmount()) + priorityFeeAmountEVVM
         );
     }
 }

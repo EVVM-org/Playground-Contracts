@@ -324,14 +324,14 @@ contract unitTestCorrect_MateNameService_acceptOffer_AsyncExecutionOnPay is
         assertEq(user, COMMON_USER_NO_STAKER_2.Address);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             checkData.amount
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_3.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -383,14 +383,14 @@ contract unitTestCorrect_MateNameService_acceptOffer_AsyncExecutionOnPay is
         assertEq(user, COMMON_USER_NO_STAKER_2.Address);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             checkData.amount
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_3.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -434,15 +434,15 @@ contract unitTestCorrect_MateNameService_acceptOffer_AsyncExecutionOnPay is
         assertEq(user, COMMON_USER_NO_STAKER_2.Address);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             checkData.amount
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            (evvm.seeMateReward()) + (((checkData.amount * 1) / 199) / 4)
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            (evvm.getRewardAmount()) + (((checkData.amount * 1) / 199) / 4)
         );
     }
 
@@ -490,15 +490,15 @@ contract unitTestCorrect_MateNameService_acceptOffer_AsyncExecutionOnPay is
         assertEq(user, COMMON_USER_NO_STAKER_2.Address);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             checkData.amount
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            (evvm.seeMateReward()) +
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            (evvm.getRewardAmount()) +
                 (((checkData.amount * 1) / 199) / 4) +
                 amountPriorityFee
         );

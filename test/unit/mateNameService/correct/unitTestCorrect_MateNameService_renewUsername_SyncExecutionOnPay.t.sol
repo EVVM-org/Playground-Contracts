@@ -312,14 +312,14 @@ contract unitTestCorrect_MateNameService_renewUsername_SyncExecutionOnPay is
         assertEq(newUsernameExpirationTime, block.timestamp + ((366 days) * 2));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -359,8 +359,8 @@ contract unitTestCorrect_MateNameService_renewUsername_SyncExecutionOnPay is
         assertEq(
             mns.seePriceToRenew("test"),
             ((mns.getSingleOfferOfUsername("test", 0).amount * 5) / 1000) >
-                (500000 * evvm.seeMateReward())
-                ? (500000 * evvm.seeMateReward())
+                (500000 * evvm.getRewardAmount())
+                ? (500000 * evvm.getRewardAmount())
                 : ((mns.getSingleOfferOfUsername("test", 0).amount * 5) / 1000)
         );
 
@@ -386,14 +386,14 @@ contract unitTestCorrect_MateNameService_renewUsername_SyncExecutionOnPay is
         assertEq(newUsernameExpirationTime, block.timestamp + ((366 days) * 2));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -421,7 +421,7 @@ contract unitTestCorrect_MateNameService_renewUsername_SyncExecutionOnPay is
                 false
             );
 
-        assertEq(mns.seePriceToRenew("test"), 500_000 * evvm.seeMateReward());
+        assertEq(mns.seePriceToRenew("test"), 500_000 * evvm.getRewardAmount());
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
 
@@ -445,14 +445,14 @@ contract unitTestCorrect_MateNameService_renewUsername_SyncExecutionOnPay is
         assertEq(newUsernameExpirationTime, block.timestamp + ((362 days)));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -503,14 +503,14 @@ contract unitTestCorrect_MateNameService_renewUsername_SyncExecutionOnPay is
         assertEq(newUsernameExpirationTime, block.timestamp + ((366 days) * 2));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -550,8 +550,8 @@ contract unitTestCorrect_MateNameService_renewUsername_SyncExecutionOnPay is
         assertEq(
             mns.seePriceToRenew("test"),
             ((mns.getSingleOfferOfUsername("test", 0).amount * 5) / 1000) >
-                (500000 * evvm.seeMateReward())
-                ? (500000 * evvm.seeMateReward())
+                (500000 * evvm.getRewardAmount())
+                ? (500000 * evvm.getRewardAmount())
                 : ((mns.getSingleOfferOfUsername("test", 0).amount * 5) / 1000)
         );
 
@@ -577,14 +577,14 @@ contract unitTestCorrect_MateNameService_renewUsername_SyncExecutionOnPay is
         assertEq(newUsernameExpirationTime, block.timestamp + ((366 days) * 2));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -612,7 +612,7 @@ contract unitTestCorrect_MateNameService_renewUsername_SyncExecutionOnPay is
                 false
             );
 
-        assertEq(mns.seePriceToRenew("test"), 500_000 * evvm.seeMateReward());
+        assertEq(mns.seePriceToRenew("test"), 500_000 * evvm.getRewardAmount());
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
 
@@ -636,14 +636,14 @@ contract unitTestCorrect_MateNameService_renewUsername_SyncExecutionOnPay is
         assertEq(newUsernameExpirationTime, block.timestamp + ((362 days)));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -696,15 +696,15 @@ contract unitTestCorrect_MateNameService_renewUsername_SyncExecutionOnPay is
         assertEq(newUsernameExpirationTime, block.timestamp + ((366 days) * 2));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            evvm.seeMateReward() +
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount() +
                 ((priceOfRenewBefore * 50) / 100) +
                 priorityFeeAmount
         );
@@ -742,8 +742,8 @@ contract unitTestCorrect_MateNameService_renewUsername_SyncExecutionOnPay is
         assertEq(
             mns.seePriceToRenew("test"),
             ((mns.getSingleOfferOfUsername("test", 0).amount * 5) / 1000) >
-                (500000 * evvm.seeMateReward())
-                ? (500000 * evvm.seeMateReward())
+                (500000 * evvm.getRewardAmount())
+                ? (500000 * evvm.getRewardAmount())
                 : ((mns.getSingleOfferOfUsername("test", 0).amount * 5) / 1000)
         );
 
@@ -771,15 +771,15 @@ contract unitTestCorrect_MateNameService_renewUsername_SyncExecutionOnPay is
         assertEq(newUsernameExpirationTime, block.timestamp + ((366 days) * 2));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            evvm.seeMateReward() +
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount() +
                 ((priceOfRenewBefore * 50) / 100) +
                 priorityFeeAmount
         );
@@ -805,7 +805,7 @@ contract unitTestCorrect_MateNameService_renewUsername_SyncExecutionOnPay is
                 false
             );
 
-        assertEq(mns.seePriceToRenew("test"), 500_000 * evvm.seeMateReward());
+        assertEq(mns.seePriceToRenew("test"), 500_000 * evvm.getRewardAmount());
 
         uint256 priceOfRenewBefore = mns.seePriceToRenew("test");
 
@@ -831,15 +831,15 @@ contract unitTestCorrect_MateNameService_renewUsername_SyncExecutionOnPay is
         assertEq(newUsernameExpirationTime, block.timestamp + ((362 days)));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            evvm.seeMateReward() +
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount() +
                 ((priceOfRenewBefore * 50) / 100) +
                 priorityFeeAmount
         );
@@ -890,15 +890,15 @@ contract unitTestCorrect_MateNameService_renewUsername_SyncExecutionOnPay is
         assertEq(newUsernameExpirationTime, block.timestamp + ((366 days) * 2));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            evvm.seeMateReward() +
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount() +
                 ((priceOfRenewBefore * 50) / 100) +
                 priorityFeeAmount
         );
@@ -936,8 +936,8 @@ contract unitTestCorrect_MateNameService_renewUsername_SyncExecutionOnPay is
         assertEq(
             mns.seePriceToRenew("test"),
             ((mns.getSingleOfferOfUsername("test", 0).amount * 5) / 1000) >
-                (500000 * evvm.seeMateReward())
-                ? (500000 * evvm.seeMateReward())
+                (500000 * evvm.getRewardAmount())
+                ? (500000 * evvm.getRewardAmount())
                 : ((mns.getSingleOfferOfUsername("test", 0).amount * 5) / 1000)
         );
 
@@ -965,15 +965,15 @@ contract unitTestCorrect_MateNameService_renewUsername_SyncExecutionOnPay is
         assertEq(newUsernameExpirationTime, block.timestamp + ((366 days) * 2));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            evvm.seeMateReward() +
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount() +
                 ((priceOfRenewBefore * 50) / 100) +
                 priorityFeeAmount
         );
@@ -999,7 +999,7 @@ contract unitTestCorrect_MateNameService_renewUsername_SyncExecutionOnPay is
                 false
             );
 
-        assertEq(mns.seePriceToRenew("test"), 500_000 * evvm.seeMateReward());
+        assertEq(mns.seePriceToRenew("test"), 500_000 * evvm.getRewardAmount());
 
         uint256 priceOfRenewBefore = mns.seePriceToRenew("test");
 
@@ -1025,15 +1025,15 @@ contract unitTestCorrect_MateNameService_renewUsername_SyncExecutionOnPay is
         assertEq(newUsernameExpirationTime, block.timestamp + ((362 days)));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            evvm.seeMateReward() +
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount() +
                 ((priceOfRenewBefore * 50) / 100) +
                 priorityFeeAmount
         );

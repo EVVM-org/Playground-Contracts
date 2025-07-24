@@ -341,7 +341,7 @@ contract unitTestCorrect_MateNameService_removeCustomMetadata_SyncExecutionOnPay
         assertEq(mns.getCustomMetadataMaxSlotsOfIdentity("test"), 2);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -349,7 +349,7 @@ contract unitTestCorrect_MateNameService_removeCustomMetadata_SyncExecutionOnPay
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -426,14 +426,14 @@ contract unitTestCorrect_MateNameService_removeCustomMetadata_SyncExecutionOnPay
         assertEq(keccak256(bytes(customMetadata)), keccak256(bytes("test>3")));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -443,7 +443,7 @@ contract unitTestCorrect_MateNameService_removeCustomMetadata_SyncExecutionOnPay
         assertEq(mns.getCustomMetadataMaxSlotsOfIdentity("test"), 2);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -451,7 +451,7 @@ contract unitTestCorrect_MateNameService_removeCustomMetadata_SyncExecutionOnPay
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -525,14 +525,14 @@ contract unitTestCorrect_MateNameService_removeCustomMetadata_SyncExecutionOnPay
         assertEq(keccak256(bytes(customMetadata)), keccak256(bytes("test>3")));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -542,7 +542,7 @@ contract unitTestCorrect_MateNameService_removeCustomMetadata_SyncExecutionOnPay
         assertEq(mns.getCustomMetadataMaxSlotsOfIdentity("test"), 2);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -550,8 +550,8 @@ contract unitTestCorrect_MateNameService_removeCustomMetadata_SyncExecutionOnPay
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            (5 * evvm.seeMateReward()) + priorityFeeAmountEVVM
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            (5 * evvm.getRewardAmount()) + priorityFeeAmountEVVM
         );
     }
 
@@ -624,14 +624,14 @@ contract unitTestCorrect_MateNameService_removeCustomMetadata_SyncExecutionOnPay
         assertEq(keccak256(bytes(customMetadata)), keccak256(bytes("test>3")));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -641,7 +641,7 @@ contract unitTestCorrect_MateNameService_removeCustomMetadata_SyncExecutionOnPay
         assertEq(mns.getCustomMetadataMaxSlotsOfIdentity("test"), 2);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -649,8 +649,8 @@ contract unitTestCorrect_MateNameService_removeCustomMetadata_SyncExecutionOnPay
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            (5 * evvm.seeMateReward()) + priorityFeeAmountEVVM
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            (5 * evvm.getRewardAmount()) + priorityFeeAmountEVVM
         );
     }
 }

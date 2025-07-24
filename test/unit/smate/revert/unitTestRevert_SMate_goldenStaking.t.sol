@@ -127,7 +127,7 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
     function getAmountOfRewardsPerExecution(
         uint256 numberOfTx
     ) private view returns (uint256) {
-        return (evvm.seeMateReward() * 2) * numberOfTx;
+        return (evvm.getRewardAmount() * 2) * numberOfTx;
     }
 
     /**
@@ -174,7 +174,7 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
 
         assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -253,7 +253,7 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
 
         assert(!evvm.isMateStaker(GOLDEN_STAKER.Address));
         assertEq(
-            evvm.seeBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
             totalOfMate + totalOfPriorityFee
         );
     }
@@ -293,7 +293,7 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
 
         assert(!evvm.isMateStaker(GOLDEN_STAKER.Address));
         assertEq(
-            evvm.seeBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
             totalOfMate + totalOfPriorityFee
         );
     }
@@ -337,7 +337,7 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
 
         assert(!evvm.isMateStaker(GOLDEN_STAKER.Address));
         assertEq(
-            evvm.seeBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
             totalOfMate + totalOfPriorityFee
         );
     }
@@ -377,7 +377,7 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
 
         assert(!evvm.isMateStaker(GOLDEN_STAKER.Address));
         assertEq(
-            evvm.seeBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
             totalOfMate + totalOfPriorityFee
         );
     }
@@ -417,7 +417,7 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
 
         assert(!evvm.isMateStaker(GOLDEN_STAKER.Address));
         assertEq(
-            evvm.seeBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
             totalOfMate + totalOfPriorityFee
         );
     }
@@ -457,7 +457,7 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
 
         assert(!evvm.isMateStaker(GOLDEN_STAKER.Address));
         assertEq(
-            evvm.seeBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
             totalOfMate + totalOfPriorityFee
         );
     }
@@ -497,7 +497,7 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
 
         assert(!evvm.isMateStaker(GOLDEN_STAKER.Address));
         assertEq(
-            evvm.seeBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
             totalOfMate + totalOfPriorityFee
         );
     }
@@ -537,7 +537,7 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
 
         assert(!evvm.isMateStaker(GOLDEN_STAKER.Address));
         assertEq(
-            evvm.seeBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
             totalOfMate + totalOfPriorityFee
         );
     }
@@ -577,7 +577,7 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
 
         assert(!evvm.isMateStaker(GOLDEN_STAKER.Address));
         assertEq(
-            evvm.seeBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
             totalOfMate + totalOfPriorityFee
         );
     }
@@ -621,7 +621,7 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
 
         assert(evvm.isMateStaker(GOLDEN_STAKER.Address));
         assertEq(
-            evvm.seeBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
             getAmountOfRewardsPerExecution(1)
         );
     }
@@ -665,7 +665,7 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
 
         assert(evvm.isMateStaker(GOLDEN_STAKER.Address));
         assertEq(
-            evvm.seeBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
             getAmountOfRewardsPerExecution(1)
         );
     }
@@ -717,7 +717,7 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
 
         assert(!evvm.isMateStaker(GOLDEN_STAKER.Address));
         assertEq(
-            evvm.seeBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
             getAmountOfRewardsPerExecution(1) + totalOfMate
         );
     }

@@ -180,7 +180,7 @@ contract unitTestRevert_MateNameService_adminFunctions is Test, Constants {
     function test__unit_revert__proposeWithdrawMateTokens__userNotAdmin()
         external
     {
-        uint256 totalInEvvm = evvm.seeBalance(address(mns), MATE_TOKEN_ADDRESS);
+        uint256 totalInEvvm = evvm.getBalance(address(mns), MATE_TOKEN_ADDRESS);
         uint256 removeAmount = totalInEvvm / 10;
 
         vm.startPrank(WILDCARD_USER.Address);
@@ -198,7 +198,7 @@ contract unitTestRevert_MateNameService_adminFunctions is Test, Constants {
     function test__unit_revert__proposeWithdrawMateTokens__adminTriesToClaimMoreThanPermitted()
         external
     {
-        uint256 total = evvm.seeBalance(address(mns), MATE_TOKEN_ADDRESS);
+        uint256 total = evvm.getBalance(address(mns), MATE_TOKEN_ADDRESS);
 
         vm.startPrank(ADMIN.Address);
         vm.expectRevert();
@@ -230,7 +230,7 @@ contract unitTestRevert_MateNameService_adminFunctions is Test, Constants {
     function test__unit_revert__cancelWithdrawMateTokens__userNotAdmin()
         external
     {
-        uint256 totalInEvvm = evvm.seeBalance(address(mns), MATE_TOKEN_ADDRESS);
+        uint256 totalInEvvm = evvm.getBalance(address(mns), MATE_TOKEN_ADDRESS);
         uint256 removeAmount = totalInEvvm / 10;
 
         vm.startPrank(ADMIN.Address);
@@ -250,7 +250,7 @@ contract unitTestRevert_MateNameService_adminFunctions is Test, Constants {
     }
 
     function test__unit_revert__claimWithdrawMateTokens__notAdmin() external {
-        uint256 totalInEvvm = evvm.seeBalance(address(mns), MATE_TOKEN_ADDRESS);
+        uint256 totalInEvvm = evvm.getBalance(address(mns), MATE_TOKEN_ADDRESS);
         uint256 removeAmount = totalInEvvm / 10;
 
         vm.startPrank(ADMIN.Address);
@@ -268,7 +268,7 @@ contract unitTestRevert_MateNameService_adminFunctions is Test, Constants {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(address(mns), MATE_TOKEN_ADDRESS),
+            evvm.getBalance(address(mns), MATE_TOKEN_ADDRESS),
             totalInEvvm
         );
 
@@ -282,7 +282,7 @@ contract unitTestRevert_MateNameService_adminFunctions is Test, Constants {
     function test__unit_revert__claimWithdrawMateTokens__adminTriesToClaimNotInTime()
         external
     {
-        uint256 totalInEvvm = evvm.seeBalance(address(mns), MATE_TOKEN_ADDRESS);
+        uint256 totalInEvvm = evvm.getBalance(address(mns), MATE_TOKEN_ADDRESS);
         uint256 removeAmount = totalInEvvm / 10;
 
         vm.startPrank(ADMIN.Address);
@@ -300,7 +300,7 @@ contract unitTestRevert_MateNameService_adminFunctions is Test, Constants {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(address(mns), MATE_TOKEN_ADDRESS),
+            evvm.getBalance(address(mns), MATE_TOKEN_ADDRESS),
             totalInEvvm
         );
 

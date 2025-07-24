@@ -163,14 +163,14 @@ contract unitTestCorrect_MateNameService_preRegistrationUsername_AsyncExecutionO
         assertEq(user, COMMON_USER_NO_STAKER_1.Address);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -222,14 +222,14 @@ contract unitTestCorrect_MateNameService_preRegistrationUsername_AsyncExecutionO
         assertEq(user, COMMON_USER_NO_STAKER_1.Address);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -275,15 +275,15 @@ contract unitTestCorrect_MateNameService_preRegistrationUsername_AsyncExecutionO
         assertEq(user, COMMON_USER_NO_STAKER_1.Address);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            evvm.seeMateReward()
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount()
         );
     }
 
@@ -331,15 +331,15 @@ contract unitTestCorrect_MateNameService_preRegistrationUsername_AsyncExecutionO
         assertEq(user, COMMON_USER_NO_STAKER_1.Address);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            evvm.seeMateReward() + totalPriorityFeeAmount
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount() + totalPriorityFeeAmount
         );
     }
 }

@@ -100,7 +100,7 @@ contract unitTestCorrect_MateNameService_adminFunctions is Test, Constants {
     }
 
     function test__unit_correct__proposeWithdrawMateTokens() external {
-        uint256 totalInEvvm = evvm.seeBalance(address(mns), MATE_TOKEN_ADDRESS);
+        uint256 totalInEvvm = evvm.getBalance(address(mns), MATE_TOKEN_ADDRESS);
         uint256 removeAmount = totalInEvvm / 10;
 
         vm.startPrank(ADMIN.Address);
@@ -115,7 +115,7 @@ contract unitTestCorrect_MateNameService_adminFunctions is Test, Constants {
     }
 
     function test__unit_correct__cancelWithdrawMateTokenss() external {
-        uint256 totalInEvvm = evvm.seeBalance(address(mns), MATE_TOKEN_ADDRESS);
+        uint256 totalInEvvm = evvm.getBalance(address(mns), MATE_TOKEN_ADDRESS);
         uint256 removeAmount = totalInEvvm / 10;
 
         vm.startPrank(ADMIN.Address);
@@ -131,7 +131,7 @@ contract unitTestCorrect_MateNameService_adminFunctions is Test, Constants {
     }
 
     function test__unit_correct__claimWithdrawMateTokens() external {
-        uint256 totalInEvvm = evvm.seeBalance(address(mns), MATE_TOKEN_ADDRESS);
+        uint256 totalInEvvm = evvm.getBalance(address(mns), MATE_TOKEN_ADDRESS);
         uint256 removeAmount = totalInEvvm / 10;
 
         vm.startPrank(ADMIN.Address);
@@ -141,8 +141,8 @@ contract unitTestCorrect_MateNameService_adminFunctions is Test, Constants {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(address(mns), MATE_TOKEN_ADDRESS),
-            (totalInEvvm - removeAmount) + evvm.seeMateReward()
+            evvm.getBalance(address(mns), MATE_TOKEN_ADDRESS),
+            (totalInEvvm - removeAmount) + evvm.getRewardAmount()
         );
 
         (uint256 amount, uint256 time) = mns

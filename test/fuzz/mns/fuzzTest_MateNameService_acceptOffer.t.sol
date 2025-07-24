@@ -350,14 +350,14 @@ contract fuzzTest_MateNameService_acceptOffer is Test, Constants {
         assertEq(user, COMMON_USER_NO_STAKER_2.Address);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             checkData.amount
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_3.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -427,14 +427,14 @@ contract fuzzTest_MateNameService_acceptOffer is Test, Constants {
         assertEq(user, COMMON_USER_NO_STAKER_2.Address);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             checkData.amount
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_3.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -475,7 +475,7 @@ contract fuzzTest_MateNameService_acceptOffer is Test, Constants {
         Mns.OfferMetadata memory checkData = mns
             .getSingleOfferOfUsername("test", 0);
 
-        uint256 amountOfStakerBefore = evvm.seeBalance(
+        uint256 amountOfStakerBefore = evvm.getBalance(
             COMMON_USER_STAKER.Address,
             MATE_TOKEN_ADDRESS
         );
@@ -501,15 +501,15 @@ contract fuzzTest_MateNameService_acceptOffer is Test, Constants {
         assertEq(user, COMMON_USER_NO_STAKER_2.Address);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             checkData.amount
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            (evvm.seeMateReward()) +
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            (evvm.getRewardAmount()) +
                 (((checkData.amount * 1) / 199) / 4) +
                 amountOfStakerBefore
         );
@@ -556,7 +556,7 @@ contract fuzzTest_MateNameService_acceptOffer is Test, Constants {
         Mns.OfferMetadata memory checkData = mns
             .getSingleOfferOfUsername("test", 0);
 
-        uint256 amountOfStakerBefore = evvm.seeBalance(
+        uint256 amountOfStakerBefore = evvm.getBalance(
             COMMON_USER_STAKER.Address,
             MATE_TOKEN_ADDRESS
         );
@@ -582,15 +582,15 @@ contract fuzzTest_MateNameService_acceptOffer is Test, Constants {
         assertEq(user, COMMON_USER_NO_STAKER_2.Address);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             checkData.amount
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            (evvm.seeMateReward()) +
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            (evvm.getRewardAmount()) +
                 (((checkData.amount * 1) / 199) / 4) +
                 input.priorityFeeAmountEVVM +
                 amountOfStakerBefore

@@ -217,7 +217,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
         updateImplementation(addressV1);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -225,7 +225,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -239,7 +239,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -247,7 +247,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -273,7 +273,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -281,7 +281,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -311,7 +311,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
         updateImplementation(addressV1);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -319,7 +319,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -333,7 +333,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -341,7 +341,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -367,7 +367,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -375,7 +375,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -391,7 +391,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -399,7 +399,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -425,7 +425,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -433,7 +433,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -463,7 +463,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
         updateImplementation(addressV1);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -471,7 +471,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -485,7 +485,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -493,7 +493,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -519,7 +519,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -527,7 +527,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -543,7 +543,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -551,7 +551,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -577,7 +577,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -585,7 +585,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -601,7 +601,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -609,7 +609,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -637,7 +637,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -645,7 +645,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),

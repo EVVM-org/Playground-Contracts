@@ -81,11 +81,11 @@ contract unitTestCorrect_EVVM_disperseCaPay is Test, Constants {
         evvm.disperseCaPay(toData, ETHER_ADDRESS, 0.000002 ether);
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.000001 ether
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
             0.000001 ether
         );
     }
@@ -110,16 +110,16 @@ contract unitTestCorrect_EVVM_disperseCaPay is Test, Constants {
         evvm.disperseCaPay(toData, ETHER_ADDRESS, 0.000002 ether);
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.000001 ether
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
             0.000001 ether
         );
         assertEq(
-            evvm.seeBalance(address(this), MATE_TOKEN_ADDRESS),
-            evvm.seeMateReward()
+            evvm.getBalance(address(this), MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount()
         );
     }
 }

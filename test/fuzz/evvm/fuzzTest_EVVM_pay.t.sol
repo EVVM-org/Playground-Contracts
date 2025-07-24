@@ -163,28 +163,28 @@ contract fuzzTest_EVVM_pay is Test, Constants, EvvmStructs {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_2.Address, token),
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, token),
             amount
         );
 
         if (FISHER.Address == COMMON_USER_STAKER.Address) {
             assertEq(
-                evvm.seeBalance(COMMON_USER_STAKER.Address, token),
+                evvm.getBalance(COMMON_USER_STAKER.Address, token),
                 priorityFee
             );
 
             assertEq(
-                evvm.seeBalance(FISHER.Address, MATE_TOKEN_ADDRESS),
-                evvm.seeMateReward()
+                evvm.getBalance(FISHER.Address, MATE_TOKEN_ADDRESS),
+                evvm.getRewardAmount()
             );
         } else {
             assertEq(
-                evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, token),
+                evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, token),
                 priorityFee
             );
 
             assertEq(
-                evvm.seeBalance(
+                evvm.getBalance(
                     COMMON_USER_NO_STAKER_3.Address,
                     MATE_TOKEN_ADDRESS
                 ),
@@ -193,7 +193,7 @@ contract fuzzTest_EVVM_pay is Test, Constants, EvvmStructs {
         }
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_2.Address, token),
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, token),
             amount
         );
     }

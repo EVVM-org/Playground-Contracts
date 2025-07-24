@@ -263,18 +263,18 @@ contract unitTestCorrect_MateNameService_makeOffer_SyncExecutionOnPay is
         assertEq(checkData.expireDate, block.timestamp + 30 days);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_3.Address,
                 MATE_TOKEN_ADDRESS
             ),
-            evvm.seeMateReward() + (totalOfferAmount * 125) / 100_000
+            evvm.getRewardAmount() + (totalOfferAmount * 125) / 100_000
         );
     }
 
@@ -323,18 +323,18 @@ contract unitTestCorrect_MateNameService_makeOffer_SyncExecutionOnPay is
         assertEq(checkData.expireDate, block.timestamp + 30 days);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_3.Address,
                 MATE_TOKEN_ADDRESS
             ),
-            evvm.seeMateReward() +
+            evvm.getRewardAmount() +
                 ((totalOfferAmount * 125) / 100_000) +
                 priorityFeeAmount
         );
@@ -385,15 +385,15 @@ contract unitTestCorrect_MateNameService_makeOffer_SyncExecutionOnPay is
         assertEq(checkData.expireDate, block.timestamp + 30 days);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            evvm.seeMateReward() + (totalOfferAmount * 125) / 100_000
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount() + (totalOfferAmount * 125) / 100_000
         );
     }
 
@@ -442,15 +442,15 @@ contract unitTestCorrect_MateNameService_makeOffer_SyncExecutionOnPay is
         assertEq(checkData.expireDate, block.timestamp + 30 days);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            evvm.seeMateReward() +
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount() +
                 ((totalOfferAmount * 125) / 100_000) +
                 priorityFeeAmount
         );

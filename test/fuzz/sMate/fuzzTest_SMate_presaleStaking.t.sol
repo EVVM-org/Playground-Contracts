@@ -159,7 +159,7 @@ contract fuzzTest_SMate_presaleStaking is Test, Constants {
     function calculateRewardPerExecution(
         uint256 numberOfTx
     ) private view returns (uint256) {
-        return (evvm.seeMateReward() * 2) * numberOfTx;
+        return (evvm.getRewardAmount() * 2) * numberOfTx;
     }
 
     struct PresaleStakingFuzzTestInput {
@@ -210,12 +210,12 @@ contract fuzzTest_SMate_presaleStaking is Test, Constants {
                 ? COMMON_USER_STAKER
                 : COMMON_USER_NO_STAKER_2;
 
-            amountBeforeFisher = evvm.seeBalance(
+            amountBeforeFisher = evvm.getBalance(
                 FISHER.Address,
                 MATE_TOKEN_ADDRESS
             );
 
-            amountBeforeUser = evvm.seeBalance(
+            amountBeforeUser = evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             );
@@ -375,7 +375,7 @@ contract fuzzTest_SMate_presaleStaking is Test, Constants {
             );
 
             assertEq(
-                evvm.seeBalance(
+                evvm.getBalance(
                     COMMON_USER_NO_STAKER_1.Address,
                     MATE_TOKEN_ADDRESS
                 ),
@@ -385,7 +385,7 @@ contract fuzzTest_SMate_presaleStaking is Test, Constants {
 
             if (FISHER.Address == COMMON_USER_STAKER.Address) {
                 assertEq(
-                    evvm.seeBalance(FISHER.Address, MATE_TOKEN_ADDRESS),
+                    evvm.getBalance(FISHER.Address, MATE_TOKEN_ADDRESS),
                     amountBeforeFisher +
                         calculateRewardPerExecution(1) +
                         (
@@ -396,7 +396,7 @@ contract fuzzTest_SMate_presaleStaking is Test, Constants {
                 );
             } else {
                 assertEq(
-                    evvm.seeBalance(FISHER.Address, MATE_TOKEN_ADDRESS),
+                    evvm.getBalance(FISHER.Address, MATE_TOKEN_ADDRESS),
                     amountBeforeFisher
                 );
             }

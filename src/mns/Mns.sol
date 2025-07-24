@@ -214,7 +214,7 @@ contract Mns {
         if (Evvm(evvmAddress.current).isMateStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
-                Evvm(evvmAddress.current).seeMateReward() +
+                Evvm(evvmAddress.current).getRewardAmount() +
                     _priorityFeeForFisher
             );
         }
@@ -305,7 +305,7 @@ contract Mns {
         if (Evvm(evvmAddress.current).isMateStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
-                (50 * Evvm(evvmAddress.current).seeMateReward()) +
+                (50 * Evvm(evvmAddress.current).getRewardAmount()) +
                     _priorityFeeForFisher
             );
         }
@@ -362,7 +362,7 @@ contract Mns {
         if (Evvm(evvmAddress.current).isMateStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
-                (multiple * Evvm(evvmAddress.current).seeMateReward()) +
+                (multiple * Evvm(evvmAddress.current).getRewardAmount()) +
                     _priorityFeeForFisher
             );
         }
@@ -388,7 +388,7 @@ contract Mns {
         if (Evvm(evvmAddress.current).isMateStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
-                (multiple * Evvm(evvmAddress.current).seeMateReward())
+                (multiple * Evvm(evvmAddress.current).getRewardAmount())
             );
         }
 
@@ -409,7 +409,7 @@ contract Mns {
         if (Evvm(evvmAddress.current).isMateStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
-                (multiple * Evvm(evvmAddress.current).seeMateReward())
+                (multiple * Evvm(evvmAddress.current).getRewardAmount())
             );
         }
     }
@@ -461,7 +461,7 @@ contract Mns {
         if (Evvm(evvmAddress.current).isMateStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
-                (multiple * Evvm(evvmAddress.current).seeMateReward()) +
+                (multiple * Evvm(evvmAddress.current).getRewardAmount()) +
                     _priorityFeeForFisher
             );
         }
@@ -486,7 +486,7 @@ contract Mns {
         if (Evvm(evvmAddress.current).isMateStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
-                (multiple * Evvm(evvmAddress.current).seeMateReward())
+                (multiple * Evvm(evvmAddress.current).getRewardAmount())
             );
         }
 
@@ -506,7 +506,7 @@ contract Mns {
         if (Evvm(evvmAddress.current).isMateStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
-                (multiple * Evvm(evvmAddress.current).seeMateReward())
+                (multiple * Evvm(evvmAddress.current).getRewardAmount())
             );
         }
     }
@@ -566,7 +566,7 @@ contract Mns {
 
         makeCaPay(
             msg.sender,
-            Evvm(evvmAddress.current).seeMateReward() +
+            Evvm(evvmAddress.current).getRewardAmount() +
                 ((_amount * 125) / 100_000) +
                 _priorityFeeForFisher
         );
@@ -624,7 +624,7 @@ contract Mns {
 
         makeCaPay(
             msg.sender,
-            Evvm(evvmAddress.current).seeMateReward() +
+            Evvm(evvmAddress.current).getRewardAmount() +
                 //obtenemos el 0.5% y dividimos entre 4 para obtener el 0.125%
                 //+ ((usernameOffers[_username][_offerID].amount  * 1 / 199)/4)
                 //mas simplificado
@@ -711,7 +711,7 @@ contract Mns {
         if (Evvm(evvmAddress.current).isMateStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
-                (Evvm(evvmAddress.current).seeMateReward()) +
+                (Evvm(evvmAddress.current).getRewardAmount()) +
                     (((usernameOffers[_username][_offerID].amount * 1) / 199) /
                         4) +
                     _priorityFeeForFisher
@@ -794,7 +794,7 @@ contract Mns {
         if (Evvm(evvmAddress.current).isMateStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
-                Evvm(evvmAddress.current).seeMateReward() +
+                Evvm(evvmAddress.current).getRewardAmount() +
                     ((priceOfRenew * 50) / 100) + //? no estamos siendo muy generosos con el priority fee
                     _priorityFeeForFisher
             );
@@ -881,7 +881,7 @@ contract Mns {
         if (Evvm(evvmAddress.current).isMateStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
-                (5 * Evvm(evvmAddress.current).seeMateReward()) +
+                (5 * Evvm(evvmAddress.current).getRewardAmount()) +
                     ((getPriceToAddCustomMetadata() * 50) / 100) +
                     _priorityFeeForFisher
             );
@@ -891,7 +891,7 @@ contract Mns {
             identityDetails[_identity].customMetadataMaxSlots
         ] = _value;
 
-        
+
         identityDetails[_identity].customMetadataMaxSlots++;
         mateNameServiceNonce[_user][_nonce] = true;
     }
@@ -959,7 +959,7 @@ contract Mns {
         if (Evvm(evvmAddress.current).isMateStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
-                (5 * Evvm(evvmAddress.current).seeMateReward()) +
+                (5 * Evvm(evvmAddress.current).getRewardAmount()) +
                     _priorityFeeForFisher
             );
         }
@@ -1014,7 +1014,7 @@ contract Mns {
         if (Evvm(evvmAddress.current).isMateStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
-                ((5 * Evvm(evvmAddress.current).seeMateReward()) *
+                ((5 * Evvm(evvmAddress.current).getRewardAmount()) *
                     identityDetails[_identity].customMetadataMaxSlots) +
                     _priorityFeeForFisher
             );
@@ -1070,7 +1070,7 @@ contract Mns {
 
         makeCaPay(
             msg.sender,
-            ((5 * Evvm(evvmAddress.current).seeMateReward()) *
+            ((5 * Evvm(evvmAddress.current).getRewardAmount()) *
                 identityDetails[_identity].customMetadataMaxSlots) +
                 _priorityFeeForFisher
         );
@@ -1118,9 +1118,9 @@ contract Mns {
 
     function proposeWithdrawMateTokens(uint256 _amount) public onlyAdmin {
         if (
-            Evvm(evvmAddress.current).seeBalance(address(this), MATE_TOKEN) -
+            Evvm(evvmAddress.current).getBalance(address(this), MATE_TOKEN) -
                 (5083 +
-                    Evvm(evvmAddress.current).seeMateReward() +
+                    Evvm(evvmAddress.current).getRewardAmount() +
                     mateTokenLockedForWithdrawOffers) <
             _amount ||
             _amount == 0
@@ -1792,19 +1792,19 @@ contract Mns {
             if (price == 0) {
                 price = 500 * 10 ** 18;
             } else {
-                uint256 mateReward = Evvm(evvmAddress.current).seeMateReward();
+                uint256 mateReward = Evvm(evvmAddress.current).getRewardAmount();
                 ///coloca el precio del username en un 0.5% del precio de la oferta más alta, con tope en 500,000 * mateReward
                 price = ((price * 5) / 1000) > (500000 * mateReward)
                     ? (500000 * mateReward)
                     : ((price * 5) / 1000);
             }
         } else {
-            price = 500_000 * Evvm(evvmAddress.current).seeMateReward();
+            price = 500_000 * Evvm(evvmAddress.current).getRewardAmount();
         }
     }
 
     function getPriceToAddCustomMetadata() public view returns (uint256 price) {
-        price = 10 * Evvm(evvmAddress.current).seeMateReward();
+        price = 10 * Evvm(evvmAddress.current).getRewardAmount();
     }
 
     function getPriceToRemoveCustomMetadata()
@@ -1812,14 +1812,14 @@ contract Mns {
         view
         returns (uint256 price)
     {
-        price = 10 * Evvm(evvmAddress.current).seeMateReward();
+        price = 10 * Evvm(evvmAddress.current).getRewardAmount();
     }
 
     function getPriceToFlushCustomMetadata(
         string memory _identity
     ) public view returns (uint256 price) {
         price =
-            (10 * Evvm(evvmAddress.current).seeMateReward()) *
+            (10 * Evvm(evvmAddress.current).getRewardAmount()) *
             identityDetails[_identity].customMetadataMaxSlots;
     }
 
@@ -1827,9 +1827,9 @@ contract Mns {
         string memory _identity
     ) public view returns (uint256 price) {
         price =
-            ((10 * Evvm(evvmAddress.current).seeMateReward()) *
+            ((10 * Evvm(evvmAddress.current).getRewardAmount()) *
                 identityDetails[_identity].customMetadataMaxSlots) +
-            Evvm(evvmAddress.current).seeMateReward();
+            Evvm(evvmAddress.current).getRewardAmount();
     }
 
     //█User██████████████████████████████████████████████████████████████████████████████
@@ -1936,7 +1936,7 @@ contract Mns {
     }
 
     function getPricePerRegistration() public view returns (uint256) {
-        return Evvm(evvmAddress.current).seeMateReward() * 100;
+        return Evvm(evvmAddress.current).getRewardAmount() * 100;
     }
 
     function getAdmin() public view returns (address) {

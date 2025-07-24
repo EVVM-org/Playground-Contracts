@@ -201,8 +201,8 @@ contract P2PSwap {
                 msg.sender,
                 MATE_TOKEN_ADDRESS,
                 _priorityFee_Evvm > 0
-                    ? (Evvm(evvmAddress).seeMateReward() * 3)
-                    : (Evvm(evvmAddress).seeMateReward() * 2)
+                    ? (Evvm(evvmAddress).getRewardAmount() * 3)
+                    : (Evvm(evvmAddress).getRewardAmount() * 2)
             );
         }
 
@@ -265,9 +265,9 @@ contract P2PSwap {
                 msg.sender,
                 MATE_TOKEN_ADDRESS,
                 _priorityFee_Evvm > 0
-                    ? ((Evvm(evvmAddress).seeMateReward() * 3) +
+                    ? ((Evvm(evvmAddress).getRewardAmount() * 3) +
                         _priorityFee_Evvm)
-                    : (Evvm(evvmAddress).seeMateReward() * 2)
+                    : (Evvm(evvmAddress).getRewardAmount() * 2)
             );
         }
         marketMetadata[market].ordersAvailable--;
@@ -370,8 +370,8 @@ contract P2PSwap {
                 MATE_TOKEN_ADDRESS,
                 metadata.amountOfTokenBToFill >
                     ordersInsideMarket[market][metadata.orderId].amountB + fee
-                    ? Evvm(evvmAddress).seeMateReward() * 5
-                    : Evvm(evvmAddress).seeMateReward() * 4
+                    ? Evvm(evvmAddress).getRewardAmount() * 5
+                    : Evvm(evvmAddress).getRewardAmount() * 4
             );
         }
 
@@ -490,8 +490,8 @@ contract P2PSwap {
                 MATE_TOKEN_ADDRESS,
                 metadata.amountOfTokenBToFill >
                     ordersInsideMarket[market][metadata.orderId].amountB + fee
-                    ? Evvm(evvmAddress).seeMateReward() * 5
-                    : Evvm(evvmAddress).seeMateReward() * 4
+                    ? Evvm(evvmAddress).getRewardAmount() * 5
+                    : Evvm(evvmAddress).getRewardAmount() * 4
             );
         }
 

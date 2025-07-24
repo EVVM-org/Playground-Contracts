@@ -162,28 +162,28 @@ contract fuzzTest_EVVM_payMateStaking_async is Test, Constants {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, input.token),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, input.token),
             0
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_2.Address, input.token),
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, input.token),
             totalAmount
         );
 
         if (input.token == MATE_TOKEN_ADDRESS) {
             assertEq(
-                evvm.seeBalance(selectedExecuter.Address, MATE_TOKEN_ADDRESS),
-                evvm.seeMateReward() + totalPriorityFee
+                evvm.getBalance(selectedExecuter.Address, MATE_TOKEN_ADDRESS),
+                evvm.getRewardAmount() + totalPriorityFee
             );
         } else {
             assertEq(
-                evvm.seeBalance(selectedExecuter.Address, input.token),
+                evvm.getBalance(selectedExecuter.Address, input.token),
                 totalPriorityFee
             );
             assertEq(
-                evvm.seeBalance(selectedExecuter.Address, MATE_TOKEN_ADDRESS),
-                evvm.seeMateReward()
+                evvm.getBalance(selectedExecuter.Address, MATE_TOKEN_ADDRESS),
+                evvm.getRewardAmount()
             );
         }
     }
@@ -241,28 +241,28 @@ contract fuzzTest_EVVM_payMateStaking_async is Test, Constants {
         vm.stopPrank();
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_1.Address, input.token),
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, input.token),
             0
         );
 
         assertEq(
-            evvm.seeBalance(COMMON_USER_NO_STAKER_2.Address, input.token),
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, input.token),
             totalAmount
         );
 
         if (input.token == MATE_TOKEN_ADDRESS) {
             assertEq(
-                evvm.seeBalance(selectedExecuter.Address, MATE_TOKEN_ADDRESS),
-                evvm.seeMateReward() + totalPriorityFee
+                evvm.getBalance(selectedExecuter.Address, MATE_TOKEN_ADDRESS),
+                evvm.getRewardAmount() + totalPriorityFee
             );
         } else {
             assertEq(
-                evvm.seeBalance(selectedExecuter.Address, input.token),
+                evvm.getBalance(selectedExecuter.Address, input.token),
                 totalPriorityFee
             );
             assertEq(
-                evvm.seeBalance(selectedExecuter.Address, MATE_TOKEN_ADDRESS),
-                evvm.seeMateReward()
+                evvm.getBalance(selectedExecuter.Address, MATE_TOKEN_ADDRESS),
+                evvm.getRewardAmount()
             );
         }
     }

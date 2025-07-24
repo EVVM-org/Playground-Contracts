@@ -105,7 +105,7 @@ contract unitTestCorrect_EVVM_adminFunctions is Test, Constants {
         vm.stopPrank();
 
         assert(
-            evvm.seeIfTokenIsWhitelisted(
+            evvm.getIfTokenIsWhitelisted(
                 0xdAC17F958D2ee523a2206206994597C13D831ec7
             )
         );
@@ -153,7 +153,7 @@ contract unitTestCorrect_EVVM_adminFunctions is Test, Constants {
         vm.stopPrank();
 
         assert(
-            evvm.seeIfTokenIsWhitelisted(
+            evvm.getIfTokenIsWhitelisted(
                 0xdAC17F958D2ee523a2206206994597C13D831ec7
             )
         );
@@ -183,7 +183,7 @@ contract unitTestCorrect_EVVM_adminFunctions is Test, Constants {
         vm.stopPrank();
 
         assert(
-            !evvm.seeIfTokenIsWhitelisted(
+            !evvm.getIfTokenIsWhitelisted(
                 0xdAC17F958D2ee523a2206206994597C13D831ec7
             )
         );
@@ -222,15 +222,15 @@ contract unitTestCorrect_EVVM_adminFunctions is Test, Constants {
         vm.stopPrank();
     }
 
-    //_addMateToTotalSupply seeMateEraTokens
+    //_addMateToTotalSupply getEraPrincipalToken
 
     function test__unit_correct__recalculateReward() external {
-        console2.log(evvm.seeMateEraTokens());
+        console2.log(evvm.getEraPrincipalToken());
 
-        evvm._addMateToTotalSupply(evvm.seeMateEraTokens() + 1);
+        evvm._addMateToTotalSupply(evvm.getEraPrincipalToken() + 1);
 
         evvm.recalculateReward();
 
-        console2.log(evvm.seeMateEraTokens());
+        console2.log(evvm.getEraPrincipalToken());
     }
 }

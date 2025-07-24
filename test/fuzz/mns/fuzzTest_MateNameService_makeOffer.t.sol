@@ -305,10 +305,10 @@ contract fuzzTest_MateNameService_makeOffer is Test, Constants {
         assertEq(checkData.amount, ((uint256(input.offerAmount) * 995) / 1000));
         assertEq(checkData.expireDate, block.timestamp + uint256(input.daysForExpire));
 
-        assertEq(evvm.seeBalance(selectedUser.Address, MATE_TOKEN_ADDRESS), 0);
+        assertEq(evvm.getBalance(selectedUser.Address, MATE_TOKEN_ADDRESS), 0);
         assertEq(
-            evvm.seeBalance(selectedFisher.Address, MATE_TOKEN_ADDRESS),
-            evvm.seeMateReward() + (uint256(input.offerAmount) * 125) / 100_000
+            evvm.getBalance(selectedFisher.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount() + (uint256(input.offerAmount) * 125) / 100_000
         );
     }
 
@@ -372,10 +372,10 @@ contract fuzzTest_MateNameService_makeOffer is Test, Constants {
         assertEq(checkData.amount, ((uint256(input.offerAmount) * 995) / 1000));
         assertEq(checkData.expireDate, block.timestamp + uint256(input.daysForExpire));
 
-        assertEq(evvm.seeBalance(selectedUser.Address, MATE_TOKEN_ADDRESS), 0);
+        assertEq(evvm.getBalance(selectedUser.Address, MATE_TOKEN_ADDRESS), 0);
         assertEq(
-            evvm.seeBalance(selectedFisher.Address, MATE_TOKEN_ADDRESS),
-            evvm.seeMateReward() + (uint256(input.offerAmount) * 125) / 100_000 + input.priorityFeeAmountEVVM
+            evvm.getBalance(selectedFisher.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount() + (uint256(input.offerAmount) * 125) / 100_000 + input.priorityFeeAmountEVVM
         );
     }
 }

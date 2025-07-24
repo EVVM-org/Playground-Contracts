@@ -84,7 +84,7 @@ contract fuzzTest_SMate_goldenStaking is Test, Constants {
     function calculateRewardPerExecution(
         uint256 numberOfTx
     ) private view returns (uint256) {
-        return (evvm.seeMateReward() * 2) * numberOfTx;
+        return (evvm.getRewardAmount() * 2) * numberOfTx;
     }
 
     function makePaySignature(
@@ -128,7 +128,7 @@ contract fuzzTest_SMate_goldenStaking is Test, Constants {
                 GOLDEN_STAKER.Address
             );
 
-            amountBefore = evvm.seeBalance(
+            amountBefore = evvm.getBalance(
                 GOLDEN_STAKER.Address,
                 MATE_TOKEN_ADDRESS
             );
@@ -203,7 +203,7 @@ contract fuzzTest_SMate_goldenStaking is Test, Constants {
                 .getAddressHistoryByIndex(GOLDEN_STAKER.Address, i + 1);
 
             assertEq(
-                evvm.seeBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
+                evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
                 amountBefore +
                     calculateRewardPerExecution(
                         evvm.isMateStaker(GOLDEN_STAKER.Address) ? 1 : 0

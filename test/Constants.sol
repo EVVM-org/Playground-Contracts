@@ -169,7 +169,7 @@ contract MockContract {
         evvm.caPay(
             user,
             0x0000000000000000000000000000000000000001,
-            evvm.seeBalance(
+            evvm.getBalance(
                 address(this),
                 0x0000000000000000000000000000000000000001
             )

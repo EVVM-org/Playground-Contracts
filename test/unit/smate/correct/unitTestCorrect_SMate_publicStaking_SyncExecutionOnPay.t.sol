@@ -138,7 +138,7 @@ contract unitTestCorrect_SMate_publicStaking_SyncExecutionOnPay is
     function getAmountOfRewardsPerExecution(
         uint256 numberOfTx
     ) private view returns (uint256) {
-        return (evvm.seeMateReward() * 2) * numberOfTx;
+        return (evvm.getRewardAmount() * 2) * numberOfTx;
     }
 
     /**
@@ -184,7 +184,7 @@ contract unitTestCorrect_SMate_publicStaking_SyncExecutionOnPay is
 
         assert(evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -262,7 +262,7 @@ contract unitTestCorrect_SMate_publicStaking_SyncExecutionOnPay is
 
         assert(evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -347,7 +347,7 @@ contract unitTestCorrect_SMate_publicStaking_SyncExecutionOnPay is
 
         assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -460,7 +460,7 @@ contract unitTestCorrect_SMate_publicStaking_SyncExecutionOnPay is
 
         assert(evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -533,7 +533,7 @@ contract unitTestCorrect_SMate_publicStaking_SyncExecutionOnPay is
 
         assert(evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -611,7 +611,7 @@ contract unitTestCorrect_SMate_publicStaking_SyncExecutionOnPay is
 
         assert(evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -696,7 +696,7 @@ contract unitTestCorrect_SMate_publicStaking_SyncExecutionOnPay is
 
         assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -809,7 +809,7 @@ contract unitTestCorrect_SMate_publicStaking_SyncExecutionOnPay is
 
         assert(evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -889,7 +889,7 @@ contract unitTestCorrect_SMate_publicStaking_SyncExecutionOnPay is
 
         assert(evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             getAmountOfRewardsPerExecution(history.length) + totalOfPriorityFee
         );
 
@@ -964,7 +964,7 @@ contract unitTestCorrect_SMate_publicStaking_SyncExecutionOnPay is
 
         assert(evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             getAmountOfRewardsPerExecution(history.length) + totalOfPriorityFee
         );
 
@@ -1046,7 +1046,7 @@ contract unitTestCorrect_SMate_publicStaking_SyncExecutionOnPay is
 
         assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             getAmountOfRewardsPerExecution(history.length) + totalOfPriorityFee
         );
 
@@ -1156,7 +1156,7 @@ contract unitTestCorrect_SMate_publicStaking_SyncExecutionOnPay is
 
         assert(evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             getAmountOfRewardsPerExecution(history.length) + totalOfPriorityFee
         );
 
@@ -1226,7 +1226,7 @@ contract unitTestCorrect_SMate_publicStaking_SyncExecutionOnPay is
 
         assert(evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             getAmountOfRewardsPerExecution(history.length) + totalOfPriorityFee
         );
 
@@ -1301,7 +1301,7 @@ contract unitTestCorrect_SMate_publicStaking_SyncExecutionOnPay is
 
         assert(evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             getAmountOfRewardsPerExecution(history.length) + totalOfPriorityFee
         );
 
@@ -1383,7 +1383,7 @@ contract unitTestCorrect_SMate_publicStaking_SyncExecutionOnPay is
 
         assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             getAmountOfRewardsPerExecution(history.length) + totalOfPriorityFee
         );
 
@@ -1493,7 +1493,7 @@ contract unitTestCorrect_SMate_publicStaking_SyncExecutionOnPay is
 
         assert(evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             getAmountOfRewardsPerExecution(history.length) + totalOfPriorityFee
         );
 

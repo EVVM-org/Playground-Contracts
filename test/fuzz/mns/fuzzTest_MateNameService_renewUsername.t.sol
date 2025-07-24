@@ -360,14 +360,14 @@ contract fuzzTest_MateNameService_renewUsername is Test, Constants {
         assertEq(newUsernameExpirationTime, block.timestamp + ((366 days) * 2));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -399,8 +399,8 @@ contract fuzzTest_MateNameService_renewUsername is Test, Constants {
         if (amountOffer != 0) {
             assertEq(
                 mns.seePriceToRenew("test"),
-                ((amountOffer * 5) / 1000) > (500000 * evvm.seeMateReward())
-                    ? (500000 * evvm.seeMateReward())
+                ((amountOffer * 5) / 1000) > (500000 * evvm.getRewardAmount())
+                    ? (500000 * evvm.getRewardAmount())
                     : ((amountOffer * 5) / 1000)
             );
         } else {
@@ -447,14 +447,14 @@ contract fuzzTest_MateNameService_renewUsername is Test, Constants {
         assertEq(newUsernameExpirationTime, block.timestamp + ((366 days) * 2));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -488,7 +488,7 @@ contract fuzzTest_MateNameService_renewUsername is Test, Constants {
                 true
             );
 
-        assertEq(mns.seePriceToRenew("test"), 500_000 * evvm.seeMateReward());
+        assertEq(mns.seePriceToRenew("test"), 500_000 * evvm.getRewardAmount());
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
 
@@ -515,14 +515,14 @@ contract fuzzTest_MateNameService_renewUsername is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -581,14 +581,14 @@ contract fuzzTest_MateNameService_renewUsername is Test, Constants {
         assertEq(newUsernameExpirationTime, block.timestamp + ((366 days) * 2));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -624,8 +624,8 @@ contract fuzzTest_MateNameService_renewUsername is Test, Constants {
         if (amountOffer != 0) {
             assertEq(
                 mns.seePriceToRenew("test"),
-                ((amountOffer * 5) / 1000) > (500000 * evvm.seeMateReward())
-                    ? (500000 * evvm.seeMateReward())
+                ((amountOffer * 5) / 1000) > (500000 * evvm.getRewardAmount())
+                    ? (500000 * evvm.getRewardAmount())
                     : ((amountOffer * 5) / 1000)
             );
         } else {
@@ -672,14 +672,14 @@ contract fuzzTest_MateNameService_renewUsername is Test, Constants {
         assertEq(newUsernameExpirationTime, block.timestamp + ((366 days) * 2));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -713,7 +713,7 @@ contract fuzzTest_MateNameService_renewUsername is Test, Constants {
                 true
             );
 
-        assertEq(mns.seePriceToRenew("test"), 500_000 * evvm.seeMateReward());
+        assertEq(mns.seePriceToRenew("test"), 500_000 * evvm.getRewardAmount());
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
 
@@ -740,14 +740,14 @@ contract fuzzTest_MateNameService_renewUsername is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -785,7 +785,7 @@ contract fuzzTest_MateNameService_renewUsername is Test, Constants {
             );
 
         uint256 priceOfRenewBefore = mns.seePriceToRenew("test");
-        uint256 amountStakerBefore = evvm.seeBalance(
+        uint256 amountStakerBefore = evvm.getBalance(
             COMMON_USER_STAKER.Address,
             MATE_TOKEN_ADDRESS
         );
@@ -812,15 +812,15 @@ contract fuzzTest_MateNameService_renewUsername is Test, Constants {
         assertEq(newUsernameExpirationTime, block.timestamp + ((366 days) * 2));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            evvm.seeMateReward() +
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount() +
                 (((priceOfRenewBefore * 50) / 100) + priorityFeeAmount) +
                 amountStakerBefore
         );
@@ -850,8 +850,8 @@ contract fuzzTest_MateNameService_renewUsername is Test, Constants {
         if (amountOffer != 0) {
             assertEq(
                 mns.seePriceToRenew("test"),
-                ((amountOffer * 5) / 1000) > (500000 * evvm.seeMateReward())
-                    ? (500000 * evvm.seeMateReward())
+                ((amountOffer * 5) / 1000) > (500000 * evvm.getRewardAmount())
+                    ? (500000 * evvm.getRewardAmount())
                     : ((amountOffer * 5) / 1000)
             );
         } else {
@@ -877,7 +877,7 @@ contract fuzzTest_MateNameService_renewUsername is Test, Constants {
             );
 
         uint256 priceOfRenewBefore = mns.seePriceToRenew("test");
-        uint256 amountStakerBefore = evvm.seeBalance(
+        uint256 amountStakerBefore = evvm.getBalance(
             COMMON_USER_STAKER.Address,
             MATE_TOKEN_ADDRESS
         );
@@ -904,15 +904,15 @@ contract fuzzTest_MateNameService_renewUsername is Test, Constants {
         assertEq(newUsernameExpirationTime, block.timestamp + ((366 days) * 2));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            evvm.seeMateReward() +
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount() +
                 (((priceOfRenewBefore * 50) / 100) + priorityFeeAmount) +
                 amountStakerBefore
         );
@@ -944,10 +944,10 @@ contract fuzzTest_MateNameService_renewUsername is Test, Constants {
                 true
             );
 
-        assertEq(mns.seePriceToRenew("test"), 500_000 * evvm.seeMateReward());
+        assertEq(mns.seePriceToRenew("test"), 500_000 * evvm.getRewardAmount());
 
         uint256 priceOfRenewBefore = mns.seePriceToRenew("test");
-        uint256 amountStakerBefore = evvm.seeBalance(
+        uint256 amountStakerBefore = evvm.getBalance(
             COMMON_USER_STAKER.Address,
             MATE_TOKEN_ADDRESS
         );
@@ -977,15 +977,15 @@ contract fuzzTest_MateNameService_renewUsername is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            evvm.seeMateReward() +
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount() +
                 (((priceOfRenewBefore * 50) / 100) + priorityFeeAmount) +
                 amountStakerBefore
         );
@@ -1021,7 +1021,7 @@ contract fuzzTest_MateNameService_renewUsername is Test, Constants {
             );
 
         uint256 priceOfRenewBefore = mns.seePriceToRenew("test");
-        uint256 amountStakerBefore = evvm.seeBalance(
+        uint256 amountStakerBefore = evvm.getBalance(
             COMMON_USER_STAKER.Address,
             MATE_TOKEN_ADDRESS
         );
@@ -1048,15 +1048,15 @@ contract fuzzTest_MateNameService_renewUsername is Test, Constants {
         assertEq(newUsernameExpirationTime, block.timestamp + ((366 days) * 2));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            evvm.seeMateReward() +
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount() +
                 (((priceOfRenewBefore * 50) / 100) + priorityFeeAmount) +
                 amountStakerBefore
         );
@@ -1090,8 +1090,8 @@ contract fuzzTest_MateNameService_renewUsername is Test, Constants {
         if (amountOffer != 0) {
             assertEq(
                 mns.seePriceToRenew("test"),
-                ((amountOffer * 5) / 1000) > (500000 * evvm.seeMateReward())
-                    ? (500000 * evvm.seeMateReward())
+                ((amountOffer * 5) / 1000) > (500000 * evvm.getRewardAmount())
+                    ? (500000 * evvm.getRewardAmount())
                     : ((amountOffer * 5) / 1000)
             );
         } else {
@@ -1117,7 +1117,7 @@ contract fuzzTest_MateNameService_renewUsername is Test, Constants {
             );
 
         uint256 priceOfRenewBefore = mns.seePriceToRenew("test");
-        uint256 amountStakerBefore = evvm.seeBalance(
+        uint256 amountStakerBefore = evvm.getBalance(
             COMMON_USER_STAKER.Address,
             MATE_TOKEN_ADDRESS
         );
@@ -1144,15 +1144,15 @@ contract fuzzTest_MateNameService_renewUsername is Test, Constants {
         assertEq(newUsernameExpirationTime, block.timestamp + ((366 days) * 2));
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            evvm.seeMateReward() +
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount() +
                 (((priceOfRenewBefore * 50) / 100) + priorityFeeAmount) +
                 amountStakerBefore
         );
@@ -1184,10 +1184,10 @@ contract fuzzTest_MateNameService_renewUsername is Test, Constants {
                 true
             );
 
-        assertEq(mns.seePriceToRenew("test"), 500_000 * evvm.seeMateReward());
+        assertEq(mns.seePriceToRenew("test"), 500_000 * evvm.getRewardAmount());
 
         uint256 priceOfRenewBefore = mns.seePriceToRenew("test");
-        uint256 amountStakerBefore = evvm.seeBalance(
+        uint256 amountStakerBefore = evvm.getBalance(
             COMMON_USER_STAKER.Address,
             MATE_TOKEN_ADDRESS
         );
@@ -1217,15 +1217,15 @@ contract fuzzTest_MateNameService_renewUsername is Test, Constants {
         );
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            evvm.seeMateReward() +
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount() +
                 (((priceOfRenewBefore * 50) / 100) + priorityFeeAmount) +
                 amountStakerBefore
         );

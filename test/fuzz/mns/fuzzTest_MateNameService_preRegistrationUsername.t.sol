@@ -220,14 +220,14 @@ contract fuzzTest_MateNameService_preRegistrationUsername is Test, Constants {
         assertEq(ownerAddress, selectedUser.Address);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -299,14 +299,14 @@ contract fuzzTest_MateNameService_preRegistrationUsername is Test, Constants {
         assertEq(ownerAddress, selectedUser.Address);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
                 MATE_TOKEN_ADDRESS
             ),
@@ -339,7 +339,7 @@ contract fuzzTest_MateNameService_preRegistrationUsername is Test, Constants {
             input.priorityFlagEVVM
         );
 
-        uint256 balanceStakerBefore = evvm.seeBalance(
+        uint256 balanceStakerBefore = evvm.getBalance(
             COMMON_USER_STAKER.Address,
             MATE_TOKEN_ADDRESS
         );
@@ -373,15 +373,15 @@ contract fuzzTest_MateNameService_preRegistrationUsername is Test, Constants {
         assertEq(ownerAddress, selectedUser.Address);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            evvm.seeMateReward() + balanceStakerBefore
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount() + balanceStakerBefore
         );
     }
 
@@ -420,7 +420,7 @@ contract fuzzTest_MateNameService_preRegistrationUsername is Test, Constants {
                 input.priorityFlagEVVM
             );
 
-        uint256 balanceStakerBefore = evvm.seeBalance(
+        uint256 balanceStakerBefore = evvm.getBalance(
             COMMON_USER_STAKER.Address,
             MATE_TOKEN_ADDRESS
         );
@@ -454,15 +454,15 @@ contract fuzzTest_MateNameService_preRegistrationUsername is Test, Constants {
         assertEq(ownerAddress, selectedUser.Address);
 
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             0
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            evvm.seeMateReward() + balanceStakerBefore + input.priorityFeeAmount
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount() + balanceStakerBefore + input.priorityFeeAmount
         );
     }
 }

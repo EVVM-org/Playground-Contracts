@@ -196,14 +196,14 @@ contract unitTestRevert_MateNameService_registrationUsername is
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             registrationPrice + totalPriorityFeeAmount
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -272,14 +272,14 @@ contract unitTestRevert_MateNameService_registrationUsername is
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             registrationPrice + totalPriorityFeeAmount
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -349,14 +349,14 @@ contract unitTestRevert_MateNameService_registrationUsername is
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             registrationPrice + totalPriorityFeeAmount
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -426,14 +426,14 @@ contract unitTestRevert_MateNameService_registrationUsername is
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             registrationPrice + totalPriorityFeeAmount
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -503,14 +503,14 @@ contract unitTestRevert_MateNameService_registrationUsername is
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             registrationPrice + totalPriorityFeeAmount
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -580,14 +580,14 @@ contract unitTestRevert_MateNameService_registrationUsername is
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             registrationPrice + totalPriorityFeeAmount
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -657,14 +657,14 @@ contract unitTestRevert_MateNameService_registrationUsername is
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             registrationPrice + totalPriorityFeeAmount
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -734,14 +734,14 @@ contract unitTestRevert_MateNameService_registrationUsername is
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             registrationPrice + totalPriorityFeeAmount
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -811,14 +811,14 @@ contract unitTestRevert_MateNameService_registrationUsername is
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             registrationPrice + totalPriorityFeeAmount
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -888,14 +888,14 @@ contract unitTestRevert_MateNameService_registrationUsername is
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             registrationPrice + totalPriorityFeeAmount
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -965,14 +965,14 @@ contract unitTestRevert_MateNameService_registrationUsername is
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             registrationPrice + totalPriorityFeeAmount
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -1042,14 +1042,14 @@ contract unitTestRevert_MateNameService_registrationUsername is
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             registrationPrice + totalPriorityFeeAmount
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -1119,14 +1119,14 @@ contract unitTestRevert_MateNameService_registrationUsername is
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             registrationPrice + totalPriorityFeeAmount
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -1196,14 +1196,14 @@ contract unitTestRevert_MateNameService_registrationUsername is
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             registrationPrice + totalPriorityFeeAmount
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -1251,14 +1251,14 @@ contract unitTestRevert_MateNameService_registrationUsername is
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             registrationPrice + totalPriorityFeeAmount
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -1310,14 +1310,14 @@ contract unitTestRevert_MateNameService_registrationUsername is
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             registrationPrice + totalPriorityFeeAmount
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -1372,14 +1372,14 @@ contract unitTestRevert_MateNameService_registrationUsername is
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             registrationPrice
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
@@ -1431,14 +1431,14 @@ contract unitTestRevert_MateNameService_registrationUsername is
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
         assertEq(
-            evvm.seeBalance(
+            evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
                 MATE_TOKEN_ADDRESS
             ),
             registrationPrice + totalPriorityFeeAmount
         );
         assertEq(
-            evvm.seeBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             0
         );
     }
