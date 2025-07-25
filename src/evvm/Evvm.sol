@@ -1141,6 +1141,14 @@ contract Evvm is EvvmStorage {
 
     //░▒▓█Getter functions██████████████████████████████████████████████████████▓▒░
 
+    function getEvvmMetadata() external view returns (EvvmMetadata memory) {
+        return evvmMetadata;
+    }
+
+    function getWhitelistTokenToBeAddedDateToSet() external view returns (uint256) {
+        return whitelistTokenToBeAdded_dateToSet;
+    }
+
     function getMateNameServiceAddress() external view returns (address) {
         return mateNameServiceAddress;
     }
