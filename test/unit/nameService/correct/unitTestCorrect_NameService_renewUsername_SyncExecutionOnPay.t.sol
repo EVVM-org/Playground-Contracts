@@ -81,8 +81,8 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
         AccountData memory user,
         string memory username,
         uint256 clowNumber,
-        uint256 nonceMNSPre,
-        uint256 nonceMNS
+        uint256 nonceNameServicePre,
+        uint256 nonceNameService
     ) private {
         evvm._addBalance(
             user.Address,
@@ -97,13 +97,13 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPreRegistrationUsername(
                 keccak256(abi.encodePacked(username, uint256(clowNumber))),
-                nonceMNSPre
+                nonceNameServicePre
             )
         );
 
         nameService.preRegistrationUsername(
             user.Address,
-            nonceMNSPre,
+            nonceNameServicePre,
             keccak256(abi.encodePacked(username, uint256(clowNumber))),
             0,
             Erc191TestBuilder.buildERC191Signature(v, r, s),
@@ -119,10 +119,10 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
             Erc191TestBuilder.buildMessageSignedForRegistrationUsername(
                 username,
                 clowNumber,
-                nonceMNS
+                nonceNameService
             )
         );
-        bytes memory signatureMNS = Erc191TestBuilder.buildERC191Signature(
+        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
             v,
             r,
             s
@@ -149,10 +149,10 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
 
         nameService.registrationUsername(
             user.Address,
-            nonceMNS,
+            nonceNameService,
             username,
             clowNumber,
-            signatureMNS,
+            signatureNameService,
             0,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
@@ -165,14 +165,14 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
         string memory usernameToMakeOffer,
         uint256 expireDate,
         uint256 amountToOffer,
-        uint256 nonceMNS,
+        uint256 nonceNameService,
         uint256 nonceEVVM,
         bool priorityFlagEVVM
     ) private {
         uint8 v;
         bytes32 r;
         bytes32 s;
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
 
         evvm._addBalance(user.Address, MATE_TOKEN_ADDRESS, amountToOffer);
@@ -183,10 +183,10 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
                 usernameToMakeOffer,
                 expireDate,
                 amountToOffer,
-                nonceMNS
+                nonceNameService
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -205,12 +205,12 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
 
         nameService.makeOffer(
             user.Address,
-            nonceMNS,
+            nonceNameService,
             usernameToMakeOffer,
             amountToOffer,
             expireDate,
             0,
-            signatureMNS,
+            signatureNameService,
             nonceEVVM,
             priorityFlagEVVM,
             signatureEVVM
@@ -220,14 +220,14 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
     function makeRenewUsernameSignatures(
         AccountData memory user,
         string memory usernameToRenew,
-        uint256 nonceMNS,
+        uint256 nonceNameService,
         uint256 priorityFeeAmountEVVM,
         uint256 nonceEVVM,
         bool priorityFlagEVVM
     )
         private
         view
-        returns (bytes memory signatureMNS, bytes memory signatureEVVM)
+        returns (bytes memory signatureNameService, bytes memory signatureEVVM)
     {
         uint8 v;
         bytes32 r;
@@ -237,10 +237,10 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForRenewUsername(
                 usernameToRenew,
-                nonceMNS
+                nonceNameService
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -277,7 +277,7 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRenewUsernameSignatures(
                 COMMON_USER_NO_STAKER_1,
@@ -297,7 +297,7 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
             1000001000001,
             "test",
             priorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -345,7 +345,7 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRenewUsernameSignatures(
                 COMMON_USER_NO_STAKER_1,
@@ -371,7 +371,7 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
             1000001000001,
             "test",
             priorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -410,7 +410,7 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRenewUsernameSignatures(
                 COMMON_USER_NO_STAKER_1,
@@ -430,7 +430,7 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
             1000001000001,
             "test",
             priorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -468,7 +468,7 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRenewUsernameSignatures(
                 COMMON_USER_NO_STAKER_1,
@@ -488,7 +488,7 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
             1000001000001,
             "test",
             priorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -536,7 +536,7 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRenewUsernameSignatures(
                 COMMON_USER_NO_STAKER_1,
@@ -562,7 +562,7 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
             1000001000001,
             "test",
             priorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -601,7 +601,7 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRenewUsernameSignatures(
                 COMMON_USER_NO_STAKER_1,
@@ -621,7 +621,7 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
             1000001000001,
             "test",
             priorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -659,7 +659,7 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRenewUsernameSignatures(
                 COMMON_USER_NO_STAKER_1,
@@ -681,7 +681,7 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
             1000001000001,
             "test",
             priorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -728,7 +728,7 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRenewUsernameSignatures(
                 COMMON_USER_NO_STAKER_1,
@@ -756,7 +756,7 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
             1000001000001,
             "test",
             priorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -794,7 +794,7 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRenewUsernameSignatures(
                 COMMON_USER_NO_STAKER_1,
@@ -816,7 +816,7 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
             1000001000001,
             "test",
             priorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -853,7 +853,7 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRenewUsernameSignatures(
                 COMMON_USER_NO_STAKER_1,
@@ -875,7 +875,7 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
             1000001000001,
             "test",
             priorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -922,7 +922,7 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRenewUsernameSignatures(
                 COMMON_USER_NO_STAKER_1,
@@ -950,7 +950,7 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
             1000001000001,
             "test",
             priorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -988,7 +988,7 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRenewUsernameSignatures(
                 COMMON_USER_NO_STAKER_1,
@@ -1010,7 +1010,7 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
             1000001000001,
             "test",
             priorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM

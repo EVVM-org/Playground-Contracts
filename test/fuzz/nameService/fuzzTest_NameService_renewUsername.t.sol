@@ -78,8 +78,8 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         AccountData memory user,
         string memory username,
         uint256 clowNumber,
-        uint256 nonceMNSPre,
-        uint256 nonceMNS
+        uint256 nonceNameServicePre,
+        uint256 nonceNameService
     ) private {
         evvm._addBalance(
             user.Address,
@@ -94,13 +94,13 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPreRegistrationUsername(
                 keccak256(abi.encodePacked(username, uint256(clowNumber))),
-                nonceMNSPre
+                nonceNameServicePre
             )
         );
 
         nameService.preRegistrationUsername(
             user.Address,
-            nonceMNSPre,
+            nonceNameServicePre,
             keccak256(abi.encodePacked(username, uint256(clowNumber))),
             0,
             Erc191TestBuilder.buildERC191Signature(v, r, s),
@@ -116,10 +116,10 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
             Erc191TestBuilder.buildMessageSignedForRegistrationUsername(
                 username,
                 clowNumber,
-                nonceMNS
+                nonceNameService
             )
         );
-        bytes memory signatureMNS = Erc191TestBuilder.buildERC191Signature(
+        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
             v,
             r,
             s
@@ -146,10 +146,10 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         nameService.registrationUsername(
             user.Address,
-            nonceMNS,
+            nonceNameService,
             username,
             clowNumber,
-            signatureMNS,
+            signatureNameService,
             0,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
@@ -162,14 +162,14 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         string memory usernameToMakeOffer,
         uint256 expireDate,
         uint256 amountToOffer,
-        uint256 nonceMNS,
+        uint256 nonceNameService,
         uint256 nonceEVVM,
         bool priorityFlagEVVM
     ) private {
         uint8 v;
         bytes32 r;
         bytes32 s;
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
 
         evvm._addBalance(user.Address, MATE_TOKEN_ADDRESS, amountToOffer);
@@ -180,10 +180,10 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
                 usernameToMakeOffer,
                 expireDate,
                 amountToOffer,
-                nonceMNS
+                nonceNameService
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -202,12 +202,12 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         nameService.makeOffer(
             user.Address,
-            nonceMNS,
+            nonceNameService,
             usernameToMakeOffer,
             amountToOffer,
             expireDate,
             0,
-            signatureMNS,
+            signatureNameService,
             nonceEVVM,
             priorityFlagEVVM,
             signatureEVVM
@@ -217,14 +217,14 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
     function makeRenewUsernameSignatures(
         AccountData memory user,
         string memory usernameToRenew,
-        uint256 nonceMNS,
+        uint256 nonceNameService,
         uint256 priorityFeeAmountEVVM,
         uint256 nonceEVVM,
         bool priorityFlagEVVM
     )
         private
         view
-        returns (bytes memory signatureMNS, bytes memory signatureEVVM)
+        returns (bytes memory signatureNameService, bytes memory signatureEVVM)
     {
         uint8 v;
         bytes32 r;
@@ -234,10 +234,10 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForRenewUsername(
                 usernameToRenew,
-                nonceMNS
+                nonceNameService
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -267,27 +267,27 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
      */
 
     struct RenewUsernameFuzzTestInput_nPF_nOf {
-        uint8 nonceMNS;
+        uint8 nonceNameService;
         uint8 nonceEVVM;
         bool priorityFlagEVVM;
     }
 
     struct RenewUsernameFuzzTestInput_nPF_Of {
         uint136 amountToOffer;
-        uint8 nonceMNS;
+        uint8 nonceNameService;
         uint8 nonceEVVM;
         bool priorityFlagEVVM;
     }
 
     struct RenewUsernameFuzzTestInput_nPF_Ex {
         uint8 daysPassed;
-        uint8 nonceMNS;
+        uint8 nonceNameService;
         uint8 nonceEVVM;
         bool priorityFlagEVVM;
     }
 
     struct RenewUsernameFuzzTestInput_PF_nOf {
-        uint8 nonceMNS;
+        uint8 nonceNameService;
         uint8 nonceEVVM;
         uint16 priorityFeeAmountEVVM;
         bool priorityFlagEVVM;
@@ -295,7 +295,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
     struct RenewUsernameFuzzTestInput_PF_Of {
         uint136 amountToOffer;
-        uint8 nonceMNS;
+        uint8 nonceNameService;
         uint8 nonceEVVM;
         uint16 priorityFeeAmountEVVM;
         bool priorityFlagEVVM;
@@ -303,7 +303,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
     struct RenewUsernameFuzzTestInput_PF_Ex {
         uint8 daysPassed;
-        uint8 nonceMNS;
+        uint8 nonceNameService;
         uint8 nonceEVVM;
         uint16 priorityFeeAmountEVVM;
         bool priorityFlagEVVM;
@@ -312,7 +312,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
     function test__unit_correct__renewUsername__nS_nPF_nOf(
         RenewUsernameFuzzTestInput_nPF_nOf memory input
     ) external {
-        vm.assume(input.nonceMNS > 1);
+        vm.assume(input.nonceNameService > 1);
 
         uint256 nonceEvvm = input.priorityFlagEVVM
             ? input.nonceEVVM
@@ -327,12 +327,12 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRenewUsernameSignatures(
                 COMMON_USER_NO_STAKER_1,
                 "test",
-                input.nonceMNS,
+                input.nonceNameService,
                 priorityFeeAmount,
                 nonceEvvm,
                 input.priorityFlagEVVM
@@ -342,10 +342,10 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceMNS,
+            input.nonceNameService,
             "test",
             priorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -378,7 +378,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
     function test__unit_correct__renewUsername__nS_nPF_Of(
         RenewUsernameFuzzTestInput_nPF_Of memory input
     ) external {
-        vm.assume(input.nonceMNS > 1 && input.amountToOffer > 0);
+        vm.assume(input.nonceNameService > 1 && input.amountToOffer > 0);
 
         uint256 nonceEvvm = input.priorityFlagEVVM
             ? input.nonceEVVM
@@ -414,12 +414,12 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRenewUsernameSignatures(
                 COMMON_USER_NO_STAKER_1,
                 "test",
-                input.nonceMNS,
+                input.nonceNameService,
                 priorityFeeAmount,
                 nonceEvvm,
                 input.priorityFlagEVVM
@@ -429,10 +429,10 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceMNS,
+            input.nonceNameService,
             "test",
             priorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -466,7 +466,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         RenewUsernameFuzzTestInput_nPF_Ex memory input
     ) external {
         vm.assume(
-            input.nonceMNS > 1 && input.daysPassed < 365 && input.daysPassed > 0
+            input.nonceNameService > 1 && input.daysPassed < 365 && input.daysPassed > 0
         );
 
         skip((366 + uint256(input.daysPassed)) * 1 days);
@@ -477,7 +477,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRenewUsernameSignatures(
                 COMMON_USER_NO_STAKER_1,
@@ -497,7 +497,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
             1000001000001,
             "test",
             priorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             11111111,
             true,
             signatureEVVM
@@ -533,7 +533,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
     function test__unit_correct__renewUsername__nS_PF_nOf(
         RenewUsernameFuzzTestInput_PF_nOf memory input
     ) external {
-        vm.assume(input.nonceMNS > 1 && input.priorityFeeAmountEVVM > 0);
+        vm.assume(input.nonceNameService > 1 && input.priorityFeeAmountEVVM > 0);
 
         uint256 nonceEvvm = input.priorityFlagEVVM
             ? input.nonceEVVM
@@ -548,12 +548,12 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRenewUsernameSignatures(
                 COMMON_USER_NO_STAKER_1,
                 "test",
-                input.nonceMNS,
+                input.nonceNameService,
                 priorityFeeAmount,
                 nonceEvvm,
                 input.priorityFlagEVVM
@@ -563,10 +563,10 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceMNS,
+            input.nonceNameService,
             "test",
             priorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -600,7 +600,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         RenewUsernameFuzzTestInput_PF_Of memory input
     ) external {
         vm.assume(
-            input.nonceMNS > 1 &&
+            input.nonceNameService > 1 &&
                 input.amountToOffer > 0 &&
                 input.priorityFeeAmountEVVM > 0
         );
@@ -639,12 +639,12 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRenewUsernameSignatures(
                 COMMON_USER_NO_STAKER_1,
                 "test",
-                input.nonceMNS,
+                input.nonceNameService,
                 priorityFeeAmount,
                 nonceEvvm,
                 input.priorityFlagEVVM
@@ -654,10 +654,10 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceMNS,
+            input.nonceNameService,
             "test",
             priorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -691,7 +691,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         RenewUsernameFuzzTestInput_PF_Ex memory input
     ) external {
         vm.assume(
-            input.nonceMNS > 1 && input.daysPassed < 365 && input.daysPassed > 0
+            input.nonceNameService > 1 && input.daysPassed < 365 && input.daysPassed > 0
         );
 
         skip((366 + uint256(input.daysPassed)) * 1 days);
@@ -702,7 +702,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRenewUsernameSignatures(
                 COMMON_USER_NO_STAKER_1,
@@ -722,7 +722,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
             1000001000001,
             "test",
             priorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             11111111,
             true,
             signatureEVVM
@@ -758,7 +758,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
     function test__unit_correct__renewUsername__S_nPF_nOf(
         RenewUsernameFuzzTestInput_nPF_nOf memory input
     ) external {
-        vm.assume(input.nonceMNS > 1);
+        vm.assume(input.nonceNameService > 1);
 
         uint256 nonceEvvm = input.priorityFlagEVVM
             ? input.nonceEVVM
@@ -773,12 +773,12 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRenewUsernameSignatures(
                 COMMON_USER_NO_STAKER_1,
                 "test",
-                input.nonceMNS,
+                input.nonceNameService,
                 priorityFeeAmount,
                 nonceEvvm,
                 input.priorityFlagEVVM
@@ -794,10 +794,10 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceMNS,
+            input.nonceNameService,
             "test",
             priorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -829,7 +829,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
     function test__unit_correct__renewUsername__S_nPF_Of(
         RenewUsernameFuzzTestInput_nPF_Of memory input
     ) external {
-        vm.assume(input.nonceMNS > 1 && input.amountToOffer > 0);
+        vm.assume(input.nonceNameService > 1 && input.amountToOffer > 0);
 
         uint256 nonceEvvm = input.priorityFlagEVVM
             ? input.nonceEVVM
@@ -865,12 +865,12 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRenewUsernameSignatures(
                 COMMON_USER_NO_STAKER_1,
                 "test",
-                input.nonceMNS,
+                input.nonceNameService,
                 priorityFeeAmount,
                 nonceEvvm,
                 input.priorityFlagEVVM
@@ -886,10 +886,10 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceMNS,
+            input.nonceNameService,
             "test",
             priorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -922,7 +922,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         RenewUsernameFuzzTestInput_nPF_Ex memory input
     ) external {
         vm.assume(
-            input.nonceMNS > 1 && input.daysPassed < 365 && input.daysPassed > 0
+            input.nonceNameService > 1 && input.daysPassed < 365 && input.daysPassed > 0
         );
 
         skip((366 + uint256(input.daysPassed)) * 1 days);
@@ -933,7 +933,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRenewUsernameSignatures(
                 COMMON_USER_NO_STAKER_1,
@@ -959,7 +959,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
             1000001000001,
             "test",
             priorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             11111111,
             true,
             signatureEVVM
@@ -994,7 +994,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
     function test__unit_correct__renewUsername__S_PF_nOf(
         RenewUsernameFuzzTestInput_PF_nOf memory input
     ) external {
-        vm.assume(input.nonceMNS > 1 && input.priorityFeeAmountEVVM > 0);
+        vm.assume(input.nonceNameService > 1 && input.priorityFeeAmountEVVM > 0);
 
         uint256 nonceEvvm = input.priorityFlagEVVM
             ? input.nonceEVVM
@@ -1009,12 +1009,12 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRenewUsernameSignatures(
                 COMMON_USER_NO_STAKER_1,
                 "test",
-                input.nonceMNS,
+                input.nonceNameService,
                 priorityFeeAmount,
                 nonceEvvm,
                 input.priorityFlagEVVM
@@ -1030,10 +1030,10 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceMNS,
+            input.nonceNameService,
             "test",
             priorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -1066,7 +1066,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         RenewUsernameFuzzTestInput_PF_Of memory input
     ) external {
         vm.assume(
-            input.nonceMNS > 1 &&
+            input.nonceNameService > 1 &&
                 input.amountToOffer > 0 &&
                 input.priorityFeeAmountEVVM > 0
         );
@@ -1105,12 +1105,12 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRenewUsernameSignatures(
                 COMMON_USER_NO_STAKER_1,
                 "test",
-                input.nonceMNS,
+                input.nonceNameService,
                 priorityFeeAmount,
                 nonceEvvm,
                 input.priorityFlagEVVM
@@ -1126,10 +1126,10 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceMNS,
+            input.nonceNameService,
             "test",
             priorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -1162,7 +1162,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         RenewUsernameFuzzTestInput_PF_Ex memory input
     ) external {
         vm.assume(
-            input.nonceMNS > 1 && input.daysPassed < 365 && input.daysPassed > 0
+            input.nonceNameService > 1 && input.daysPassed < 365 && input.daysPassed > 0
         );
 
         skip((366 + uint256(input.daysPassed)) * 1 days);
@@ -1173,7 +1173,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRenewUsernameSignatures(
                 COMMON_USER_NO_STAKER_1,
@@ -1199,7 +1199,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
             1000001000001,
             "test",
             priorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             11111111,
             true,
             signatureEVVM

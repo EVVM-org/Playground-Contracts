@@ -278,7 +278,7 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
     }
 
     /*
-     ! note: if staking in the future has a MNS identity, then rework
+     ! note: if staking in the future has a NameService identity, then rework
      !       this test
      */
     function test__unit_revert__publicStaking__bPaySigAtToIdentity() public {

@@ -86,8 +86,8 @@ contract unitTestCorrect_NameService_withdrawOffer_AsyncExecutionOnPay is
         AccountData memory user,
         string memory username,
         uint256 clowNumber,
-        uint256 nonceMNSPre,
-        uint256 nonceMNS
+        uint256 nonceNameServicePre,
+        uint256 nonceNameService
     ) private {
         evvm._addBalance(
             user.Address,
@@ -102,13 +102,13 @@ contract unitTestCorrect_NameService_withdrawOffer_AsyncExecutionOnPay is
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPreRegistrationUsername(
                 keccak256(abi.encodePacked(username, uint256(clowNumber))),
-                nonceMNSPre
+                nonceNameServicePre
             )
         );
 
         nameService.preRegistrationUsername(
             user.Address,
-            nonceMNSPre,
+            nonceNameServicePre,
             keccak256(abi.encodePacked(username, uint256(clowNumber))),
             0,
             Erc191TestBuilder.buildERC191Signature(v, r, s),
@@ -124,10 +124,10 @@ contract unitTestCorrect_NameService_withdrawOffer_AsyncExecutionOnPay is
             Erc191TestBuilder.buildMessageSignedForRegistrationUsername(
                 username,
                 clowNumber,
-                nonceMNS
+                nonceNameService
             )
         );
-        bytes memory signatureMNS = Erc191TestBuilder.buildERC191Signature(
+        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
             v,
             r,
             s
@@ -154,10 +154,10 @@ contract unitTestCorrect_NameService_withdrawOffer_AsyncExecutionOnPay is
 
         nameService.registrationUsername(
             user.Address,
-            nonceMNS,
+            nonceNameService,
             username,
             clowNumber,
-            signatureMNS,
+            signatureNameService,
             0,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
@@ -170,14 +170,14 @@ contract unitTestCorrect_NameService_withdrawOffer_AsyncExecutionOnPay is
         string memory usernameToMakeOffer,
         uint256 expireDate,
         uint256 amountToOffer,
-        uint256 nonceMNS,
+        uint256 nonceNameService,
         uint256 nonceEVVM,
         bool priorityFlagEVVM
     ) private {
         uint8 v;
         bytes32 r;
         bytes32 s;
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
 
         evvm._addBalance(user.Address, MATE_TOKEN_ADDRESS, amountToOffer);
@@ -188,10 +188,10 @@ contract unitTestCorrect_NameService_withdrawOffer_AsyncExecutionOnPay is
                 usernameToMakeOffer,
                 expireDate,
                 amountToOffer,
-                nonceMNS
+                nonceNameService
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -210,12 +210,12 @@ contract unitTestCorrect_NameService_withdrawOffer_AsyncExecutionOnPay is
 
         nameService.makeOffer(
             user.Address,
-            nonceMNS,
+            nonceNameService,
             usernameToMakeOffer,
             amountToOffer,
             expireDate,
             0,
-            signatureMNS,
+            signatureNameService,
             nonceEVVM,
             priorityFlagEVVM,
             signatureEVVM
@@ -227,14 +227,14 @@ contract unitTestCorrect_NameService_withdrawOffer_AsyncExecutionOnPay is
         bool givePriorityFee,
         string memory usernameToFindOffer,
         uint256 index,
-        uint256 nonceMNS,
+        uint256 nonceNameService,
         uint256 priorityFeeAmountEVVM,
         uint256 nonceEVVM,
         bool priorityFlagEVVM
     )
         private
         view
-        returns (bytes memory signatureMNS, bytes memory signatureEVVM)
+        returns (bytes memory signatureNameService, bytes memory signatureEVVM)
     {
         uint8 v;
         bytes32 r;
@@ -246,10 +246,10 @@ contract unitTestCorrect_NameService_withdrawOffer_AsyncExecutionOnPay is
                 Erc191TestBuilder.buildMessageSignedForWithdrawOffer(
                     usernameToFindOffer,
                     index,
-                    nonceMNS
+                    nonceNameService
                 )
             );
-            signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+            signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
             (v, r, s) = vm.sign(
                 user.PrivateKey,
@@ -271,10 +271,10 @@ contract unitTestCorrect_NameService_withdrawOffer_AsyncExecutionOnPay is
                 Erc191TestBuilder.buildMessageSignedForWithdrawOffer(
                     usernameToFindOffer,
                     index,
-                    nonceMNS
+                    nonceNameService
                 )
             );
-            signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+            signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
             signatureEVVM = "";
         }
     }
@@ -288,7 +288,7 @@ contract unitTestCorrect_NameService_withdrawOffer_AsyncExecutionOnPay is
      */
 
     function test__unit_correct__withdrawOffer__nS_nPF() external {
-        (bytes memory signatureMNS, ) = makeWithdrawOfferSignatures(
+        (bytes memory signatureNameService, ) = makeWithdrawOfferSignatures(
             COMMON_USER_NO_STAKER_2,
             false,
             "test",
@@ -310,7 +310,7 @@ contract unitTestCorrect_NameService_withdrawOffer_AsyncExecutionOnPay is
             "test",
             0,
             0,
-            signatureMNS,
+            signatureNameService,
             10000001,
             true,
             ""
@@ -348,7 +348,7 @@ contract unitTestCorrect_NameService_withdrawOffer_AsyncExecutionOnPay is
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeWithdrawOfferSignatures(
                 COMMON_USER_NO_STAKER_2,
@@ -372,7 +372,7 @@ contract unitTestCorrect_NameService_withdrawOffer_AsyncExecutionOnPay is
             "test",
             0,
             totalPriorityFee,
-            signatureMNS,
+            signatureNameService,
             10000001,
             true,
             signatureEVVM
@@ -406,7 +406,7 @@ contract unitTestCorrect_NameService_withdrawOffer_AsyncExecutionOnPay is
     }
 
     function test__unit_correct__withdrawOffer__S_nPF() external {
-        (bytes memory signatureMNS, ) = makeWithdrawOfferSignatures(
+        (bytes memory signatureNameService, ) = makeWithdrawOfferSignatures(
             COMMON_USER_NO_STAKER_2,
             false,
             "test",
@@ -428,7 +428,7 @@ contract unitTestCorrect_NameService_withdrawOffer_AsyncExecutionOnPay is
             "test",
             0,
             0,
-            signatureMNS,
+            signatureNameService,
             10000001,
             true,
             ""
@@ -466,7 +466,7 @@ contract unitTestCorrect_NameService_withdrawOffer_AsyncExecutionOnPay is
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeWithdrawOfferSignatures(
                 COMMON_USER_NO_STAKER_2,
@@ -490,7 +490,7 @@ contract unitTestCorrect_NameService_withdrawOffer_AsyncExecutionOnPay is
             "test",
             0,
             totalPriorityFee,
-            signatureMNS,
+            signatureNameService,
             10000001,
             true,
             signatureEVVM

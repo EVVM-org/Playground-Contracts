@@ -75,7 +75,7 @@ contract unitTestCorrect_NameService_preRegistrationUsername_SyncExecutionOnPay 
     function makePreRegistrationUsernameSignature(
         string memory username,
         uint256 clowNumber,
-        uint256 nonceMNS,
+        uint256 nonceNameService,
         bool givePriorityFee,
         uint256 priorityFeeAmount,
         uint256 nonceEVVM,
@@ -83,7 +83,7 @@ contract unitTestCorrect_NameService_preRegistrationUsername_SyncExecutionOnPay 
     )
         private
         view
-        returns (bytes memory signatureMNS, bytes memory signatureEVVM)
+        returns (bytes memory signatureNameService, bytes memory signatureEVVM)
     {
         uint8 v;
         bytes32 r;
@@ -94,10 +94,10 @@ contract unitTestCorrect_NameService_preRegistrationUsername_SyncExecutionOnPay 
                 COMMON_USER_NO_STAKER_1.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPreRegistrationUsername(
                     keccak256(abi.encodePacked(username, uint256(clowNumber))),
-                    nonceMNS
+                    nonceNameService
                 )
             );
-            signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+            signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
             (v, r, s) = vm.sign(
                 COMMON_USER_NO_STAKER_1.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPay(
@@ -117,10 +117,10 @@ contract unitTestCorrect_NameService_preRegistrationUsername_SyncExecutionOnPay 
                 COMMON_USER_NO_STAKER_1.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPreRegistrationUsername(
                     keccak256(abi.encodePacked(username, uint256(clowNumber))),
-                    nonceMNS
+                    nonceNameService
                 )
             );
-            signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+            signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
             signatureEVVM = "";
         }
     }
@@ -128,7 +128,7 @@ contract unitTestCorrect_NameService_preRegistrationUsername_SyncExecutionOnPay 
     function test__unit_correct__preRegistrationUsername__nS_nPF() external {
 
 
-        (bytes memory signatureMNS, ) = makePreRegistrationUsernameSignature(
+        (bytes memory signatureNameService, ) = makePreRegistrationUsernameSignature(
             "test",
             10101,
             1001,
@@ -145,7 +145,7 @@ contract unitTestCorrect_NameService_preRegistrationUsername_SyncExecutionOnPay 
             1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
             0,
-            signatureMNS,
+            signatureNameService,
             0,
             false,
             hex""
@@ -180,7 +180,7 @@ contract unitTestCorrect_NameService_preRegistrationUsername_SyncExecutionOnPay 
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makePreRegistrationUsernameSignature(
                 "test",
@@ -198,7 +198,7 @@ contract unitTestCorrect_NameService_preRegistrationUsername_SyncExecutionOnPay 
             1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
             totalPriorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
                 false,
             signatureEVVM
@@ -229,7 +229,7 @@ contract unitTestCorrect_NameService_preRegistrationUsername_SyncExecutionOnPay 
 
     function test__unit_correct__preRegistrationUsername__S_nPF() external {
     
-        (bytes memory signatureMNS, ) = makePreRegistrationUsernameSignature(
+        (bytes memory signatureNameService, ) = makePreRegistrationUsernameSignature(
             "test",
             10101,
             1001,
@@ -246,7 +246,7 @@ contract unitTestCorrect_NameService_preRegistrationUsername_SyncExecutionOnPay 
             1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
             0,
-            signatureMNS,
+            signatureNameService,
             0,
             false,
             hex""
@@ -281,7 +281,7 @@ contract unitTestCorrect_NameService_preRegistrationUsername_SyncExecutionOnPay 
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makePreRegistrationUsernameSignature(
                 "test",
@@ -299,7 +299,7 @@ contract unitTestCorrect_NameService_preRegistrationUsername_SyncExecutionOnPay 
             1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
             totalPriorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
                 false,
             signatureEVVM

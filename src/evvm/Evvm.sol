@@ -996,8 +996,8 @@ contract Evvm is EvvmStorage {
         timeToAcceptImplementation = 0;
     }
 
-    //░▒▓█MNS address███▓▒░
-    function setMNSAddress(address _nameServiceAddress) external onlyAdmin {
+    //░▒▓█NameService address███▓▒░
+    function setNameServiceAddress(address _nameServiceAddress) external onlyAdmin {
         nameServiceAddress = _nameServiceAddress;
     }
 

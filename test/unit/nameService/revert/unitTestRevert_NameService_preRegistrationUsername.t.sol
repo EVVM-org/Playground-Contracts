@@ -68,7 +68,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
         AccountData memory user,
         string memory username,
         uint256 clowNumber,
-        uint256 nonceMNS,
+        uint256 nonceNameService,
         bool givePriorityFee,
         uint256 priorityFeeAmount,
         uint256 nonceEVVM,
@@ -76,7 +76,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
     )
         private
         view
-        returns (bytes memory signatureMNS, bytes memory signatureEVVM)
+        returns (bytes memory signatureNameService, bytes memory signatureEVVM)
     {
         uint8 v;
         bytes32 r;
@@ -87,10 +87,10 @@ contract unitTestRevert_NameService_preRegistrationUsername is
                 user.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPreRegistrationUsername(
                     keccak256(abi.encodePacked(username, uint256(clowNumber))),
-                    nonceMNS
+                    nonceNameService
                 )
             );
-            signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+            signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
             (v, r, s) = vm.sign(
                 user.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPay(
@@ -110,10 +110,10 @@ contract unitTestRevert_NameService_preRegistrationUsername is
                 user.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPreRegistrationUsername(
                     keccak256(abi.encodePacked(username, uint256(clowNumber))),
-                    nonceMNS
+                    nonceNameService
                 )
             );
-            signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+            signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
             signatureEVVM = "";
         }
     }
@@ -131,7 +131,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
         uint8 v;
         bytes32 r;
         bytes32 s;
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
 
         uint256 totalPriorityFeeAmount = addBalance(
@@ -147,7 +147,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
                 1001
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
@@ -171,7 +171,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
             1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
             totalPriorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             101,
             true,
             signatureEVVM
@@ -207,7 +207,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
         uint8 v;
         bytes32 r;
         bytes32 s;
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
 
         uint256 totalPriorityFeeAmount = addBalance(
@@ -223,7 +223,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
                 1001
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
@@ -247,7 +247,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
             1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
             totalPriorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             101,
             true,
             signatureEVVM
@@ -283,7 +283,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
         uint8 v;
         bytes32 r;
         bytes32 s;
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
 
         uint256 totalPriorityFeeAmount = addBalance(
@@ -299,7 +299,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
                 1001
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
@@ -323,7 +323,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
             1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
             totalPriorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             101,
             true,
             signatureEVVM
@@ -353,13 +353,13 @@ contract unitTestRevert_NameService_preRegistrationUsername is
         );
     }
 
-    function test__unit_revert__preRegistrationUsername__bSigAtNonceMNS()
+    function test__unit_revert__preRegistrationUsername__bSigAtNonceNameService()
         external
     {
         uint8 v;
         bytes32 r;
         bytes32 s;
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
 
         uint256 totalPriorityFeeAmount = addBalance(
@@ -375,7 +375,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
                 777
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
@@ -399,7 +399,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
             1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
             totalPriorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             101,
             true,
             signatureEVVM
@@ -435,7 +435,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
         uint8 v;
         bytes32 r;
         bytes32 s;
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
 
         uint256 totalPriorityFeeAmount = addBalance(
@@ -451,7 +451,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
                 1001
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
@@ -475,7 +475,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
             1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
             totalPriorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             101,
             true,
             signatureEVVM
@@ -511,7 +511,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
         uint8 v;
         bytes32 r;
         bytes32 s;
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
 
         uint256 totalPriorityFeeAmount = addBalance(
@@ -527,7 +527,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
                 1001
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
@@ -551,7 +551,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
             1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
             totalPriorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             101,
             true,
             signatureEVVM
@@ -587,7 +587,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
         uint8 v;
         bytes32 r;
         bytes32 s;
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
 
         uint256 totalPriorityFeeAmount = addBalance(
@@ -603,7 +603,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
                 1001
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
@@ -627,7 +627,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
             1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
             totalPriorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             101,
             true,
             signatureEVVM
@@ -663,7 +663,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
         uint8 v;
         bytes32 r;
         bytes32 s;
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
 
         uint256 totalPriorityFeeAmount = addBalance(
@@ -679,7 +679,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
                 1001
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
@@ -703,7 +703,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
             1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
             totalPriorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             101,
             true,
             signatureEVVM
@@ -739,7 +739,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
         uint8 v;
         bytes32 r;
         bytes32 s;
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
 
         uint256 totalPriorityFeeAmount = addBalance(
@@ -755,7 +755,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
                 1001
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
@@ -779,7 +779,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
             1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
             totalPriorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             101,
             true,
             signatureEVVM
@@ -815,7 +815,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
         uint8 v;
         bytes32 r;
         bytes32 s;
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
 
         uint256 totalPriorityFeeAmount = addBalance(
@@ -831,7 +831,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
                 1001
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
@@ -855,7 +855,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
             1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
             totalPriorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             101,
             true,
             signatureEVVM
@@ -891,7 +891,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
         uint8 v;
         bytes32 r;
         bytes32 s;
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
 
         uint256 totalPriorityFeeAmount = addBalance(
@@ -907,7 +907,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
                 1001
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
@@ -931,7 +931,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
             1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
             totalPriorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             101,
             true,
             signatureEVVM
@@ -967,7 +967,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
         uint8 v;
         bytes32 r;
         bytes32 s;
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
 
         uint256 totalPriorityFeeAmount = addBalance(
@@ -983,7 +983,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
                 1001
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
@@ -1007,7 +1007,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
             1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
             totalPriorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             101,
             true,
             signatureEVVM
@@ -1043,7 +1043,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
         uint8 v;
         bytes32 r;
         bytes32 s;
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
 
         uint256 totalPriorityFeeAmount = addBalance(
@@ -1059,7 +1059,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
                 1001
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
@@ -1083,7 +1083,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
             1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
             totalPriorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             101,
             true,
             signatureEVVM
@@ -1116,7 +1116,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
     function test__unit_revert__preRegistrationUsername__EVVMnonceAlreadyUsed()
         external
     {
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
 
         uint256 totalPriorityFeeAmount = addBalance(
@@ -1125,7 +1125,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
             0.001 ether
         );
 
-        (signatureMNS, signatureEVVM) = makePreRegistrationUsernameSignature(
+        (signatureNameService, signatureEVVM) = makePreRegistrationUsernameSignature(
             COMMON_USER_NO_STAKER_1,
             "user",
             10101,
@@ -1142,14 +1142,14 @@ contract unitTestRevert_NameService_preRegistrationUsername is
             1001,
             keccak256(abi.encodePacked("user", uint256(10101))),
             0,
-            signatureMNS,
+            signatureNameService,
             101,
             true,
             signatureEVVM
         );
         vm.stopPrank();
 
-        (signatureMNS, signatureEVVM) = makePreRegistrationUsernameSignature(
+        (signatureNameService, signatureEVVM) = makePreRegistrationUsernameSignature(
             COMMON_USER_NO_STAKER_1,
             "test",
             10101,
@@ -1167,7 +1167,7 @@ contract unitTestRevert_NameService_preRegistrationUsername is
             1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
             totalPriorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             202,
             true,
             signatureEVVM

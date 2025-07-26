@@ -113,8 +113,8 @@ contract unitTestRevert_NameService_removeCustomMetadata is
         AccountData memory user,
         string memory username,
         uint256 clowNumber,
-        uint256 nonceMNSPre,
-        uint256 nonceMNS
+        uint256 nonceNameServicePre,
+        uint256 nonceNameService
     ) private {
         evvm._addBalance(
             user.Address,
@@ -129,13 +129,13 @@ contract unitTestRevert_NameService_removeCustomMetadata is
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPreRegistrationUsername(
                 keccak256(abi.encodePacked(username, uint256(clowNumber))),
-                nonceMNSPre
+                nonceNameServicePre
             )
         );
 
         nameService.preRegistrationUsername(
             user.Address,
-            nonceMNSPre,
+            nonceNameServicePre,
             keccak256(abi.encodePacked(username, uint256(clowNumber))),
             0,
             Erc191TestBuilder.buildERC191Signature(v, r, s),
@@ -151,10 +151,10 @@ contract unitTestRevert_NameService_removeCustomMetadata is
             Erc191TestBuilder.buildMessageSignedForRegistrationUsername(
                 username,
                 clowNumber,
-                nonceMNS
+                nonceNameService
             )
         );
-        bytes memory signatureMNS = Erc191TestBuilder.buildERC191Signature(
+        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
             v,
             r,
             s
@@ -181,10 +181,10 @@ contract unitTestRevert_NameService_removeCustomMetadata is
 
         nameService.registrationUsername(
             user.Address,
-            nonceMNS,
+            nonceNameService,
             username,
             clowNumber,
-            signatureMNS,
+            signatureNameService,
             0,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
@@ -196,7 +196,7 @@ contract unitTestRevert_NameService_removeCustomMetadata is
         AccountData memory user,
         string memory username,
         string memory customMetadata,
-        uint256 nonceMNS,
+        uint256 nonceNameService,
         uint256 nonceEVVM,
         bool priorityFlagEVVM
     ) private {
@@ -215,10 +215,10 @@ contract unitTestRevert_NameService_removeCustomMetadata is
             Erc191TestBuilder.buildMessageSignedForAddCustomMetadata(
                 username,
                 customMetadata,
-                nonceMNS
+                nonceNameService
             )
         );
-        bytes memory signatureMNS = Erc191TestBuilder.buildERC191Signature(
+        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
             v,
             r,
             s
@@ -245,11 +245,11 @@ contract unitTestRevert_NameService_removeCustomMetadata is
 
         nameService.addCustomMetadata(
             user.Address,
-            nonceMNS,
+            nonceNameService,
             username,
             customMetadata,
             0,
-            signatureMNS,
+            signatureNameService,
             nonceEVVM,
             priorityFlagEVVM,
             signatureEVVM
@@ -260,14 +260,14 @@ contract unitTestRevert_NameService_removeCustomMetadata is
         AccountData memory user,
         string memory username,
         uint256 indexCustomMetadata,
-        uint256 nonceMNS,
+        uint256 nonceNameService,
         uint256 priorityFeeAmountEVVM,
         uint256 nonceEVVM,
         bool priorityFlagEVVM
     )
         private
         view
-        returns (bytes memory signatureMNS, bytes memory signatureEVVM)
+        returns (bytes memory signatureNameService, bytes memory signatureEVVM)
     {
         uint8 v;
         bytes32 r;
@@ -278,10 +278,10 @@ contract unitTestRevert_NameService_removeCustomMetadata is
             Erc191TestBuilder.buildMessageSignedForRemoveCustomMetadata(
                 username,
                 indexCustomMetadata,
-                nonceMNS
+                nonceNameService
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -313,7 +313,7 @@ contract unitTestRevert_NameService_removeCustomMetadata is
             uint256 totalPriorityFeeAmount
         ) = addBalance(COMMON_USER_NO_STAKER_1, 0.0001 ether);
 
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
         uint8 v;
         bytes32 r;
@@ -327,7 +327,7 @@ contract unitTestRevert_NameService_removeCustomMetadata is
                 100010001
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -353,7 +353,7 @@ contract unitTestRevert_NameService_removeCustomMetadata is
             "test",
             1,
             totalPriorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             100010001,
             true,
             signatureEVVM
@@ -394,7 +394,7 @@ contract unitTestRevert_NameService_removeCustomMetadata is
         ) = addBalance(COMMON_USER_NO_STAKER_1, 0.0001 ether);
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRemoveCustomMetadataSignatures(
                 COMMON_USER_NO_STAKER_1,
@@ -415,7 +415,7 @@ contract unitTestRevert_NameService_removeCustomMetadata is
             "test",
             1,
             totalPriorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             100010001,
             true,
             signatureEVVM
@@ -454,7 +454,7 @@ contract unitTestRevert_NameService_removeCustomMetadata is
             uint256 totalPriorityFeeAmount
         ) = addBalance(COMMON_USER_NO_STAKER_1, 0.0001 ether);
 
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
         uint8 v;
         bytes32 r;
@@ -468,7 +468,7 @@ contract unitTestRevert_NameService_removeCustomMetadata is
                 100010001
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -494,7 +494,7 @@ contract unitTestRevert_NameService_removeCustomMetadata is
             "test",
             1,
             totalPriorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             100010001,
             true,
             signatureEVVM
@@ -534,7 +534,7 @@ contract unitTestRevert_NameService_removeCustomMetadata is
             uint256 totalPriorityFeeAmount
         ) = addBalance(COMMON_USER_NO_STAKER_1, 0.0001 ether);
 
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
         uint8 v;
         bytes32 r;
@@ -548,7 +548,7 @@ contract unitTestRevert_NameService_removeCustomMetadata is
                 100010001
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -574,7 +574,7 @@ contract unitTestRevert_NameService_removeCustomMetadata is
             "test",
             1,
             totalPriorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             100010001,
             true,
             signatureEVVM
@@ -612,7 +612,7 @@ contract unitTestRevert_NameService_removeCustomMetadata is
             uint256 totalPriorityFeeAmount
         ) = addBalance(COMMON_USER_NO_STAKER_1, 0.0001 ether);
 
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
         uint8 v;
         bytes32 r;
@@ -626,7 +626,7 @@ contract unitTestRevert_NameService_removeCustomMetadata is
                 100010001
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -652,7 +652,7 @@ contract unitTestRevert_NameService_removeCustomMetadata is
             "test",
             1,
             totalPriorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             100010001,
             true,
             signatureEVVM
@@ -684,7 +684,7 @@ contract unitTestRevert_NameService_removeCustomMetadata is
         );
     }
 
-    function test__unit_revert__removeCustomMetadata__bSigAtNonceMNS()
+    function test__unit_revert__removeCustomMetadata__bSigAtNonceNameService()
         external
     {
         (
@@ -692,7 +692,7 @@ contract unitTestRevert_NameService_removeCustomMetadata is
             uint256 totalPriorityFeeAmount
         ) = addBalance(COMMON_USER_NO_STAKER_1, 0.0001 ether);
 
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
         uint8 v;
         bytes32 r;
@@ -706,7 +706,7 @@ contract unitTestRevert_NameService_removeCustomMetadata is
                 777
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -732,7 +732,7 @@ contract unitTestRevert_NameService_removeCustomMetadata is
             "test",
             1,
             totalPriorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             100010001,
             true,
             signatureEVVM
@@ -773,7 +773,7 @@ contract unitTestRevert_NameService_removeCustomMetadata is
         ) = addBalance(COMMON_USER_NO_STAKER_2, 0.0001 ether);
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRemoveCustomMetadataSignatures(
                 COMMON_USER_NO_STAKER_2,
@@ -794,7 +794,7 @@ contract unitTestRevert_NameService_removeCustomMetadata is
             "test",
             1,
             totalPriorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             100010001,
             true,
             signatureEVVM
@@ -835,7 +835,7 @@ contract unitTestRevert_NameService_removeCustomMetadata is
         ) = addBalance(COMMON_USER_NO_STAKER_1, 0.0001 ether);
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRemoveCustomMetadataSignatures(
                 COMMON_USER_NO_STAKER_1,
@@ -856,7 +856,7 @@ contract unitTestRevert_NameService_removeCustomMetadata is
             "test",
             1,
             totalPriorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             100010001,
             true,
             signatureEVVM
@@ -897,7 +897,7 @@ contract unitTestRevert_NameService_removeCustomMetadata is
         ) = addBalance(COMMON_USER_NO_STAKER_1, 0.0001 ether);
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRemoveCustomMetadataSignatures(
                 COMMON_USER_NO_STAKER_1,
@@ -918,7 +918,7 @@ contract unitTestRevert_NameService_removeCustomMetadata is
             "test",
             777,
             totalPriorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             100010001,
             true,
             signatureEVVM
@@ -948,7 +948,7 @@ contract unitTestRevert_NameService_removeCustomMetadata is
         uint256 totalPriorityFeeAmount = 0;
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRemoveCustomMetadataSignatures(
                 COMMON_USER_NO_STAKER_1,
@@ -969,7 +969,7 @@ contract unitTestRevert_NameService_removeCustomMetadata is
             "test",
             1,
             totalPriorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             100010001,
             true,
             signatureEVVM

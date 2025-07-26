@@ -92,8 +92,8 @@ contract fuzzTest_NameService_flushCustomMetadata is Test, Constants {
         AccountData memory user,
         string memory username,
         uint256 clowNumber,
-        uint256 nonceMNSPre,
-        uint256 nonceMNS
+        uint256 nonceNameServicePre,
+        uint256 nonceNameService
     ) private {
         evvm._addBalance(
             user.Address,
@@ -108,13 +108,13 @@ contract fuzzTest_NameService_flushCustomMetadata is Test, Constants {
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPreRegistrationUsername(
                 keccak256(abi.encodePacked(username, uint256(clowNumber))),
-                nonceMNSPre
+                nonceNameServicePre
             )
         );
 
         nameService.preRegistrationUsername(
             user.Address,
-            nonceMNSPre,
+            nonceNameServicePre,
             keccak256(abi.encodePacked(username, uint256(clowNumber))),
             0,
             Erc191TestBuilder.buildERC191Signature(v, r, s),
@@ -130,10 +130,10 @@ contract fuzzTest_NameService_flushCustomMetadata is Test, Constants {
             Erc191TestBuilder.buildMessageSignedForRegistrationUsername(
                 username,
                 clowNumber,
-                nonceMNS
+                nonceNameService
             )
         );
-        bytes memory signatureMNS = Erc191TestBuilder.buildERC191Signature(
+        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
             v,
             r,
             s
@@ -160,10 +160,10 @@ contract fuzzTest_NameService_flushCustomMetadata is Test, Constants {
 
         nameService.registrationUsername(
             user.Address,
-            nonceMNS,
+            nonceNameService,
             username,
             clowNumber,
-            signatureMNS,
+            signatureNameService,
             0,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
@@ -175,7 +175,7 @@ contract fuzzTest_NameService_flushCustomMetadata is Test, Constants {
         AccountData memory user,
         string memory username,
         string memory customMetadata,
-        uint256 nonceMNS,
+        uint256 nonceNameService,
         uint256 nonceEVVM,
         bool priorityFlagEVVM
     ) private {
@@ -194,10 +194,10 @@ contract fuzzTest_NameService_flushCustomMetadata is Test, Constants {
             Erc191TestBuilder.buildMessageSignedForAddCustomMetadata(
                 username,
                 customMetadata,
-                nonceMNS
+                nonceNameService
             )
         );
-        bytes memory signatureMNS = Erc191TestBuilder.buildERC191Signature(
+        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
             v,
             r,
             s
@@ -224,11 +224,11 @@ contract fuzzTest_NameService_flushCustomMetadata is Test, Constants {
 
         nameService.addCustomMetadata(
             user.Address,
-            nonceMNS,
+            nonceNameService,
             username,
             customMetadata,
             0,
-            signatureMNS,
+            signatureNameService,
             nonceEVVM,
             priorityFlagEVVM,
             signatureEVVM
@@ -238,14 +238,14 @@ contract fuzzTest_NameService_flushCustomMetadata is Test, Constants {
     function makeFlushCustomMetadataSignatures(
         AccountData memory user,
         string memory username,
-        uint256 nonceMNS,
+        uint256 nonceNameService,
         uint256 priorityFeeAmountEVVM,
         uint256 nonceEVVM,
         bool priorityFlagEVVM
     )
         private
         view
-        returns (bytes memory signatureMNS, bytes memory signatureEVVM)
+        returns (bytes memory signatureNameService, bytes memory signatureEVVM)
     {
         uint8 v;
         bytes32 r;
@@ -255,10 +255,10 @@ contract fuzzTest_NameService_flushCustomMetadata is Test, Constants {
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForFlushCustomMetadata(
                 username,
-                nonceMNS
+                nonceNameService
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -303,14 +303,14 @@ contract fuzzTest_NameService_flushCustomMetadata is Test, Constants {
 
     struct FlushCustomMetadataFuzzTestInput_nPF {
         uint8 amountOfCustomMetadata;
-        uint32 nonceMNS;
+        uint32 nonceNameService;
         uint32 nonceEVVM;
         bool priorityFlagEVVM;
     }
 
     struct FlushCustomMetadataFuzzTestInput_PF {
         uint8 amountOfCustomMetadata;
-        uint32 nonceMNS;
+        uint32 nonceNameService;
         uint32 nonceEVVM;
         uint16 priorityFeeAmountEVVM;
         bool priorityFlagEVVM;
@@ -320,11 +320,11 @@ contract fuzzTest_NameService_flushCustomMetadata is Test, Constants {
         FlushCustomMetadataFuzzTestInput_nPF memory input
     ) external {
         vm.assume(
-            input.nonceMNS > uint256(input.amountOfCustomMetadata) &&
+            input.nonceNameService > uint256(input.amountOfCustomMetadata) &&
                 input.nonceEVVM > uint256(input.amountOfCustomMetadata) &&
-                input.nonceMNS != 10101 &&
+                input.nonceNameService != 10101 &&
                 input.nonceEVVM != 10101 &&
-                input.nonceMNS != 20202 &&
+                input.nonceNameService != 20202 &&
                 input.nonceEVVM != 20202 &&
                 uint256(input.amountOfCustomMetadata) > 0
         );
@@ -345,12 +345,12 @@ contract fuzzTest_NameService_flushCustomMetadata is Test, Constants {
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeFlushCustomMetadataSignatures(
                 COMMON_USER_NO_STAKER_1,
                 "test",
-                input.nonceMNS,
+                input.nonceNameService,
                 totalPriorityFeeAmount,
                 nonceEvvm,
                 input.priorityFlagEVVM
@@ -360,10 +360,10 @@ contract fuzzTest_NameService_flushCustomMetadata is Test, Constants {
 
         nameService.flushCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceMNS,
+            input.nonceNameService,
             "test",
             totalPriorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -393,11 +393,11 @@ contract fuzzTest_NameService_flushCustomMetadata is Test, Constants {
         FlushCustomMetadataFuzzTestInput_PF memory input
     ) external {
         vm.assume(
-            input.nonceMNS > uint256(input.amountOfCustomMetadata) &&
+            input.nonceNameService > uint256(input.amountOfCustomMetadata) &&
                 input.nonceEVVM > uint256(input.amountOfCustomMetadata) &&
-                input.nonceMNS != 10101 &&
+                input.nonceNameService != 10101 &&
                 input.nonceEVVM != 10101 &&
-                input.nonceMNS != 20202 &&
+                input.nonceNameService != 20202 &&
                 input.nonceEVVM != 20202 &&
                 uint256(input.amountOfCustomMetadata) > 0 &&
                 input.priorityFeeAmountEVVM > 0
@@ -419,12 +419,12 @@ contract fuzzTest_NameService_flushCustomMetadata is Test, Constants {
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeFlushCustomMetadataSignatures(
                 COMMON_USER_NO_STAKER_1,
                 "test",
-                input.nonceMNS,
+                input.nonceNameService,
                 totalPriorityFeeAmount,
                 nonceEvvm,
                 input.priorityFlagEVVM
@@ -434,10 +434,10 @@ contract fuzzTest_NameService_flushCustomMetadata is Test, Constants {
 
         nameService.flushCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceMNS,
+            input.nonceNameService,
             "test",
             totalPriorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -467,11 +467,11 @@ contract fuzzTest_NameService_flushCustomMetadata is Test, Constants {
         FlushCustomMetadataFuzzTestInput_nPF memory input
     ) external {
         vm.assume(
-            input.nonceMNS > uint256(input.amountOfCustomMetadata) &&
+            input.nonceNameService > uint256(input.amountOfCustomMetadata) &&
                 input.nonceEVVM > uint256(input.amountOfCustomMetadata) &&
-                input.nonceMNS != 10101 &&
+                input.nonceNameService != 10101 &&
                 input.nonceEVVM != 10101 &&
-                input.nonceMNS != 20202 &&
+                input.nonceNameService != 20202 &&
                 input.nonceEVVM != 20202 &&
                 uint256(input.amountOfCustomMetadata) > 0
         );
@@ -492,12 +492,12 @@ contract fuzzTest_NameService_flushCustomMetadata is Test, Constants {
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeFlushCustomMetadataSignatures(
                 COMMON_USER_NO_STAKER_1,
                 "test",
-                input.nonceMNS,
+                input.nonceNameService,
                 totalPriorityFeeAmount,
                 nonceEvvm,
                 input.priorityFlagEVVM
@@ -507,10 +507,10 @@ contract fuzzTest_NameService_flushCustomMetadata is Test, Constants {
 
         nameService.flushCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceMNS,
+            input.nonceNameService,
             "test",
             totalPriorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -538,11 +538,11 @@ contract fuzzTest_NameService_flushCustomMetadata is Test, Constants {
         FlushCustomMetadataFuzzTestInput_PF memory input
     ) external {
         vm.assume(
-            input.nonceMNS > uint256(input.amountOfCustomMetadata) &&
+            input.nonceNameService > uint256(input.amountOfCustomMetadata) &&
                 input.nonceEVVM > uint256(input.amountOfCustomMetadata) &&
-                input.nonceMNS != 10101 &&
+                input.nonceNameService != 10101 &&
                 input.nonceEVVM != 10101 &&
-                input.nonceMNS != 20202 &&
+                input.nonceNameService != 20202 &&
                 input.nonceEVVM != 20202 &&
                 uint256(input.amountOfCustomMetadata) > 0 &&
                 input.priorityFeeAmountEVVM > 0
@@ -564,12 +564,12 @@ contract fuzzTest_NameService_flushCustomMetadata is Test, Constants {
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeFlushCustomMetadataSignatures(
                 COMMON_USER_NO_STAKER_1,
                 "test",
-                input.nonceMNS,
+                input.nonceNameService,
                 totalPriorityFeeAmount,
                 nonceEvvm,
                 input.priorityFlagEVVM
@@ -579,10 +579,10 @@ contract fuzzTest_NameService_flushCustomMetadata is Test, Constants {
 
         nameService.flushCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceMNS,
+            input.nonceNameService,
             "test",
             totalPriorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM

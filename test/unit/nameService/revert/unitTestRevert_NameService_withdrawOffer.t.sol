@@ -83,8 +83,8 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
         AccountData memory user,
         string memory username,
         uint256 clowNumber,
-        uint256 nonceMNSPre,
-        uint256 nonceMNS
+        uint256 nonceNameServicePre,
+        uint256 nonceNameService
     ) private {
         evvm._addBalance(
             user.Address,
@@ -99,13 +99,13 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPreRegistrationUsername(
                 keccak256(abi.encodePacked(username, uint256(clowNumber))),
-                nonceMNSPre
+                nonceNameServicePre
             )
         );
 
         nameService.preRegistrationUsername(
             user.Address,
-            nonceMNSPre,
+            nonceNameServicePre,
             keccak256(abi.encodePacked(username, uint256(clowNumber))),
             0,
             Erc191TestBuilder.buildERC191Signature(v, r, s),
@@ -121,10 +121,10 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             Erc191TestBuilder.buildMessageSignedForRegistrationUsername(
                 username,
                 clowNumber,
-                nonceMNS
+                nonceNameService
             )
         );
-        bytes memory signatureMNS = Erc191TestBuilder.buildERC191Signature(
+        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
             v,
             r,
             s
@@ -151,10 +151,10 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
 
         nameService.registrationUsername(
             user.Address,
-            nonceMNS,
+            nonceNameService,
             username,
             clowNumber,
-            signatureMNS,
+            signatureNameService,
             0,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
@@ -167,14 +167,14 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
         string memory usernameToMakeOffer,
         uint256 expireDate,
         uint256 amountToOffer,
-        uint256 nonceMNS,
+        uint256 nonceNameService,
         uint256 nonceEVVM,
         bool priorityFlagEVVM
     ) private {
         uint8 v;
         bytes32 r;
         bytes32 s;
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
 
         evvm._addBalance(user.Address, MATE_TOKEN_ADDRESS, amountToOffer);
@@ -185,10 +185,10 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
                 usernameToMakeOffer,
                 expireDate,
                 amountToOffer,
-                nonceMNS
+                nonceNameService
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -207,12 +207,12 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
 
         nameService.makeOffer(
             user.Address,
-            nonceMNS,
+            nonceNameService,
             usernameToMakeOffer,
             amountToOffer,
             expireDate,
             0,
-            signatureMNS,
+            signatureNameService,
             nonceEVVM,
             priorityFlagEVVM,
             signatureEVVM
@@ -224,14 +224,14 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
         bool givePriorityFee,
         string memory usernameToFindOffer,
         uint256 index,
-        uint256 nonceMNS,
+        uint256 nonceNameService,
         uint256 priorityFeeAmountEVVM,
         uint256 nonceEVVM,
         bool priorityFlagEVVM
     )
         private
         view
-        returns (bytes memory signatureMNS, bytes memory signatureEVVM)
+        returns (bytes memory signatureNameService, bytes memory signatureEVVM)
     {
         uint8 v;
         bytes32 r;
@@ -243,10 +243,10 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
                 Erc191TestBuilder.buildMessageSignedForWithdrawOffer(
                     usernameToFindOffer,
                     index,
-                    nonceMNS
+                    nonceNameService
                 )
             );
-            signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+            signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
             (v, r, s) = vm.sign(
                 user.PrivateKey,
@@ -268,10 +268,10 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
                 Erc191TestBuilder.buildMessageSignedForWithdrawOffer(
                     usernameToFindOffer,
                     index,
-                    nonceMNS
+                    nonceNameService
                 )
             );
-            signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+            signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
             signatureEVVM = "";
         }
     }
@@ -291,7 +291,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             0.0001 ether
         );
 
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
         uint8 v;
         bytes32 r;
@@ -305,7 +305,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
                 100010001
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
@@ -334,7 +334,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             "test",
             0,
             totalPriorityFee,
-            signatureMNS,
+            signatureNameService,
             10000001,
             true,
             signatureEVVM
@@ -371,7 +371,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeWithdrawOfferSignatures(
                 COMMON_USER_NO_STAKER_2,
@@ -396,7 +396,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             "test",
             0,
             totalPriorityFee,
-            signatureMNS,
+            signatureNameService,
             10000001,
             true,
             signatureEVVM
@@ -431,7 +431,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             0.0001 ether
         );
 
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
         uint8 v;
         bytes32 r;
@@ -445,7 +445,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
                 100010001
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
@@ -474,7 +474,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             "test",
             0,
             totalPriorityFee,
-            signatureMNS,
+            signatureNameService,
             10000001,
             true,
             signatureEVVM
@@ -508,7 +508,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             0.0001 ether
         );
 
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
         uint8 v;
         bytes32 r;
@@ -522,7 +522,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
                 100010001
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
@@ -551,7 +551,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             "test",
             0,
             totalPriorityFee,
-            signatureMNS,
+            signatureNameService,
             10000001,
             true,
             signatureEVVM
@@ -585,7 +585,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             0.0001 ether
         );
 
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
         uint8 v;
         bytes32 r;
@@ -599,7 +599,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
                 100010001
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
@@ -628,7 +628,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             "test",
             0,
             totalPriorityFee,
-            signatureMNS,
+            signatureNameService,
             10000001,
             true,
             signatureEVVM
@@ -656,13 +656,13 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
         );
     }
 
-    function test__unit_revert__withdrawOffer__bSigAtNonceMNS() external {
+    function test__unit_revert__withdrawOffer__bSigAtNonceNameService() external {
         uint256 totalPriorityFee = addBalance(
             COMMON_USER_NO_STAKER_2,
             0.0001 ether
         );
 
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
         uint8 v;
         bytes32 r;
@@ -672,7 +672,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForWithdrawOffer("test", 0, 777)
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
@@ -701,7 +701,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             "test",
             0,
             totalPriorityFee,
-            signatureMNS,
+            signatureNameService,
             10000001,
             true,
             signatureEVVM
@@ -735,7 +735,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             0.0001 ether
         );
 
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
         uint8 v;
         bytes32 r;
@@ -749,7 +749,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
                 100010001
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -778,7 +778,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             "test",
             0,
             totalPriorityFee,
-            signatureMNS,
+            signatureNameService,
             10000001,
             true,
             signatureEVVM
@@ -812,7 +812,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             0.0001 ether
         );
 
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
         uint8 v;
         bytes32 r;
@@ -826,7 +826,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
                 100010001
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
@@ -855,7 +855,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             "test",
             0,
             totalPriorityFee,
-            signatureMNS,
+            signatureNameService,
             10000001,
             true,
             signatureEVVM
@@ -889,7 +889,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             0.0001 ether
         );
 
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
         uint8 v;
         bytes32 r;
@@ -903,7 +903,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
                 100010001
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
@@ -932,7 +932,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             "test",
             0,
             totalPriorityFee,
-            signatureMNS,
+            signatureNameService,
             10000001,
             true,
             signatureEVVM
@@ -968,7 +968,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             0.0001 ether
         );
 
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
         uint8 v;
         bytes32 r;
@@ -982,7 +982,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
                 100010001
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
@@ -1011,7 +1011,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             "test",
             0,
             totalPriorityFee,
-            signatureMNS,
+            signatureNameService,
             10000001,
             true,
             signatureEVVM
@@ -1045,7 +1045,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             0.0001 ether
         );
 
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
         uint8 v;
         bytes32 r;
@@ -1059,7 +1059,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
                 100010001
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
@@ -1088,7 +1088,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             "test",
             0,
             totalPriorityFee,
-            signatureMNS,
+            signatureNameService,
             10000001,
             true,
             signatureEVVM
@@ -1124,7 +1124,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             0.0001 ether
         );
 
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
         uint8 v;
         bytes32 r;
@@ -1138,7 +1138,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
                 100010001
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
@@ -1167,7 +1167,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             "test",
             0,
             totalPriorityFee,
-            signatureMNS,
+            signatureNameService,
             10000001,
             true,
             signatureEVVM
@@ -1201,7 +1201,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             0.0001 ether
         );
 
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
         uint8 v;
         bytes32 r;
@@ -1215,7 +1215,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
                 100010001
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
@@ -1244,7 +1244,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             "test",
             0,
             totalPriorityFee,
-            signatureMNS,
+            signatureNameService,
             10000001,
             true,
             signatureEVVM
@@ -1280,7 +1280,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             0.0001 ether
         );
 
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
         uint8 v;
         bytes32 r;
@@ -1294,7 +1294,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
                 100010001
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
@@ -1323,7 +1323,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             "test",
             0,
             totalPriorityFee,
-            signatureMNS,
+            signatureNameService,
             10000001,
             true,
             signatureEVVM
@@ -1357,7 +1357,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             0.0001 ether
         );
 
-        bytes memory signatureMNS;
+        bytes memory signatureNameService;
         bytes memory signatureEVVM;
         uint8 v;
         bytes32 r;
@@ -1371,7 +1371,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
                 100010001
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
@@ -1400,7 +1400,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             "test",
             0,
             totalPriorityFee,
-            signatureMNS,
+            signatureNameService,
             10000001,
             true,
             signatureEVVM
@@ -1435,7 +1435,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeWithdrawOfferSignatures(
                 COMMON_USER_NO_STAKER_3,
@@ -1460,7 +1460,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             "test",
             0,
             totalPriorityFee,
-            signatureMNS,
+            signatureNameService,
             10000001,
             true,
             signatureEVVM
@@ -1495,7 +1495,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeWithdrawOfferSignatures(
                 COMMON_USER_NO_STAKER_2,
@@ -1520,7 +1520,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             "test",
             0,
             totalPriorityFee,
-            signatureMNS,
+            signatureNameService,
             10000001,
             true,
             signatureEVVM
@@ -1555,7 +1555,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeWithdrawOfferSignatures(
                 COMMON_USER_NO_STAKER_2,
@@ -1580,7 +1580,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
             "test",
             5,
             totalPriorityFee,
-            signatureMNS,
+            signatureNameService,
             10000001,
             true,
             signatureEVVM

@@ -80,8 +80,8 @@ contract unitTestCorrect_NameService_removeCustomMetadata_SyncExecutionOnPay is
         AccountData memory user,
         string memory username,
         uint256 clowNumber,
-        uint256 nonceMNSPre,
-        uint256 nonceMNS
+        uint256 nonceNameServicePre,
+        uint256 nonceNameService
     ) private {
         evvm._addBalance(
             user.Address,
@@ -96,13 +96,13 @@ contract unitTestCorrect_NameService_removeCustomMetadata_SyncExecutionOnPay is
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPreRegistrationUsername(
                 keccak256(abi.encodePacked(username, uint256(clowNumber))),
-                nonceMNSPre
+                nonceNameServicePre
             )
         );
 
         nameService.preRegistrationUsername(
             user.Address,
-            nonceMNSPre,
+            nonceNameServicePre,
             keccak256(abi.encodePacked(username, uint256(clowNumber))),
             0,
             Erc191TestBuilder.buildERC191Signature(v, r, s),
@@ -118,10 +118,10 @@ contract unitTestCorrect_NameService_removeCustomMetadata_SyncExecutionOnPay is
             Erc191TestBuilder.buildMessageSignedForRegistrationUsername(
                 username,
                 clowNumber,
-                nonceMNS
+                nonceNameService
             )
         );
-        bytes memory signatureMNS = Erc191TestBuilder.buildERC191Signature(
+        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
             v,
             r,
             s
@@ -148,10 +148,10 @@ contract unitTestCorrect_NameService_removeCustomMetadata_SyncExecutionOnPay is
 
         nameService.registrationUsername(
             user.Address,
-            nonceMNS,
+            nonceNameService,
             username,
             clowNumber,
-            signatureMNS,
+            signatureNameService,
             0,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
@@ -163,7 +163,7 @@ contract unitTestCorrect_NameService_removeCustomMetadata_SyncExecutionOnPay is
         AccountData memory user,
         string memory username,
         string memory customMetadata,
-        uint256 nonceMNS,
+        uint256 nonceNameService,
         uint256 nonceEVVM,
         bool priorityFlagEVVM
     ) private {
@@ -182,10 +182,10 @@ contract unitTestCorrect_NameService_removeCustomMetadata_SyncExecutionOnPay is
             Erc191TestBuilder.buildMessageSignedForAddCustomMetadata(
                 username,
                 customMetadata,
-                nonceMNS
+                nonceNameService
             )
         );
-        bytes memory signatureMNS = Erc191TestBuilder.buildERC191Signature(
+        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
             v,
             r,
             s
@@ -212,11 +212,11 @@ contract unitTestCorrect_NameService_removeCustomMetadata_SyncExecutionOnPay is
 
         nameService.addCustomMetadata(
             user.Address,
-            nonceMNS,
+            nonceNameService,
             username,
             customMetadata,
             0,
-            signatureMNS,
+            signatureNameService,
             nonceEVVM,
             priorityFlagEVVM,
             signatureEVVM
@@ -227,14 +227,14 @@ contract unitTestCorrect_NameService_removeCustomMetadata_SyncExecutionOnPay is
         AccountData memory user,
         string memory username,
         uint256 indexCustomMetadata,
-        uint256 nonceMNS,
+        uint256 nonceNameService,
         uint256 priorityFeeAmountEVVM,
         uint256 nonceEVVM,
         bool priorityFlagEVVM
     )
         private
         view
-        returns (bytes memory signatureMNS, bytes memory signatureEVVM)
+        returns (bytes memory signatureNameService, bytes memory signatureEVVM)
     {
         uint8 v;
         bytes32 r;
@@ -245,10 +245,10 @@ contract unitTestCorrect_NameService_removeCustomMetadata_SyncExecutionOnPay is
             Erc191TestBuilder.buildMessageSignedForRemoveCustomMetadata(
                 username,
                 indexCustomMetadata,
-                nonceMNS
+                nonceNameService
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -303,7 +303,7 @@ contract unitTestCorrect_NameService_removeCustomMetadata_SyncExecutionOnPay is
         uint256 priorityFeeAmountEVVM = addBalance(COMMON_USER_NO_STAKER_1, 0);
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRemoveCustomMetadataSignatures(
                 COMMON_USER_NO_STAKER_1,
@@ -323,7 +323,7 @@ contract unitTestCorrect_NameService_removeCustomMetadata_SyncExecutionOnPay is
             "test",
             1,
             priorityFeeAmountEVVM,
-            signatureMNS,
+            signatureNameService,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -389,7 +389,7 @@ contract unitTestCorrect_NameService_removeCustomMetadata_SyncExecutionOnPay is
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRemoveCustomMetadataSignatures(
                 COMMON_USER_NO_STAKER_1,
@@ -409,7 +409,7 @@ contract unitTestCorrect_NameService_removeCustomMetadata_SyncExecutionOnPay is
             "test",
             1,
             priorityFeeAmountEVVM,
-            signatureMNS,
+            signatureNameService,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -488,7 +488,7 @@ contract unitTestCorrect_NameService_removeCustomMetadata_SyncExecutionOnPay is
         uint256 priorityFeeAmountEVVM = addBalance(COMMON_USER_NO_STAKER_1, 0);
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRemoveCustomMetadataSignatures(
                 COMMON_USER_NO_STAKER_1,
@@ -508,7 +508,7 @@ contract unitTestCorrect_NameService_removeCustomMetadata_SyncExecutionOnPay is
             "test",
             1,
             priorityFeeAmountEVVM,
-            signatureMNS,
+            signatureNameService,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -587,7 +587,7 @@ contract unitTestCorrect_NameService_removeCustomMetadata_SyncExecutionOnPay is
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRemoveCustomMetadataSignatures(
                 COMMON_USER_NO_STAKER_1,
@@ -607,7 +607,7 @@ contract unitTestCorrect_NameService_removeCustomMetadata_SyncExecutionOnPay is
             "test",
             1,
             priorityFeeAmountEVVM,
-            signatureMNS,
+            signatureNameService,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM

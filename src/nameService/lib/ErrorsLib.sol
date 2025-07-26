@@ -7,7 +7,7 @@ library ErrorsLib {
     error SenderIsNotAdmin();
     error UserIsNotOwnerOfIdentity();
     error NonceAlreadyUsed();
-    error InvalidSignatureOnMNS();
+    error InvalidSignatureOnNameService();
     /**
      * @dev Error thrown when a username is not valid.
      *      0x01 - Username is too short.

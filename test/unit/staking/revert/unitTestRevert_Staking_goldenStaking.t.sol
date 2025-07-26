@@ -299,7 +299,7 @@ contract unitTestRevert_Staking_goldenStaking is Test, Constants {
     }
 
     /*
-     ! note: if staking in the future has a MNS identity, then rework
+     ! note: if staking in the future has a NameService identity, then rework
      !       this test
      */
     function test__unitRevert__goldenStaking__bPaySigAtToIdentity() external {

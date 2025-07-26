@@ -74,7 +74,7 @@ contract fuzzTest_NameService_preRegistrationUsername is Test, Constants {
         AccountData memory user,
         string memory username,
         uint256 clowNumber,
-        uint256 nonceMNS,
+        uint256 nonceNameService,
         bool givePriorityFee,
         uint256 priorityFeeAmount,
         uint256 nonceEVVM,
@@ -82,7 +82,7 @@ contract fuzzTest_NameService_preRegistrationUsername is Test, Constants {
     )
         private
         view
-        returns (bytes memory signatureMNS, bytes memory signatureEVVM)
+        returns (bytes memory signatureNameService, bytes memory signatureEVVM)
     {
         uint8 v;
         bytes32 r;
@@ -93,10 +93,10 @@ contract fuzzTest_NameService_preRegistrationUsername is Test, Constants {
                 user.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPreRegistrationUsername(
                     keccak256(abi.encodePacked(username, uint256(clowNumber))),
-                    nonceMNS
+                    nonceNameService
                 )
             );
-            signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+            signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
             (v, r, s) = vm.sign(
                 user.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPay(
@@ -116,10 +116,10 @@ contract fuzzTest_NameService_preRegistrationUsername is Test, Constants {
                 user.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPreRegistrationUsername(
                     keccak256(abi.encodePacked(username, uint256(clowNumber))),
-                    nonceMNS
+                    nonceNameService
                 )
             );
-            signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+            signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
             signatureEVVM = "";
         }
     }
@@ -150,7 +150,7 @@ contract fuzzTest_NameService_preRegistrationUsername is Test, Constants {
      */
 
     struct PreRegistrationUsernameFuzzTestInput_nPF {
-        uint8 nonceMNS;
+        uint8 nonceNameService;
         uint8 nonceEVVM;
         bool priorityFlagEVVM;
         uint16 clowNumber;
@@ -158,7 +158,7 @@ contract fuzzTest_NameService_preRegistrationUsername is Test, Constants {
     }
 
     struct PreRegistrationUsernameFuzzTestInput_PF {
-        uint8 nonceMNS;
+        uint8 nonceNameService;
         uint8 nonceEVVM;
         bool priorityFlagEVVM;
         uint16 priorityFeeAmount;
@@ -180,11 +180,11 @@ contract fuzzTest_NameService_preRegistrationUsername is Test, Constants {
             ? input.nonceEVVM
             : evvm.getNextCurrentSyncNonce(selectedUser.Address);
 
-        (bytes memory signatureMNS, ) = makePreRegistrationUsernameSignature(
+        (bytes memory signatureNameService, ) = makePreRegistrationUsernameSignature(
             selectedUser,
             username,
             input.clowNumber,
-            input.nonceMNS,
+            input.nonceNameService,
             false,
             0,
             nonce,
@@ -195,10 +195,10 @@ contract fuzzTest_NameService_preRegistrationUsername is Test, Constants {
 
         nameService.preRegistrationUsername(
             selectedUser.Address,
-            input.nonceMNS,
+            input.nonceNameService,
             keccak256(abi.encodePacked(username, uint256(input.clowNumber))),
             0,
-            signatureMNS,
+            signatureNameService,
             nonce,
             input.priorityFlagEVVM,
             hex""
@@ -257,13 +257,13 @@ contract fuzzTest_NameService_preRegistrationUsername is Test, Constants {
             : evvm.getNextCurrentSyncNonce(selectedUser.Address);
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makePreRegistrationUsernameSignature(
                 selectedUser,
                 username,
                 input.clowNumber,
-                input.nonceMNS,
+                input.nonceNameService,
                 true,
                 input.priorityFeeAmount,
                 nonce,
@@ -274,10 +274,10 @@ contract fuzzTest_NameService_preRegistrationUsername is Test, Constants {
 
         nameService.preRegistrationUsername(
             selectedUser.Address,
-            input.nonceMNS,
+            input.nonceNameService,
             keccak256(abi.encodePacked(username, uint256(input.clowNumber))),
             input.priorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             nonce,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -328,11 +328,11 @@ contract fuzzTest_NameService_preRegistrationUsername is Test, Constants {
             ? input.nonceEVVM
             : evvm.getNextCurrentSyncNonce(selectedUser.Address);
 
-        (bytes memory signatureMNS, ) = makePreRegistrationUsernameSignature(
+        (bytes memory signatureNameService, ) = makePreRegistrationUsernameSignature(
             selectedUser,
             username,
             input.clowNumber,
-            input.nonceMNS,
+            input.nonceNameService,
             false,
             0,
             nonce,
@@ -348,10 +348,10 @@ contract fuzzTest_NameService_preRegistrationUsername is Test, Constants {
 
         nameService.preRegistrationUsername(
             selectedUser.Address,
-            input.nonceMNS,
+            input.nonceNameService,
             keccak256(abi.encodePacked(username, uint256(input.clowNumber))),
             0,
-            signatureMNS,
+            signatureNameService,
             nonce,
             input.priorityFlagEVVM,
             hex""
@@ -407,13 +407,13 @@ contract fuzzTest_NameService_preRegistrationUsername is Test, Constants {
             : evvm.getNextCurrentSyncNonce(selectedUser.Address);
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makePreRegistrationUsernameSignature(
                 selectedUser,
                 username,
                 input.clowNumber,
-                input.nonceMNS,
+                input.nonceNameService,
                 true,
                 input.priorityFeeAmount,
                 nonce,
@@ -429,10 +429,10 @@ contract fuzzTest_NameService_preRegistrationUsername is Test, Constants {
 
         nameService.preRegistrationUsername(
             selectedUser.Address,
-            input.nonceMNS,
+            input.nonceNameService,
             keccak256(abi.encodePacked(username, uint256(input.clowNumber))),
             input.priorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             nonce,
             input.priorityFlagEVVM,
             signatureEVVM

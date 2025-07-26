@@ -83,19 +83,19 @@ contract unitTestCorrect_NameService_registrationUsername_AsyncExecutionOnPay is
         AccountData memory user,
         string memory username,
         uint256 clowNumber,
-        uint256 nonceMNS
+        uint256 nonceNameService
     ) private {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPreRegistrationUsername(
                 keccak256(abi.encodePacked(username, uint256(clowNumber))),
-                nonceMNS
+                nonceNameService
             )
         );
 
         nameService.preRegistrationUsername(
             user.Address,
-            nonceMNS,
+            nonceNameService,
             keccak256(abi.encodePacked(username, uint256(clowNumber))),
             0,
             Erc191TestBuilder.buildERC191Signature(v, r, s),
@@ -109,14 +109,14 @@ contract unitTestCorrect_NameService_registrationUsername_AsyncExecutionOnPay is
         AccountData memory user,
         string memory username,
         uint256 clowNumber,
-        uint256 nonceMNS,
+        uint256 nonceNameService,
         uint256 priorityFeeAmountEVVM,
         uint256 nonceEVVM,
         bool priorityFlagEVVM
     )
         private
         view
-        returns (bytes memory signatureMNS, bytes memory signatureEVVM)
+        returns (bytes memory signatureNameService, bytes memory signatureEVVM)
     {
         uint8 v;
         bytes32 r;
@@ -127,10 +127,10 @@ contract unitTestCorrect_NameService_registrationUsername_AsyncExecutionOnPay is
             Erc191TestBuilder.buildMessageSignedForRegistrationUsername(
                 username,
                 clowNumber,
-                nonceMNS
+                nonceNameService
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -160,7 +160,7 @@ contract unitTestCorrect_NameService_registrationUsername_AsyncExecutionOnPay is
         skip(30 minutes);
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRegistrationUsernameSignatures(
                 COMMON_USER_NO_STAKER_1,
@@ -178,7 +178,7 @@ contract unitTestCorrect_NameService_registrationUsername_AsyncExecutionOnPay is
             20202,
             "test",
             777,
-            signatureMNS,
+            signatureNameService,
             0,
             1001,
             true,
@@ -220,7 +220,7 @@ contract unitTestCorrect_NameService_registrationUsername_AsyncExecutionOnPay is
         skip(30 minutes);
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRegistrationUsernameSignatures(
                 COMMON_USER_NO_STAKER_1,
@@ -238,7 +238,7 @@ contract unitTestCorrect_NameService_registrationUsername_AsyncExecutionOnPay is
             20202,
             "test",
             777,
-            signatureMNS,
+            signatureNameService,
             0.001 ether,
             1001,
             true,
@@ -280,7 +280,7 @@ contract unitTestCorrect_NameService_registrationUsername_AsyncExecutionOnPay is
         skip(30 minutes);
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRegistrationUsernameSignatures(
                 COMMON_USER_NO_STAKER_1,
@@ -298,7 +298,7 @@ contract unitTestCorrect_NameService_registrationUsername_AsyncExecutionOnPay is
             20202,
             "test",
             777,
-            signatureMNS,
+            signatureNameService,
             0,
             1001,
             true,
@@ -337,7 +337,7 @@ contract unitTestCorrect_NameService_registrationUsername_AsyncExecutionOnPay is
         skip(30 minutes);
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRegistrationUsernameSignatures(
                 COMMON_USER_NO_STAKER_1,
@@ -355,7 +355,7 @@ contract unitTestCorrect_NameService_registrationUsername_AsyncExecutionOnPay is
             20202,
             "test",
             777,
-            signatureMNS,
+            signatureNameService,
             0.001 ether,
             1001,
             true,

@@ -65,7 +65,7 @@ contract unitTestCorrect_EVVM_payMateStaking_async is Test, Constants {
      * nPF: No priority fee
      * EX: Includes executor execution
      * nEX: Does not include executor execution
-     * ID: Uses a MNS identity
+     * ID: Uses a NameService identity
      * AD: Uses an address
      */
 

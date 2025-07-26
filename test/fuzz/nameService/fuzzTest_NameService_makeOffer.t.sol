@@ -89,8 +89,8 @@ contract fuzzTest_NameService_makeOffer is Test, Constants {
         AccountData memory user,
         string memory username,
         uint256 clowNumber,
-        uint256 nonceMNSPre,
-        uint256 nonceMNS
+        uint256 nonceNameServicePre,
+        uint256 nonceNameService
     ) private {
         evvm._addBalance(
             user.Address,
@@ -105,13 +105,13 @@ contract fuzzTest_NameService_makeOffer is Test, Constants {
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPreRegistrationUsername(
                 keccak256(abi.encodePacked(username, uint256(clowNumber))),
-                nonceMNSPre
+                nonceNameServicePre
             )
         );
 
         nameService.preRegistrationUsername(
             user.Address,
-            nonceMNSPre,
+            nonceNameServicePre,
             keccak256(abi.encodePacked(username, uint256(clowNumber))),
             0,
             Erc191TestBuilder.buildERC191Signature(v, r, s),
@@ -127,10 +127,10 @@ contract fuzzTest_NameService_makeOffer is Test, Constants {
             Erc191TestBuilder.buildMessageSignedForRegistrationUsername(
                 username,
                 clowNumber,
-                nonceMNS
+                nonceNameService
             )
         );
-        bytes memory signatureMNS = Erc191TestBuilder.buildERC191Signature(
+        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
             v,
             r,
             s
@@ -157,10 +157,10 @@ contract fuzzTest_NameService_makeOffer is Test, Constants {
 
         nameService.registrationUsername(
             user.Address,
-            nonceMNS,
+            nonceNameService,
             username,
             clowNumber,
-            signatureMNS,
+            signatureNameService,
             0,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
@@ -173,14 +173,14 @@ contract fuzzTest_NameService_makeOffer is Test, Constants {
         string memory usernameToMakeOffer,
         uint256 expireDate,
         uint256 amountToOffer,
-        uint256 nonceMNS,
+        uint256 nonceNameService,
         uint256 priorityFeeAmountEVVM,
         uint256 nonceEVVM,
         bool priorityFlagEVVM
     )
         private
         view
-        returns (bytes memory signatureMNS, bytes memory signatureEVVM)
+        returns (bytes memory signatureNameService, bytes memory signatureEVVM)
     {
         uint8 v;
         bytes32 r;
@@ -192,10 +192,10 @@ contract fuzzTest_NameService_makeOffer is Test, Constants {
                 usernameToMakeOffer,
                 expireDate,
                 amountToOffer,
-                nonceMNS
+                nonceNameService
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -220,7 +220,7 @@ contract fuzzTest_NameService_makeOffer is Test, Constants {
      */
 
     struct MakeOfferFuzzTestInput_nPF {
-        uint8 nonceMNS;
+        uint8 nonceNameService;
         uint8 nonceEVVM;
         bool priorityFlagEVVM;
         uint16 clowNumber;
@@ -232,7 +232,7 @@ contract fuzzTest_NameService_makeOffer is Test, Constants {
     }
 
     struct MakeOfferFuzzTestInput_PF {
-        uint8 nonceMNS;
+        uint8 nonceNameService;
         uint8 nonceEVVM;
         uint32 priorityFeeAmountEVVM;
         bool priorityFlagEVVM;
@@ -268,14 +268,14 @@ contract fuzzTest_NameService_makeOffer is Test, Constants {
             0
         );
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeMakeOfferSignatures(
                 selectedUser,
                 "test",
                 block.timestamp + uint256(input.daysForExpire),
                 input.offerAmount,
-                input.nonceMNS,
+                input.nonceNameService,
                 0,
                 nonce,
                 input.priorityFlagEVVM
@@ -285,12 +285,12 @@ contract fuzzTest_NameService_makeOffer is Test, Constants {
 
         nameService.makeOffer(
             selectedUser.Address,
-            input.nonceMNS,
+            input.nonceNameService,
             "test",
             input.offerAmount,
             block.timestamp + input.daysForExpire,
             0,
-            signatureMNS,
+            signatureNameService,
             nonce,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -335,14 +335,14 @@ contract fuzzTest_NameService_makeOffer is Test, Constants {
             input.priorityFeeAmountEVVM
         );
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeMakeOfferSignatures(
                 selectedUser,
                 "test",
                 block.timestamp + uint256(input.daysForExpire),
                 input.offerAmount,
-                input.nonceMNS,
+                input.nonceNameService,
                 input.priorityFeeAmountEVVM,
                 nonce,
                 input.priorityFlagEVVM
@@ -352,12 +352,12 @@ contract fuzzTest_NameService_makeOffer is Test, Constants {
 
         nameService.makeOffer(
             selectedUser.Address,
-            input.nonceMNS,
+            input.nonceNameService,
             "test",
             input.offerAmount,
             block.timestamp + input.daysForExpire,
             input.priorityFeeAmountEVVM,
-            signatureMNS,
+            signatureNameService,
             nonce,
             input.priorityFlagEVVM,
             signatureEVVM

@@ -96,8 +96,8 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
         AccountData memory user,
         string memory username,
         uint256 clowNumber,
-        uint256 nonceMNSPre,
-        uint256 nonceMNS
+        uint256 nonceNameServicePre,
+        uint256 nonceNameService
     ) private {
         evvm._addBalance(
             user.Address,
@@ -112,13 +112,13 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPreRegistrationUsername(
                 keccak256(abi.encodePacked(username, uint256(clowNumber))),
-                nonceMNSPre
+                nonceNameServicePre
             )
         );
 
         nameService.preRegistrationUsername(
             user.Address,
-            nonceMNSPre,
+            nonceNameServicePre,
             keccak256(abi.encodePacked(username, uint256(clowNumber))),
             0,
             Erc191TestBuilder.buildERC191Signature(v, r, s),
@@ -134,10 +134,10 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
             Erc191TestBuilder.buildMessageSignedForRegistrationUsername(
                 username,
                 clowNumber,
-                nonceMNS
+                nonceNameService
             )
         );
-        bytes memory signatureMNS = Erc191TestBuilder.buildERC191Signature(
+        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
             v,
             r,
             s
@@ -164,10 +164,10 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
 
         nameService.registrationUsername(
             user.Address,
-            nonceMNS,
+            nonceNameService,
             username,
             clowNumber,
-            signatureMNS,
+            signatureNameService,
             0,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
@@ -179,7 +179,7 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
         AccountData memory user,
         string memory username,
         string memory customMetadata,
-        uint256 nonceMNS,
+        uint256 nonceNameService,
         uint256 nonceEVVM,
         bool priorityFlagEVVM
     ) private {
@@ -198,10 +198,10 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
             Erc191TestBuilder.buildMessageSignedForAddCustomMetadata(
                 username,
                 customMetadata,
-                nonceMNS
+                nonceNameService
             )
         );
-        bytes memory signatureMNS = Erc191TestBuilder.buildERC191Signature(
+        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
             v,
             r,
             s
@@ -228,11 +228,11 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
 
         nameService.addCustomMetadata(
             user.Address,
-            nonceMNS,
+            nonceNameService,
             username,
             customMetadata,
             0,
-            signatureMNS,
+            signatureNameService,
             nonceEVVM,
             priorityFlagEVVM,
             signatureEVVM
@@ -243,14 +243,14 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
         AccountData memory user,
         string memory username,
         uint256 indexCustomMetadata,
-        uint256 nonceMNS,
+        uint256 nonceNameService,
         uint256 priorityFeeAmountEVVM,
         uint256 nonceEVVM,
         bool priorityFlagEVVM
     )
         private
         view
-        returns (bytes memory signatureMNS, bytes memory signatureEVVM)
+        returns (bytes memory signatureNameService, bytes memory signatureEVVM)
     {
         uint8 v;
         bytes32 r;
@@ -261,10 +261,10 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
             Erc191TestBuilder.buildMessageSignedForRemoveCustomMetadata(
                 username,
                 indexCustomMetadata,
-                nonceMNS
+                nonceNameService
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -292,14 +292,14 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
 
     struct RemoveCustomMetadataFuzzTestInput_nPF {
         uint8 indexToRemove;
-        uint32 nonceMNS;
+        uint32 nonceNameService;
         uint32 nonceEVVM;
         bool priorityFlagEVVM;
     }
 
     struct RemoveCustomMetadataFuzzTestInput_PF {
         uint8 indexToRemove;
-        uint32 nonceMNS;
+        uint32 nonceNameService;
         uint32 nonceEVVM;
         uint16 priorityFeeAmountEVVM;
         bool priorityFlagEVVM;
@@ -309,7 +309,7 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
         RemoveCustomMetadataFuzzTestInput_nPF memory input
     ) external {
         vm.assume(
-            input.nonceMNS > uint256(type(uint8).max) &&
+            input.nonceNameService > uint256(type(uint8).max) &&
                 input.nonceEVVM > uint256(type(uint8).max)
         );
 
@@ -320,13 +320,13 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
         uint256 priorityFeeAmountEVVM = addBalance(COMMON_USER_NO_STAKER_1, 0);
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRemoveCustomMetadataSignatures(
                 COMMON_USER_NO_STAKER_1,
                 "test",
                 input.indexToRemove,
-                input.nonceMNS,
+                input.nonceNameService,
                 priorityFeeAmountEVVM,
                 nonceEvvm,
                 input.priorityFlagEVVM
@@ -336,11 +336,11 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
 
         nameService.removeCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceMNS,
+            input.nonceNameService,
             "test",
             input.indexToRemove,
             priorityFeeAmountEVVM,
-            signatureMNS,
+            signatureNameService,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -422,7 +422,7 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
         RemoveCustomMetadataFuzzTestInput_PF memory input
     ) external {
         vm.assume(
-            input.nonceMNS > uint256(type(uint8).max) &&
+            input.nonceNameService > uint256(type(uint8).max) &&
                 input.nonceEVVM > uint256(type(uint8).max)
         );
 
@@ -436,13 +436,13 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRemoveCustomMetadataSignatures(
                 COMMON_USER_NO_STAKER_1,
                 "test",
                 input.indexToRemove,
-                input.nonceMNS,
+                input.nonceNameService,
                 priorityFeeAmountEVVM,
                 nonceEvvm,
                 input.priorityFlagEVVM
@@ -452,11 +452,11 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
 
         nameService.removeCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceMNS,
+            input.nonceNameService,
             "test",
             input.indexToRemove,
             priorityFeeAmountEVVM,
-            signatureMNS,
+            signatureNameService,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -538,7 +538,7 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
         RemoveCustomMetadataFuzzTestInput_nPF memory input
     ) external {
         vm.assume(
-            input.nonceMNS > uint256(type(uint8).max) &&
+            input.nonceNameService > uint256(type(uint8).max) &&
                 input.nonceEVVM > uint256(type(uint8).max)
         );
 
@@ -556,13 +556,13 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
         console2.log("customMetadata: ", customMetadata);
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRemoveCustomMetadataSignatures(
                 COMMON_USER_NO_STAKER_1,
                 "test",
                 input.indexToRemove,
-                input.nonceMNS,
+                input.nonceNameService,
                 priorityFeeAmountEVVM,
                 nonceEvvm,
                 input.priorityFlagEVVM
@@ -572,11 +572,11 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
 
         nameService.removeCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceMNS,
+            input.nonceNameService,
             "test",
             input.indexToRemove,
             priorityFeeAmountEVVM,
-            signatureMNS,
+            signatureNameService,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -655,7 +655,7 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
         RemoveCustomMetadataFuzzTestInput_PF memory input
     ) external {
         vm.assume(
-            input.nonceMNS > uint256(type(uint8).max) &&
+            input.nonceNameService > uint256(type(uint8).max) &&
                 input.nonceEVVM > uint256(type(uint8).max)
         );
 
@@ -669,13 +669,13 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
         );
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRemoveCustomMetadataSignatures(
                 COMMON_USER_NO_STAKER_1,
                 "test",
                 input.indexToRemove,
-                input.nonceMNS,
+                input.nonceNameService,
                 priorityFeeAmountEVVM,
                 nonceEvvm,
                 input.priorityFlagEVVM
@@ -685,11 +685,11 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
 
         nameService.removeCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceMNS,
+            input.nonceNameService,
             "test",
             input.indexToRemove,
             priorityFeeAmountEVVM,
-            signatureMNS,
+            signatureNameService,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM

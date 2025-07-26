@@ -164,7 +164,7 @@ contract NameService {
                 _nonce,
                 _signature
             )
-        ) revert ErrorsLib.InvalidSignatureOnMNS();
+        ) revert ErrorsLib.InvalidSignatureOnNameService();
 
         if (_priorityFeeForFisher > 0) {
             makePay(
@@ -242,7 +242,7 @@ contract NameService {
                 _nonce,
                 _signature
             )
-        ) revert ErrorsLib.InvalidSignatureOnMNS();
+        ) revert ErrorsLib.InvalidSignatureOnNameService();
 
         makePay(
             _user,
@@ -513,7 +513,7 @@ contract NameService {
                 _nonce,
                 _signature
             )
-        ) revert ErrorsLib.InvalidSignatureOnMNS();
+        ) revert ErrorsLib.InvalidSignatureOnNameService();
 
         makePay(
             _user,
@@ -575,7 +575,7 @@ contract NameService {
                 _nonce,
                 _signature
             )
-        ) revert ErrorsLib.InvalidSignatureOnMNS();
+        ) revert ErrorsLib.InvalidSignatureOnNameService();
 
         if (_priorityFeeForFisher > 0) {
             makePay(
@@ -655,7 +655,7 @@ contract NameService {
                 _nonce,
                 _signature
             )
-        ) revert ErrorsLib.InvalidSignatureOnMNS();
+        ) revert ErrorsLib.InvalidSignatureOnNameService();
 
         if (_priorityFeeForFisher > 0) {
             makePay(
@@ -742,7 +742,7 @@ contract NameService {
                 _nonce,
                 _signature
             )
-        ) revert ErrorsLib.InvalidSignatureOnMNS();
+        ) revert ErrorsLib.InvalidSignatureOnNameService();
 
         uint256 priceOfRenew = seePriceToRenew(_username);
 
@@ -827,7 +827,7 @@ contract NameService {
                 _nonce,
                 _signature
             )
-        ) revert ErrorsLib.InvalidSignatureOnMNS();
+        ) revert ErrorsLib.InvalidSignatureOnNameService();
 
         makePay(
             _user,
@@ -878,7 +878,7 @@ contract NameService {
                 _nonce,
                 _signature
             )
-        ) revert ErrorsLib.InvalidSignatureOnMNS();
+        ) revert ErrorsLib.InvalidSignatureOnNameService();
 
         //check if the key is greater than the number of custom metadata
         if (identityDetails[_identity].customMetadataMaxSlots <= _key)
@@ -942,7 +942,7 @@ contract NameService {
                 _nonce,
                 _signature
             )
-        ) revert ErrorsLib.InvalidSignatureOnMNS();
+        ) revert ErrorsLib.InvalidSignatureOnNameService();
 
         if (identityDetails[_identity].customMetadataMaxSlots == 0)
             revert ErrorsLib.EmptyCustomMetadata();
@@ -1003,7 +1003,7 @@ contract NameService {
                 _nonce,
                 _signature
             )
-        ) revert ErrorsLib.InvalidSignatureOnMNS();
+        ) revert ErrorsLib.InvalidSignatureOnNameService();
 
         makePay(
             _user,
@@ -1789,7 +1789,7 @@ contract NameService {
 
     //█User██████████████████████████████████████████████████████████████████████████████
 
-    function checkIfMNSNonceIsAvailable(
+    function checkIfNameServiceNonceIsAvailable(
         address _user,
         uint256 _nonce
     ) public view returns (bool) {

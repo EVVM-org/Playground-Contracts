@@ -94,8 +94,8 @@ contract unitTestCorrect_NameService_makeOffer_AsyncExecutionOnPay is
         AccountData memory user,
         string memory username,
         uint256 clowNumber,
-        uint256 nonceMNSPre,
-        uint256 nonceMNS
+        uint256 nonceNameServicePre,
+        uint256 nonceNameService
     ) private {
         evvm._addBalance(
             user.Address,
@@ -110,13 +110,13 @@ contract unitTestCorrect_NameService_makeOffer_AsyncExecutionOnPay is
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPreRegistrationUsername(
                 keccak256(abi.encodePacked(username, uint256(clowNumber))),
-                nonceMNSPre
+                nonceNameServicePre
             )
         );
 
         nameService.preRegistrationUsername(
             user.Address,
-            nonceMNSPre,
+            nonceNameServicePre,
             keccak256(abi.encodePacked(username, uint256(clowNumber))),
             0,
             Erc191TestBuilder.buildERC191Signature(v, r, s),
@@ -132,10 +132,10 @@ contract unitTestCorrect_NameService_makeOffer_AsyncExecutionOnPay is
             Erc191TestBuilder.buildMessageSignedForRegistrationUsername(
                 username,
                 clowNumber,
-                nonceMNS
+                nonceNameService
             )
         );
-        bytes memory signatureMNS = Erc191TestBuilder.buildERC191Signature(
+        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
             v,
             r,
             s
@@ -162,10 +162,10 @@ contract unitTestCorrect_NameService_makeOffer_AsyncExecutionOnPay is
 
         nameService.registrationUsername(
             user.Address,
-            nonceMNS,
+            nonceNameService,
             username,
             clowNumber,
-            signatureMNS,
+            signatureNameService,
             0,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
@@ -178,14 +178,14 @@ contract unitTestCorrect_NameService_makeOffer_AsyncExecutionOnPay is
         string memory usernameToMakeOffer,
         uint256 expireDate,
         uint256 amountToOffer,
-        uint256 nonceMNS,
+        uint256 nonceNameService,
         uint256 priorityFeeAmountEVVM,
         uint256 nonceEVVM,
         bool priorityFlagEVVM
     )
         private
         view
-        returns (bytes memory signatureMNS, bytes memory signatureEVVM)
+        returns (bytes memory signatureNameService, bytes memory signatureEVVM)
     {
         uint8 v;
         bytes32 r;
@@ -197,10 +197,10 @@ contract unitTestCorrect_NameService_makeOffer_AsyncExecutionOnPay is
                 usernameToMakeOffer,
                 expireDate,
                 amountToOffer,
-                nonceMNS
+                nonceNameService
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -225,7 +225,7 @@ contract unitTestCorrect_NameService_makeOffer_AsyncExecutionOnPay is
             0
         );
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeMakeOfferSignatures(
                 COMMON_USER_NO_STAKER_2,
@@ -247,7 +247,7 @@ contract unitTestCorrect_NameService_makeOffer_AsyncExecutionOnPay is
             totalOfferAmount,
             block.timestamp + 30 days,
             0,
-            signatureMNS,
+            signatureNameService,
             101,
             true,
             signatureEVVM
@@ -285,7 +285,7 @@ contract unitTestCorrect_NameService_makeOffer_AsyncExecutionOnPay is
             0.000001 ether
         );
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeMakeOfferSignatures(
                 COMMON_USER_NO_STAKER_2,
@@ -307,7 +307,7 @@ contract unitTestCorrect_NameService_makeOffer_AsyncExecutionOnPay is
             totalOfferAmount,
             block.timestamp + 30 days,
             priorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             101,
             true,
             signatureEVVM
@@ -347,7 +347,7 @@ contract unitTestCorrect_NameService_makeOffer_AsyncExecutionOnPay is
             0
         );
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeMakeOfferSignatures(
                 COMMON_USER_NO_STAKER_2,
@@ -369,7 +369,7 @@ contract unitTestCorrect_NameService_makeOffer_AsyncExecutionOnPay is
             totalOfferAmount,
             block.timestamp + 30 days,
             0,
-            signatureMNS,
+            signatureNameService,
             101,
             true,
             signatureEVVM
@@ -404,7 +404,7 @@ contract unitTestCorrect_NameService_makeOffer_AsyncExecutionOnPay is
             0.000001 ether
         );
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeMakeOfferSignatures(
                 COMMON_USER_NO_STAKER_2,
@@ -426,7 +426,7 @@ contract unitTestCorrect_NameService_makeOffer_AsyncExecutionOnPay is
             totalOfferAmount,
             block.timestamp + 30 days,
             priorityFeeAmount,
-            signatureMNS,
+            signatureNameService,
             101,
             true,
             signatureEVVM

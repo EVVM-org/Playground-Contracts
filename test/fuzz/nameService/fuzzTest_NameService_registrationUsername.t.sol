@@ -79,19 +79,19 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
         AccountData memory user,
         string memory username,
         uint256 clowNumber,
-        uint256 nonceMNS
+        uint256 nonceNameService
     ) private {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPreRegistrationUsername(
                 keccak256(abi.encodePacked(username, uint256(clowNumber))),
-                nonceMNS
+                nonceNameService
             )
         );
 
         nameService.preRegistrationUsername(
             user.Address,
-            nonceMNS,
+            nonceNameService,
             keccak256(abi.encodePacked(username, uint256(clowNumber))),
             0,
             Erc191TestBuilder.buildERC191Signature(v, r, s),
@@ -105,14 +105,14 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
         AccountData memory user,
         string memory username,
         uint256 clowNumber,
-        uint256 nonceMNS,
+        uint256 nonceNameService,
         uint256 priorityFeeAmountEVVM,
         uint256 nonceEVVM,
         bool priorityFlagEVVM
     )
         private
         view
-        returns (bytes memory signatureMNS, bytes memory signatureEVVM)
+        returns (bytes memory signatureNameService, bytes memory signatureEVVM)
     {
         uint8 v;
         bytes32 r;
@@ -123,10 +123,10 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
             Erc191TestBuilder.buildMessageSignedForRegistrationUsername(
                 username,
                 clowNumber,
-                nonceMNS
+                nonceNameService
             )
         );
-        signatureMNS = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -170,7 +170,7 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
      */
 
     struct RegistrationUsernameFuzzTestInput_nPF {
-        uint8 nonceMNS;
+        uint8 nonceNameService;
         uint8 nonceEVVM;
         bool priorityFlagEVVM;
         uint16 clowNumber;
@@ -178,7 +178,7 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
     }
 
     struct RegistrationUsernameFuzzTestInput_PF {
-        uint8 nonceMNS;
+        uint8 nonceNameService;
         uint8 nonceEVVM;
         bool priorityFlagEVVM;
         uint16 priorityFeeAmount;
@@ -189,7 +189,7 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
     function test__fuzz__registrationUsername__nS_nPF(
         RegistrationUsernameFuzzTestInput_nPF memory input
     ) external {
-        vm.assume((input.seed / 2) >= 4 && input.nonceMNS != 10);
+        vm.assume((input.seed / 2) >= 4 && input.nonceNameService != 10);
 
         AccountData memory selectedUser = (input.seed % 2 == 0)
             ? COMMON_USER_NO_STAKER_1
@@ -211,13 +211,13 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
         skip(30 minutes);
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRegistrationUsernameSignatures(
                 selectedUser,
                 username,
                 input.clowNumber,
-                input.nonceMNS,
+                input.nonceNameService,
                 0,
                 nonce,
                 input.priorityFlagEVVM
@@ -226,10 +226,10 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
         vm.startPrank(COMMON_USER_NO_STAKER_3.Address);
         nameService.registrationUsername(
             selectedUser.Address,
-            input.nonceMNS,
+            input.nonceNameService,
             username,
             input.clowNumber,
-            signatureMNS,
+            signatureNameService,
             0,
             nonce,
             input.priorityFlagEVVM,
@@ -256,7 +256,7 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
     function test__fuzz__registrationUsername__nS_PF(
         RegistrationUsernameFuzzTestInput_PF memory input
     ) external {
-        vm.assume((input.seed / 2) >= 4 && input.nonceMNS != 10);
+        vm.assume((input.seed / 2) >= 4 && input.nonceNameService != 10);
 
         AccountData memory selectedUser = (input.seed % 2 == 0)
             ? COMMON_USER_NO_STAKER_1
@@ -278,13 +278,13 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
         skip(30 minutes);
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRegistrationUsernameSignatures(
                 selectedUser,
                 username,
                 input.clowNumber,
-                input.nonceMNS,
+                input.nonceNameService,
                 input.priorityFeeAmount,
                 nonce,
                 input.priorityFlagEVVM
@@ -293,10 +293,10 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
         vm.startPrank(COMMON_USER_NO_STAKER_3.Address);
         nameService.registrationUsername(
             selectedUser.Address,
-            input.nonceMNS,
+            input.nonceNameService,
             username,
             input.clowNumber,
-            signatureMNS,
+            signatureNameService,
             input.priorityFeeAmount,
             nonce,
             input.priorityFlagEVVM,
@@ -323,7 +323,7 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
     function test__fuzz__registrationUsername__S_nPF(
         RegistrationUsernameFuzzTestInput_nPF memory input
     ) external {
-        vm.assume((input.seed / 2) >= 4 && input.nonceMNS != 10);
+        vm.assume((input.seed / 2) >= 4 && input.nonceNameService != 10);
 
         AccountData memory selectedUser = (input.seed % 2 == 0)
             ? COMMON_USER_NO_STAKER_1
@@ -345,13 +345,13 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
         skip(30 minutes);
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRegistrationUsernameSignatures(
                 selectedUser,
                 username,
                 input.clowNumber,
-                input.nonceMNS,
+                input.nonceNameService,
                 0,
                 nonce,
                 input.priorityFlagEVVM
@@ -365,10 +365,10 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER.Address);
         nameService.registrationUsername(
             selectedUser.Address,
-            input.nonceMNS,
+            input.nonceNameService,
             username,
             input.clowNumber,
-            signatureMNS,
+            signatureNameService,
             0,
             nonce,
             input.priorityFlagEVVM,
@@ -392,7 +392,7 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
     function test__fuzz__registrationUsername__S_PF(
         RegistrationUsernameFuzzTestInput_PF memory input
     ) external {
-        vm.assume((input.seed / 2) >= 4 && input.nonceMNS != 10);
+        vm.assume((input.seed / 2) >= 4 && input.nonceNameService != 10);
 
         AccountData memory selectedUser = (input.seed % 2 == 0)
             ? COMMON_USER_NO_STAKER_1
@@ -414,13 +414,13 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
         skip(30 minutes);
 
         (
-            bytes memory signatureMNS,
+            bytes memory signatureNameService,
             bytes memory signatureEVVM
         ) = makeRegistrationUsernameSignatures(
                 selectedUser,
                 username,
                 input.clowNumber,
-                input.nonceMNS,
+                input.nonceNameService,
                 input.priorityFeeAmount,
                 nonce,
                 input.priorityFlagEVVM
@@ -434,10 +434,10 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER.Address);
         nameService.registrationUsername(
             selectedUser.Address,
-            input.nonceMNS,
+            input.nonceNameService,
             username,
             input.clowNumber,
-            signatureMNS,
+            signatureNameService,
             input.priorityFeeAmount,
             nonce,
             input.priorityFlagEVVM,
