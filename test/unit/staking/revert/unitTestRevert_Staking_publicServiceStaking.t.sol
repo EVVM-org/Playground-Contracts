@@ -16,60 +16,65 @@ pragma abicoder v2;
 import "forge-std/Test.sol";
 import "forge-std/console2.sol";
 
-import {Constants} from "test/Constants.sol";
+import {Constants, MockContract} from "test/Constants.sol";
 import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
-import {SMate} from "@EVVM/playground/staking/SMate.sol";
+import {Staking} from "@EVVM/playground/staking/Staking.sol";
 import {NameService} from "@EVVM/playground/nameService/NameService.sol";
 import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 
-contract unitTestRevert_SMate_publicStaking is Test, Constants {
-    SMate sMate;
+contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
+    Staking staking;
     Evvm evvm;
     Estimator estimator;
     NameService nameService;
+    MockContract mock;
 
     function setUp() public {
-        sMate = new SMate(ADMIN.Address, GOLDEN_STAKER.Address);
-        evvm = new Evvm(ADMIN.Address, address(sMate));
+        staking = new Staking(ADMIN.Address, GOLDEN_STAKER.Address);
+        evvm = new Evvm(ADMIN.Address, address(staking));
         estimator = new Estimator(
             ACTIVATOR.Address,
             address(evvm),
-            address(sMate),
+            address(staking),
             ADMIN.Address
         );
         nameService = new NameService(address(evvm), ADMIN.Address);
 
-        sMate._setupEstimatorAndEvvm(address(estimator), address(evvm));
+        staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
         
-
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
+        mock = new MockContract(address(staking));
+    }
 
+    modifier enableStaking() {
         vm.startPrank(ADMIN.Address);
 
-        sMate.prepareChangeAllowPublicStaking();
+        staking.prepareChangeAllowPublicStaking();
         skip(1 days);
-        sMate.confirmChangeAllowPublicStaking();
+        staking.confirmChangeAllowPublicStaking();
 
         vm.stopPrank();
+
+        _;
     }
 
     function giveMateToExecute(
         AccountData memory user,
-        uint256 sMateAmount,
+        uint256 stakingAmount,
         uint256 priorityFee
     ) private returns (uint256 totalOfMate, uint256 totalOfPriorityFee) {
         evvm._addBalance(
             user.Address,
             MATE_TOKEN_ADDRESS,
-            (sMate.priceOfSMate() * sMateAmount) + priorityFee
+            (staking.priceOfStaking() * stakingAmount) + priorityFee
         );
 
-        totalOfMate = (sMate.priceOfSMate() * sMateAmount);
+        totalOfMate = (staking.priceOfStaking() * stakingAmount);
         totalOfPriorityFee = priorityFee;
     }
 
@@ -81,6 +86,7 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
 
     function makeSignature(
         AccountData memory signer,
+        address serviceAddress,
         bool isStaking,
         uint256 amountOfSmate,
         uint256 priorityFee,
@@ -90,7 +96,7 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
     )
         private
         view
-        returns (bytes memory signatureEVVM, bytes memory signatureSMate)
+        returns (bytes memory signatureEVVM, bytes memory signatureStaking)
     {
         uint8 v;
         bytes32 r;
@@ -100,28 +106,28 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
             (v, r, s) = vm.sign(
                 signer.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPay(
-                    address(sMate),
+                    address(staking),
                     "",
                     MATE_TOKEN_ADDRESS,
-                    sMate.priceOfSMate() * amountOfSmate,
+                    staking.priceOfStaking() * amountOfSmate,
                     priorityFee,
                     nonceEVVM,
                     priorityEVVM,
-                    address(sMate)
+                    address(staking)
                 )
             );
         } else {
             (v, r, s) = vm.sign(
                 signer.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPay(
-                    address(sMate),
+                    address(staking),
                     "",
                     MATE_TOKEN_ADDRESS,
                     priorityFee,
                     0,
                     nonceEVVM,
                     priorityEVVM,
-                    address(sMate)
+                    address(staking)
                 )
             );
         }
@@ -130,13 +136,14 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
 
         (v, r, s) = vm.sign(
             signer.PrivateKey,
-            Erc191TestBuilder.buildMessageSignedForPublicStaking(
+            Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                serviceAddress,
                 isStaking,
                 amountOfSmate,
                 nonceSmate
             )
         );
-        signatureSMate = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureStaking = Erc191TestBuilder.buildERC191Signature(v, r, s);
     }
 
     /**
@@ -147,9 +154,150 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
      * some denominations on test can be explicit expleined
      */
 
-    function test__unit_revert__publicStaking__bPaySigAtSigned() public {
+    function test__unit_revert__publicServiceStaking__funcionNotEnabled()
+        public
+    {
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
+        uint8 v;
+        bytes32 r;
+        bytes32 s;
+
+        (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
+            COMMON_USER_NO_STAKER_1,
+            111,
+            0 ether
+        );
+
+        (v, r, s) = vm.sign(
+            COMMON_USER_NO_STAKER_1.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForPay(
+                address(staking),
+                "",
+                MATE_TOKEN_ADDRESS,
+                totalOfMate,
+                totalOfPriorityFee,
+                1001,
+                true,
+                address(staking)
+            )
+        );
+
+        signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
+
+        (v, r, s) = vm.sign(
+            COMMON_USER_NO_STAKER_1.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                address(mock),
+                true,
+                111,
+                1001001
+            )
+        );
+        signatureStaking = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
+
+        vm.expectRevert();
+        staking.publicServiceStaking(
+            true,
+            COMMON_USER_NO_STAKER_1.Address,
+            address(mock),
+            1001001,
+            111,
+            signatureStaking,
+            totalOfPriorityFee,
+            1001,
+            true,
+            signatureEVVM
+        );
+
+        vm.stopPrank();
+
+        assert(!evvm.istakingStaker(address(mock)));
+        assertEq(
+            evvm.getBalance(
+                COMMON_USER_NO_STAKER_1.Address,
+                MATE_TOKEN_ADDRESS
+            ),
+            totalOfMate + totalOfPriorityFee
+        );
+    }
+
+    /*
+    function test__unit_revert__publicServiceStaking__() public enableStaking {
+        bytes memory signatureEVVM;
+        bytes memory signatureStaking;
+        uint8 v;
+        bytes32 r;
+        bytes32 s;
+
+        (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
+            COMMON_USER_NO_STAKER_1,
+            111,
+            0 ether
+        );
+
+        (v, r, s) = vm.sign(
+            COMMON_USER_NO_STAKER_1.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForPay(
+                address(staking),
+                "",
+                MATE_TOKEN_ADDRESS,
+                totalOfMate,
+                totalOfPriorityFee,
+                1001,
+                true,
+                address(staking)
+            )
+        );
+
+        signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
+
+        (v, r, s) = vm.sign(
+            COMMON_USER_NO_STAKER_1.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                address(mock),
+                true,
+                111,
+                1001001
+            )
+        );
+        signatureStaking = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
+
+        vm.expectRevert();
+        staking.publicServiceStaking(
+            true,
+            COMMON_USER_NO_STAKER_1.Address,
+            address(mock),
+            1001001,
+            111,
+            signatureStaking,
+            totalOfPriorityFee,
+            1001,
+            true,
+            signatureEVVM
+        );
+
+        vm.stopPrank();
+
+        assert(!evvm.istakingStaker(address(mock)));
+        assertEq(
+            evvm.getBalance(
+                COMMON_USER_NO_STAKER_1.Address,
+                MATE_TOKEN_ADDRESS
+            ),
+            totalOfMate + totalOfPriorityFee
+        );
+    }
+    */
+
+    function test__unit_revert__publicServiceStaking__bPaySigAtSigner()
+        public
+        enableStaking
+    {
+        bytes memory signatureEVVM;
+        bytes memory signatureStaking;
         uint8 v;
         bytes32 r;
         bytes32 s;
@@ -163,14 +311,14 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 totalOfPriorityFee,
                 1001,
                 true,
-                address(sMate)
+                address(staking)
             )
         );
 
@@ -178,22 +326,24 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
-            Erc191TestBuilder.buildMessageSignedForPublicStaking(
+            Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                address(mock),
                 true,
                 111,
                 1001001
             )
         );
-        signatureSMate = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureStaking = Erc191TestBuilder.buildERC191Signature(v, r, s);
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
 
         vm.expectRevert();
-        sMate.publicStaking(
+        staking.publicServiceStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
+            address(mock),
             1001001,
             111,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             1001,
             true,
@@ -202,7 +352,7 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(address(mock)));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -212,9 +362,12 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
         );
     }
 
-    function test__unit_revert__publicStaking__bPaySigAtToAddress() public {
+    function test__unit_revert__publicServiceStaking__bPaySigAtToAddress()
+        public
+        enableStaking
+    {
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
         uint8 v;
         bytes32 r;
         bytes32 s;
@@ -228,14 +381,14 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(evvm),
+                address(mock),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 totalOfPriorityFee,
                 1001,
                 true,
-                address(sMate)
+                address(staking)
             )
         );
 
@@ -243,22 +396,24 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
-            Erc191TestBuilder.buildMessageSignedForPublicStaking(
+            Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                address(mock),
                 true,
                 111,
                 1001001
             )
         );
-        signatureSMate = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureStaking = Erc191TestBuilder.buildERC191Signature(v, r, s);
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
 
         vm.expectRevert();
-        sMate.publicStaking(
+        staking.publicServiceStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
+            address(mock),
             1001001,
             111,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             1001,
             true,
@@ -267,7 +422,7 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(address(mock)));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -277,13 +432,12 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
         );
     }
 
-    /*
-     ! note: if sMate in the future has a MNS identity, then rework
-     !       this test
-     */
-    function test__unit_revert__publicStaking__bPaySigAtToIdentity() public {
+    function test__unit_revert__publicServiceStaking__bPaySigAtToIdentity()
+        public
+        enableStaking
+    {
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
         uint8 v;
         bytes32 r;
         bytes32 s;
@@ -304,7 +458,7 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
                 totalOfPriorityFee,
                 1001,
                 true,
-                address(sMate)
+                address(staking)
             )
         );
 
@@ -312,22 +466,24 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
-            Erc191TestBuilder.buildMessageSignedForPublicStaking(
+            Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                address(mock),
                 true,
                 111,
                 1001001
             )
         );
-        signatureSMate = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureStaking = Erc191TestBuilder.buildERC191Signature(v, r, s);
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
 
         vm.expectRevert();
-        sMate.publicStaking(
+        staking.publicServiceStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
+            address(mock),
             1001001,
             111,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             1001,
             true,
@@ -336,7 +492,7 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(address(mock)));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -346,9 +502,12 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
         );
     }
 
-    function test__unit_revert__publicStaking__bPaySigAtToken() public {
+    function test__unit_revert__publicServiceStaking__bPaySigAtTokenAddress()
+        public
+        enableStaking
+    {
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
         uint8 v;
         bytes32 r;
         bytes32 s;
@@ -362,14 +521,14 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 ETHER_ADDRESS,
                 totalOfMate,
                 totalOfPriorityFee,
                 1001,
                 true,
-                address(sMate)
+                address(staking)
             )
         );
 
@@ -377,22 +536,24 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
-            Erc191TestBuilder.buildMessageSignedForPublicStaking(
+            Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                address(mock),
                 true,
                 111,
                 1001001
             )
         );
-        signatureSMate = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureStaking = Erc191TestBuilder.buildERC191Signature(v, r, s);
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
 
         vm.expectRevert();
-        sMate.publicStaking(
+        staking.publicServiceStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
+            address(mock),
             1001001,
             111,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             1001,
             true,
@@ -401,7 +562,7 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(address(mock)));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -411,9 +572,12 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
         );
     }
 
-    function test__unit_revert__publicStaking__bPaySigAtAmount() public {
+    function test__unit_revert__publicServiceStaking__bPaySigAtAmount()
+        public
+        enableStaking
+    {
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
         uint8 v;
         bytes32 r;
         bytes32 s;
@@ -427,14 +591,14 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
-                777,
+                7,
                 totalOfPriorityFee,
                 1001,
                 true,
-                address(sMate)
+                address(staking)
             )
         );
 
@@ -442,22 +606,24 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
-            Erc191TestBuilder.buildMessageSignedForPublicStaking(
+            Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                address(mock),
                 true,
                 111,
                 1001001
             )
         );
-        signatureSMate = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureStaking = Erc191TestBuilder.buildERC191Signature(v, r, s);
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
 
         vm.expectRevert();
-        sMate.publicStaking(
+        staking.publicServiceStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
+            address(mock),
             1001001,
             111,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             1001,
             true,
@@ -466,7 +632,7 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(address(mock)));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -476,9 +642,12 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
         );
     }
 
-    function test__unit_revert__publicStaking__bPaySigAtPriorityFee() public {
+    function test__unit_revert__publicServiceStaking__bPaySigAtPriorityFee()
+        public
+        enableStaking
+    {
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
         uint8 v;
         bytes32 r;
         bytes32 s;
@@ -492,14 +661,14 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 777,
                 1001,
                 true,
-                address(sMate)
+                address(staking)
             )
         );
 
@@ -507,22 +676,24 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
-            Erc191TestBuilder.buildMessageSignedForPublicStaking(
+            Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                address(mock),
                 true,
                 111,
                 1001001
             )
         );
-        signatureSMate = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureStaking = Erc191TestBuilder.buildERC191Signature(v, r, s);
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
 
         vm.expectRevert();
-        sMate.publicStaking(
+        staking.publicServiceStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
+            address(mock),
             1001001,
             111,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             1001,
             true,
@@ -531,7 +702,7 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(address(mock)));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -541,9 +712,12 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
         );
     }
 
-    function test__unit_revert__publicStaking__bPaySigAtNonce() public {
+    function test__unit_revert__publicServiceStaking__bPaySigAtNonce()
+        public
+        enableStaking
+    {
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
         uint8 v;
         bytes32 r;
         bytes32 s;
@@ -557,14 +731,14 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 totalOfPriorityFee,
-                77,
+                777,
                 true,
-                address(sMate)
+                address(staking)
             )
         );
 
@@ -572,22 +746,24 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
-            Erc191TestBuilder.buildMessageSignedForPublicStaking(
+            Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                address(mock),
                 true,
                 111,
                 1001001
             )
         );
-        signatureSMate = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureStaking = Erc191TestBuilder.buildERC191Signature(v, r, s);
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
 
         vm.expectRevert();
-        sMate.publicStaking(
+        staking.publicServiceStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
+            address(mock),
             1001001,
             111,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             1001,
             true,
@@ -596,7 +772,7 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(address(mock)));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -606,9 +782,12 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
         );
     }
 
-    function test__unit_revert__publicStaking__bPaySigAtPriorityFlag() public {
+    function test__unit_revert__publicServiceStaking__bPaySigAtPriorityFlag()
+        public
+        enableStaking
+    {
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
         uint8 v;
         bytes32 r;
         bytes32 s;
@@ -622,14 +801,14 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 totalOfPriorityFee,
                 1001,
                 false,
-                address(sMate)
+                address(staking)
             )
         );
 
@@ -637,22 +816,24 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
-            Erc191TestBuilder.buildMessageSignedForPublicStaking(
+            Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                address(mock),
                 true,
                 111,
                 1001001
             )
         );
-        signatureSMate = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureStaking = Erc191TestBuilder.buildERC191Signature(v, r, s);
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
 
         vm.expectRevert();
-        sMate.publicStaking(
+        staking.publicServiceStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
+            address(mock),
             1001001,
             111,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             1001,
             true,
@@ -661,7 +842,7 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(address(mock)));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -671,9 +852,12 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
         );
     }
 
-    function test__unit_revert__publicStaking__bPaySigAtExecutor() public {
+    function test__unit_revert__publicServiceStaking__bPaySigAtExecutorAddress()
+        public
+        enableStaking
+    {
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
         uint8 v;
         bytes32 r;
         bytes32 s;
@@ -687,14 +871,14 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 totalOfPriorityFee,
                 1001,
                 true,
-                address(evvm)
+                address(0)
             )
         );
 
@@ -702,22 +886,24 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
-            Erc191TestBuilder.buildMessageSignedForPublicStaking(
+            Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                address(mock),
                 true,
                 111,
                 1001001
             )
         );
-        signatureSMate = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureStaking = Erc191TestBuilder.buildERC191Signature(v, r, s);
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
 
         vm.expectRevert();
-        sMate.publicStaking(
+        staking.publicServiceStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
+            address(mock),
             1001001,
             111,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             1001,
             true,
@@ -726,7 +912,7 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(address(mock)));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -736,9 +922,12 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
         );
     }
 
-    function test__unit_revert__publicStaking__bStakeSigAtSigner() public {
+    function test__unit_revert__publicServiceStaking__bStakeSigAtSigner()
+        public
+        enableStaking
+    {
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
         uint8 v;
         bytes32 r;
         bytes32 s;
@@ -752,14 +941,14 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 totalOfPriorityFee,
                 1001,
                 true,
-                address(sMate)
+                address(staking)
             )
         );
 
@@ -767,22 +956,24 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
-            Erc191TestBuilder.buildMessageSignedForPublicStaking(
+            Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                address(mock),
                 true,
                 111,
                 1001001
             )
         );
-        signatureSMate = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureStaking = Erc191TestBuilder.buildERC191Signature(v, r, s);
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
 
         vm.expectRevert();
-        sMate.publicStaking(
+        staking.publicServiceStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
+            address(mock),
             1001001,
             111,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             1001,
             true,
@@ -791,7 +982,7 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(address(mock)));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -801,11 +992,12 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
         );
     }
 
-    function test__unit_revert__publicStaking__bStakeSigAtIsStakingFlag()
+    function test__unit_revert__publicServiceStaking__bStakeSigAtServiceAddress()
         public
+        enableStaking
     {
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
         uint8 v;
         bytes32 r;
         bytes32 s;
@@ -819,14 +1011,14 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 totalOfPriorityFee,
                 1001,
                 true,
-                address(sMate)
+                address(staking)
             )
         );
 
@@ -834,22 +1026,94 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
-            Erc191TestBuilder.buildMessageSignedForPublicStaking(
+            Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                address(this),
+                true,
+                111,
+                1001001
+            )
+        );
+        signatureStaking = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
+
+        vm.expectRevert();
+        staking.publicServiceStaking(
+            true,
+            COMMON_USER_NO_STAKER_1.Address,
+            address(mock),
+            1001001,
+            111,
+            signatureStaking,
+            totalOfPriorityFee,
+            1001,
+            true,
+            signatureEVVM
+        );
+
+        vm.stopPrank();
+
+        assert(!evvm.istakingStaker(address(mock)));
+        assertEq(
+            evvm.getBalance(
+                COMMON_USER_NO_STAKER_1.Address,
+                MATE_TOKEN_ADDRESS
+            ),
+            totalOfMate + totalOfPriorityFee
+        );
+    }
+
+    function test__unit_revert__publicServiceStaking__bStakeSigAtIsStakingFlag()
+        public
+        enableStaking
+    {
+        bytes memory signatureEVVM;
+        bytes memory signatureStaking;
+        uint8 v;
+        bytes32 r;
+        bytes32 s;
+
+        (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
+            COMMON_USER_NO_STAKER_1,
+            111,
+            0 ether
+        );
+
+        (v, r, s) = vm.sign(
+            COMMON_USER_NO_STAKER_1.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForPay(
+                address(staking),
+                "",
+                MATE_TOKEN_ADDRESS,
+                totalOfMate,
+                totalOfPriorityFee,
+                1001,
+                true,
+                address(staking)
+            )
+        );
+
+        signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
+
+        (v, r, s) = vm.sign(
+            COMMON_USER_NO_STAKER_1.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                address(mock),
                 false,
                 111,
                 1001001
             )
         );
-        signatureSMate = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureStaking = Erc191TestBuilder.buildERC191Signature(v, r, s);
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
 
         vm.expectRevert();
-        sMate.publicStaking(
+        staking.publicServiceStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
+            address(mock),
             1001001,
             111,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             1001,
             true,
@@ -858,7 +1122,7 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(address(mock)));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -868,9 +1132,12 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
         );
     }
 
-    function test__unit_revert__publicStaking__bStakeSigAtAmount() public {
+    function test__unit_revert__publicServiceStaking__bStakeSigAtAmount()
+        public
+        enableStaking
+    {
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
         uint8 v;
         bytes32 r;
         bytes32 s;
@@ -884,14 +1151,14 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 totalOfPriorityFee,
                 1001,
                 true,
-                address(sMate)
+                address(staking)
             )
         );
 
@@ -899,22 +1166,24 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
-            Erc191TestBuilder.buildMessageSignedForPublicStaking(
+            Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                address(mock),
                 true,
-                777,
+                555,
                 1001001
             )
         );
-        signatureSMate = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureStaking = Erc191TestBuilder.buildERC191Signature(v, r, s);
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
 
         vm.expectRevert();
-        sMate.publicStaking(
+        staking.publicServiceStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
+            address(mock),
             1001001,
             111,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             1001,
             true,
@@ -923,7 +1192,7 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(address(mock)));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -933,9 +1202,12 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
         );
     }
 
-    function test__unit_revert__publicStaking__bStakeSigAtNonce() public {
+    function test__unit_revert__publicServiceStaking__bStakeSigAtNonce()
+        public
+        enableStaking
+    {
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
         uint8 v;
         bytes32 r;
         bytes32 s;
@@ -949,14 +1221,14 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 totalOfPriorityFee,
                 1001,
                 true,
-                address(sMate)
+                address(staking)
             )
         );
 
@@ -964,22 +1236,24 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
-            Erc191TestBuilder.buildMessageSignedForPublicStaking(
+            Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                address(mock),
                 true,
                 111,
                 777
             )
         );
-        signatureSMate = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureStaking = Erc191TestBuilder.buildERC191Signature(v, r, s);
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
 
         vm.expectRevert();
-        sMate.publicStaking(
+        staking.publicServiceStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
+            address(mock),
             1001001,
             111,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             1001,
             true,
@@ -988,7 +1262,7 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(address(mock)));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -998,66 +1272,110 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
         );
     }
 
-    function test__unit_revert__publicStaking__NonceAlreadyUsed() public {
+    function test__unit_revert__publicServiceStaking__NonceAlreadyUsed()
+        public
+        enableStaking
+    {
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
+        uint8 v;
+        bytes32 r;
+        bytes32 s;
 
         (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
             COMMON_USER_NO_STAKER_1,
-            2,
+            (111) * 2,
             0 ether
         );
 
-        (signatureEVVM, signatureSMate) = makeSignature(
-            COMMON_USER_NO_STAKER_1,
-            true,
-            1,
-            totalOfPriorityFee,
-            1001001,
-            true,
-            1001
+        (v, r, s) = vm.sign(
+            COMMON_USER_NO_STAKER_1.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForPay(
+                address(staking),
+                "",
+                MATE_TOKEN_ADDRESS,
+                (totalOfMate / 2),
+                totalOfPriorityFee,
+                1001,
+                true,
+                address(staking)
+            )
         );
 
+        signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
+
+        (v, r, s) = vm.sign(
+            COMMON_USER_NO_STAKER_1.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                address(mock),
+                true,
+                111,
+                1001001
+            )
+        );
+        signatureStaking = Erc191TestBuilder.buildERC191Signature(v, r, s);
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
-        sMate.publicStaking(
+
+        staking.publicServiceStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
-            1,
-            signatureSMate,
-            totalOfPriorityFee,
+            address(mock),
             1001001,
+            111,
+            signatureStaking,
+            totalOfPriorityFee,
+            1001,
             true,
             signatureEVVM
         );
 
-        (signatureEVVM, signatureSMate) = makeSignature(
-            COMMON_USER_NO_STAKER_1,
-            true,
-            1,
-            totalOfPriorityFee,
-            2002002,
-            true,
-            1001
+        vm.stopPrank();
+
+        (v, r, s) = vm.sign(
+            COMMON_USER_NO_STAKER_1.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForPay(
+                address(staking),
+                "",
+                MATE_TOKEN_ADDRESS,
+                (totalOfMate / 2),
+                totalOfPriorityFee,
+                1001,
+                true,
+                address(staking)
+            )
         );
 
+        signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
+
+        (v, r, s) = vm.sign(
+            COMMON_USER_NO_STAKER_1.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                address(mock),
+                true,
+                111,
+                1001001
+            )
+        );
+        signatureStaking = Erc191TestBuilder.buildERC191Signature(v, r, s);
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
 
         vm.expectRevert();
-        sMate.publicStaking(
+        staking.publicServiceStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
+            address(mock),
             1001001,
-            1,
-            signatureSMate,
+            111,
+            signatureStaking,
             totalOfPriorityFee,
-            2002002,
+            1001,
             true,
             signatureEVVM
         );
+
         vm.stopPrank();
 
-        assert(evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(evvm.istakingStaker(address(mock)));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -1067,11 +1385,15 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
         );
     }
 
-    function test__unit_revert__publicStaking__UserTryToFullUnstakeWithoutWaitTime()
+    function test__unit_revert__publicServiceStaking__ServiceAddressIsNotAService()
         public
+        enableStaking
     {
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
+        uint8 v;
+        bytes32 r;
+        bytes32 s;
 
         (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
             COMMON_USER_NO_STAKER_1,
@@ -1079,157 +1401,51 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
             0 ether
         );
 
-        (signatureEVVM, signatureSMate) = makeSignature(
-            COMMON_USER_NO_STAKER_1,
-            true,
-            111,
-            totalOfPriorityFee,
-            1001001,
-            true,
-            1001
+        (v, r, s) = vm.sign(
+            COMMON_USER_NO_STAKER_1.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForPay(
+                address(staking),
+                "",
+                MATE_TOKEN_ADDRESS,
+                totalOfMate,
+                totalOfPriorityFee,
+                1001,
+                true,
+                address(staking)
+            )
         );
 
+        signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
+
+        (v, r, s) = vm.sign(
+            COMMON_USER_NO_STAKER_1.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                WILDCARD_USER.Address,
+                true,
+                111,
+                1001001
+            )
+        );
+        signatureStaking = Erc191TestBuilder.buildERC191Signature(v, r, s);
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
-        sMate.publicStaking(
-            true,
-            COMMON_USER_NO_STAKER_1.Address,
-            1001,
-            111,
-            signatureSMate,
-            totalOfPriorityFee,
-            1001001,
-            true,
-            signatureEVVM
-        );
-        vm.stopPrank();
 
-        (signatureEVVM, signatureSMate) = makeSignature(
-            COMMON_USER_NO_STAKER_1,
-            false,
-            111,
-            totalOfPriorityFee,
-            2002002,
-            true,
-            2002
-        );
-
-        vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         vm.expectRevert();
-        sMate.publicStaking(
-            false,
+        staking.publicServiceStaking(
+            true,
             COMMON_USER_NO_STAKER_1.Address,
-            2002,
-            111,
-            signatureSMate,
-            totalOfPriorityFee,
-            2002002,
-            true,
-            signatureEVVM
-        );
-        vm.stopPrank();
-
-        assert(evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
-        assertEq(
-            evvm.getBalance(
-                COMMON_USER_NO_STAKER_1.Address,
-                MATE_TOKEN_ADDRESS
-            ),
-            0
-        );
-    }
-
-    function test__unit_revert__publicStaking__notInTimeToRestake() public {
-        bytes memory signatureEVVM;
-        bytes memory signatureSMate;
-
-        vm.startPrank(ADMIN.Address);
-        sMate.proposeSetSecondsToUnlockStaking(5 days);
-        skip(1 days);
-        sMate.acceptSetSecondsToUnlockStaking();
-        vm.stopPrank();
-
-        (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
-            COMMON_USER_NO_STAKER_1,
-            111,
-            0 ether
-        );
-
-        (signatureEVVM, signatureSMate) = makeSignature(
-            COMMON_USER_NO_STAKER_1,
-            true,
-            111,
-            totalOfPriorityFee,
+            WILDCARD_USER.Address,
             1001001,
-            true,
-            1001
-        );
-
-        vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
-        sMate.publicStaking(
-            true,
-            COMMON_USER_NO_STAKER_1.Address,
+            111,
+            signatureStaking,
+            totalOfPriorityFee,
             1001,
-            111,
-            signatureSMate,
-            totalOfPriorityFee,
-            1001001,
             true,
             signatureEVVM
         );
+
         vm.stopPrank();
 
-        skip(sMate.getSecondsToUnlockFullUnstaking());
-
-        (signatureEVVM, signatureSMate) = makeSignature(
-            COMMON_USER_NO_STAKER_1,
-            false,
-            111,
-            totalOfPriorityFee,
-            2002002,
-            true,
-            2002
-        );
-
-        vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
-        sMate.publicStaking(
-            false,
-            COMMON_USER_NO_STAKER_1.Address,
-            2002,
-            111,
-            signatureSMate,
-            totalOfPriorityFee,
-            2002002,
-            true,
-            signatureEVVM
-        );
-        vm.stopPrank();
-
-        (signatureEVVM, signatureSMate) = makeSignature(
-            COMMON_USER_NO_STAKER_1,
-            true,
-            111,
-            totalOfPriorityFee,
-            3003003,
-            true,
-            3003
-        );
-
-        vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
-        vm.expectRevert();
-        sMate.publicStaking(
-            true,
-            COMMON_USER_NO_STAKER_1.Address,
-            3003,
-            111,
-            signatureSMate,
-            totalOfPriorityFee,
-            3003003,
-            true,
-            signatureEVVM
-        );
-        vm.stopPrank();
-
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(address(mock)));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -1239,64 +1455,15 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
         );
     }
 
-    function test__unit_revert__publicStaking__UserTriesToUnstakeWithoutStaking()
+    function test__unit_revert__publicServiceStaking__UnstakingServiceIsDiferentToUserAddress()
         public
+        enableStaking
     {
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
-
-        (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
-            COMMON_USER_NO_STAKER_1,
-            0,
-            0 ether
-        );
-
-        (signatureEVVM, signatureSMate) = makeSignature(
-            COMMON_USER_NO_STAKER_1,
-            false,
-            111,
-            totalOfPriorityFee,
-            1001001,
-            true,
-            1001
-        );
-
-        vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
-        vm.expectRevert();
-        sMate.publicStaking(
-            false,
-            COMMON_USER_NO_STAKER_1.Address,
-            1001,
-            111,
-            signatureSMate,
-            totalOfPriorityFee,
-            1001001,
-            true,
-            signatureEVVM
-        );
-        vm.stopPrank();
-
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
-        assertEq(
-            evvm.getBalance(
-                COMMON_USER_NO_STAKER_1.Address,
-                MATE_TOKEN_ADDRESS
-            ),
-            totalOfMate + totalOfPriorityFee
-        );
-    }
-
-    function test__unit_revert__publicStaking__stakeWithoutFlagOnTrue() public {
-        bytes memory signatureEVVM;
-        bytes memory signatureSMate;
-
-        vm.startPrank(ADMIN.Address);
-
-        sMate.prepareChangeAllowPublicStaking();
-        skip(1 days);
-        sMate.confirmChangeAllowPublicStaking();
-
-        vm.stopPrank();
+        bytes memory signatureStaking;
+        uint8 v;
+        bytes32 r;
+        bytes32 s;
 
         (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
             COMMON_USER_NO_STAKER_1,
@@ -1304,38 +1471,59 @@ contract unitTestRevert_SMate_publicStaking is Test, Constants {
             0 ether
         );
 
-        (signatureEVVM, signatureSMate) = makeSignature(
-            COMMON_USER_NO_STAKER_1,
-            true,
-            111,
-            totalOfPriorityFee,
-            1001001,
-            true,
-            1001
+        (v, r, s) = vm.sign(
+            COMMON_USER_NO_STAKER_1.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForPay(
+                address(staking),
+                "",
+                MATE_TOKEN_ADDRESS,
+                totalOfMate,
+                totalOfPriorityFee,
+                1001,
+                true,
+                address(staking)
+            )
         );
 
+        signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
+
+        (v, r, s) = vm.sign(
+            COMMON_USER_NO_STAKER_1.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                address(mock),
+                true,
+                111,
+                1001001
+            )
+        );
+        signatureStaking = Erc191TestBuilder.buildERC191Signature(v, r, s);
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
-        vm.expectRevert();
-        sMate.publicStaking(
+
+        
+        staking.publicServiceStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
-            111,
-            signatureSMate,
-            totalOfPriorityFee,
+            address(mock),
             1001001,
+            111,
+            signatureStaking,
+            totalOfPriorityFee,
+            1001,
             true,
             signatureEVVM
         );
+
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
-        assertEq(
-            evvm.getBalance(
-                COMMON_USER_NO_STAKER_1.Address,
-                MATE_TOKEN_ADDRESS
-            ),
-            totalOfMate + totalOfPriorityFee
+        vm.expectRevert();
+        mock.unstake(
+            111,
+            1001001,
+            COMMON_USER_NO_STAKER_1.Address
         );
+
+        assert(evvm.istakingStaker(address(mock)));
+
     }
 }
+

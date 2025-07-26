@@ -19,31 +19,31 @@ import "forge-std/console2.sol";
 import {Constants} from "test/Constants.sol";
 import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
-import {SMate} from "@EVVM/playground/staking/SMate.sol";
+import {Staking} from "@EVVM/playground/staking/Staking.sol";
 import {NameService} from "@EVVM/playground/nameService/NameService.sol";
 import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 
-contract unitTestRevert_SMate_goldenStaking is Test, Constants {
-    SMate sMate;
+contract unitTestRevert_Staking_goldenStaking is Test, Constants {
+    Staking staking;
     Evvm evvm;
     Estimator estimator;
     NameService nameService;
 
     function setUp() public {
-        sMate = new SMate(ADMIN.Address, GOLDEN_STAKER.Address);
-        evvm = new Evvm(ADMIN.Address, address(sMate));
+        staking = new Staking(ADMIN.Address, GOLDEN_STAKER.Address);
+        evvm = new Evvm(ADMIN.Address, address(staking));
         estimator = new Estimator(
             ACTIVATOR.Address,
             address(evvm),
-            address(sMate),
+            address(staking),
             ADMIN.Address
         );
         nameService = new NameService(address(evvm), ADMIN.Address);
 
-        sMate._setupEstimatorAndEvvm(address(estimator), address(evvm));
+        staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
         
 
@@ -52,16 +52,16 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
 
     function giveMateToExecute(
         address user,
-        uint256 sMateAmount,
+        uint256 stakingAmount,
         uint256 priorityFee
     ) private returns (uint256 totalOfMate, uint256 totalOfPriorityFee) {
         evvm._addBalance(
             user,
             MATE_TOKEN_ADDRESS,
-            (sMate.priceOfSMate() * sMateAmount) + priorityFee
+            (staking.priceOfStaking() * stakingAmount) + priorityFee
         );
 
-        totalOfMate = (sMate.priceOfSMate() * sMateAmount);
+        totalOfMate = (staking.priceOfStaking() * stakingAmount);
         totalOfPriorityFee = priorityFee;
     }
 
@@ -75,7 +75,7 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
     )
         private
         view
-        returns (bytes memory signatureEVVM, bytes memory signatureSMate)
+        returns (bytes memory signatureEVVM, bytes memory signatureStaking)
     {
         uint8 v;
         bytes32 r;
@@ -85,28 +85,28 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
             (v, r, s) = vm.sign(
                 COMMON_USER_NO_STAKER_1.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPay(
-                    address(sMate),
+                    address(staking),
                     "",
                     MATE_TOKEN_ADDRESS,
-                    sMate.priceOfSMate() * amountOfSmate,
+                    staking.priceOfStaking() * amountOfSmate,
                     priorityFee,
                     nonceEVVM,
                     priorityEVVM,
-                    address(sMate)
+                    address(staking)
                 )
             );
         } else {
             (v, r, s) = vm.sign(
                 COMMON_USER_NO_STAKER_1.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPay(
-                    address(sMate),
+                    address(staking),
                     "",
                     MATE_TOKEN_ADDRESS,
                     priorityFee,
                     0,
                     nonceEVVM,
                     priorityEVVM,
-                    address(sMate)
+                    address(staking)
                 )
             );
         }
@@ -121,7 +121,7 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
                 nonceSmate
             )
         );
-        signatureSMate = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureStaking = Erc191TestBuilder.buildERC191Signature(v, r, s);
     }
 
     function getAmountOfRewardsPerExecution(
@@ -149,14 +149,14 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 totalOfPriorityFee,
                 evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
                 false,
-                address(sMate)
+                address(staking)
             )
         );
         bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
@@ -168,11 +168,11 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
         vm.startPrank(COMMON_USER_NO_STAKER_1.Address);
 
         vm.expectRevert();
-        sMate.goldenStaking(true, 1, signatureEVVM);
+        staking.goldenStaking(true, 1, signatureEVVM);
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -193,14 +193,14 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             GOLDEN_STAKER.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 totalOfPriorityFee,
                 evvm.getNextCurrentSyncNonce(GOLDEN_STAKER.Address),
                 false,
-                address(sMate)
+                address(staking)
             )
         );
         bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
@@ -212,7 +212,7 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
         vm.startPrank(GOLDEN_STAKER.Address);
 
         vm.expectRevert();
-        sMate.goldenStaking(true, 1, signatureEVVM);
+        staking.goldenStaking(true, 1, signatureEVVM);
 
         vm.stopPrank();
     }
@@ -228,14 +228,14 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             WILDCARD_USER.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 totalOfPriorityFee,
                 evvm.getNextCurrentSyncNonce(GOLDEN_STAKER.Address),
                 false,
-                address(sMate)
+                address(staking)
             )
         );
         bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
@@ -247,11 +247,11 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
         vm.startPrank(GOLDEN_STAKER.Address);
 
         vm.expectRevert();
-        sMate.goldenStaking(true, 1, signatureEVVM);
+        staking.goldenStaking(true, 1, signatureEVVM);
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(GOLDEN_STAKER.Address));
+        assert(!evvm.istakingStaker(GOLDEN_STAKER.Address));
         assertEq(
             evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
             totalOfMate + totalOfPriorityFee
@@ -275,7 +275,7 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
                 totalOfPriorityFee,
                 evvm.getNextCurrentSyncNonce(GOLDEN_STAKER.Address),
                 false,
-                address(sMate)
+                address(staking)
             )
         );
         bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
@@ -287,11 +287,11 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
         vm.startPrank(GOLDEN_STAKER.Address);
 
         vm.expectRevert();
-        sMate.goldenStaking(true, 1, signatureEVVM);
+        staking.goldenStaking(true, 1, signatureEVVM);
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(GOLDEN_STAKER.Address));
+        assert(!evvm.istakingStaker(GOLDEN_STAKER.Address));
         assertEq(
             evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
             totalOfMate + totalOfPriorityFee
@@ -299,7 +299,7 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
     }
 
     /*
-     ! note: if sMate in the future has a MNS identity, then rework
+     ! note: if staking in the future has a MNS identity, then rework
      !       this test
      */
     function test__unitRevert__goldenStaking__bPaySigAtToIdentity() external {
@@ -313,13 +313,13 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
             GOLDEN_STAKER.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
                 address(0),
-                "sMate",
+                "staking",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 totalOfPriorityFee,
                 evvm.getNextCurrentSyncNonce(GOLDEN_STAKER.Address),
                 false,
-                address(sMate)
+                address(staking)
             )
         );
         bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
@@ -331,11 +331,11 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
         vm.startPrank(GOLDEN_STAKER.Address);
 
         vm.expectRevert();
-        sMate.goldenStaking(true, 1, signatureEVVM);
+        staking.goldenStaking(true, 1, signatureEVVM);
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(GOLDEN_STAKER.Address));
+        assert(!evvm.istakingStaker(GOLDEN_STAKER.Address));
         assertEq(
             evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
             totalOfMate + totalOfPriorityFee
@@ -352,14 +352,14 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             GOLDEN_STAKER.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 ETHER_ADDRESS,
                 totalOfMate,
                 totalOfPriorityFee,
                 evvm.getNextCurrentSyncNonce(GOLDEN_STAKER.Address),
                 false,
-                address(sMate)
+                address(staking)
             )
         );
         bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
@@ -371,11 +371,11 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
         vm.startPrank(GOLDEN_STAKER.Address);
 
         vm.expectRevert();
-        sMate.goldenStaking(true, 1, signatureEVVM);
+        staking.goldenStaking(true, 1, signatureEVVM);
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(GOLDEN_STAKER.Address));
+        assert(!evvm.istakingStaker(GOLDEN_STAKER.Address));
         assertEq(
             evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
             totalOfMate + totalOfPriorityFee
@@ -392,14 +392,14 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             GOLDEN_STAKER.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 1,
                 totalOfPriorityFee,
                 evvm.getNextCurrentSyncNonce(GOLDEN_STAKER.Address),
                 false,
-                address(sMate)
+                address(staking)
             )
         );
         bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
@@ -411,11 +411,11 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
         vm.startPrank(GOLDEN_STAKER.Address);
 
         vm.expectRevert();
-        sMate.goldenStaking(true, 1, signatureEVVM);
+        staking.goldenStaking(true, 1, signatureEVVM);
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(GOLDEN_STAKER.Address));
+        assert(!evvm.istakingStaker(GOLDEN_STAKER.Address));
         assertEq(
             evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
             totalOfMate + totalOfPriorityFee
@@ -432,14 +432,14 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             GOLDEN_STAKER.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 1000,
                 evvm.getNextCurrentSyncNonce(GOLDEN_STAKER.Address),
                 false,
-                address(sMate)
+                address(staking)
             )
         );
         bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
@@ -451,11 +451,11 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
         vm.startPrank(GOLDEN_STAKER.Address);
 
         vm.expectRevert();
-        sMate.goldenStaking(true, 1, signatureEVVM);
+        staking.goldenStaking(true, 1, signatureEVVM);
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(GOLDEN_STAKER.Address));
+        assert(!evvm.istakingStaker(GOLDEN_STAKER.Address));
         assertEq(
             evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
             totalOfMate + totalOfPriorityFee
@@ -472,14 +472,14 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             GOLDEN_STAKER.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 totalOfPriorityFee,
                 777,
                 false,
-                address(sMate)
+                address(staking)
             )
         );
         bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
@@ -491,11 +491,11 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
         vm.startPrank(GOLDEN_STAKER.Address);
 
         vm.expectRevert();
-        sMate.goldenStaking(true, 1, signatureEVVM);
+        staking.goldenStaking(true, 1, signatureEVVM);
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(GOLDEN_STAKER.Address));
+        assert(!evvm.istakingStaker(GOLDEN_STAKER.Address));
         assertEq(
             evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
             totalOfMate + totalOfPriorityFee
@@ -512,14 +512,14 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             GOLDEN_STAKER.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 totalOfPriorityFee,
                 evvm.getNextCurrentSyncNonce(GOLDEN_STAKER.Address),
                 true,
-                address(sMate)
+                address(staking)
             )
         );
         bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
@@ -531,11 +531,11 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
         vm.startPrank(GOLDEN_STAKER.Address);
 
         vm.expectRevert();
-        sMate.goldenStaking(true, 1, signatureEVVM);
+        staking.goldenStaking(true, 1, signatureEVVM);
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(GOLDEN_STAKER.Address));
+        assert(!evvm.istakingStaker(GOLDEN_STAKER.Address));
         assertEq(
             evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
             totalOfMate + totalOfPriorityFee
@@ -552,7 +552,7 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             GOLDEN_STAKER.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
@@ -571,11 +571,11 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
         vm.startPrank(GOLDEN_STAKER.Address);
 
         vm.expectRevert();
-        sMate.goldenStaking(true, 1, signatureEVVM);
+        staking.goldenStaking(true, 1, signatureEVVM);
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(GOLDEN_STAKER.Address));
+        assert(!evvm.istakingStaker(GOLDEN_STAKER.Address));
         assertEq(
             evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
             totalOfMate + totalOfPriorityFee
@@ -594,14 +594,14 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             GOLDEN_STAKER.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 0,
                 evvm.getNextCurrentSyncNonce(GOLDEN_STAKER.Address),
                 false,
-                address(sMate)
+                address(staking)
             )
         );
         bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
@@ -612,14 +612,14 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
 
         vm.startPrank(GOLDEN_STAKER.Address);
 
-        sMate.goldenStaking(true, 10, signatureEVVM);
+        staking.goldenStaking(true, 10, signatureEVVM);
 
         vm.expectRevert();
-        sMate.goldenStaking(false, 10, "");
+        staking.goldenStaking(false, 10, "");
 
         vm.stopPrank();
 
-        assert(evvm.isMateStaker(GOLDEN_STAKER.Address));
+        assert(evvm.istakingStaker(GOLDEN_STAKER.Address));
         assertEq(
             evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
             getAmountOfRewardsPerExecution(1)
@@ -638,14 +638,14 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             GOLDEN_STAKER.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 0,
                 evvm.getNextCurrentSyncNonce(GOLDEN_STAKER.Address),
                 false,
-                address(sMate)
+                address(staking)
             )
         );
         bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
@@ -656,14 +656,14 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
 
         vm.startPrank(GOLDEN_STAKER.Address);
 
-        sMate.goldenStaking(true, 10, signatureEVVM);
+        staking.goldenStaking(true, 10, signatureEVVM);
 
         vm.expectRevert();
-        sMate.goldenStaking(false, 420, "");
+        staking.goldenStaking(false, 420, "");
 
         vm.stopPrank();
 
-        assert(evvm.isMateStaker(GOLDEN_STAKER.Address));
+        assert(evvm.istakingStaker(GOLDEN_STAKER.Address));
         assertEq(
             evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
             getAmountOfRewardsPerExecution(1)
@@ -672,9 +672,9 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
 
     function test__unitRevert__goldenStaking__notInTimeToStake() external {
         vm.startPrank(ADMIN.Address);
-        sMate.proposeSetSecondsToUnlockStaking(5 days);
+        staking.proposeSetSecondsToUnlockStaking(5 days);
         skip(1 days);
-        sMate.acceptSetSecondsToUnlockStaking();
+        staking.acceptSetSecondsToUnlockStaking();
         vm.stopPrank();
 
         (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
@@ -686,14 +686,14 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             GOLDEN_STAKER.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 0,
                 evvm.getNextCurrentSyncNonce(GOLDEN_STAKER.Address),
                 false,
-                address(sMate)
+                address(staking)
             )
         );
         bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
@@ -704,18 +704,18 @@ contract unitTestRevert_SMate_goldenStaking is Test, Constants {
 
         vm.startPrank(GOLDEN_STAKER.Address);
 
-        sMate.goldenStaking(true, 10, signatureEVVM);
+        staking.goldenStaking(true, 10, signatureEVVM);
 
-        skip(sMate.getSecondsToUnlockFullUnstaking());
+        skip(staking.getSecondsToUnlockFullUnstaking());
 
-        sMate.goldenStaking(false, 10, "");
+        staking.goldenStaking(false, 10, "");
 
         vm.expectRevert();
-        sMate.goldenStaking(true, 10, "");
+        staking.goldenStaking(true, 10, "");
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(GOLDEN_STAKER.Address));
+        assert(!evvm.istakingStaker(GOLDEN_STAKER.Address));
         assertEq(
             evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
             getAmountOfRewardsPerExecution(1) + totalOfMate

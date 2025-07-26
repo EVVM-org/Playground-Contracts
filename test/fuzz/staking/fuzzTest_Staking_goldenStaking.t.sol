@@ -12,7 +12,7 @@
 ###         ########  ######### #########          ###     ########## ########     ###     
 
 
- * @title fuzz test for sMate function correct behavior
+ * @title fuzz test for staking function correct behavior
  * @notice some functions has evvm functions that are implemented
  *         for payment and dosent need to be tested here
  */
@@ -25,15 +25,15 @@ import "forge-std/console2.sol";
 import {Constants} from "test/Constants.sol";
 import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
-import {SMate} from "@EVVM/playground/staking/SMate.sol";
+import {Staking} from "@EVVM/playground/staking/Staking.sol";
 import {NameService} from "@EVVM/playground/nameService/NameService.sol";
 import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 
-contract fuzzTest_SMate_goldenStaking is Test, Constants {
-    SMate sMate;
+contract fuzzTest_Staking_goldenStaking is Test, Constants {
+    Staking staking;
     Evvm evvm;
     Estimator estimator;
     NameService nameService;
@@ -41,17 +41,17 @@ contract fuzzTest_SMate_goldenStaking is Test, Constants {
     AccountData COMMON_USER_NO_STAKER_3 = WILDCARD_USER;
 
     function setUp() public {
-        sMate = new SMate(ADMIN.Address, GOLDEN_STAKER.Address);
-        evvm = new Evvm(ADMIN.Address, address(sMate));
+        staking = new Staking(ADMIN.Address, GOLDEN_STAKER.Address);
+        evvm = new Evvm(ADMIN.Address, address(staking));
         estimator = new Estimator(
             ACTIVATOR.Address,
             address(evvm),
-            address(sMate),
+            address(staking),
             ADMIN.Address
         );
         nameService = new NameService(address(evvm), ADMIN.Address);
 
-        sMate._setupEstimatorAndEvvm(address(estimator), address(evvm));
+        staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
         
 
@@ -63,22 +63,22 @@ contract fuzzTest_SMate_goldenStaking is Test, Constants {
 
         vm.startPrank(GOLDEN_STAKER.Address);
 
-        sMate.goldenStaking(true, 10, signatureEVVM);
+        staking.goldenStaking(true, 10, signatureEVVM);
 
         vm.stopPrank();
     }
 
     function giveMateToExecute(
         address user,
-        uint256 sMateAmount
+        uint256 stakingAmount
     ) private returns (uint256 totalAmount) {
         evvm._addBalance(
             user,
             MATE_TOKEN_ADDRESS,
-            sMate.priceOfSMate() * sMateAmount
+            staking.priceOfStaking() * stakingAmount
         );
 
-        totalAmount = sMate.priceOfSMate() * sMateAmount;
+        totalAmount = staking.priceOfStaking() * stakingAmount;
     }
 
     function calculateRewardPerExecution(
@@ -93,14 +93,14 @@ contract fuzzTest_SMate_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             GOLDEN_STAKER.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 amount,
                 0,
                 evvm.getNextCurrentSyncNonce(GOLDEN_STAKER.Address),
                 false,
-                address(sMate)
+                address(staking)
             )
         );
         signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
@@ -117,14 +117,14 @@ contract fuzzTest_SMate_goldenStaking is Test, Constants {
         uint256 totalAmount;
         bytes memory signatureEVVM;
         uint256 amountBefore;
-        uint256 sMateFullAmountBefore;
+        uint256 stakingFullAmountBefore;
         uint256 totalStakedBefore;
 
         for (uint256 i = 0; i < input.length; i++) {
             console2.log("isStaking", input[i].isStaking);
             console2.log("amount", input[i].amount);
 
-            totalStakedBefore = sMate.getUserAmountStaked(
+            totalStakedBefore = staking.getUserAmountStaked(
                 GOLDEN_STAKER.Address
             );
 
@@ -134,9 +134,9 @@ contract fuzzTest_SMate_goldenStaking is Test, Constants {
             );
             if (input[i].isStaking) {
                 // staking
-                if (sMate.getUserAmountStaked(GOLDEN_STAKER.Address) == 0) {
+                if (staking.getUserAmountStaked(GOLDEN_STAKER.Address) == 0) {
                     vm.warp(
-                        sMate.getTimeToUserUnlockStakingTime(
+                        staking.getTimeToUserUnlockStakingTime(
                             GOLDEN_STAKER.Address
                         )
                     );
@@ -151,7 +151,7 @@ contract fuzzTest_SMate_goldenStaking is Test, Constants {
 
                 vm.startPrank(GOLDEN_STAKER.Address);
 
-                sMate.goldenStaking(
+                staking.goldenStaking(
                     input[i].isStaking,
                     input[i].amount,
                     signatureEVVM
@@ -159,37 +159,37 @@ contract fuzzTest_SMate_goldenStaking is Test, Constants {
 
                 vm.stopPrank();
 
-                assert(evvm.isMateStaker(GOLDEN_STAKER.Address));
+                assert(evvm.istakingStaker(GOLDEN_STAKER.Address));
             } else {
                 // unstaking
                 if (
                     input[i].amount >=
-                    sMate.getUserAmountStaked(GOLDEN_STAKER.Address)
+                    staking.getUserAmountStaked(GOLDEN_STAKER.Address)
                 ) {
                     vm.warp(
-                        sMate.getTimeToUserUnlockFullUnstakingTime(
+                        staking.getTimeToUserUnlockFullUnstakingTime(
                             GOLDEN_STAKER.Address
                         )
                     );
 
-                    sMateFullAmountBefore = sMate.getUserAmountStaked(
+                    stakingFullAmountBefore = staking.getUserAmountStaked(
                         GOLDEN_STAKER.Address
                     );
                     vm.startPrank(GOLDEN_STAKER.Address);
 
-                    sMate.goldenStaking(
+                    staking.goldenStaking(
                         input[i].isStaking,
-                        sMate.getUserAmountStaked(GOLDEN_STAKER.Address),
+                        staking.getUserAmountStaked(GOLDEN_STAKER.Address),
                         signatureEVVM
                     );
 
                     vm.stopPrank();
 
-                    assert(!evvm.isMateStaker(GOLDEN_STAKER.Address));
+                    assert(!evvm.istakingStaker(GOLDEN_STAKER.Address));
                 } else {
                     vm.startPrank(GOLDEN_STAKER.Address);
 
-                    sMate.goldenStaking(
+                    staking.goldenStaking(
                         input[i].isStaking,
                         input[i].amount,
                         signatureEVVM
@@ -199,25 +199,25 @@ contract fuzzTest_SMate_goldenStaking is Test, Constants {
                 }
             }
 
-            SMate.HistoryMetadata memory history = sMate
+            Staking.HistoryMetadata memory history = staking
                 .getAddressHistoryByIndex(GOLDEN_STAKER.Address, i + 1);
 
             assertEq(
                 evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
                 amountBefore +
                     calculateRewardPerExecution(
-                        evvm.isMateStaker(GOLDEN_STAKER.Address) ? 1 : 0
+                        evvm.istakingStaker(GOLDEN_STAKER.Address) ? 1 : 0
                     ) +
                     (
                         input[i].isStaking
                             ? 0
                             : (
-                                sMate.getUserAmountStaked(
+                                staking.getUserAmountStaked(
                                     GOLDEN_STAKER.Address
                                 ) == 0
-                                    ? sMate.priceOfSMate() *
-                                        sMateFullAmountBefore
-                                    : sMate.priceOfSMate() * input[i].amount
+                                    ? staking.priceOfStaking() *
+                                        stakingFullAmountBefore
+                                    : staking.priceOfStaking() * input[i].amount
                             )
                     )
             );
@@ -237,9 +237,9 @@ contract fuzzTest_SMate_goldenStaking is Test, Constants {
                     input[i].isStaking
                         ? input[i].amount
                         : (
-                            sMate.getUserAmountStaked(GOLDEN_STAKER.Address) ==
+                            staking.getUserAmountStaked(GOLDEN_STAKER.Address) ==
                                 0
-                                ? sMateFullAmountBefore
+                                ? stakingFullAmountBefore
                                 : input[i].amount
                         )
                 )
@@ -254,9 +254,9 @@ contract fuzzTest_SMate_goldenStaking is Test, Constants {
                     history.totalStaked,
                     totalStakedBefore -
                         (
-                            sMate.getUserAmountStaked(GOLDEN_STAKER.Address) ==
+                            staking.getUserAmountStaked(GOLDEN_STAKER.Address) ==
                                 0
-                                ? sMateFullAmountBefore
+                                ? stakingFullAmountBefore
                                 : input[i].amount
                         )
                 );

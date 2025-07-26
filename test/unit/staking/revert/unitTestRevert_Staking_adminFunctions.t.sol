@@ -19,31 +19,31 @@ import "forge-std/console2.sol";
 import {Constants} from "test/Constants.sol";
 import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
-import {SMate} from "@EVVM/playground/staking/SMate.sol";
+import {Staking} from "@EVVM/playground/staking/Staking.sol";
 import {NameService} from "@EVVM/playground/nameService/NameService.sol";
 import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 
-contract unitTestRevert_SMate_adminFunctions is Test, Constants {
-    SMate sMate;
+contract unitTestRevert_Staking_adminFunctions is Test, Constants {
+    Staking staking;
     Evvm evvm;
     Estimator estimator;
     NameService nameService;
 
     function setUp() public {
-        sMate = new SMate(ADMIN.Address, GOLDEN_STAKER.Address);
-        evvm = new Evvm(ADMIN.Address, address(sMate));
+        staking = new Staking(ADMIN.Address, GOLDEN_STAKER.Address);
+        evvm = new Evvm(ADMIN.Address, address(staking));
         estimator = new Estimator(
             ACTIVATOR.Address,
             address(evvm),
-            address(sMate),
+            address(staking),
             ADMIN.Address
         );
         nameService = new NameService(address(evvm), ADMIN.Address);
 
-        sMate._setupEstimatorAndEvvm(address(estimator), address(evvm));
+        staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
         
 
@@ -53,7 +53,7 @@ contract unitTestRevert_SMate_adminFunctions is Test, Constants {
     function test__unitRevert__addPresaleStaker__nonOwner() external {
         vm.startPrank(WILDCARD_USER.Address);
         vm.expectRevert();
-        sMate.addPresaleStaker(COMMON_USER_NO_STAKER_1.Address);
+        staking.addPresaleStaker(COMMON_USER_NO_STAKER_1.Address);
         vm.stopPrank();
     }
 
@@ -64,89 +64,89 @@ contract unitTestRevert_SMate_adminFunctions is Test, Constants {
 
         vm.startPrank(WILDCARD_USER.Address);
         vm.expectRevert();
-        sMate.addPresaleStakers(stakers);
+        staking.addPresaleStakers(stakers);
         vm.stopPrank();
     }
 
     function test__unitRevert__proposeAdmin__nonOwner() external {
         vm.startPrank(WILDCARD_USER.Address);
         vm.expectRevert();
-        sMate.proposeAdmin(WILDCARD_USER.Address);
+        staking.proposeAdmin(WILDCARD_USER.Address);
         vm.stopPrank();
     }
 
     function test__unitRevert__rejectProposalAdmin__nonOwner() external {
         vm.startPrank(ADMIN.Address);
-        sMate.proposeAdmin(WILDCARD_USER.Address);
+        staking.proposeAdmin(WILDCARD_USER.Address);
         vm.stopPrank();
 
         vm.warp(block.timestamp + 2 hours);
 
         vm.startPrank(WILDCARD_USER.Address);
         vm.expectRevert();
-        sMate.rejectProposalAdmin();
+        staking.rejectProposalAdmin();
         vm.stopPrank();
     }
 
     function test__unitRevert__acceptNewAdmin__nonNewOwner() external {
         vm.startPrank(ADMIN.Address);
-        sMate.proposeAdmin(WILDCARD_USER.Address);
+        staking.proposeAdmin(WILDCARD_USER.Address);
         vm.stopPrank();
         vm.warp(block.timestamp + 1 days + 1);
         vm.startPrank(ADMIN.Address);
         vm.expectRevert();
-        sMate.acceptNewAdmin();
+        staking.acceptNewAdmin();
         vm.stopPrank();
     }
 
     function test__unitRevert__acceptNewAdmin__notInTime() external {
         vm.startPrank(ADMIN.Address);
-        sMate.proposeAdmin(WILDCARD_USER.Address);
+        staking.proposeAdmin(WILDCARD_USER.Address);
         vm.stopPrank();
         vm.warp(block.timestamp + 10 hours);
         vm.startPrank(WILDCARD_USER.Address);
         vm.expectRevert();
-        sMate.acceptNewAdmin();
+        staking.acceptNewAdmin();
         vm.stopPrank();
     }
 
     function test__unitRevert__proposeGoldenFisher__nonOwner() external {
         vm.startPrank(WILDCARD_USER.Address);
         vm.expectRevert();
-        sMate.proposeGoldenFisher(WILDCARD_USER.Address);
+        staking.proposeGoldenFisher(WILDCARD_USER.Address);
         vm.stopPrank();
     }
 
     function test__unitRevert__rejectProposalGoldenFisher__nonOwner() external {
         vm.startPrank(ADMIN.Address);
-        sMate.proposeGoldenFisher(WILDCARD_USER.Address);
+        staking.proposeGoldenFisher(WILDCARD_USER.Address);
         vm.warp(block.timestamp + 2 hours);
         vm.stopPrank();
         vm.startPrank(WILDCARD_USER.Address);
         vm.expectRevert();
-        sMate.rejectProposalGoldenFisher();
+        staking.rejectProposalGoldenFisher();
         vm.stopPrank();
     }
 
     function test__unitRevert__acceptNewGoldenFisher__nonOwner() external {
         vm.startPrank(ADMIN.Address);
-        sMate.proposeGoldenFisher(WILDCARD_USER.Address);
+        staking.proposeGoldenFisher(WILDCARD_USER.Address);
         vm.stopPrank();
 
         vm.warp(block.timestamp + 1 days + 1);
 
         vm.startPrank(WILDCARD_USER.Address);
         vm.expectRevert();
-        sMate.acceptNewGoldenFisher();
+        staking.acceptNewGoldenFisher();
         vm.stopPrank();
     }
 
     function test__unitRevert__acceptNewGoldenFisher__notInTime() external {
         vm.startPrank(ADMIN.Address);
-        sMate.proposeGoldenFisher(WILDCARD_USER.Address);
+        staking.proposeGoldenFisher(WILDCARD_USER.Address);
         vm.warp(block.timestamp + 10 hours);
         vm.expectRevert();
-        sMate.acceptNewGoldenFisher();
+        staking.acceptNewGoldenFisher();
         vm.stopPrank();
     }
 
@@ -155,7 +155,7 @@ contract unitTestRevert_SMate_adminFunctions is Test, Constants {
     {
         vm.startPrank(WILDCARD_USER.Address);
         vm.expectRevert();
-        sMate.proposeSetSecondsToUnlockStaking(2 days);
+        staking.proposeSetSecondsToUnlockStaking(2 days);
         vm.stopPrank();
     }
 
@@ -163,14 +163,14 @@ contract unitTestRevert_SMate_adminFunctions is Test, Constants {
         external
     {
         vm.startPrank(ADMIN.Address);
-        sMate.proposeSetSecondsToUnlockStaking(2 days);
+        staking.proposeSetSecondsToUnlockStaking(2 days);
         vm.stopPrank();
 
         vm.warp(block.timestamp + 10 hours);
 
         vm.startPrank(WILDCARD_USER.Address);
         vm.expectRevert();
-        sMate.rejectProposalSetSecondsToUnlockStaking();
+        staking.rejectProposalSetSecondsToUnlockStaking();
         vm.stopPrank();
     }
 
@@ -178,14 +178,14 @@ contract unitTestRevert_SMate_adminFunctions is Test, Constants {
         external
     {
         vm.startPrank(ADMIN.Address);
-        sMate.proposeSetSecondsToUnlockStaking(2 days);
+        staking.proposeSetSecondsToUnlockStaking(2 days);
         vm.stopPrank();
 
         vm.warp(block.timestamp + 1 days + 1);
 
         vm.startPrank(WILDCARD_USER.Address);
         vm.expectRevert();
-        sMate.acceptSetSecondsToUnlockStaking();
+        staking.acceptSetSecondsToUnlockStaking();
         vm.stopPrank();
     }
 
@@ -193,10 +193,10 @@ contract unitTestRevert_SMate_adminFunctions is Test, Constants {
         external
     {
         vm.startPrank(ADMIN.Address);
-        sMate.proposeSetSecondsToUnlockStaking(2 days);
+        staking.proposeSetSecondsToUnlockStaking(2 days);
         vm.warp(block.timestamp + 10 hours);
         vm.expectRevert();
-        sMate.acceptSetSecondsToUnlockStaking();
+        staking.acceptSetSecondsToUnlockStaking();
         vm.stopPrank();
     }
 
@@ -205,7 +205,7 @@ contract unitTestRevert_SMate_adminFunctions is Test, Constants {
     {
         vm.startPrank(WILDCARD_USER.Address);
         vm.expectRevert();
-        sMate.prepareSetSecondsToUnllockFullUnstaking(2 days);
+        staking.prepareSetSecondsToUnllockFullUnstaking(2 days);
         vm.stopPrank();
     }
 
@@ -213,14 +213,14 @@ contract unitTestRevert_SMate_adminFunctions is Test, Constants {
         external
     {
         vm.startPrank(ADMIN.Address);
-        sMate.prepareSetSecondsToUnllockFullUnstaking(2 days);
+        staking.prepareSetSecondsToUnllockFullUnstaking(2 days);
         vm.stopPrank();
 
         vm.warp(block.timestamp + 10 hours);
 
         vm.startPrank(WILDCARD_USER.Address);
         vm.expectRevert();
-        sMate.cancelSetSecondsToUnllockFullUnstaking();
+        staking.cancelSetSecondsToUnllockFullUnstaking();
         vm.stopPrank();
     }
 
@@ -228,14 +228,14 @@ contract unitTestRevert_SMate_adminFunctions is Test, Constants {
         external
     {
         vm.startPrank(ADMIN.Address);
-        sMate.prepareSetSecondsToUnllockFullUnstaking(2 days);
+        staking.prepareSetSecondsToUnllockFullUnstaking(2 days);
         vm.stopPrank();
 
         vm.warp(block.timestamp + 1 days + 1);
 
         vm.startPrank(WILDCARD_USER.Address);
         vm.expectRevert();
-        sMate.confirmSetSecondsToUnllockFullUnstaking();
+        staking.confirmSetSecondsToUnllockFullUnstaking();
         vm.stopPrank();
     }
 
@@ -243,10 +243,10 @@ contract unitTestRevert_SMate_adminFunctions is Test, Constants {
         external
     {
         vm.startPrank(ADMIN.Address);
-        sMate.prepareSetSecondsToUnllockFullUnstaking(2 days);
+        staking.prepareSetSecondsToUnllockFullUnstaking(2 days);
         vm.warp(block.timestamp + 10 hours);
         vm.expectRevert();
-        sMate.confirmSetSecondsToUnllockFullUnstaking();
+        staking.confirmSetSecondsToUnllockFullUnstaking();
         vm.stopPrank();
     }
 
@@ -255,7 +255,7 @@ contract unitTestRevert_SMate_adminFunctions is Test, Constants {
     {
         vm.startPrank(WILDCARD_USER.Address);
         vm.expectRevert();
-        sMate.prepareChangeAllowPublicStaking();
+        staking.prepareChangeAllowPublicStaking();
         vm.stopPrank();
     }
 
@@ -263,14 +263,14 @@ contract unitTestRevert_SMate_adminFunctions is Test, Constants {
         external
     {
         vm.startPrank(ADMIN.Address);
-        sMate.prepareChangeAllowPublicStaking();
+        staking.prepareChangeAllowPublicStaking();
         vm.stopPrank();
 
         vm.warp(block.timestamp + 2 hours);
 
         vm.startPrank(WILDCARD_USER.Address);
         vm.expectRevert();
-        sMate.cancelChangeAllowPublicStaking();
+        staking.cancelChangeAllowPublicStaking();
         vm.stopPrank();
     }
 
@@ -278,14 +278,14 @@ contract unitTestRevert_SMate_adminFunctions is Test, Constants {
         external
     {
         vm.startPrank(ADMIN.Address);
-        sMate.prepareChangeAllowPublicStaking();
+        staking.prepareChangeAllowPublicStaking();
         vm.stopPrank();
 
         vm.warp(block.timestamp + 1 days + 1);
 
         vm.startPrank(WILDCARD_USER.Address);
         vm.expectRevert();
-        sMate.confirmChangeAllowPublicStaking();
+        staking.confirmChangeAllowPublicStaking();
         vm.stopPrank();
     }
 
@@ -293,10 +293,10 @@ contract unitTestRevert_SMate_adminFunctions is Test, Constants {
         external
     {
         vm.startPrank(ADMIN.Address);
-        sMate.prepareChangeAllowPublicStaking();
+        staking.prepareChangeAllowPublicStaking();
         vm.warp(block.timestamp + 10 hours);
         vm.expectRevert();
-        sMate.confirmChangeAllowPublicStaking();
+        staking.confirmChangeAllowPublicStaking();
         vm.stopPrank();
     }
 
@@ -305,7 +305,7 @@ contract unitTestRevert_SMate_adminFunctions is Test, Constants {
     {
         vm.startPrank(WILDCARD_USER.Address);
         vm.expectRevert();
-        sMate.prepareChangeAllowPresaleStaking();
+        staking.prepareChangeAllowPresaleStaking();
         vm.stopPrank();
     }
 
@@ -313,14 +313,14 @@ contract unitTestRevert_SMate_adminFunctions is Test, Constants {
         external
     {
         vm.startPrank(ADMIN.Address);
-        sMate.prepareChangeAllowPresaleStaking();
+        staking.prepareChangeAllowPresaleStaking();
         vm.stopPrank();
 
         vm.warp(block.timestamp + 2 hours);
 
         vm.startPrank(WILDCARD_USER.Address);
         vm.expectRevert();
-        sMate.cancelChangeAllowPresaleStaking();
+        staking.cancelChangeAllowPresaleStaking();
         vm.stopPrank();
     }
 
@@ -328,14 +328,14 @@ contract unitTestRevert_SMate_adminFunctions is Test, Constants {
         external
     {
         vm.startPrank(ADMIN.Address);
-        sMate.prepareChangeAllowPresaleStaking();
+        staking.prepareChangeAllowPresaleStaking();
         vm.stopPrank();
 
         vm.warp(block.timestamp + 1 days + 1);
 
         vm.startPrank(WILDCARD_USER.Address);
         vm.expectRevert();
-        sMate.confirmChangeAllowPresaleStaking();
+        staking.confirmChangeAllowPresaleStaking();
         vm.stopPrank();
     }
 
@@ -343,10 +343,10 @@ contract unitTestRevert_SMate_adminFunctions is Test, Constants {
         external
     {
         vm.startPrank(ADMIN.Address);
-        sMate.prepareChangeAllowPresaleStaking();
+        staking.prepareChangeAllowPresaleStaking();
         vm.warp(block.timestamp + 10 hours);
         vm.expectRevert();
-        sMate.confirmChangeAllowPresaleStaking();
+        staking.confirmChangeAllowPresaleStaking();
         vm.stopPrank();
     }
 }

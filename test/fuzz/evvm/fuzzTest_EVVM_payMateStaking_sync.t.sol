@@ -23,7 +23,7 @@ import "forge-std/console2.sol";
 
 import {Constants} from "test/Constants.sol";
 
-import {SMate} from "@EVVM/playground/staking/SMate.sol";
+import {Staking} from "@EVVM/playground/staking/Staking.sol";
 import {NameService} from "@EVVM/playground/nameService/NameService.sol";
 import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
@@ -31,7 +31,7 @@ import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 
 contract fuzzTest_EVVM_payMateStaking_sync is Test, Constants {
-    SMate sMate;
+    Staking staking;
     Evvm evvm;
     Estimator estimator;
     NameService nameService;
@@ -40,17 +40,17 @@ contract fuzzTest_EVVM_payMateStaking_sync is Test, Constants {
     AccountData COMMON_USER_STAKER_2 = WILDCARD_USER;
 
     function setUp() public {
-        sMate = new SMate(ADMIN.Address, GOLDEN_STAKER.Address);
-        evvm = new Evvm(ADMIN.Address, address(sMate));
+        staking = new Staking(ADMIN.Address, GOLDEN_STAKER.Address);
+        evvm = new Evvm(ADMIN.Address, address(staking));
         estimator = new Estimator(
             ACTIVATOR.Address,
             address(evvm),
-            address(sMate),
+            address(staking),
             ADMIN.Address
         );
         nameService = new NameService(address(evvm), ADMIN.Address);
 
-        sMate._setupEstimatorAndEvvm(address(estimator), address(evvm));
+        staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
         
         evvm._setPointStaker(COMMON_USER_STAKER_1.Address, 0x01);

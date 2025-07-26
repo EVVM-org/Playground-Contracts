@@ -12,7 +12,7 @@
 ###         ########  ######### #########          ###     ########## ########     ###     
 
 
- * @title fuzz test for sMate function correct behavior
+ * @title fuzz test for staking function correct behavior
  * @notice some functions has evvm functions that are implemented
  *         for payment and dosent need to be tested here
  */
@@ -25,31 +25,31 @@ import "forge-std/console2.sol";
 import {Constants} from "test/Constants.sol";
 import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
-import {SMate} from "@EVVM/playground/staking/SMate.sol";
+import {Staking} from "@EVVM/playground/staking/Staking.sol";
 import {NameService} from "@EVVM/playground/nameService/NameService.sol";
 import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 
-contract fuzzTest_SMate_presaleStaking is Test, Constants {
-    SMate sMate;
+contract fuzzTest_Staking_presaleStaking is Test, Constants {
+    Staking staking;
     Evvm evvm;
     Estimator estimator;
     NameService nameService;
 
     function setUp() public {
-        sMate = new SMate(ADMIN.Address, GOLDEN_STAKER.Address);
-        evvm = new Evvm(ADMIN.Address, address(sMate));
+        staking = new Staking(ADMIN.Address, GOLDEN_STAKER.Address);
+        evvm = new Evvm(ADMIN.Address, address(staking));
         estimator = new Estimator(
             ACTIVATOR.Address,
             address(evvm),
-            address(sMate),
+            address(staking),
             ADMIN.Address
         );
         nameService = new NameService(address(evvm), ADMIN.Address);
 
-        sMate._setupEstimatorAndEvvm(address(estimator), address(evvm));
+        staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
         
 
@@ -57,25 +57,25 @@ contract fuzzTest_SMate_presaleStaking is Test, Constants {
 
         vm.startPrank(ADMIN.Address);
 
-        sMate.prepareChangeAllowPresaleStaking();
+        staking.prepareChangeAllowPresaleStaking();
         skip(1 days);
-        sMate.confirmChangeAllowPresaleStaking();
+        staking.confirmChangeAllowPresaleStaking();
 
-        sMate.addPresaleStaker(COMMON_USER_NO_STAKER_1.Address);
+        staking.addPresaleStaker(COMMON_USER_NO_STAKER_1.Address);
         vm.stopPrank();
 
         giveMateToExecute(COMMON_USER_NO_STAKER_1, true, 0);
 
         (
             bytes memory signatureEVVM,
-            bytes memory signatureSMate
+            bytes memory signatureStaking
         ) = makeSignature(true, 0, 0, 0, false);
 
-        sMate.presaleStaking(
+        staking.presaleStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
             0,
-            signatureSMate,
+            signatureStaking,
             0,
             0,
             false,
@@ -91,10 +91,10 @@ contract fuzzTest_SMate_presaleStaking is Test, Constants {
         evvm._addBalance(
             user.Address,
             MATE_TOKEN_ADDRESS,
-            (isStaking ? (sMate.priceOfSMate() * 1) : 0) + priorityFee
+            (isStaking ? (staking.priceOfStaking() * 1) : 0) + priorityFee
         );
 
-        totalOfMate = (isStaking ? (sMate.priceOfSMate() * 1) : 0);
+        totalOfMate = (isStaking ? (staking.priceOfStaking() * 1) : 0);
         totalOfPriorityFee = priorityFee;
     }
 
@@ -107,7 +107,7 @@ contract fuzzTest_SMate_presaleStaking is Test, Constants {
     )
         private
         view
-        returns (bytes memory signatureEVVM, bytes memory signatureSMate)
+        returns (bytes memory signatureEVVM, bytes memory signatureStaking)
     {
         uint8 v;
         bytes32 r;
@@ -117,28 +117,28 @@ contract fuzzTest_SMate_presaleStaking is Test, Constants {
             (v, r, s) = vm.sign(
                 COMMON_USER_NO_STAKER_1.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPay(
-                    address(sMate),
+                    address(staking),
                     "",
                     MATE_TOKEN_ADDRESS,
-                    sMate.priceOfSMate() * 1,
+                    staking.priceOfStaking() * 1,
                     priorityFee,
                     nonceEVVM,
                     priorityEVVM,
-                    address(sMate)
+                    address(staking)
                 )
             );
         } else {
             (v, r, s) = vm.sign(
                 COMMON_USER_NO_STAKER_1.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPay(
-                    address(sMate),
+                    address(staking),
                     "",
                     MATE_TOKEN_ADDRESS,
                     priorityFee,
                     0,
                     nonceEVVM,
                     priorityEVVM,
-                    address(sMate)
+                    address(staking)
                 )
             );
         }
@@ -153,7 +153,7 @@ contract fuzzTest_SMate_presaleStaking is Test, Constants {
                 nonceSmate
             )
         );
-        signatureSMate = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureStaking = Erc191TestBuilder.buildERC191Signature(v, r, s);
     }
 
     function calculateRewardPerExecution(
@@ -165,7 +165,7 @@ contract fuzzTest_SMate_presaleStaking is Test, Constants {
     struct PresaleStakingFuzzTestInput {
         bool isStaking;
         bool usingStaker;
-        uint144 nonceSMate;
+        uint144 nonceStaking;
         uint144 nonceEVVM;
         bool priorityEVVM;
         bool givePriorityFee;
@@ -176,8 +176,8 @@ contract fuzzTest_SMate_presaleStaking is Test, Constants {
         PresaleStakingFuzzTestInput[20] memory input
     ) external {
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
-        SMate.HistoryMetadata memory history;
+        bytes memory signatureStaking;
+        Staking.HistoryMetadata memory history;
         uint256 amountBeforeFisher;
         uint256 amountBeforeUser;
         uint256 totalStakedBefore;
@@ -187,9 +187,9 @@ contract fuzzTest_SMate_presaleStaking is Test, Constants {
 
         for (uint256 i = 0; i < input.length; i++) {
             if (
-                sMate.checkIfStakeNonceUsed(
+                staking.checkIfStakeNonceUsed(
                     COMMON_USER_NO_STAKER_1.Address,
-                    input[i].nonceSMate
+                    input[i].nonceStaking
                 )
             ) {
                 incorrectTxCount++;
@@ -220,14 +220,14 @@ contract fuzzTest_SMate_presaleStaking is Test, Constants {
                 MATE_TOKEN_ADDRESS
             );
 
-            totalStakedBefore = sMate.getUserAmountStaked(
+            totalStakedBefore = staking.getUserAmountStaked(
                 COMMON_USER_NO_STAKER_1.Address
             );
 
             if (input[i].isStaking) {
                 // staking
                 if (
-                    sMate.getUserAmountStaked(
+                    staking.getUserAmountStaked(
                         COMMON_USER_NO_STAKER_1.Address
                     ) == 2
                 ) {
@@ -235,12 +235,12 @@ contract fuzzTest_SMate_presaleStaking is Test, Constants {
                     continue;
                 }
                 if (
-                    sMate.getUserAmountStaked(
+                    staking.getUserAmountStaked(
                         COMMON_USER_NO_STAKER_1.Address
                     ) == 0
                 ) {
                     vm.warp(
-                        sMate.getTimeToUserUnlockStakingTime(
+                        staking.getTimeToUserUnlockStakingTime(
                             COMMON_USER_NO_STAKER_1.Address
                         )
                     );
@@ -256,14 +256,14 @@ contract fuzzTest_SMate_presaleStaking is Test, Constants {
                     )
                 );
 
-                (signatureEVVM, signatureSMate) = makeSignature(
+                (signatureEVVM, signatureStaking) = makeSignature(
                     input[i].isStaking,
                     (
                         input[i].givePriorityFee
                             ? uint256(input[i].priorityFeeAmountEVVM)
                             : 0
                     ),
-                    input[i].nonceSMate,
+                    input[i].nonceStaking,
                     (
                         input[i].priorityEVVM
                             ? input[i].nonceEVVM
@@ -275,11 +275,11 @@ contract fuzzTest_SMate_presaleStaking is Test, Constants {
                 );
 
                 vm.startPrank(FISHER.Address);
-                sMate.presaleStaking(
+                staking.presaleStaking(
                     input[i].isStaking,
                     COMMON_USER_NO_STAKER_1.Address,
-                    input[i].nonceSMate,
-                    signatureSMate,
+                    input[i].nonceStaking,
+                    signatureStaking,
                     (
                         input[i].givePriorityFee
                             ? uint256(input[i].priorityFeeAmountEVVM)
@@ -299,7 +299,7 @@ contract fuzzTest_SMate_presaleStaking is Test, Constants {
             } else {
                 // unstaking
                 if (
-                    sMate.getUserAmountStaked(
+                    staking.getUserAmountStaked(
                         COMMON_USER_NO_STAKER_1.Address
                     ) == 0
                 ) {
@@ -308,12 +308,12 @@ contract fuzzTest_SMate_presaleStaking is Test, Constants {
                 }
 
                 if (
-                    sMate.getUserAmountStaked(
+                    staking.getUserAmountStaked(
                         COMMON_USER_NO_STAKER_1.Address
                     ) == 1
                 ) {
                     vm.warp(
-                        sMate.getTimeToUserUnlockFullUnstakingTime(
+                        staking.getTimeToUserUnlockFullUnstakingTime(
                             COMMON_USER_NO_STAKER_1.Address
                         )
                     );
@@ -327,14 +327,14 @@ contract fuzzTest_SMate_presaleStaking is Test, Constants {
                     );
                 }
 
-                (signatureEVVM, signatureSMate) = makeSignature(
+                (signatureEVVM, signatureStaking) = makeSignature(
                     input[i].isStaking,
                     (
                         input[i].givePriorityFee
                             ? uint256(input[i].priorityFeeAmountEVVM)
                             : 0
                     ),
-                    input[i].nonceSMate,
+                    input[i].nonceStaking,
                     (
                         input[i].priorityEVVM
                             ? input[i].nonceEVVM
@@ -346,11 +346,11 @@ contract fuzzTest_SMate_presaleStaking is Test, Constants {
                 );
 
                 vm.startPrank(FISHER.Address);
-                sMate.presaleStaking(
+                staking.presaleStaking(
                     input[i].isStaking,
                     COMMON_USER_NO_STAKER_1.Address,
-                    input[i].nonceSMate,
-                    signatureSMate,
+                    input[i].nonceStaking,
+                    signatureStaking,
                     (
                         input[i].givePriorityFee
                             ? uint256(input[i].priorityFeeAmountEVVM)
@@ -369,7 +369,7 @@ contract fuzzTest_SMate_presaleStaking is Test, Constants {
                 vm.stopPrank();
             }
 
-            history = sMate.getAddressHistoryByIndex(
+            history = staking.getAddressHistoryByIndex(
                 COMMON_USER_NO_STAKER_1.Address,
                 (i + 1) - incorrectTxCount
             );
@@ -380,7 +380,7 @@ contract fuzzTest_SMate_presaleStaking is Test, Constants {
                     MATE_TOKEN_ADDRESS
                 ),
                 amountBeforeUser +
-                    (input[i].isStaking ? 0 : sMate.priceOfSMate() * 1)
+                    (input[i].isStaking ? 0 : staking.priceOfStaking() * 1)
             );
 
             if (FISHER.Address == COMMON_USER_STAKER.Address) {

@@ -3,12 +3,12 @@ pragma solidity ^0.8.13;
 
 import {Script, console2} from "forge-std/Script.sol";
 import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
-import {SMate} from "@EVVM/playground/staking/SMate.sol";
+import {Staking} from "@EVVM/playground/staking/Staking.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {NameService} from "@EVVM/playground/nameService/NameService.sol";
 
 contract DeployScript is Script {
-    SMate sMate;
+    Staking staking;
     Evvm evvm;
     Estimator estimator;
     NameService nameService;
@@ -21,22 +21,22 @@ contract DeployScript is Script {
     function run() public {
         vm.startBroadcast();
 
-        sMate = new SMate(admin, goldenFisher);
-        evvm = new Evvm(admin, address(sMate));
+        staking = new Staking(admin, goldenFisher);
+        evvm = new Evvm(admin, address(staking));
         estimator = new Estimator(
             activator,
             address(evvm),
-            address(sMate),
+            address(staking),
             admin
         );
         nameService = new NameService(address(evvm), admin);
 
-        sMate._setupEstimatorAndEvvm(address(estimator), address(evvm));
+        staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
 
         vm.stopBroadcast();
 
-        console2.log("SMate deployed at:", address(sMate));
+        console2.log("Staking deployed at:", address(staking));
         console2.log("Evvm deployed at:", address(evvm));
         console2.log("Estimator deployed at:", address(estimator));
     }

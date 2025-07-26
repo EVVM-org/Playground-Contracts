@@ -19,15 +19,15 @@ import "forge-std/console2.sol";
 import {Constants} from "test/Constants.sol";
 import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
-import {SMate} from "@EVVM/playground/staking/SMate.sol";
+import {Staking} from "@EVVM/playground/staking/Staking.sol";
 import {NameService} from "@EVVM/playground/nameService/NameService.sol";
 import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 
-contract unitTestCorrect_SMate_goldenStaking is Test, Constants {
-    SMate sMate;
+contract unitTestCorrect_Staking_goldenStaking is Test, Constants {
+    Staking staking;
     Evvm evvm;
     Estimator estimator;
     NameService nameService;
@@ -35,17 +35,17 @@ contract unitTestCorrect_SMate_goldenStaking is Test, Constants {
     AccountData COMMON_USER_NO_STAKER_3 = WILDCARD_USER;
 
     function setUp() public {
-        sMate = new SMate(ADMIN.Address, GOLDEN_STAKER.Address);
-        evvm = new Evvm(ADMIN.Address, address(sMate));
+        staking = new Staking(ADMIN.Address, GOLDEN_STAKER.Address);
+        evvm = new Evvm(ADMIN.Address, address(staking));
         estimator = new Estimator(
             ACTIVATOR.Address,
             address(evvm),
-            address(sMate),
+            address(staking),
             ADMIN.Address
         );
         nameService = new NameService(address(evvm), ADMIN.Address);
 
-        sMate._setupEstimatorAndEvvm(address(estimator), address(evvm));
+        staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
         
 
@@ -54,16 +54,16 @@ contract unitTestCorrect_SMate_goldenStaking is Test, Constants {
 
     function giveMateToExecute(
         address user,
-        uint256 sMateAmount,
+        uint256 stakingAmount,
         uint256 priorityFee
     ) private returns (uint256 totalOfMate) {
         evvm._addBalance(
             user,
             MATE_TOKEN_ADDRESS,
-            (sMate.priceOfSMate() * sMateAmount) + priorityFee
+            (staking.priceOfStaking() * stakingAmount) + priorityFee
         );
 
-        totalOfMate = (sMate.priceOfSMate() * sMateAmount) + priorityFee;
+        totalOfMate = (staking.priceOfStaking() * stakingAmount) + priorityFee;
     }
 
     function calculateRewardPerExecution(
@@ -78,14 +78,14 @@ contract unitTestCorrect_SMate_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             GOLDEN_STAKER.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 0,
                 evvm.getNextCurrentSyncNonce(GOLDEN_STAKER.Address),
                 false,
-                address(sMate)
+                address(staking)
             )
         );
         bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
@@ -96,17 +96,17 @@ contract unitTestCorrect_SMate_goldenStaking is Test, Constants {
 
         vm.startPrank(GOLDEN_STAKER.Address);
 
-        sMate.goldenStaking(true, 10, signatureEVVM);
+        staking.goldenStaking(true, 10, signatureEVVM);
 
         vm.stopPrank();
 
-        assert(evvm.isMateStaker(GOLDEN_STAKER.Address));
+        assert(evvm.istakingStaker(GOLDEN_STAKER.Address));
 
-        SMate.HistoryMetadata[]
-            memory history = new SMate.HistoryMetadata[](
-                sMate.getSizeOfAddressHistory(GOLDEN_STAKER.Address)
+        Staking.HistoryMetadata[]
+            memory history = new Staking.HistoryMetadata[](
+                staking.getSizeOfAddressHistory(GOLDEN_STAKER.Address)
             );
-        history = sMate.getAddressHistory(GOLDEN_STAKER.Address);
+        history = staking.getAddressHistory(GOLDEN_STAKER.Address);
 
         assertEq(
             evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
@@ -124,14 +124,14 @@ contract unitTestCorrect_SMate_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             GOLDEN_STAKER.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 0,
                 evvm.getNextCurrentSyncNonce(GOLDEN_STAKER.Address),
                 false,
-                address(sMate)
+                address(staking)
             )
         );
         bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
@@ -142,22 +142,22 @@ contract unitTestCorrect_SMate_goldenStaking is Test, Constants {
 
         vm.startPrank(GOLDEN_STAKER.Address);
 
-        sMate.goldenStaking(true, 2, signatureEVVM);
-        sMate.goldenStaking(false, 1, "");
+        staking.goldenStaking(true, 2, signatureEVVM);
+        staking.goldenStaking(false, 1, "");
 
         vm.stopPrank();
 
-        SMate.HistoryMetadata[]
-            memory history = new SMate.HistoryMetadata[](
-                sMate.getSizeOfAddressHistory(GOLDEN_STAKER.Address)
+        Staking.HistoryMetadata[]
+            memory history = new Staking.HistoryMetadata[](
+                staking.getSizeOfAddressHistory(GOLDEN_STAKER.Address)
             );
-        history = sMate.getAddressHistory(GOLDEN_STAKER.Address);
+        history = staking.getAddressHistory(GOLDEN_STAKER.Address);
 
-        assert(evvm.isMateStaker(GOLDEN_STAKER.Address));
+        assert(evvm.istakingStaker(GOLDEN_STAKER.Address));
 
         assertEq(
             evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
-            calculateRewardPerExecution(2) + sMate.priceOfSMate()
+            calculateRewardPerExecution(2) + staking.priceOfStaking()
         );
 
         assertEq(history[0].timestamp, block.timestamp);
@@ -177,14 +177,14 @@ contract unitTestCorrect_SMate_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             GOLDEN_STAKER.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 0,
                 evvm.getNextCurrentSyncNonce(GOLDEN_STAKER.Address),
                 false,
-                address(sMate)
+                address(staking)
             )
         );
         bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
@@ -195,33 +195,33 @@ contract unitTestCorrect_SMate_goldenStaking is Test, Constants {
 
         vm.startPrank(GOLDEN_STAKER.Address);
 
-        sMate.goldenStaking(true, 2, signatureEVVM);
+        staking.goldenStaking(true, 2, signatureEVVM);
 
         vm.warp(
-            sMate.getTimeToUserUnlockFullUnstakingTime(GOLDEN_STAKER.Address)
+            staking.getTimeToUserUnlockFullUnstakingTime(GOLDEN_STAKER.Address)
         );
 
         console2.log(
-            evvm.getBalance(address(sMate), MATE_TOKEN_ADDRESS)
+            evvm.getBalance(address(staking), MATE_TOKEN_ADDRESS)
         );
 
-        sMate.goldenStaking(false, 2, "");
+        staking.goldenStaking(false, 2, "");
 
         vm.stopPrank();
 
         assertEq(
             evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
-            (calculateRewardPerExecution(1)) + (sMate.priceOfSMate() * 2)
+            (calculateRewardPerExecution(1)) + (staking.priceOfStaking() * 2)
         );
 
-        assert(!evvm.isMateStaker(GOLDEN_STAKER.Address));
+        assert(!evvm.istakingStaker(GOLDEN_STAKER.Address));
 
-        SMate.HistoryMetadata[]
-            memory history = new SMate.HistoryMetadata[](
-                sMate.getSizeOfAddressHistory(GOLDEN_STAKER.Address)
+        Staking.HistoryMetadata[]
+            memory history = new Staking.HistoryMetadata[](
+                staking.getSizeOfAddressHistory(GOLDEN_STAKER.Address)
             );
 
-        history = sMate.getAddressHistory(GOLDEN_STAKER.Address);
+        history = staking.getAddressHistory(GOLDEN_STAKER.Address);
 
         assertEq(history[0].timestamp, 1);
         assert(history[0].transactionType == DEPOSIT_HISTORY_SMATE_IDENTIFIER);

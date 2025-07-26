@@ -16,7 +16,7 @@ pragma solidity ^0.8.0;
  */
 
 import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
-import {SMate} from "@EVVM/playground/staking/SMate.sol";
+import {Staking} from "@EVVM/playground/staking/Staking.sol";
 
 abstract contract Constants {
     bytes32 constant DEPOSIT_HISTORY_SMATE_IDENTIFIER = bytes32(uint256(1));
@@ -142,20 +142,20 @@ abstract contract Constants {
 }
 
 contract MockContract {
-    SMate sMate;
+    Staking staking;
     Evvm evvm;
 
-    constructor(address sMateAddress) {
-        sMate = SMate(sMateAddress);
-        evvm = Evvm(sMate.getEvvmAddress());
+    constructor(address stakingAddress) {
+        staking = Staking(stakingAddress);
+        evvm = Evvm(staking.getEvvmAddress());
     }
 
-    function unstake(uint256 amount, uint256 nonceSMate, address _user) public {
-        sMate.publicServiceStaking(
+    function unstake(uint256 amount, uint256 nonceStaking, address _user) public {
+        staking.publicServiceStaking(
             false,
             _user,
             address(this),
-            nonceSMate,
+            nonceStaking,
             amount,
             bytes(""),
             0,

@@ -28,16 +28,16 @@ contract Evvm is EvvmStorage {
         _;
     }
 
-    constructor(address _initialOwner, address _sMateContractAddress) {
-        sMateContractAddress = _sMateContractAddress;
+    constructor(address _initialOwner, address _stakingContractAddress) {
+        stakingContractAddress = _stakingContractAddress;
 
         admin.current = _initialOwner;
 
         maxAmountToWithdraw.current = 0.1 ether;
 
-        balances[_sMateContractAddress][evvmMetadata.principalTokenAddress] = getRewardAmount() * 2;
+        balances[_stakingContractAddress][evvmMetadata.principalTokenAddress] = getRewardAmount() * 2;
 
-        stakerList[_sMateContractAddress] = 0x01;
+        stakerList[_stakingContractAddress] = 0x01;
 
         breakerSetupNameServiceAddress = 0x01;
     }
@@ -210,13 +210,13 @@ contract Evvm is EvvmStorage {
     //░▒▓█Pay functions█████████████████████████████████████████████████████████▓▒░
 
     /**
-     *  @notice Pay function for non sMate holders (syncronous nonce)
+     *  @notice Pay function for non staking holders (syncronous nonce)
      *  @param from user // who wants to pay
      *  @param to_address address of the receiver
      *  @param to_identity identity of the receiver
      *  @param token address of the token to send
      *  @param amount amount to send
-     *  @param priorityFee priorityFee to send to the sMate holder
+     *  @param priorityFee priorityFee to send to the staking holder
      *  @param signature signature of the user who wants to send the message
      */
     function payNoMateStaking_sync(
@@ -262,13 +262,13 @@ contract Evvm is EvvmStorage {
     }
 
     /**
-     *  @notice Pay function for non sMate holders (asyncronous nonce)
+     *  @notice Pay function for non staking holders (asyncronous nonce)
      *  @param from user // who wants to pay
      *  @param to_address address of the receiver
      *  @param to_identity identity of the receiver
      *  @param token address of the token to send
      *  @param amount amount to send
-     *  @param priorityFee priorityFee to send to the sMate holder
+     *  @param priorityFee priorityFee to send to the staking holder
      *  @param nonce nonce of the transaction
      *  @param signature signature of the user who wants to send the message
      */
@@ -318,13 +318,13 @@ contract Evvm is EvvmStorage {
     }
 
     /**
-     *  @notice Pay function for sMate holders (syncronous nonce)
+     *  @notice Pay function for staking holders (syncronous nonce)
      *  @param from user // who wants to pay
      *  @param to_address address of the receiver
      *  @param to_identity identity of the receiver
      *  @param token address of the token to send
      *  @param amount amount to send
-     *  @param priorityFee priorityFee to send to the sMate holder
+     *  @param priorityFee priorityFee to send to the staking holder
      *  @param signature signature of the user who wants to send the message
      */
     function payMateStaking_sync(
@@ -357,7 +357,7 @@ contract Evvm is EvvmStorage {
                 revert ErrorsLib.SenderIsNotTheExecutor();
         }
 
-        if (!isMateStaker(msg.sender)) revert ErrorsLib.NotAnStaker();
+        if (!istakingStaker(msg.sender)) revert ErrorsLib.NotAnStaker();
 
         address to = !Strings.equal(to_identity, "")
             ? NameService(nameServiceAddress).verifyStrictAndGetOwnerOfIdentity(
@@ -378,13 +378,13 @@ contract Evvm is EvvmStorage {
     }
 
     /**
-     *  @notice Pay function for sMate holders (asyncronous nonce)
+     *  @notice Pay function for staking holders (asyncronous nonce)
      *  @param from user // who wants to pay
      *  @param to_address address of the receiver
      *  @param to_identity identity of the receiver
      *  @param token address of the token to send
      *  @param amount amount to send
-     *  @param priorityFee priorityFee to send to the sMate holder
+     *  @param priorityFee priorityFee to send to the staking holder
      *  @param nonce nonce of the transaction
      *  @param signature signature of the user who wants to send the message
      */
@@ -419,7 +419,7 @@ contract Evvm is EvvmStorage {
                 revert ErrorsLib.SenderIsNotTheExecutor();
         }
 
-        if (!isMateStaker(msg.sender)) revert ErrorsLib.NotAnStaker();
+        if (!istakingStaker(msg.sender)) revert ErrorsLib.NotAnStaker();
 
         if (asyncUsedNonce[from][nonce]) revert ErrorsLib.InvalidAsyncNonce();
 
@@ -541,7 +541,7 @@ contract Evvm is EvvmStorage {
             } else {
                 if (
                     payData[iteration].priorityFee > 0 &&
-                    isMateStaker(msg.sender)
+                    istakingStaker(msg.sender)
                 ) {
                     if (
                         !_updateBalance(
@@ -562,7 +562,7 @@ contract Evvm is EvvmStorage {
             }
         }
 
-        if (isMateStaker(msg.sender)) {
+        if (istakingStaker(msg.sender)) {
             _giveMateReward(msg.sender, successfulTransactions);
         }
     }
@@ -631,7 +631,7 @@ contract Evvm is EvvmStorage {
         if (acomulatedAmount != amount)
             revert ErrorsLib.InvalidAmount(acomulatedAmount, amount);
 
-        if (isMateStaker(msg.sender)) {
+        if (istakingStaker(msg.sender)) {
             _giveMateReward(msg.sender, 1);
             balances[msg.sender][token] += priorityFee;
         } else {
@@ -659,7 +659,7 @@ contract Evvm is EvvmStorage {
         if (!_updateBalance(from, to, token, amount))
             revert ErrorsLib.UpdateBalanceFailed();
 
-        if (isMateStaker(msg.sender)) {
+        if (istakingStaker(msg.sender)) {
             _giveMateReward(msg.sender, 1);
         }
     }
@@ -696,7 +696,7 @@ contract Evvm is EvvmStorage {
         if (acomulatedAmount != amount)
             revert ErrorsLib.InvalidAmount(acomulatedAmount, amount);
 
-        if (isMateStaker(msg.sender)) {
+        if (istakingStaker(msg.sender)) {
             _giveMateReward(msg.sender, 1);
         }
     }
@@ -844,7 +844,7 @@ contract Evvm is EvvmStorage {
      *
      *  @param _token address of the token to send
      *  @param _amount amount to send
-     *  @param _priorityFee priorityFee to send to the sMate holder
+     *  @param _priorityFee priorityFee to send to the staking holder
      *  @param _nonce nonce of the transaction
      *  @param _priority_boolean if the transaction is priority or not
      *  @param _executor the executor of the transaction
@@ -1130,10 +1130,10 @@ contract Evvm is EvvmStorage {
             ) % (max - min + 1));
     }
 
-    //░▒▓█sMate functions███████████████████████████████████████████████████████▓▒░
+    //░▒▓█staking functions███████████████████████████████████████████████████████▓▒░
 
     function pointStaker(address user, bytes1 answer) public {
-        if (msg.sender != sMateContractAddress) {
+        if (msg.sender != stakingContractAddress) {
             revert();
         }
         stakerList[user] = answer;
@@ -1153,8 +1153,8 @@ contract Evvm is EvvmStorage {
         return nameServiceAddress;
     }
 
-    function getSMateContractAddress() external view returns (address) {
-        return sMateContractAddress;
+    function getStakingContractAddress() external view returns (address) {
+        return stakingContractAddress;
     }
 
     function getMaxAmountToWithdraw() external view returns (uint256) {
@@ -1193,7 +1193,7 @@ contract Evvm is EvvmStorage {
         return balances[user][token];
     }
 
-    function isMateStaker(address user) public view returns (bool) {
+    function istakingStaker(address user) public view returns (bool) {
         return stakerList[user] == 0x01;
     }
 

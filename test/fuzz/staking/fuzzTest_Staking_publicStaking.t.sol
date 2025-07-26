@@ -12,7 +12,7 @@
 ###         ########  ######### #########          ###     ########## ########     ###     
 
 
- * @title fuzz test for sMate function correct behavior
+ * @title fuzz test for staking function correct behavior
  * @notice some functions has evvm functions that are implemented
  *         for payment and dosent need to be tested here
  */
@@ -25,31 +25,31 @@ import "forge-std/console2.sol";
 import {Constants} from "test/Constants.sol";
 import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
-import {SMate} from "@EVVM/playground/staking/SMate.sol";
+import {Staking} from "@EVVM/playground/staking/Staking.sol";
 import {NameService} from "@EVVM/playground/nameService/NameService.sol";
 import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 
-contract fuzzTest_SMate_publicStaking is Test, Constants {
-    SMate sMate;
+contract fuzzTest_Staking_publicStaking is Test, Constants {
+    Staking staking;
     Evvm evvm;
     Estimator estimator;
     NameService nameService;
 
     function setUp() public {
-        sMate = new SMate(ADMIN.Address, GOLDEN_STAKER.Address);
-        evvm = new Evvm(ADMIN.Address, address(sMate));
+        staking = new Staking(ADMIN.Address, GOLDEN_STAKER.Address);
+        evvm = new Evvm(ADMIN.Address, address(staking));
         estimator = new Estimator(
             ACTIVATOR.Address,
             address(evvm),
-            address(sMate),
+            address(staking),
             ADMIN.Address
         );
         nameService = new NameService(address(evvm), ADMIN.Address);
 
-        sMate._setupEstimatorAndEvvm(address(estimator), address(evvm));
+        staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
         
 
@@ -57,9 +57,9 @@ contract fuzzTest_SMate_publicStaking is Test, Constants {
 
         vm.startPrank(ADMIN.Address);
 
-        sMate.prepareChangeAllowPublicStaking();
+        staking.prepareChangeAllowPublicStaking();
         skip(1 days);
-        sMate.confirmChangeAllowPublicStaking();
+        staking.confirmChangeAllowPublicStaking();
 
         vm.stopPrank();
 
@@ -67,7 +67,7 @@ contract fuzzTest_SMate_publicStaking is Test, Constants {
 
         (
             bytes memory signatureEVVM,
-            bytes memory signatureSMate
+            bytes memory signatureStaking
         ) = makeSignature(
                 true,
                 10,
@@ -77,12 +77,12 @@ contract fuzzTest_SMate_publicStaking is Test, Constants {
                 0
             );
 
-        sMate.publicStaking(
+        staking.publicStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
             0,
             10,
-            signatureSMate,
+            signatureStaking,
             0,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
@@ -92,16 +92,16 @@ contract fuzzTest_SMate_publicStaking is Test, Constants {
 
     function giveMateToExecute(
         address user,
-        uint256 sMateAmount,
+        uint256 stakingAmount,
         uint256 priorityFee
     ) private returns (uint256 totalOfMate, uint256 totalOfPriorityFee) {
         evvm._addBalance(
             user,
             MATE_TOKEN_ADDRESS,
-            (sMate.priceOfSMate() * sMateAmount) + priorityFee
+            (staking.priceOfStaking() * stakingAmount) + priorityFee
         );
 
-        totalOfMate = (sMate.priceOfSMate() * sMateAmount);
+        totalOfMate = (staking.priceOfStaking() * stakingAmount);
         totalOfPriorityFee = priorityFee;
     }
 
@@ -115,7 +115,7 @@ contract fuzzTest_SMate_publicStaking is Test, Constants {
     )
         private
         view
-        returns (bytes memory signatureEVVM, bytes memory signatureSMate)
+        returns (bytes memory signatureEVVM, bytes memory signatureStaking)
     {
         uint8 v;
         bytes32 r;
@@ -125,28 +125,28 @@ contract fuzzTest_SMate_publicStaking is Test, Constants {
             (v, r, s) = vm.sign(
                 COMMON_USER_NO_STAKER_1.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPay(
-                    address(sMate),
+                    address(staking),
                     "",
                     MATE_TOKEN_ADDRESS,
-                    sMate.priceOfSMate() * amountOfSmate,
+                    staking.priceOfStaking() * amountOfSmate,
                     priorityFee,
                     nonceEVVM,
                     priorityEVVM,
-                    address(sMate)
+                    address(staking)
                 )
             );
         } else {
             (v, r, s) = vm.sign(
                 COMMON_USER_NO_STAKER_1.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPay(
-                    address(sMate),
+                    address(staking),
                     "",
                     MATE_TOKEN_ADDRESS,
                     priorityFee,
                     0,
                     nonceEVVM,
                     priorityEVVM,
-                    address(sMate)
+                    address(staking)
                 )
             );
         }
@@ -161,7 +161,7 @@ contract fuzzTest_SMate_publicStaking is Test, Constants {
                 nonceSmate
             )
         );
-        signatureSMate = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureStaking = Erc191TestBuilder.buildERC191Signature(v, r, s);
     }
 
     function calculateRewardPerExecution(
@@ -182,7 +182,7 @@ contract fuzzTest_SMate_publicStaking is Test, Constants {
         bool isStaking;
         bool usingStaker;
         uint8 stakingAmount;
-        uint144 nonceSMate;
+        uint144 nonceStaking;
         uint144 nonceEVVM;
         bool priorityEVVM;
         bool givePriorityFee;
@@ -193,20 +193,20 @@ contract fuzzTest_SMate_publicStaking is Test, Constants {
         PublicStakingFuzzTestInput[20] memory input
     ) external {
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
-        SMate.HistoryMetadata memory history;
+        bytes memory signatureStaking;
+        Staking.HistoryMetadata memory history;
         uint256 amountBeforeFisher;
         uint256 amountBeforeUser;
         uint256 totalStakedBefore;
         AccountData memory FISHER;
         uint256 incorrectTxCount = 0;
-        uint256 sMateFullAmountBefore;
+        uint256 stakingFullAmountBefore;
 
         for (uint256 i = 0; i < input.length; i++) {
             if (
-                sMate.checkIfStakeNonceUsed(
+                staking.checkIfStakeNonceUsed(
                     COMMON_USER_NO_STAKER_1.Address,
-                    input[i].nonceSMate
+                    input[i].nonceStaking
                 )
             ) {
                 incorrectTxCount++;
@@ -237,19 +237,19 @@ contract fuzzTest_SMate_publicStaking is Test, Constants {
                 MATE_TOKEN_ADDRESS
             );
 
-            totalStakedBefore = sMate.getUserAmountStaked(
+            totalStakedBefore = staking.getUserAmountStaked(
                 COMMON_USER_NO_STAKER_1.Address
             );
 
             if (input[i].isStaking) {
                 // staking
                 if (
-                    sMate.getUserAmountStaked(
+                    staking.getUserAmountStaked(
                         COMMON_USER_NO_STAKER_1.Address
                     ) == 0
                 ) {
                     vm.warp(
-                        sMate.getTimeToUserUnlockStakingTime(
+                        staking.getTimeToUserUnlockStakingTime(
                             COMMON_USER_NO_STAKER_1.Address
                         )
                     );
@@ -265,7 +265,7 @@ contract fuzzTest_SMate_publicStaking is Test, Constants {
                     )
                 );
 
-                (signatureEVVM, signatureSMate) = makeSignature(
+                (signatureEVVM, signatureStaking) = makeSignature(
                     input[i].isStaking,
                     input[i].stakingAmount,
                     totalOfPriorityFee,
@@ -277,17 +277,17 @@ contract fuzzTest_SMate_publicStaking is Test, Constants {
                             )
                     ),
                     input[i].priorityEVVM,
-                    input[i].nonceSMate
+                    input[i].nonceStaking
                 );
 
                 vm.startPrank(FISHER.Address);
 
-                sMate.publicStaking(
+                staking.publicStaking(
                     input[i].isStaking,
                     COMMON_USER_NO_STAKER_1.Address,
-                    input[i].nonceSMate,
+                    input[i].nonceStaking,
                     input[i].stakingAmount,
-                    signatureSMate,
+                    signatureStaking,
                     totalOfPriorityFee,
                     (
                         input[i].priorityEVVM
@@ -305,15 +305,15 @@ contract fuzzTest_SMate_publicStaking is Test, Constants {
                 // unstaking
                 if (
                     input[i].stakingAmount >=
-                    sMate.getUserAmountStaked(COMMON_USER_NO_STAKER_1.Address)
+                    staking.getUserAmountStaked(COMMON_USER_NO_STAKER_1.Address)
                 ) {
                     vm.warp(
-                        sMate.getTimeToUserUnlockFullUnstakingTime(
+                        staking.getTimeToUserUnlockFullUnstakingTime(
                             COMMON_USER_NO_STAKER_1.Address
                         )
                     );
 
-                    sMateFullAmountBefore = sMate.getUserAmountStaked(
+                    stakingFullAmountBefore = staking.getUserAmountStaked(
                         COMMON_USER_NO_STAKER_1.Address
                     );
 
@@ -327,9 +327,9 @@ contract fuzzTest_SMate_publicStaking is Test, Constants {
                         )
                     );
 
-                    (signatureEVVM, signatureSMate) = makeSignature(
+                    (signatureEVVM, signatureStaking) = makeSignature(
                         input[i].isStaking,
-                        sMateFullAmountBefore,
+                        stakingFullAmountBefore,
                         totalOfPriorityFee,
                         (
                             input[i].priorityEVVM
@@ -339,17 +339,17 @@ contract fuzzTest_SMate_publicStaking is Test, Constants {
                                 )
                         ),
                         input[i].priorityEVVM,
-                        input[i].nonceSMate
+                        input[i].nonceStaking
                     );
 
                     vm.startPrank(FISHER.Address);
 
-                    sMate.publicStaking(
+                    staking.publicStaking(
                         input[i].isStaking,
                         COMMON_USER_NO_STAKER_1.Address,
-                        input[i].nonceSMate,
-                        sMateFullAmountBefore,
-                        signatureSMate,
+                        input[i].nonceStaking,
+                        stakingFullAmountBefore,
+                        signatureStaking,
                         totalOfPriorityFee,
                         (
                             input[i].priorityEVVM
@@ -374,7 +374,7 @@ contract fuzzTest_SMate_publicStaking is Test, Constants {
                         )
                     );
 
-                    (signatureEVVM, signatureSMate) = makeSignature(
+                    (signatureEVVM, signatureStaking) = makeSignature(
                         input[i].isStaking,
                         input[i].stakingAmount,
                         totalOfPriorityFee,
@@ -386,17 +386,17 @@ contract fuzzTest_SMate_publicStaking is Test, Constants {
                                 )
                         ),
                         input[i].priorityEVVM,
-                        input[i].nonceSMate
+                        input[i].nonceStaking
                     );
 
                     vm.startPrank(FISHER.Address);
 
-                    sMate.publicStaking(
+                    staking.publicStaking(
                         input[i].isStaking,
                         COMMON_USER_NO_STAKER_1.Address,
-                        input[i].nonceSMate,
+                        input[i].nonceStaking,
                         input[i].stakingAmount,
-                        signatureSMate,
+                        signatureStaking,
                         totalOfPriorityFee,
                         (
                             input[i].priorityEVVM
@@ -413,7 +413,7 @@ contract fuzzTest_SMate_publicStaking is Test, Constants {
                 }
             }
 
-            history = sMate.getAddressHistoryByIndex(
+            history = staking.getAddressHistoryByIndex(
                 COMMON_USER_NO_STAKER_1.Address,
                 (i + 1) - incorrectTxCount
             );
@@ -446,12 +446,12 @@ contract fuzzTest_SMate_publicStaking is Test, Constants {
                         input[i].isStaking
                             ? 0
                             : (
-                                sMate.getUserAmountStaked(
+                                staking.getUserAmountStaked(
                                     COMMON_USER_NO_STAKER_1.Address
                                 ) == 0
-                                    ? sMate.priceOfSMate() *
-                                        sMateFullAmountBefore
-                                    : sMate.priceOfSMate() *
+                                    ? staking.priceOfStaking() *
+                                        stakingFullAmountBefore
+                                    : staking.priceOfStaking() *
                                         input[i].stakingAmount
                             )
                     )
@@ -478,10 +478,10 @@ contract fuzzTest_SMate_publicStaking is Test, Constants {
                 assertEq(
                     history.amount,
                     (
-                        sMate.getUserAmountStaked(
+                        staking.getUserAmountStaked(
                             COMMON_USER_NO_STAKER_1.Address
                         ) == 0
-                            ? sMateFullAmountBefore
+                            ? stakingFullAmountBefore
                             : input[i].stakingAmount
                     )
                 );
@@ -490,10 +490,10 @@ contract fuzzTest_SMate_publicStaking is Test, Constants {
                     history.totalStaked,
                     totalStakedBefore -
                         (
-                            sMate.getUserAmountStaked(
+                            staking.getUserAmountStaked(
                                 COMMON_USER_NO_STAKER_1.Address
                             ) == 0
-                                ? sMateFullAmountBefore
+                                ? stakingFullAmountBefore
                                 : input[i].stakingAmount
                         )
                 );

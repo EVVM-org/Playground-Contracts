@@ -25,7 +25,7 @@ abstract contract EvvmStorage is EvvmStructs {
 
     address nameServiceAddress;
 
-    address sMateContractAddress;
+    address stakingContractAddress;
 
     address constant ETH_ADDRESS = address(0);
 

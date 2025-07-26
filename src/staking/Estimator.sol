@@ -15,7 +15,7 @@ MMMMMMMMMMMM
  * @author jistro.eth ariutokintumi.eth
  */
 
-import {SMate} from "@EVVM/playground/staking/SMate.sol";
+import {Staking} from "@EVVM/playground/staking/Staking.sol";
 import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import "forge-std/console2.sol";
 
@@ -43,7 +43,7 @@ contract Estimator {
     EpochMetadata private epoch;
     AddressTypeProposal private activator;
     AddressTypeProposal private evvmAddress;
-    AddressTypeProposal private addressSMate;
+    AddressTypeProposal private addressStaking;
     AddressTypeProposal private admin;
 
     bytes32 constant DEPOSIT_IDENTIFIER = bytes32(uint256(1));
@@ -52,8 +52,8 @@ contract Estimator {
 
     bytes32 epochId = bytes32(uint256(3));
 
-    modifier onlySMate() {
-        if (msg.sender != addressSMate.actual) revert();
+    modifier onlyStaking() {
+        if (msg.sender != addressStaking.actual) revert();
         _;
     }
 
@@ -70,12 +70,12 @@ contract Estimator {
     constructor(
         address _activator,
         address _evvmAddress,
-        address _addressSMate,
+        address _addressStaking,
         address _admin
     ) {
         activator.actual = _activator;
         evvmAddress.actual = _evvmAddress;
-        addressSMate.actual = _addressSMate;
+        addressStaking.actual = _addressStaking;
         admin.actual = _admin;
     }
 
@@ -98,7 +98,7 @@ contract Estimator {
         address _user
     )
         external
-        onlySMate
+        onlyStaking
         returns (
             bytes32 epochAnswer,
             address tokenAddress,
@@ -120,13 +120,13 @@ contract Estimator {
         //uint256 tTotal = epoch.tFinal - epoch.tStart;
 
         uint256 tLast = epoch.tStart;
-        SMate.HistoryMetadata memory h;
-        uint256 size = SMate(addressSMate.actual).getSizeOfAddressHistory(
+        Staking.HistoryMetadata memory h;
+        uint256 size = Staking(addressStaking.actual).getSizeOfAddressHistory(
             _user
         );
 
         for (uint256 i = 0; i < size; i++) {
-            h = SMate(addressSMate.actual).getAddressHistoryByIndex(
+            h = Staking(addressStaking.actual).getAddressHistoryByIndex(
                 _user,
                 i
             );
@@ -239,24 +239,24 @@ contract Estimator {
         evvmAddress.timeToAccept = 0;
     }
 
-    function setAddressSMateProposal(
+    function setAddressStakingProposal(
         address _proposal
     ) external onlyAdmin {
-        addressSMate.proposal = _proposal;
-        addressSMate.timeToAccept = block.timestamp + 1 days;
+        addressStaking.proposal = _proposal;
+        addressStaking.timeToAccept = block.timestamp + 1 days;
     }
 
-    function cancelAddressSMateProposal() external onlyAdmin {
-        addressSMate.proposal = address(0);
-        addressSMate.timeToAccept = 0;
+    function cancelAddressStakingProposal() external onlyAdmin {
+        addressStaking.proposal = address(0);
+        addressStaking.timeToAccept = 0;
     }
 
-    function acceptAddressSMateProposal() external onlyAdmin {
-        if (block.timestamp < addressSMate.timeToAccept) revert();
+    function acceptAddressStakingProposal() external onlyAdmin {
+        if (block.timestamp < addressStaking.timeToAccept) revert();
 
-        addressSMate.actual = addressSMate.proposal;
-        addressSMate.proposal = address(0);
-        addressSMate.timeToAccept = 0;
+        addressStaking.actual = addressStaking.proposal;
+        addressStaking.proposal = address(0);
+        addressStaking.timeToAccept = 0;
     }
 
     function setAdminProposal(
@@ -307,12 +307,12 @@ contract Estimator {
         return evvmAddress;
     }
 
-    function getAddressSMateMetadata()
+    function getAddressStakingMetadata()
         external
         view
         returns (AddressTypeProposal memory)
     {
-        return addressSMate;
+        return addressStaking;
     }
 
     function getAdminMetadata() external view returns (AddressTypeProposal memory) {
@@ -338,13 +338,13 @@ contract Estimator {
         uint256 sumSmT;
 
         uint256 tLast = epoch.tStart;
-        SMate.HistoryMetadata memory h;
-        uint256 size = SMate(addressSMate.actual).getSizeOfAddressHistory(
+        Staking.HistoryMetadata memory h;
+        uint256 size = Staking(addressStaking.actual).getSizeOfAddressHistory(
             _user
         );
 
         for (uint256 i = 0; i < size; i++) {
-            h = SMate(addressSMate.actual).getAddressHistoryByIndex(
+            h = Staking(addressStaking.actual).getAddressHistoryByIndex(
                 _user,
                 i
             );

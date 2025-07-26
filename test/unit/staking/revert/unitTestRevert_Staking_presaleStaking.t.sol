@@ -19,31 +19,31 @@ import "forge-std/console2.sol";
 import {Constants} from "test/Constants.sol";
 import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
-import {SMate} from "@EVVM/playground/staking/SMate.sol";
+import {Staking} from "@EVVM/playground/staking/Staking.sol";
 import {NameService} from "@EVVM/playground/nameService/NameService.sol";
 import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 
-contract unitTestRevert_SMate_presaleStaking is Test, Constants {
-    SMate sMate;
+contract unitTestRevert_Staking_presaleStaking is Test, Constants {
+    Staking staking;
     Evvm evvm;
     Estimator estimator;
     NameService nameService;
 
     function setUp() public {
-        sMate = new SMate(ADMIN.Address, GOLDEN_STAKER.Address);
-        evvm = new Evvm(ADMIN.Address, address(sMate));
+        staking = new Staking(ADMIN.Address, GOLDEN_STAKER.Address);
+        evvm = new Evvm(ADMIN.Address, address(staking));
         estimator = new Estimator(
             ACTIVATOR.Address,
             address(evvm),
-            address(sMate),
+            address(staking),
             ADMIN.Address
         );
         nameService = new NameService(address(evvm), ADMIN.Address);
 
-        sMate._setupEstimatorAndEvvm(address(estimator), address(evvm));
+        staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
         
 
@@ -51,26 +51,26 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
 
         vm.startPrank(ADMIN.Address);
 
-        sMate.prepareChangeAllowPresaleStaking();
+        staking.prepareChangeAllowPresaleStaking();
         skip(1 days);
-        sMate.confirmChangeAllowPresaleStaking();
+        staking.confirmChangeAllowPresaleStaking();
 
-        sMate.addPresaleStaker(COMMON_USER_NO_STAKER_1.Address);
+        staking.addPresaleStaker(COMMON_USER_NO_STAKER_1.Address);
         vm.stopPrank();
     }
 
     function giveMateToExecute(
         address user,
-        uint256 sMateAmount,
+        uint256 stakingAmount,
         uint256 priorityFee
     ) private returns (uint256 totalOfMate, uint256 totalOfPriorityFee) {
         evvm._addBalance(
             user,
             MATE_TOKEN_ADDRESS,
-            (sMate.priceOfSMate() * sMateAmount) + priorityFee
+            (staking.priceOfStaking() * stakingAmount) + priorityFee
         );
 
-        totalOfMate = (sMate.priceOfSMate() * sMateAmount);
+        totalOfMate = (staking.priceOfStaking() * stakingAmount);
         totalOfPriorityFee = priorityFee;
     }
 
@@ -89,7 +89,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
     )
         private
         view
-        returns (bytes memory signatureEVVM, bytes memory signatureSMate)
+        returns (bytes memory signatureEVVM, bytes memory signatureStaking)
     {
         uint8 v;
         bytes32 r;
@@ -99,28 +99,28 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
             (v, r, s) = vm.sign(
                 COMMON_USER_NO_STAKER_1.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPay(
-                    address(sMate),
+                    address(staking),
                     "",
                     MATE_TOKEN_ADDRESS,
-                    sMate.priceOfSMate() * 1,
+                    staking.priceOfStaking() * 1,
                     priorityFee,
                     nonceEVVM,
                     priorityEVVM,
-                    address(sMate)
+                    address(staking)
                 )
             );
         } else {
             (v, r, s) = vm.sign(
                 COMMON_USER_NO_STAKER_1.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPay(
-                    address(sMate),
+                    address(staking),
                     "",
                     MATE_TOKEN_ADDRESS,
                     priorityFee,
                     0,
                     nonceEVVM,
                     priorityEVVM,
-                    address(sMate)
+                    address(staking)
                 )
             );
         }
@@ -135,7 +135,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
                 nonceSmate
             )
         );
-        signatureSMate = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureStaking = Erc191TestBuilder.buildERC191Signature(v, r, s);
     }
 
     /**
@@ -161,14 +161,14 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 totalOfPriorityFee,
                 10001,
                 true,
-                address(sMate)
+                address(staking)
             )
         );
 
@@ -186,7 +186,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
                 1001001
             )
         );
-        bytes memory signatureSMate = Erc191TestBuilder.buildERC191Signature(
+        bytes memory signatureStaking = Erc191TestBuilder.buildERC191Signature(
             v,
             r,
             s
@@ -195,11 +195,11 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER.Address);
 
         vm.expectRevert();
-        sMate.presaleStaking(
+        staking.presaleStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
             1001001,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             10001,
             true,
@@ -208,7 +208,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
             evvm.getBalance(
@@ -245,7 +245,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
                 totalOfPriorityFee,
                 10001,
                 true,
-                address(sMate)
+                address(staking)
             )
         );
 
@@ -263,7 +263,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
                 1001001
             )
         );
-        bytes memory signatureSMate = Erc191TestBuilder.buildERC191Signature(
+        bytes memory signatureStaking = Erc191TestBuilder.buildERC191Signature(
             v,
             r,
             s
@@ -272,11 +272,11 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER.Address);
 
         vm.expectRevert();
-        sMate.presaleStaking(
+        staking.presaleStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
             1001001,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             10001,
             true,
@@ -285,7 +285,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
             evvm.getBalance(
@@ -302,7 +302,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
     }
 
     /*
-     ! note: if sMate in the future has a MNS identity, then rework
+     ! note: if staking in the future has a MNS identity, then rework
      !       this test
      */
     function test__unitRevert__presaleStaking__bPaySigAtToIdentity() external {
@@ -326,7 +326,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
                 totalOfPriorityFee,
                 10001,
                 true,
-                address(sMate)
+                address(staking)
             )
         );
 
@@ -344,7 +344,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
                 1001001
             )
         );
-        bytes memory signatureSMate = Erc191TestBuilder.buildERC191Signature(
+        bytes memory signatureStaking = Erc191TestBuilder.buildERC191Signature(
             v,
             r,
             s
@@ -353,11 +353,11 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER.Address);
 
         vm.expectRevert();
-        sMate.presaleStaking(
+        staking.presaleStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
             1001001,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             10001,
             true,
@@ -366,7 +366,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
             evvm.getBalance(
@@ -396,14 +396,14 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 ETHER_ADDRESS,
                 totalOfMate,
                 totalOfPriorityFee,
                 10001,
                 true,
-                address(sMate)
+                address(staking)
             )
         );
 
@@ -421,7 +421,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
                 1001001
             )
         );
-        bytes memory signatureSMate = Erc191TestBuilder.buildERC191Signature(
+        bytes memory signatureStaking = Erc191TestBuilder.buildERC191Signature(
             v,
             r,
             s
@@ -430,11 +430,11 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER.Address);
 
         vm.expectRevert();
-        sMate.presaleStaking(
+        staking.presaleStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
             1001001,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             10001,
             true,
@@ -443,7 +443,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
             evvm.getBalance(
@@ -473,14 +473,14 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 777,
                 totalOfPriorityFee,
                 10001,
                 true,
-                address(sMate)
+                address(staking)
             )
         );
 
@@ -498,7 +498,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
                 1001001
             )
         );
-        bytes memory signatureSMate = Erc191TestBuilder.buildERC191Signature(
+        bytes memory signatureStaking = Erc191TestBuilder.buildERC191Signature(
             v,
             r,
             s
@@ -507,11 +507,11 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER.Address);
 
         vm.expectRevert();
-        sMate.presaleStaking(
+        staking.presaleStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
             1001001,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             10001,
             true,
@@ -520,7 +520,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
             evvm.getBalance(
@@ -550,14 +550,14 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 777,
                 10001,
                 true,
-                address(sMate)
+                address(staking)
             )
         );
 
@@ -575,7 +575,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
                 1001001
             )
         );
-        bytes memory signatureSMate = Erc191TestBuilder.buildERC191Signature(
+        bytes memory signatureStaking = Erc191TestBuilder.buildERC191Signature(
             v,
             r,
             s
@@ -584,11 +584,11 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER.Address);
 
         vm.expectRevert();
-        sMate.presaleStaking(
+        staking.presaleStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
             1001001,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             10001,
             true,
@@ -597,7 +597,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
             evvm.getBalance(
@@ -627,14 +627,14 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 totalOfPriorityFee,
                 11111,
                 true,
-                address(sMate)
+                address(staking)
             )
         );
 
@@ -652,7 +652,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
                 1001001
             )
         );
-        bytes memory signatureSMate = Erc191TestBuilder.buildERC191Signature(
+        bytes memory signatureStaking = Erc191TestBuilder.buildERC191Signature(
             v,
             r,
             s
@@ -661,11 +661,11 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER.Address);
 
         vm.expectRevert();
-        sMate.presaleStaking(
+        staking.presaleStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
             1001001,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             10001,
             true,
@@ -674,7 +674,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
             evvm.getBalance(
@@ -704,14 +704,14 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 totalOfPriorityFee,
                 10001,
                 false,
-                address(sMate)
+                address(staking)
             )
         );
 
@@ -729,7 +729,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
                 1001001
             )
         );
-        bytes memory signatureSMate = Erc191TestBuilder.buildERC191Signature(
+        bytes memory signatureStaking = Erc191TestBuilder.buildERC191Signature(
             v,
             r,
             s
@@ -738,11 +738,11 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER.Address);
 
         vm.expectRevert();
-        sMate.presaleStaking(
+        staking.presaleStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
             1001001,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             10001,
             true,
@@ -751,7 +751,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
             evvm.getBalance(
@@ -781,7 +781,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
@@ -806,7 +806,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
                 1001001
             )
         );
-        bytes memory signatureSMate = Erc191TestBuilder.buildERC191Signature(
+        bytes memory signatureStaking = Erc191TestBuilder.buildERC191Signature(
             v,
             r,
             s
@@ -815,11 +815,11 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER.Address);
 
         vm.expectRevert();
-        sMate.presaleStaking(
+        staking.presaleStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
             1001001,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             10001,
             true,
@@ -828,7 +828,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
             evvm.getBalance(
@@ -858,14 +858,14 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 totalOfPriorityFee,
                 10001,
                 true,
-                address(sMate)
+                address(staking)
             )
         );
 
@@ -883,7 +883,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
                 1001001
             )
         );
-        bytes memory signatureSMate = Erc191TestBuilder.buildERC191Signature(
+        bytes memory signatureStaking = Erc191TestBuilder.buildERC191Signature(
             v,
             r,
             s
@@ -892,11 +892,11 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER.Address);
 
         vm.expectRevert();
-        sMate.presaleStaking(
+        staking.presaleStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
             1001001,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             10001,
             true,
@@ -905,7 +905,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
             evvm.getBalance(
@@ -937,14 +937,14 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 totalOfPriorityFee,
                 10001,
                 true,
-                address(sMate)
+                address(staking)
             )
         );
 
@@ -962,7 +962,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
                 1001001
             )
         );
-        bytes memory signatureSMate = Erc191TestBuilder.buildERC191Signature(
+        bytes memory signatureStaking = Erc191TestBuilder.buildERC191Signature(
             v,
             r,
             s
@@ -971,11 +971,11 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER.Address);
 
         vm.expectRevert();
-        sMate.presaleStaking(
+        staking.presaleStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
             1001001,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             10001,
             true,
@@ -984,7 +984,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
             evvm.getBalance(
@@ -1014,14 +1014,14 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 totalOfPriorityFee,
                 10001,
                 true,
-                address(sMate)
+                address(staking)
             )
         );
 
@@ -1039,7 +1039,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
                 1001001
             )
         );
-        bytes memory signatureSMate = Erc191TestBuilder.buildERC191Signature(
+        bytes memory signatureStaking = Erc191TestBuilder.buildERC191Signature(
             v,
             r,
             s
@@ -1048,11 +1048,11 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER.Address);
 
         vm.expectRevert();
-        sMate.presaleStaking(
+        staking.presaleStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
             1001001,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             10001,
             true,
@@ -1061,7 +1061,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
             evvm.getBalance(
@@ -1091,14 +1091,14 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 totalOfPriorityFee,
                 10001,
                 true,
-                address(sMate)
+                address(staking)
             )
         );
 
@@ -1112,7 +1112,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPresaleStaking(true, 1, 111)
         );
-        bytes memory signatureSMate = Erc191TestBuilder.buildERC191Signature(
+        bytes memory signatureStaking = Erc191TestBuilder.buildERC191Signature(
             v,
             r,
             s
@@ -1121,11 +1121,11 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER.Address);
 
         vm.expectRevert();
-        sMate.presaleStaking(
+        staking.presaleStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
             1001001,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             10001,
             true,
@@ -1134,7 +1134,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
             evvm.getBalance(
@@ -1165,14 +1165,14 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 totalOfPriorityFee,
                 10001,
                 true,
-                address(sMate)
+                address(staking)
             )
         );
 
@@ -1190,7 +1190,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
                 1001001
             )
         );
-        bytes memory signatureSMate = Erc191TestBuilder.buildERC191Signature(
+        bytes memory signatureStaking = Erc191TestBuilder.buildERC191Signature(
             v,
             r,
             s
@@ -1199,11 +1199,11 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER.Address);
 
         vm.expectRevert();
-        sMate.presaleStaking(
+        staking.presaleStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
             1001001,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             10001,
             true,
@@ -1212,7 +1212,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
             evvm.getBalance(
@@ -1246,14 +1246,14 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 totalOfPriorityFee,
                 10001,
                 true,
-                address(sMate)
+                address(staking)
             )
         );
 
@@ -1271,7 +1271,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
                 1001001
             )
         );
-        bytes memory signatureSMate = Erc191TestBuilder.buildERC191Signature(
+        bytes memory signatureStaking = Erc191TestBuilder.buildERC191Signature(
             v,
             r,
             s
@@ -1280,11 +1280,11 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER.Address);
 
         vm.expectRevert();
-        sMate.presaleStaking(
+        staking.presaleStaking(
             true,
             COMMON_USER_NO_STAKER_2.Address,
             1001001,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             10001,
             true,
@@ -1293,7 +1293,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_2.Address));
+        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_2.Address));
 
         assertEq(
             evvm.getBalance(
@@ -1314,7 +1314,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         bytes32 r;
         bytes32 s;
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
 
         (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
             COMMON_USER_NO_STAKER_1.Address,
@@ -1322,7 +1322,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
             0
         );
 
-        (signatureEVVM, signatureSMate) = makeSignature(
+        (signatureEVVM, signatureStaking) = makeSignature(
             true,
             0,
             100,
@@ -1331,11 +1331,11 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
-        sMate.presaleStaking(
+        staking.presaleStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
             1001001,
-            signatureSMate,
+            signatureStaking,
             0,
             100,
             true,
@@ -1346,14 +1346,14 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 totalOfPriorityFee,
                 10001,
                 true,
-                address(sMate)
+                address(staking)
             )
         );
 
@@ -1367,16 +1367,16 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
                 1001001
             )
         );
-        signatureSMate = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureStaking = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
         vm.expectRevert();
-        sMate.presaleStaking(
+        staking.presaleStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
             1001001,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             10001,
             true,
@@ -1385,7 +1385,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
             evvm.getBalance(
@@ -1410,9 +1410,9 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
 
         vm.startPrank(ADMIN.Address);
 
-        sMate.prepareChangeAllowPublicStaking();
+        staking.prepareChangeAllowPublicStaking();
         skip(1 days);
-        sMate.confirmChangeAllowPublicStaking();
+        staking.confirmChangeAllowPublicStaking();
         vm.stopPrank();
 
         (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
@@ -1424,14 +1424,14 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 totalOfPriorityFee,
                 10001,
                 true,
-                address(sMate)
+                address(staking)
             )
         );
 
@@ -1449,7 +1449,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
                 1001001
             )
         );
-        bytes memory signatureSMate = Erc191TestBuilder.buildERC191Signature(
+        bytes memory signatureStaking = Erc191TestBuilder.buildERC191Signature(
             v,
             r,
             s
@@ -1458,11 +1458,11 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER.Address);
 
         vm.expectRevert();
-        sMate.presaleStaking(
+        staking.presaleStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
             1001001,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             10001,
             true,
@@ -1471,7 +1471,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
             evvm.getBalance(
@@ -1503,14 +1503,14 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 totalOfPriorityFee,
                 10001,
                 true,
-                address(sMate)
+                address(staking)
             )
         );
 
@@ -1528,7 +1528,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
                 1001001
             )
         );
-        bytes memory signatureSMate = Erc191TestBuilder.buildERC191Signature(
+        bytes memory signatureStaking = Erc191TestBuilder.buildERC191Signature(
             v,
             r,
             s
@@ -1537,11 +1537,11 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER.Address);
 
         vm.expectRevert();
-        sMate.presaleStaking(
+        staking.presaleStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
             1001001,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             10001,
             true,
@@ -1550,7 +1550,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
             evvm.getBalance(
@@ -1573,7 +1573,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         bytes32 r;
         bytes32 s;
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
 
         (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
             COMMON_USER_NO_STAKER_1.Address,
@@ -1581,7 +1581,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
             0
         );
 
-        (signatureEVVM, signatureSMate) = makeSignature(
+        (signatureEVVM, signatureStaking) = makeSignature(
             true,
             0,
             100,
@@ -1590,11 +1590,11 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
-        sMate.presaleStaking(
+        staking.presaleStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
             100,
-            signatureSMate,
+            signatureStaking,
             0,
             100,
             true,
@@ -1602,7 +1602,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
         vm.stopPrank();
 
-        (signatureEVVM, signatureSMate) = makeSignature(
+        (signatureEVVM, signatureStaking) = makeSignature(
             true,
             0,
             101,
@@ -1611,11 +1611,11 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
-        sMate.presaleStaking(
+        staking.presaleStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
             101,
-            signatureSMate,
+            signatureStaking,
             0,
             101,
             true,
@@ -1623,7 +1623,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
         vm.stopPrank();
 
-        (signatureEVVM, signatureSMate) = makeSignature(
+        (signatureEVVM, signatureStaking) = makeSignature(
             true,
             0,
             102,
@@ -1634,11 +1634,11 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER.Address);
 
         vm.expectRevert();
-        sMate.presaleStaking(
+        staking.presaleStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
             102,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             102,
             true,
@@ -1647,7 +1647,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
             evvm.getBalance(
@@ -1679,14 +1679,14 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
-                address(sMate),
+                address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
                 totalOfMate,
                 totalOfPriorityFee,
                 10001,
                 true,
-                address(sMate)
+                address(staking)
             )
         );
 
@@ -1704,7 +1704,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
                 1001001
             )
         );
-        bytes memory signatureSMate = Erc191TestBuilder.buildERC191Signature(
+        bytes memory signatureStaking = Erc191TestBuilder.buildERC191Signature(
             v,
             r,
             s
@@ -1713,11 +1713,11 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER.Address);
 
         vm.expectRevert();
-        sMate.presaleStaking(
+        staking.presaleStaking(
             false,
             COMMON_USER_NO_STAKER_1.Address,
             1001001,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             10001,
             true,
@@ -1726,7 +1726,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
             evvm.getBalance(
@@ -1752,9 +1752,9 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
 
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
 
-        (signatureEVVM, signatureSMate) = makeSignature(
+        (signatureEVVM, signatureStaking) = makeSignature(
             true,
             0,
             100,
@@ -1763,11 +1763,11 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
-        sMate.presaleStaking(
+        staking.presaleStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
             100,
-            signatureSMate,
+            signatureStaking,
             0,
             100,
             true,
@@ -1775,7 +1775,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
         vm.stopPrank();
 
-        (signatureEVVM, signatureSMate) = makeSignature(
+        (signatureEVVM, signatureStaking) = makeSignature(
             true,
             0,
             101,
@@ -1784,11 +1784,11 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
-        sMate.presaleStaking(
+        staking.presaleStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
             101,
-            signatureSMate,
+            signatureStaking,
             0,
             101,
             true,
@@ -1796,7 +1796,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
         vm.stopPrank();
 
-        (signatureEVVM, signatureSMate) = makeSignature(
+        (signatureEVVM, signatureStaking) = makeSignature(
             false,
             0,
             102,
@@ -1805,11 +1805,11 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
-        sMate.presaleStaking(
+        staking.presaleStaking(
             false,
             COMMON_USER_NO_STAKER_1.Address,
             102,
-            signatureSMate,
+            signatureStaking,
             0,
             102,
             true,
@@ -1817,7 +1817,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
         vm.stopPrank();
 
-        (signatureEVVM, signatureSMate) = makeSignature(
+        (signatureEVVM, signatureStaking) = makeSignature(
             false,
             0,
             103,
@@ -1828,11 +1828,11 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
 
         vm.expectRevert();
-        sMate.presaleStaking(
+        staking.presaleStaking(
             false,
             COMMON_USER_NO_STAKER_1.Address,
             103,
-            signatureSMate,
+            signatureStaking,
             0,
             103,
             true,
@@ -1840,7 +1840,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
         vm.stopPrank();
 
-        assert(evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -1854,9 +1854,9 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         external
     {
         vm.startPrank(ADMIN.Address);
-        sMate.proposeSetSecondsToUnlockStaking(5 days);
+        staking.proposeSetSecondsToUnlockStaking(5 days);
         skip(1 days);
-        sMate.acceptSetSecondsToUnlockStaking();
+        staking.acceptSetSecondsToUnlockStaking();
         vm.stopPrank();
 
         (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
@@ -1866,9 +1866,9 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
 
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
 
-        (signatureEVVM, signatureSMate) = makeSignature(
+        (signatureEVVM, signatureStaking) = makeSignature(
             true,
             0,
             100,
@@ -1877,11 +1877,11 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
-        sMate.presaleStaking(
+        staking.presaleStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
             100,
-            signatureSMate,
+            signatureStaking,
             0,
             100,
             true,
@@ -1889,7 +1889,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
         vm.stopPrank();
 
-        (signatureEVVM, signatureSMate) = makeSignature(
+        (signatureEVVM, signatureStaking) = makeSignature(
             true,
             0,
             101,
@@ -1898,11 +1898,11 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
-        sMate.presaleStaking(
+        staking.presaleStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
             101,
-            signatureSMate,
+            signatureStaking,
             0,
             101,
             true,
@@ -1910,7 +1910,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
         vm.stopPrank();
 
-        (signatureEVVM, signatureSMate) = makeSignature(
+        (signatureEVVM, signatureStaking) = makeSignature(
             false,
             0,
             102,
@@ -1919,11 +1919,11 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
-        sMate.presaleStaking(
+        staking.presaleStaking(
             false,
             COMMON_USER_NO_STAKER_1.Address,
             102,
-            signatureSMate,
+            signatureStaking,
             0,
             102,
             true,
@@ -1931,7 +1931,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
         vm.stopPrank();
 
-        (signatureEVVM, signatureSMate) = makeSignature(
+        (signatureEVVM, signatureStaking) = makeSignature(
             false,
             0,
             103,
@@ -1939,14 +1939,14 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
             103
         );
 
-        skip(sMate.getSecondsToUnlockFullUnstaking());
+        skip(staking.getSecondsToUnlockFullUnstaking());
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
-        sMate.presaleStaking(
+        staking.presaleStaking(
             false,
             COMMON_USER_NO_STAKER_1.Address,
             103,
-            signatureSMate,
+            signatureStaking,
             0,
             103,
             true,
@@ -1954,7 +1954,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
         vm.stopPrank();
 
-        (signatureEVVM, signatureSMate) = makeSignature(
+        (signatureEVVM, signatureStaking) = makeSignature(
             true,
             0,
             104,
@@ -1964,11 +1964,11 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         vm.expectRevert();
-        sMate.presaleStaking(
+        staking.presaleStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
             104,
-            signatureSMate,
+            signatureStaking,
             0,
             104,
             true,
@@ -1976,7 +1976,7 @@ contract unitTestRevert_SMate_presaleStaking is Test, Constants {
         );
         vm.stopPrank();
 
-        assert(!evvm.isMateStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,

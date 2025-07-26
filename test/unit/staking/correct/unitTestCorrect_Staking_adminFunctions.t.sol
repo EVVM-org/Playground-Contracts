@@ -19,34 +19,34 @@ import "forge-std/console2.sol";
 import {Constants} from "test/Constants.sol";
 import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
-import {SMate} from "@EVVM/playground/staking/SMate.sol";
+import {Staking} from "@EVVM/playground/staking/Staking.sol";
 import {NameService} from "@EVVM/playground/nameService/NameService.sol";
 import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 
-contract unitTestCorrect_SMate_adminFunctions is
+contract unitTestCorrect_Staking_adminFunctions is
     Test,
     Constants
 {
-    SMate sMate;
+    Staking staking;
     Evvm evvm;
     Estimator estimator;
     NameService nameService;
 
     function setUp() public {
-        sMate = new SMate(ADMIN.Address, GOLDEN_STAKER.Address);
-        evvm = new Evvm(ADMIN.Address, address(sMate));
+        staking = new Staking(ADMIN.Address, GOLDEN_STAKER.Address);
+        evvm = new Evvm(ADMIN.Address, address(staking));
         estimator = new Estimator(
             ACTIVATOR.Address,
             address(evvm),
-            address(sMate),
+            address(staking),
             ADMIN.Address
         );
         nameService = new NameService(address(evvm), ADMIN.Address);
 
-        sMate._setupEstimatorAndEvvm(address(estimator), address(evvm));
+        staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
         
 
@@ -56,7 +56,7 @@ contract unitTestCorrect_SMate_adminFunctions is
 
     function test__unit_correct__admin_addPresaleStaker() external {
         vm.startPrank(ADMIN.Address);
-        sMate.addPresaleStaker(WILDCARD_USER.Address);
+        staking.addPresaleStaker(WILDCARD_USER.Address);
         vm.stopPrank();
     }
 
@@ -66,141 +66,141 @@ contract unitTestCorrect_SMate_adminFunctions is
         stakers[1] = makeAddr("bob");
 
         vm.startPrank(ADMIN.Address);
-        sMate.addPresaleStakers(stakers);
+        staking.addPresaleStakers(stakers);
         vm.stopPrank();
     }
 
     function test__unit_correct__admin_proposeAdmin() external {
         vm.startPrank(ADMIN.Address);
-        sMate.proposeAdmin(WILDCARD_USER.Address);
+        staking.proposeAdmin(WILDCARD_USER.Address);
         vm.stopPrank();
     }
 
     function test__unit_correct__admin_rejectProposalAdmin() external {
         vm.startPrank(ADMIN.Address);
-        sMate.proposeAdmin(WILDCARD_USER.Address);
+        staking.proposeAdmin(WILDCARD_USER.Address);
         vm.warp(block.timestamp + 2 hours);
-        sMate.rejectProposalAdmin();
+        staking.rejectProposalAdmin();
         vm.stopPrank();
     }
 
     function test__unit_correct__admin_acceptNewAdmin() external {
         vm.startPrank(ADMIN.Address);
-        sMate.proposeAdmin(WILDCARD_USER.Address);
+        staking.proposeAdmin(WILDCARD_USER.Address);
         vm.stopPrank();
         vm.warp(block.timestamp + 1 days + 1);
         vm.startPrank(WILDCARD_USER.Address);
-        sMate.acceptNewAdmin();
+        staking.acceptNewAdmin();
         vm.stopPrank();
     }
 
     function test__unit_correct__admin_proposeGoldenFisher() external {
         vm.startPrank(ADMIN.Address);
-        sMate.proposeGoldenFisher(WILDCARD_USER.Address);
+        staking.proposeGoldenFisher(WILDCARD_USER.Address);
         vm.stopPrank();
     }
 
     function test__unit_correct__admin_rejectProposalGoldenFisher() external {
         vm.startPrank(ADMIN.Address);
-        sMate.proposeGoldenFisher(WILDCARD_USER.Address);
+        staking.proposeGoldenFisher(WILDCARD_USER.Address);
         vm.warp(block.timestamp + 2 hours);
-        sMate.rejectProposalGoldenFisher();
+        staking.rejectProposalGoldenFisher();
         vm.stopPrank();
     }
 
     function test__unit_correct__admin_acceptNewGoldenFisher() external {
         vm.startPrank(ADMIN.Address);
-        sMate.proposeGoldenFisher(WILDCARD_USER.Address);
+        staking.proposeGoldenFisher(WILDCARD_USER.Address);
         vm.warp(block.timestamp + 1 days + 1);
-        sMate.acceptNewGoldenFisher();
+        staking.acceptNewGoldenFisher();
         vm.stopPrank();
     }
 
     function test__unit_correct__admin_proposeSetSecondsToUnlockStaking() external {
         vm.startPrank(ADMIN.Address);
-        sMate.proposeSetSecondsToUnlockStaking(2 days);
+        staking.proposeSetSecondsToUnlockStaking(2 days);
         vm.stopPrank();
     }
 
     function test__unit_correct__admin_rejectProposalSetSecondsToUnlockStaking() external {
         vm.startPrank(ADMIN.Address);
-        sMate.proposeSetSecondsToUnlockStaking(2 days);
+        staking.proposeSetSecondsToUnlockStaking(2 days);
         vm.warp(block.timestamp + 2 hours);
-        sMate.rejectProposalSetSecondsToUnlockStaking();
+        staking.rejectProposalSetSecondsToUnlockStaking();
         vm.stopPrank();
     }
 
     function test__unit_correct__admin_acceptSetSecondsToUnlockStaking() external {
         vm.startPrank(ADMIN.Address);
-        sMate.proposeSetSecondsToUnlockStaking(2 days);
+        staking.proposeSetSecondsToUnlockStaking(2 days);
         vm.warp(block.timestamp + 1 days + 1);
-        sMate.acceptSetSecondsToUnlockStaking();
+        staking.acceptSetSecondsToUnlockStaking();
         vm.stopPrank();
     }
 
     function test__unit_correct__admin_prepareSetSecondsToUnllockFullUnstaking() external {
         vm.startPrank(ADMIN.Address);
-        sMate.prepareSetSecondsToUnllockFullUnstaking(2 days);
+        staking.prepareSetSecondsToUnllockFullUnstaking(2 days);
         vm.stopPrank();
     }
 
     function test__unit_correct__admin_cancelSetSecondsToUnllockFullUnstaking() external {
         vm.startPrank(ADMIN.Address);
-        sMate.prepareSetSecondsToUnllockFullUnstaking(2 days);
+        staking.prepareSetSecondsToUnllockFullUnstaking(2 days);
         vm.warp(block.timestamp + 2 hours);
-        sMate.cancelSetSecondsToUnllockFullUnstaking();
+        staking.cancelSetSecondsToUnllockFullUnstaking();
         vm.stopPrank();
     }
 
     function test__unit_correct__admin_confirmSetSecondsToUnllockFullUnstaking() external {
         vm.startPrank(ADMIN.Address);
-        sMate.prepareSetSecondsToUnllockFullUnstaking(2 days);
+        staking.prepareSetSecondsToUnllockFullUnstaking(2 days);
         vm.warp(block.timestamp + 1 days + 1);
-        sMate.confirmSetSecondsToUnllockFullUnstaking();
+        staking.confirmSetSecondsToUnllockFullUnstaking();
         vm.stopPrank();
     }
 
     function test__unit_correct__admin_prepareChangeAllowPublicStaking() external {
         vm.startPrank(ADMIN.Address);
-        sMate.prepareChangeAllowPublicStaking();
+        staking.prepareChangeAllowPublicStaking();
         vm.stopPrank();
     }
 
     function test__unit_correct__admin_cancelChangeAllowPublicStaking() external {
         vm.startPrank(ADMIN.Address);
-        sMate.prepareChangeAllowPublicStaking();
+        staking.prepareChangeAllowPublicStaking();
         vm.warp(block.timestamp + 2 hours);
-        sMate.cancelChangeAllowPublicStaking();
+        staking.cancelChangeAllowPublicStaking();
         vm.stopPrank();
     }
 
     function test__unit_correct__admin_confirmChangeAllowPublicStaking() external {
         vm.startPrank(ADMIN.Address);
-        sMate.prepareChangeAllowPublicStaking();
+        staking.prepareChangeAllowPublicStaking();
         vm.warp(block.timestamp + 1 days + 1);
-        sMate.confirmChangeAllowPublicStaking();
+        staking.confirmChangeAllowPublicStaking();
         vm.stopPrank();
     }
 
     function test__unit_correct__admin_prepareChangeAllowPresaleStaking() external {
         vm.startPrank(ADMIN.Address);
-        sMate.prepareChangeAllowPresaleStaking();
+        staking.prepareChangeAllowPresaleStaking();
         vm.stopPrank();
     }
 
     function test__unit_correct__admin_cancelChangeAllowPresaleStaking() external {
         vm.startPrank(ADMIN.Address);
-        sMate.prepareChangeAllowPresaleStaking();
+        staking.prepareChangeAllowPresaleStaking();
         vm.warp(block.timestamp + 2 hours);
-        sMate.cancelChangeAllowPresaleStaking();
+        staking.cancelChangeAllowPresaleStaking();
         vm.stopPrank();
     }
 
     function test__unit_correct__admin_confirmChangeAllowPresaleStaking() external {
         vm.startPrank(ADMIN.Address);
-        sMate.prepareChangeAllowPresaleStaking();
+        staking.prepareChangeAllowPresaleStaking();
         vm.warp(block.timestamp + 1 days + 1);
-        sMate.confirmChangeAllowPresaleStaking();
+        staking.confirmChangeAllowPresaleStaking();
         vm.stopPrank();
     }
 }

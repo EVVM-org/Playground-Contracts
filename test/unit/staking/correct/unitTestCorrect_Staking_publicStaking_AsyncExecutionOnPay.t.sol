@@ -16,38 +16,37 @@ pragma abicoder v2;
 import "forge-std/Test.sol";
 import "forge-std/console2.sol";
 
-import {Constants, MockContract} from "test/Constants.sol";
+import {Constants} from "test/Constants.sol";
 import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
-import {SMate} from "@EVVM/playground/staking/SMate.sol";
+import {Staking} from "@EVVM/playground/staking/Staking.sol";
 import {NameService} from "@EVVM/playground/nameService/NameService.sol";
 import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 
-contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
+contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
     Test,
     Constants
 {
-    SMate sMate;
+    Staking staking;
     Evvm evvm;
     Estimator estimator;
     NameService nameService;
-    MockContract mock;
 
     function setUp() public {
-        sMate = new SMate(ADMIN.Address, GOLDEN_STAKER.Address);
-        evvm = new Evvm(ADMIN.Address, address(sMate));
+        staking = new Staking(ADMIN.Address, GOLDEN_STAKER.Address);
+        evvm = new Evvm(ADMIN.Address, address(staking));
         estimator = new Estimator(
             ACTIVATOR.Address,
             address(evvm),
-            address(sMate),
+            address(staking),
             ADMIN.Address
         );
         nameService = new NameService(address(evvm), ADMIN.Address);
 
-        sMate._setupEstimatorAndEvvm(address(estimator), address(evvm));
+        staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
         
 
@@ -55,32 +54,29 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
 
         vm.startPrank(ADMIN.Address);
 
-        sMate.prepareChangeAllowPublicStaking();
+        staking.prepareChangeAllowPublicStaking();
         skip(1 days);
-        sMate.confirmChangeAllowPublicStaking();
+        staking.confirmChangeAllowPublicStaking();
 
         vm.stopPrank();
-
-        mock = new MockContract(address(sMate));
     }
 
     function giveMateToExecute(
         address user,
-        uint256 sMateAmount,
+        uint256 stakingAmount,
         uint256 priorityFee
     ) private returns (uint256 totalOfMate, uint256 totalOfPriorityFee) {
         evvm._addBalance(
             user,
             MATE_TOKEN_ADDRESS,
-            (sMate.priceOfSMate() * sMateAmount) + priorityFee
+            (staking.priceOfStaking() * stakingAmount) + priorityFee
         );
 
-        totalOfMate = (sMate.priceOfSMate() * sMateAmount);
+        totalOfMate = (staking.priceOfStaking() * stakingAmount);
         totalOfPriorityFee = priorityFee;
     }
 
     function makeSignature(
-        address serviceAddress,
         bool isStaking,
         uint256 amountOfSmate,
         uint256 priorityFee,
@@ -90,7 +86,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
     )
         private
         view
-        returns (bytes memory signatureEVVM, bytes memory signatureSMate)
+        returns (bytes memory signatureEVVM, bytes memory signatureStaking)
     {
         uint8 v;
         bytes32 r;
@@ -100,28 +96,28 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
             (v, r, s) = vm.sign(
                 COMMON_USER_NO_STAKER_1.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPay(
-                    address(sMate),
+                    address(staking),
                     "",
                     MATE_TOKEN_ADDRESS,
-                    sMate.priceOfSMate() * amountOfSmate,
+                    staking.priceOfStaking() * amountOfSmate,
                     priorityFee,
                     nonceEVVM,
                     priorityEVVM,
-                    address(sMate)
+                    address(staking)
                 )
             );
         } else {
             (v, r, s) = vm.sign(
                 COMMON_USER_NO_STAKER_1.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPay(
-                    address(sMate),
+                    address(staking),
                     "",
                     MATE_TOKEN_ADDRESS,
                     priorityFee,
                     0,
                     nonceEVVM,
                     priorityEVVM,
-                    address(sMate)
+                    address(staking)
                 )
             );
         }
@@ -130,14 +126,13 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
-            Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
-                serviceAddress,
+            Erc191TestBuilder.buildMessageSignedForPublicStaking(
                 isStaking,
                 amountOfSmate,
                 nonceSmate
             )
         );
-        signatureSMate = Erc191TestBuilder.buildERC191Signature(v, r, s);
+        signatureStaking = Erc191TestBuilder.buildERC191Signature(v, r, s);
     }
 
     function getAmountOfRewardsPerExecution(
@@ -154,7 +149,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
      * PF: Includes priority fee
      */
 
-    function test__unit_correct__publicServiceStaking__stake_nS_nPF() external {
+    function test__unit_correct__publicStaking__stake_nS_nPF() external {
         (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
             COMMON_USER_NO_STAKER_1.Address,
             10,
@@ -162,10 +157,9 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
 
-        (signatureEVVM, signatureSMate) = makeSignature(
-            address(mock),
+        (signatureEVVM, signatureStaking) = makeSignature(
             true,
             10,
             totalOfPriorityFee,
@@ -175,13 +169,12 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
-        sMate.publicServiceStaking(
+        staking.publicStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
-            address(mock),
             1001,
             10,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             1001,
             true,
@@ -189,7 +182,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        assert(evvm.isMateStaker(address(mock)));
+        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -198,12 +191,12 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
             0
         );
 
-        SMate.HistoryMetadata[]
-            memory history = new SMate.HistoryMetadata[](
-                sMate.getSizeOfAddressHistory(address(mock))
+        Staking.HistoryMetadata[]
+            memory history = new Staking.HistoryMetadata[](
+                staking.getSizeOfAddressHistory(COMMON_USER_NO_STAKER_1.Address)
             );
 
-        history = sMate.getAddressHistory(address(mock));
+        history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
         assertEq(history[0].timestamp, block.timestamp);
         assert(history[0].transactionType == DEPOSIT_HISTORY_SMATE_IDENTIFIER);
@@ -211,9 +204,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         assertEq(history[0].totalStaked, 10);
     }
 
-    function test__unit_correct__publicServiceStaking__unstake_nS_nPF()
-        external
-    {
+    function test__unit_correct__publicStaking__unstake_nS_nPF() external {
         (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
             COMMON_USER_NO_STAKER_1.Address,
             10,
@@ -221,10 +212,9 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
 
-        (signatureEVVM, signatureSMate) = makeSignature(
-            address(mock),
+        (signatureEVVM, signatureStaking) = makeSignature(
             true,
             10,
             totalOfPriorityFee,
@@ -234,13 +224,12 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
-        sMate.publicServiceStaking(
+        staking.publicStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
-            address(mock),
             1001,
             10,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             1001,
             true,
@@ -248,9 +237,30 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        mock.unstake(5, 1002, address(mock));
+        (signatureEVVM, signatureStaking) = makeSignature(
+            false,
+            5,
+            totalOfPriorityFee,
+            1002,
+            true,
+            1002
+        );
 
-        assert(evvm.isMateStaker(address(mock)));
+        vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
+        staking.publicStaking(
+            false,
+            COMMON_USER_NO_STAKER_1.Address,
+            1002,
+            5,
+            signatureStaking,
+            totalOfPriorityFee,
+            1002,
+            true,
+            signatureEVVM
+        );
+        vm.stopPrank();
+
+        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -259,12 +269,12 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
             0
         );
 
-        SMate.HistoryMetadata[]
-            memory history = new SMate.HistoryMetadata[](
-                sMate.getSizeOfAddressHistory(address(mock))
+        Staking.HistoryMetadata[]
+            memory history = new Staking.HistoryMetadata[](
+                staking.getSizeOfAddressHistory(COMMON_USER_NO_STAKER_1.Address)
             );
 
-        history = sMate.getAddressHistory(address(mock));
+        history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
         assertEq(history[0].timestamp, block.timestamp);
         assert(history[0].transactionType == DEPOSIT_HISTORY_SMATE_IDENTIFIER);
@@ -277,9 +287,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         assertEq(history[1].totalStaked, 5);
     }
 
-    function test__unit_correct__publicServiceStaking__fullUnstake_nS_nPF()
-        external
-    {
+    function test__unit_correct__publicStaking__fullUnstake_nS_nPF() external {
         (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
             COMMON_USER_NO_STAKER_1.Address,
             10,
@@ -287,10 +295,9 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
 
-        (signatureEVVM, signatureSMate) = makeSignature(
-            address(mock),
+        (signatureEVVM, signatureStaking) = makeSignature(
             true,
             10,
             totalOfPriorityFee,
@@ -300,13 +307,12 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
-        sMate.publicServiceStaking(
+        staking.publicStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
-            address(mock),
             1001,
             10,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             1001,
             true,
@@ -314,11 +320,32 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        skip(sMate.getSecondsToUnlockFullUnstaking());
+        skip(staking.getSecondsToUnlockFullUnstaking());
 
-        mock.unstake(10, 1002, address(mock));
+        (signatureEVVM, signatureStaking) = makeSignature(
+            false,
+            10,
+            totalOfPriorityFee,
+            1002,
+            true,
+            1002
+        );
 
-        assert(!evvm.isMateStaker(address(mock)));
+        vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
+        staking.publicStaking(
+            false,
+            COMMON_USER_NO_STAKER_1.Address,
+            1002,
+            10,
+            signatureStaking,
+            totalOfPriorityFee,
+            1002,
+            true,
+            signatureEVVM
+        );
+        vm.stopPrank();
+
+        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -327,16 +354,16 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
             0
         );
 
-        SMate.HistoryMetadata[]
-            memory history = new SMate.HistoryMetadata[](
-                sMate.getSizeOfAddressHistory(address(mock))
+        Staking.HistoryMetadata[]
+            memory history = new Staking.HistoryMetadata[](
+                staking.getSizeOfAddressHistory(COMMON_USER_NO_STAKER_1.Address)
             );
 
-        history = sMate.getAddressHistory(address(mock));
+        history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
         assertEq(
             history[0].timestamp,
-            block.timestamp - sMate.getSecondsToUnlockFullUnstaking()
+            block.timestamp - staking.getSecondsToUnlockFullUnstaking()
         );
         assert(history[0].transactionType == DEPOSIT_HISTORY_SMATE_IDENTIFIER);
         assertEq(history[0].amount, 10);
@@ -348,9 +375,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         assertEq(history[1].totalStaked, 0);
     }
 
-    function test__unit_correct__publicServiceStaking__stakeAfterFullUnstake_nS_nPF()
-        external
-    {
+    function test__unit_correct__publicStaking__stakeAfterFullUnstake_nS_nPF() external {
         (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
             COMMON_USER_NO_STAKER_1.Address,
             10,
@@ -358,10 +383,9 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
 
-        (signatureEVVM, signatureSMate) = makeSignature(
-            address(mock),
+        (signatureEVVM, signatureStaking) = makeSignature(
             true,
             10,
             totalOfPriorityFee,
@@ -371,13 +395,12 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
-        sMate.publicServiceStaking(
+        staking.publicStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
-            address(mock),
             1001,
             10,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             1001,
             true,
@@ -385,16 +408,34 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        skip(sMate.getSecondsToUnlockFullUnstaking());
+        skip(staking.getSecondsToUnlockFullUnstaking());
 
-        mock.unstake(10, 1002, address(mock));
+        (signatureEVVM, signatureStaking) = makeSignature(
+            false,
+            10,
+            totalOfPriorityFee,
+            1002,
+            true,
+            1002
+        );
 
-        mock.getBackMate(COMMON_USER_NO_STAKER_1.Address);
+        vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
+        staking.publicStaking(
+            false,
+            COMMON_USER_NO_STAKER_1.Address,
+            1002,
+            10,
+            signatureStaking,
+            totalOfPriorityFee,
+            1002,
+            true,
+            signatureEVVM
+        );
+        vm.stopPrank();
 
-        skip(sMate.getSecondsToUnlockStaking());
+        skip(staking.getSecondsToUnlockStaking());
 
-        (signatureEVVM, signatureSMate) = makeSignature(
-            address(mock),
+        (signatureEVVM, signatureStaking) = makeSignature(
             true,
             10,
             totalOfPriorityFee,
@@ -404,13 +445,12 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
-        sMate.publicServiceStaking(
+        staking.publicStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
-            address(mock),
             1003,
             10,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             1003,
             true,
@@ -418,7 +458,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        assert(evvm.isMateStaker(address(mock)));
+        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -427,18 +467,18 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
             0
         );
 
-        SMate.HistoryMetadata[]
-            memory history = new SMate.HistoryMetadata[](
-                sMate.getSizeOfAddressHistory(address(mock))
+        Staking.HistoryMetadata[]
+            memory history = new Staking.HistoryMetadata[](
+                staking.getSizeOfAddressHistory(COMMON_USER_NO_STAKER_1.Address)
             );
 
-        history = sMate.getAddressHistory(address(mock));
+        history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
         assertEq(
             history[0].timestamp,
             block.timestamp -
-                (sMate.getSecondsToUnlockFullUnstaking() +
-                    sMate.getSecondsToUnlockStaking())
+                (staking.getSecondsToUnlockFullUnstaking() +
+                    staking.getSecondsToUnlockStaking())
         );
         assert(history[0].transactionType == DEPOSIT_HISTORY_SMATE_IDENTIFIER);
         assertEq(history[0].amount, 10);
@@ -446,7 +486,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
 
         assertEq(
             history[1].timestamp,
-            block.timestamp - sMate.getSecondsToUnlockStaking()
+            block.timestamp - staking.getSecondsToUnlockStaking()
         );
         assert(history[1].transactionType == WITHDRAW_HISTORY_SMATE_IDENTIFIER);
         assertEq(history[1].amount, 10);
@@ -458,7 +498,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         assertEq(history[2].totalStaked, 10);
     }
 
-    function test__unit_correct__publicServiceStaking__stake_nS_PF() external {
+    function test__unit_correct__publicStaking__stake_nS_PF() external {
         (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
             COMMON_USER_NO_STAKER_1.Address,
             10,
@@ -466,10 +506,9 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
 
-        (signatureEVVM, signatureSMate) = makeSignature(
-            address(mock),
+        (signatureEVVM, signatureStaking) = makeSignature(
             true,
             10,
             totalOfPriorityFee,
@@ -479,13 +518,12 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
-        sMate.publicServiceStaking(
+        staking.publicStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
-            address(mock),
             1001,
             10,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             1001,
             true,
@@ -493,7 +531,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        assert(evvm.isMateStaker(address(mock)));
+        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -502,12 +540,12 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
             0
         );
 
-        SMate.HistoryMetadata[]
-            memory history = new SMate.HistoryMetadata[](
-                sMate.getSizeOfAddressHistory(address(mock))
+        Staking.HistoryMetadata[]
+            memory history = new Staking.HistoryMetadata[](
+                staking.getSizeOfAddressHistory(COMMON_USER_NO_STAKER_1.Address)
             );
 
-        history = sMate.getAddressHistory(address(mock));
+        history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
         assertEq(history[0].timestamp, block.timestamp);
         assert(history[0].transactionType == DEPOSIT_HISTORY_SMATE_IDENTIFIER);
@@ -515,9 +553,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         assertEq(history[0].totalStaked, 10);
     }
 
-    function test__unit_correct__publicServiceStaking__unstake_nS_PF()
-        external
-    {
+    function test__unit_correct__publicStaking__unstake_nS_PF() external {
         (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
             COMMON_USER_NO_STAKER_1.Address,
             10,
@@ -525,10 +561,9 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
 
-        (signatureEVVM, signatureSMate) = makeSignature(
-            address(mock),
+        (signatureEVVM, signatureStaking) = makeSignature(
             true,
             10,
             0.001 ether,
@@ -538,13 +573,12 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
-        sMate.publicServiceStaking(
+        staking.publicStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
-            address(mock),
             1001,
             10,
-            signatureSMate,
+            signatureStaking,
             0.001 ether,
             1001,
             true,
@@ -552,9 +586,30 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        mock.unstake(5, 1002, address(mock));
+        (signatureEVVM, signatureStaking) = makeSignature(
+            false,
+            5,
+            0.001 ether,
+            1002,
+            true,
+            1002
+        );
 
-        assert(evvm.isMateStaker(address(mock)));
+        vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
+        staking.publicStaking(
+            false,
+            COMMON_USER_NO_STAKER_1.Address,
+            1002,
+            5,
+            signatureStaking,
+            0.001 ether,
+            1002,
+            true,
+            signatureEVVM
+        );
+        vm.stopPrank();
+
+        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -563,12 +618,12 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
             0
         );
 
-        SMate.HistoryMetadata[]
-            memory history = new SMate.HistoryMetadata[](
-                sMate.getSizeOfAddressHistory(address(mock))
+        Staking.HistoryMetadata[]
+            memory history = new Staking.HistoryMetadata[](
+                staking.getSizeOfAddressHistory(COMMON_USER_NO_STAKER_1.Address)
             );
 
-        history = sMate.getAddressHistory(address(mock));
+        history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
         assertEq(history[0].timestamp, block.timestamp);
         assert(history[0].transactionType == DEPOSIT_HISTORY_SMATE_IDENTIFIER);
@@ -581,9 +636,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         assertEq(history[1].totalStaked, 5);
     }
 
-    function test__unit_correct__publicServiceStaking__fullUnstake_nS_PF()
-        external
-    {
+    function test__unit_correct__publicStaking__fullUnstake_nS_PF() external {
         (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
             COMMON_USER_NO_STAKER_1.Address,
             10,
@@ -591,10 +644,9 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
 
-        (signatureEVVM, signatureSMate) = makeSignature(
-            address(mock),
+        (signatureEVVM, signatureStaking) = makeSignature(
             true,
             10,
             0.001 ether,
@@ -604,13 +656,12 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
-        sMate.publicServiceStaking(
+        staking.publicStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
-            address(mock),
             1001,
             10,
-            signatureSMate,
+            signatureStaking,
             0.001 ether,
             1001,
             true,
@@ -618,11 +669,32 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        skip(sMate.getSecondsToUnlockFullUnstaking());
+        skip(staking.getSecondsToUnlockFullUnstaking());
 
-        mock.unstake(10, 1002, address(mock));
+        (signatureEVVM, signatureStaking) = makeSignature(
+            false,
+            10,
+            0.001 ether,
+            1002,
+            true,
+            1002
+        );
 
-        assert(!evvm.isMateStaker(address(mock)));
+        vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
+        staking.publicStaking(
+            false,
+            COMMON_USER_NO_STAKER_1.Address,
+            1002,
+            10,
+            signatureStaking,
+            0.001 ether,
+            1002,
+            true,
+            signatureEVVM
+        );
+        vm.stopPrank();
+
+        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -631,16 +703,16 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
             0
         );
 
-        SMate.HistoryMetadata[]
-            memory history = new SMate.HistoryMetadata[](
-                sMate.getSizeOfAddressHistory(address(mock))
+        Staking.HistoryMetadata[]
+            memory history = new Staking.HistoryMetadata[](
+                staking.getSizeOfAddressHistory(COMMON_USER_NO_STAKER_1.Address)
             );
 
-        history = sMate.getAddressHistory(address(mock));
+        history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
         assertEq(
             history[0].timestamp,
-            block.timestamp - sMate.getSecondsToUnlockFullUnstaking()
+            block.timestamp - staking.getSecondsToUnlockFullUnstaking()
         );
         assert(history[0].transactionType == DEPOSIT_HISTORY_SMATE_IDENTIFIER);
         assertEq(history[0].amount, 10);
@@ -652,9 +724,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         assertEq(history[1].totalStaked, 0);
     }
 
-    function test__unit_correct__publicServiceStaking__stakeAfterFullUnstake_nS_PF()
-        external
-    {
+    function test__unit_correct__publicStaking__stakeAfterFullUnstake_nS_PF() external {
         (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
             COMMON_USER_NO_STAKER_1.Address,
             10,
@@ -662,10 +732,9 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
 
-        (signatureEVVM, signatureSMate) = makeSignature(
-            address(mock),
+        (signatureEVVM, signatureStaking) = makeSignature(
             true,
             10,
             0.001 ether,
@@ -675,13 +744,12 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
-        sMate.publicServiceStaking(
+        staking.publicStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
-            address(mock),
             1001,
             10,
-            signatureSMate,
+            signatureStaking,
             0.001 ether,
             1001,
             true,
@@ -689,16 +757,34 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        skip(sMate.getSecondsToUnlockFullUnstaking());
+        skip(staking.getSecondsToUnlockFullUnstaking());
 
-        mock.unstake(10, 1002, address(mock));
+        (signatureEVVM, signatureStaking) = makeSignature(
+            false,
+            10,
+            0.001 ether,
+            1002,
+            true,
+            1002
+        );
 
-        mock.getBackMate(COMMON_USER_NO_STAKER_1.Address);
+        vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
+        staking.publicStaking(
+            false,
+            COMMON_USER_NO_STAKER_1.Address,
+            1002,
+            10,
+            signatureStaking,
+            0.001 ether,
+            1002,
+            true,
+            signatureEVVM
+        );
+        vm.stopPrank();
 
-        skip(sMate.getSecondsToUnlockStaking());
+        skip(staking.getSecondsToUnlockStaking());
 
-        (signatureEVVM, signatureSMate) = makeSignature(
-            address(mock),
+        (signatureEVVM, signatureStaking) = makeSignature(
             true,
             10,
             0.001 ether,
@@ -708,13 +794,12 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
-        sMate.publicServiceStaking(
+        staking.publicStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
-            address(mock),
             1003,
             10,
-            signatureSMate,
+            signatureStaking,
             0.001 ether,
             1003,
             true,
@@ -722,7 +807,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        assert(evvm.isMateStaker(address(mock)));
+        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -731,18 +816,18 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
             0
         );
 
-        SMate.HistoryMetadata[]
-            memory history = new SMate.HistoryMetadata[](
-                sMate.getSizeOfAddressHistory(address(mock))
+        Staking.HistoryMetadata[]
+            memory history = new Staking.HistoryMetadata[](
+                staking.getSizeOfAddressHistory(COMMON_USER_NO_STAKER_1.Address)
             );
 
-        history = sMate.getAddressHistory(address(mock));
+        history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
         assertEq(
             history[0].timestamp,
             block.timestamp -
-                (sMate.getSecondsToUnlockFullUnstaking() +
-                    sMate.getSecondsToUnlockStaking())
+                (staking.getSecondsToUnlockFullUnstaking() +
+                    staking.getSecondsToUnlockStaking())
         );
         assert(history[0].transactionType == DEPOSIT_HISTORY_SMATE_IDENTIFIER);
         assertEq(history[0].amount, 10);
@@ -750,7 +835,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
 
         assertEq(
             history[1].timestamp,
-            block.timestamp - sMate.getSecondsToUnlockStaking()
+            block.timestamp - staking.getSecondsToUnlockStaking()
         );
         assert(history[1].transactionType == WITHDRAW_HISTORY_SMATE_IDENTIFIER);
         assertEq(history[1].amount, 10);
@@ -762,7 +847,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         assertEq(history[2].totalStaked, 10);
     }
 
-    function test__unit_correct__publicServiceStaking__stake_S_nPF() external {
+    function test__unit_correct__publicStaking__stake_S_nPF() external {
         (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
             COMMON_USER_NO_STAKER_1.Address,
             10,
@@ -770,10 +855,9 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
 
-        (signatureEVVM, signatureSMate) = makeSignature(
-            address(mock),
+        (signatureEVVM, signatureStaking) = makeSignature(
             true,
             10,
             totalOfPriorityFee,
@@ -783,13 +867,12 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         vm.startPrank(COMMON_USER_STAKER.Address);
-        sMate.publicServiceStaking(
+        staking.publicStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
-            address(mock),
             1001,
             10,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             1001,
             true,
@@ -797,25 +880,17 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        assert(evvm.isMateStaker(address(mock)));
-        assertEq(
-            evvm.getBalance(
-                COMMON_USER_NO_STAKER_2.Address,
-                MATE_TOKEN_ADDRESS
-            ),
-            0
-        );
-
-        SMate.HistoryMetadata[]
-            memory history = new SMate.HistoryMetadata[](
-                sMate.getSizeOfAddressHistory(address(mock))
+        Staking.HistoryMetadata[]
+            memory history = new Staking.HistoryMetadata[](
+                staking.getSizeOfAddressHistory(COMMON_USER_NO_STAKER_1.Address)
             );
 
-        history = sMate.getAddressHistory(address(mock));
+        history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
+        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            getAmountOfRewardsPerExecution(1) + totalOfPriorityFee
+            getAmountOfRewardsPerExecution(history.length) + totalOfPriorityFee
         );
 
         assertEq(history[0].timestamp, block.timestamp);
@@ -824,9 +899,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         assertEq(history[0].totalStaked, 10);
     }
 
-    function test__unit_correct__publicServiceStaking__unstake_S_nPF()
-        external
-    {
+    function test__unit_correct__publicStaking__unstake_S_nPF() external {
         (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
             COMMON_USER_NO_STAKER_1.Address,
             10,
@@ -834,10 +907,9 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
 
-        (signatureEVVM, signatureSMate) = makeSignature(
-            address(mock),
+        (signatureEVVM, signatureStaking) = makeSignature(
             true,
             10,
             totalOfPriorityFee,
@@ -847,13 +919,12 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         vm.startPrank(COMMON_USER_STAKER.Address);
-        sMate.publicServiceStaking(
+        staking.publicStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
-            address(mock),
             1001,
             10,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             1001,
             true,
@@ -861,27 +932,40 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        mock.unstake(5, 1002, address(mock));
-
-        assert(evvm.isMateStaker(address(mock)));
-        assertEq(
-            evvm.getBalance(
-                COMMON_USER_NO_STAKER_2.Address,
-                MATE_TOKEN_ADDRESS
-            ),
-            0
+        (signatureEVVM, signatureStaking) = makeSignature(
+            false,
+            5,
+            totalOfPriorityFee,
+            1002,
+            true,
+            1002
         );
 
-        SMate.HistoryMetadata[]
-            memory history = new SMate.HistoryMetadata[](
-                sMate.getSizeOfAddressHistory(address(mock))
+        vm.startPrank(COMMON_USER_STAKER.Address);
+        staking.publicStaking(
+            false,
+            COMMON_USER_NO_STAKER_1.Address,
+            1002,
+            5,
+            signatureStaking,
+            totalOfPriorityFee,
+            1002,
+            true,
+            signatureEVVM
+        );
+        vm.stopPrank();
+
+        Staking.HistoryMetadata[]
+            memory history = new Staking.HistoryMetadata[](
+                staking.getSizeOfAddressHistory(COMMON_USER_NO_STAKER_1.Address)
             );
 
-        history = sMate.getAddressHistory(address(mock));
+        history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
+        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            getAmountOfRewardsPerExecution(1) + totalOfPriorityFee
+            getAmountOfRewardsPerExecution(history.length) + totalOfPriorityFee
         );
 
         assertEq(history[0].timestamp, block.timestamp);
@@ -895,9 +979,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         assertEq(history[1].totalStaked, 5);
     }
 
-    function test__unit_correct__publicServiceStaking__fullUnstake_S_nPF()
-        external
-    {
+    function test__unit_correct__publicStaking__fullUnstake_S_nPF() external {
         (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
             COMMON_USER_NO_STAKER_1.Address,
             10,
@@ -905,10 +987,9 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
 
-        (signatureEVVM, signatureSMate) = makeSignature(
-            address(mock),
+        (signatureEVVM, signatureStaking) = makeSignature(
             true,
             10,
             totalOfPriorityFee,
@@ -918,13 +999,12 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         vm.startPrank(COMMON_USER_STAKER.Address);
-        sMate.publicServiceStaking(
+        staking.publicStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
-            address(mock),
             1001,
             10,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             1001,
             true,
@@ -932,35 +1012,47 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        skip(sMate.getSecondsToUnlockFullUnstaking());
+        skip(staking.getSecondsToUnlockFullUnstaking());
 
-        mock.unstake(10, 1002, address(mock));
-
-        assert(!evvm.isMateStaker(address(mock)));
-        assertEq(
-            evvm.getBalance(
-                COMMON_USER_NO_STAKER_2.Address,
-                MATE_TOKEN_ADDRESS
-            ),
-            0
+        (signatureEVVM, signatureStaking) = makeSignature(
+            false,
+            10,
+            totalOfPriorityFee,
+            1002,
+            true,
+            1002
         );
 
-        SMate.HistoryMetadata[]
-            memory history = new SMate.HistoryMetadata[](
-                sMate.getSizeOfAddressHistory(address(mock))
+        vm.startPrank(COMMON_USER_STAKER.Address);
+        staking.publicStaking(
+            false,
+            COMMON_USER_NO_STAKER_1.Address,
+            1002,
+            10,
+            signatureStaking,
+            totalOfPriorityFee,
+            1002,
+            true,
+            signatureEVVM
+        );
+        vm.stopPrank();
+
+        Staking.HistoryMetadata[]
+            memory history = new Staking.HistoryMetadata[](
+                staking.getSizeOfAddressHistory(COMMON_USER_NO_STAKER_1.Address)
             );
 
-        history = sMate.getAddressHistory(address(mock));
+        history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
+        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            getAmountOfRewardsPerExecution(1) + totalOfPriorityFee
+            getAmountOfRewardsPerExecution(history.length) + totalOfPriorityFee
         );
-
 
         assertEq(
             history[0].timestamp,
-            block.timestamp - sMate.getSecondsToUnlockFullUnstaking()
+            block.timestamp - staking.getSecondsToUnlockFullUnstaking()
         );
         assert(history[0].transactionType == DEPOSIT_HISTORY_SMATE_IDENTIFIER);
         assertEq(history[0].amount, 10);
@@ -972,9 +1064,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         assertEq(history[1].totalStaked, 0);
     }
 
-    function test__unit_correct__publicServiceStaking__stakeAfterFullUnstake_S_nPF()
-        external
-    {
+    function test__unit_correct__publicStaking__stakeAfterFullUnstake_S_nPF() external {
         (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
             COMMON_USER_NO_STAKER_1.Address,
             10,
@@ -982,10 +1072,9 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
 
-        (signatureEVVM, signatureSMate) = makeSignature(
-            address(mock),
+        (signatureEVVM, signatureStaking) = makeSignature(
             true,
             10,
             totalOfPriorityFee,
@@ -995,13 +1084,12 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         vm.startPrank(COMMON_USER_STAKER.Address);
-        sMate.publicServiceStaking(
+        staking.publicStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
-            address(mock),
             1001,
             10,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             1001,
             true,
@@ -1009,16 +1097,34 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        skip(sMate.getSecondsToUnlockFullUnstaking());
+        skip(staking.getSecondsToUnlockFullUnstaking());
 
-        mock.unstake(10, 1002, address(mock));
+        (signatureEVVM, signatureStaking) = makeSignature(
+            false,
+            10,
+            totalOfPriorityFee,
+            1002,
+            true,
+            1002
+        );
 
-        mock.getBackMate(COMMON_USER_NO_STAKER_1.Address);
+        vm.startPrank(COMMON_USER_STAKER.Address);
+        staking.publicStaking(
+            false,
+            COMMON_USER_NO_STAKER_1.Address,
+            1002,
+            10,
+            signatureStaking,
+            totalOfPriorityFee,
+            1002,
+            true,
+            signatureEVVM
+        );
+        vm.stopPrank();
 
-        skip(sMate.getSecondsToUnlockStaking());
+        skip(staking.getSecondsToUnlockStaking());
 
-        (signatureEVVM, signatureSMate) = makeSignature(
-            address(mock),
+        (signatureEVVM, signatureStaking) = makeSignature(
             true,
             10,
             totalOfPriorityFee,
@@ -1028,13 +1134,12 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         vm.startPrank(COMMON_USER_STAKER.Address);
-        sMate.publicServiceStaking(
+        staking.publicStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
-            address(mock),
             1003,
             10,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             1003,
             true,
@@ -1042,33 +1147,24 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        assert(evvm.isMateStaker(address(mock)));
-        assertEq(
-            evvm.getBalance(
-                COMMON_USER_NO_STAKER_2.Address,
-                MATE_TOKEN_ADDRESS
-            ),
-            0
-        );
-
-        SMate.HistoryMetadata[]
-            memory history = new SMate.HistoryMetadata[](
-                sMate.getSizeOfAddressHistory(address(mock))
+        Staking.HistoryMetadata[]
+            memory history = new Staking.HistoryMetadata[](
+                staking.getSizeOfAddressHistory(COMMON_USER_NO_STAKER_1.Address)
             );
 
-        history = sMate.getAddressHistory(address(mock));
+        history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
+        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            getAmountOfRewardsPerExecution(2) + totalOfPriorityFee
+            getAmountOfRewardsPerExecution(history.length) + totalOfPriorityFee
         );
-
 
         assertEq(
             history[0].timestamp,
             block.timestamp -
-                (sMate.getSecondsToUnlockFullUnstaking() +
-                    sMate.getSecondsToUnlockStaking())
+                (staking.getSecondsToUnlockFullUnstaking() +
+                    staking.getSecondsToUnlockStaking())
         );
         assert(history[0].transactionType == DEPOSIT_HISTORY_SMATE_IDENTIFIER);
         assertEq(history[0].amount, 10);
@@ -1076,7 +1172,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
 
         assertEq(
             history[1].timestamp,
-            block.timestamp - sMate.getSecondsToUnlockStaking()
+            block.timestamp - staking.getSecondsToUnlockStaking()
         );
         assert(history[1].transactionType == WITHDRAW_HISTORY_SMATE_IDENTIFIER);
         assertEq(history[1].amount, 10);
@@ -1088,7 +1184,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         assertEq(history[2].totalStaked, 10);
     }
 
-    function test__unit_correct__publicServiceStaking__stake_S_PF() external {
+    function test__unit_correct__publicStaking__stake_S_PF() external {
         (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
             COMMON_USER_NO_STAKER_1.Address,
             10,
@@ -1096,10 +1192,9 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
 
-        (signatureEVVM, signatureSMate) = makeSignature(
-            address(mock),
+        (signatureEVVM, signatureStaking) = makeSignature(
             true,
             10,
             totalOfPriorityFee,
@@ -1109,13 +1204,12 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         vm.startPrank(COMMON_USER_STAKER.Address);
-        sMate.publicServiceStaking(
+        staking.publicStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
-            address(mock),
             1001,
             10,
-            signatureSMate,
+            signatureStaking,
             totalOfPriorityFee,
             1001,
             true,
@@ -1123,27 +1217,18 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        assert(evvm.isMateStaker(address(mock)));
-        assertEq(
-            evvm.getBalance(
-                COMMON_USER_NO_STAKER_2.Address,
-                MATE_TOKEN_ADDRESS
-            ),
-            0
-        );
-
-        SMate.HistoryMetadata[]
-            memory history = new SMate.HistoryMetadata[](
-                sMate.getSizeOfAddressHistory(address(mock))
+        Staking.HistoryMetadata[]
+            memory history = new Staking.HistoryMetadata[](
+                staking.getSizeOfAddressHistory(COMMON_USER_NO_STAKER_1.Address)
             );
 
-        history = sMate.getAddressHistory(address(mock));
+        history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
+        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            getAmountOfRewardsPerExecution(1) + totalOfPriorityFee
+            getAmountOfRewardsPerExecution(history.length) + totalOfPriorityFee
         );
-
 
         assertEq(history[0].timestamp, block.timestamp);
         assert(history[0].transactionType == DEPOSIT_HISTORY_SMATE_IDENTIFIER);
@@ -1151,9 +1236,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         assertEq(history[0].totalStaked, 10);
     }
 
-    function test__unit_correct__publicServiceStaking__unstake_S_PF()
-        external
-    {
+    function test__unit_correct__publicStaking__unstake_S_PF() external {
         (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
             COMMON_USER_NO_STAKER_1.Address,
             10,
@@ -1161,56 +1244,66 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
 
-        (signatureEVVM, signatureSMate) = makeSignature(
-            address(mock),
+        (signatureEVVM, signatureStaking) = makeSignature(
             true,
             10,
-            0.002 ether,
+            0.001 ether,
             1001,
             true,
             1001
         );
 
         vm.startPrank(COMMON_USER_STAKER.Address);
-        sMate.publicServiceStaking(
+        staking.publicStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
-            address(mock),
             1001,
             10,
-            signatureSMate,
-            0.002 ether,
+            signatureStaking,
+            0.001 ether,
             1001,
             true,
             signatureEVVM
         );
         vm.stopPrank();
 
-        mock.unstake(5, 1002, address(mock));
-
-        assert(evvm.isMateStaker(address(mock)));
-        assertEq(
-            evvm.getBalance(
-                COMMON_USER_NO_STAKER_2.Address,
-                MATE_TOKEN_ADDRESS
-            ),
-            0
+        (signatureEVVM, signatureStaking) = makeSignature(
+            false,
+            5,
+            0.001 ether,
+            1002,
+            true,
+            1002
         );
 
-        SMate.HistoryMetadata[]
-            memory history = new SMate.HistoryMetadata[](
-                sMate.getSizeOfAddressHistory(address(mock))
+        vm.startPrank(COMMON_USER_STAKER.Address);
+        staking.publicStaking(
+            false,
+            COMMON_USER_NO_STAKER_1.Address,
+            1002,
+            5,
+            signatureStaking,
+            0.001 ether,
+            1002,
+            true,
+            signatureEVVM
+        );
+        vm.stopPrank();
+
+        Staking.HistoryMetadata[]
+            memory history = new Staking.HistoryMetadata[](
+                staking.getSizeOfAddressHistory(COMMON_USER_NO_STAKER_1.Address)
             );
 
-        history = sMate.getAddressHistory(address(mock));
+        history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
+        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            getAmountOfRewardsPerExecution(1) + (totalOfPriorityFee)
+            getAmountOfRewardsPerExecution(history.length) + totalOfPriorityFee
         );
-
 
         assertEq(history[0].timestamp, block.timestamp);
         assert(history[0].transactionType == DEPOSIT_HISTORY_SMATE_IDENTIFIER);
@@ -1223,9 +1316,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         assertEq(history[1].totalStaked, 5);
     }
 
-    function test__unit_correct__publicServiceStaking__fullUnstake_S_PF()
-        external
-    {
+    function test__unit_correct__publicStaking__fullUnstake_S_PF() external {
         (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
             COMMON_USER_NO_STAKER_1.Address,
             10,
@@ -1233,62 +1324,72 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
 
-        (signatureEVVM, signatureSMate) = makeSignature(
-            address(mock),
+        (signatureEVVM, signatureStaking) = makeSignature(
             true,
             10,
-            0.002 ether,
+            0.001 ether,
             1001,
             true,
             1001
         );
 
         vm.startPrank(COMMON_USER_STAKER.Address);
-        sMate.publicServiceStaking(
+        staking.publicStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
-            address(mock),
             1001,
             10,
-            signatureSMate,
-            0.002 ether,
+            signatureStaking,
+            0.001 ether,
             1001,
             true,
             signatureEVVM
         );
         vm.stopPrank();
 
-        skip(sMate.getSecondsToUnlockFullUnstaking());
+        skip(staking.getSecondsToUnlockFullUnstaking());
 
-        mock.unstake(10, 1002, address(mock));
-
-        assert(!evvm.isMateStaker(address(mock)));
-        assertEq(
-            evvm.getBalance(
-                COMMON_USER_NO_STAKER_2.Address,
-                MATE_TOKEN_ADDRESS
-            ),
-            0
+        (signatureEVVM, signatureStaking) = makeSignature(
+            false,
+            10,
+            0.001 ether,
+            1002,
+            true,
+            1002
         );
 
-        SMate.HistoryMetadata[]
-            memory history = new SMate.HistoryMetadata[](
-                sMate.getSizeOfAddressHistory(address(mock))
+        vm.startPrank(COMMON_USER_STAKER.Address);
+        staking.publicStaking(
+            false,
+            COMMON_USER_NO_STAKER_1.Address,
+            1002,
+            10,
+            signatureStaking,
+            0.001 ether,
+            1002,
+            true,
+            signatureEVVM
+        );
+        vm.stopPrank();
+
+        Staking.HistoryMetadata[]
+            memory history = new Staking.HistoryMetadata[](
+                staking.getSizeOfAddressHistory(COMMON_USER_NO_STAKER_1.Address)
             );
 
-        history = sMate.getAddressHistory(address(mock));
+        history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
+        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            getAmountOfRewardsPerExecution(1) + totalOfPriorityFee
+            getAmountOfRewardsPerExecution(history.length) + totalOfPriorityFee
         );
-
 
         assertEq(
             history[0].timestamp,
-            block.timestamp - sMate.getSecondsToUnlockFullUnstaking()
+            block.timestamp - staking.getSecondsToUnlockFullUnstaking()
         );
         assert(history[0].transactionType == DEPOSIT_HISTORY_SMATE_IDENTIFIER);
         assertEq(history[0].amount, 10);
@@ -1300,9 +1401,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         assertEq(history[1].totalStaked, 0);
     }
 
-    function test__unit_correct__publicServiceStaking__stakeAfterFullUnstake_S_PF()
-        external
-    {
+    function test__unit_correct__publicStaking__stakeAfterFullUnstake_S_PF() external {
         (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
             COMMON_USER_NO_STAKER_1.Address,
             10,
@@ -1310,43 +1409,59 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         bytes memory signatureEVVM;
-        bytes memory signatureSMate;
+        bytes memory signatureStaking;
 
-        (signatureEVVM, signatureSMate) = makeSignature(
-            address(mock),
+        (signatureEVVM, signatureStaking) = makeSignature(
             true,
             10,
-            0.002 ether,
+            0.001 ether,
             1001,
             true,
             1001
         );
 
         vm.startPrank(COMMON_USER_STAKER.Address);
-        sMate.publicServiceStaking(
+        staking.publicStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
-            address(mock),
             1001,
             10,
-            signatureSMate,
-            0.002 ether,
+            signatureStaking,
+            0.001 ether,
             1001,
             true,
             signatureEVVM
         );
         vm.stopPrank();
 
-        skip(sMate.getSecondsToUnlockFullUnstaking());
+        skip(staking.getSecondsToUnlockFullUnstaking());
 
-        mock.unstake(10, 1002, address(mock));
+        (signatureEVVM, signatureStaking) = makeSignature(
+            false,
+            10,
+            0.001 ether,
+            1002,
+            true,
+            1002
+        );
 
-        mock.getBackMate(COMMON_USER_NO_STAKER_1.Address);
+        vm.startPrank(COMMON_USER_STAKER.Address);
+        staking.publicStaking(
+            false,
+            COMMON_USER_NO_STAKER_1.Address,
+            1002,
+            10,
+            signatureStaking,
+            0.001 ether,
+            1002,
+            true,
+            signatureEVVM
+        );
+        vm.stopPrank();
 
-        skip(sMate.getSecondsToUnlockStaking());
+        skip(staking.getSecondsToUnlockStaking());
 
-        (signatureEVVM, signatureSMate) = makeSignature(
-            address(mock),
+        (signatureEVVM, signatureStaking) = makeSignature(
             true,
             10,
             0.001 ether,
@@ -1356,13 +1471,12 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
 
         vm.startPrank(COMMON_USER_STAKER.Address);
-        sMate.publicServiceStaking(
+        staking.publicStaking(
             true,
             COMMON_USER_NO_STAKER_1.Address,
-            address(mock),
             1003,
             10,
-            signatureSMate,
+            signatureStaking,
             0.001 ether,
             1003,
             true,
@@ -1370,33 +1484,24 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        assert(evvm.isMateStaker(address(mock)));
-        assertEq(
-            evvm.getBalance(
-                COMMON_USER_NO_STAKER_2.Address,
-                MATE_TOKEN_ADDRESS
-            ),
-            0
-        );
-
-        SMate.HistoryMetadata[]
-            memory history = new SMate.HistoryMetadata[](
-                sMate.getSizeOfAddressHistory(address(mock))
+        Staking.HistoryMetadata[]
+            memory history = new Staking.HistoryMetadata[](
+                staking.getSizeOfAddressHistory(COMMON_USER_NO_STAKER_1.Address)
             );
 
-        history = sMate.getAddressHistory(address(mock));
+        history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
+        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            getAmountOfRewardsPerExecution(2) + totalOfPriorityFee
+            getAmountOfRewardsPerExecution(history.length) + totalOfPriorityFee
         );
-
 
         assertEq(
             history[0].timestamp,
             block.timestamp -
-                (sMate.getSecondsToUnlockFullUnstaking() +
-                    sMate.getSecondsToUnlockStaking())
+                (staking.getSecondsToUnlockFullUnstaking() +
+                    staking.getSecondsToUnlockStaking())
         );
         assert(history[0].transactionType == DEPOSIT_HISTORY_SMATE_IDENTIFIER);
         assertEq(history[0].amount, 10);
@@ -1404,7 +1509,7 @@ contract unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay is
 
         assertEq(
             history[1].timestamp,
-            block.timestamp - sMate.getSecondsToUnlockStaking()
+            block.timestamp - staking.getSecondsToUnlockStaking()
         );
         assert(history[1].transactionType == WITHDRAW_HISTORY_SMATE_IDENTIFIER);
         assertEq(history[1].amount, 10);

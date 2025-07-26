@@ -26,7 +26,7 @@ import {SignatureRecover} from "@EVVM/libraries/SignatureRecover.sol";
 import {NameService} from "@EVVM/playground/nameService/NameService.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 
-contract SMate {
+contract Staking {
     error Time(uint256);
     error Logic(string code);
 
@@ -133,7 +133,7 @@ contract SMate {
     /**
      *  @dev goldenStaking allows the goldenFisher address to make a stakingProcess.
      *  @param _isStaking boolean to check if the user is staking or unstaking
-     *  @param _amountOfSMate amount of sMATE to stake/unstake
+     *  @param _amountOfStaking amount of sMATE to stake/unstake
      *  @param _signature_Evvm signature for the Evvm contract
      *
      * @notice only the goldenFisher address can call this function and only
@@ -141,7 +141,7 @@ contract SMate {
      */
     function goldenStaking(
         bool _isStaking,
-        uint256 _amountOfSMate,
+        uint256 _amountOfStaking,
         bytes memory _signature_Evvm
     ) external {
         if (msg.sender != goldenFisher.actual) {
@@ -151,7 +151,7 @@ contract SMate {
         stakingUserProcess(
             _isStaking,
             goldenFisher.actual,
-            _amountOfSMate,
+            _amountOfStaking,
             0,
             Evvm(EVVM_ADDRESS).getNextCurrentSyncNonce(msg.sender),
             false,
@@ -171,14 +171,14 @@ contract SMate {
      *  @dev presaleStaking allows the presale users to make a stakingProcess.
      *  @param _isStaking boolean to check if the user is staking or unstaking
      *  @param _user user address of the user that wants to stake/unstake
-     *  @param _nonce nonce for the SMate contract
-     *  @param _signature signature for the SMate contract
+     *  @param _nonce nonce for the Staking contract
+     *  @param _signature signature for the Staking contract
      *  @param _priorityFee_Evvm priority fee for the Evvm contract
      *  @param _nonce_Evvm nonce for the Evvm contract // staking or unstaking
      *  @param _priority_Evvm priority for the Evvm contract (true for async, false for sync)
      *  @param _signature_Evvm signature for the Evvm contract // staking or unstaking
      *
-     *  @notice the presale users can only take 2 SMate tokens, and only one at a time
+     *  @notice the presale users can only take 2 Staking tokens, and only one at a time
      */
     function presaleStaking(
         bool _isStaking,
@@ -270,9 +270,9 @@ contract SMate {
      *  @dev publicStaking allows the users to make a stakingProcess.
      *  @param _isStaking boolean to check if the user is staking or unstaking
      *  @param _user user address of the user that wants to stake/unstake
-     *  @param _nonce nonce for the SMate contract
-     *  @param _amountOfSMate amount of sMATE to stake/unstake
-     *  @param _signature signature for the SMate contract
+     *  @param _nonce nonce for the Staking contract
+     *  @param _amountOfStaking amount of sMATE to stake/unstake
+     *  @param _signature signature for the Staking contract
      *  @param _priorityFee_Evvm priority fee for the Evvm contract // staking or unstaking
      *  @param _nonce_Evvm nonce for the Evvm contract // staking or unstaking
      *  @param _priority_Evvm priority for the Evvm contract (true for async, false for sync) // staking or unstaking
@@ -283,7 +283,7 @@ contract SMate {
         bool _isStaking,
         address _user,
         uint256 _nonce,
-        uint256 _amountOfSMate,
+        uint256 _amountOfStaking,
         bytes memory _signature,
         uint256 _priorityFee_Evvm,
         uint256 _nonce_Evvm,
@@ -299,7 +299,7 @@ contract SMate {
                 true,
                 _user,
                 _isStaking,
-                _amountOfSMate,
+                _amountOfStaking,
                 _nonce,
                 _signature
             )
@@ -314,7 +314,7 @@ contract SMate {
         stakingUserProcess(
             _isStaking,
             _user,
-            _amountOfSMate,
+            _amountOfStaking,
             _priorityFee_Evvm,
             _nonce_Evvm,
             _priority_Evvm,
@@ -329,7 +329,7 @@ contract SMate {
         address _user,
         address _service,
         uint256 _nonce,
-        uint256 _amountOfSMate,
+        uint256 _amountOfStaking,
         bytes memory _signature,
         uint256 _priorityFee_Evvm,
         uint256 _nonce_Evvm,
@@ -357,7 +357,7 @@ contract SMate {
                     _user,
                     _service,
                     _isStaking,
-                    _amountOfSMate,
+                    _amountOfStaking,
                     _nonce,
                     _signature
                 )
@@ -378,7 +378,7 @@ contract SMate {
             _isStaking,
             _user,
             _service,
-            _amountOfSMate,
+            _amountOfStaking,
             _isStaking ? _priorityFee_Evvm : 0,
             _isStaking ? _nonce_Evvm : 0,
             _isStaking ? _priority_Evvm : false,
@@ -392,7 +392,7 @@ contract SMate {
         bool _isStaking,
         address _user,
         address _service,
-        uint256 _amountOfSMate,
+        uint256 _amountOfStaking,
         uint256 _priorityFee_Evvm,
         uint256 _nonce_Evvm,
         bool _priority_Evvm,
@@ -402,7 +402,7 @@ contract SMate {
             _isStaking,
             _user,
             _service,
-            _amountOfSMate,
+            _amountOfStaking,
             _priorityFee_Evvm,
             _nonce_Evvm,
             _priority_Evvm,
@@ -414,7 +414,7 @@ contract SMate {
      *  @dev stakingUserProcess allows the contract to make a stakingProcess.
      *  @param _isStaking boolean to check if the user is staking or unstaking
      *  @param _user user address of the user that wants to stake/unstake
-     *  @param _amountOfSMate amount of sMATE to stake/unstake
+     *  @param _amountOfStaking amount of sMATE to stake/unstake
      *  @param _priorityFee_Evvm priority fee for the Evvm contract
      *  @param _nonce_Evvm nonce for the Evvm contract
      *  @param _priority_Evvm priority for the Evvm contract (true for async, false for sync)
@@ -424,7 +424,7 @@ contract SMate {
     function stakingUserProcess(
         bool _isStaking,
         address _user,
-        uint256 _amountOfSMate,
+        uint256 _amountOfStaking,
         uint256 _priorityFee_Evvm,
         uint256 _nonce_Evvm,
         bool _priority_Evvm,
@@ -434,7 +434,7 @@ contract SMate {
             _isStaking,
             _user,
             _user,
-            _amountOfSMate,
+            _amountOfStaking,
             _priorityFee_Evvm,
             _nonce_Evvm,
             _priority_Evvm,
@@ -447,7 +447,7 @@ contract SMate {
      * @param _isStaking boolean indicating if staking or unstaking
      * @param _user address of the user paying for the transaction
      * @param _stakingAccount address that will receive the stake/unstake
-     * @param _amountOfSMate amount of sMATE tokens
+     * @param _amountOfStaking amount of sMATE tokens
      * @param _priorityFee_Evvm priority fee for EVVM
      * @param _nonce_Evvm nonce for EVVM
      * @param _priority_Evvm priority flag for EVVM
@@ -457,7 +457,7 @@ contract SMate {
         bool _isStaking,
         address _user,
         address _stakingAccount,
-        uint256 _amountOfSMate,
+        uint256 _amountOfStaking,
         uint256 _priorityFee_Evvm,
         uint256 _nonce_Evvm,
         bool _priority_Evvm,
@@ -475,7 +475,7 @@ contract SMate {
 
             makePay(
                 _user,
-                (PRICE_OF_SMATE * _amountOfSMate),
+                (PRICE_OF_SMATE * _amountOfStaking),
                 _priorityFee_Evvm,
                 _priority_Evvm,
                 _nonce_Evvm,
@@ -485,12 +485,12 @@ contract SMate {
             Evvm(EVVM_ADDRESS).pointStaker(_stakingAccount, 0x01);
 
             auxSMsteBalance = userHistory[_stakingAccount].length == 0
-                ? _amountOfSMate
+                ? _amountOfStaking
                 : userHistory[_stakingAccount][
                     userHistory[_stakingAccount].length - 1
-                ].totalStaked + _amountOfSMate;
+                ].totalStaked + _amountOfStaking;
         } else {
-            if (_amountOfSMate == getUserAmountStaked(_stakingAccount)) {
+            if (_amountOfStaking == getUserAmountStaked(_stakingAccount)) {
                 if (
                     getTimeToUserUnlockFullUnstakingTime(_stakingAccount) >
                     block.timestamp
@@ -517,12 +517,12 @@ contract SMate {
                 userHistory[_stakingAccount][
                     userHistory[_stakingAccount].length - 1
                 ].totalStaked -
-                _amountOfSMate;
+                _amountOfStaking;
 
             makeCaPay(
                 MATE_TOKEN_ADDRESS,
                 _stakingAccount,
-                (PRICE_OF_SMATE * _amountOfSMate)
+                (PRICE_OF_SMATE * _amountOfStaking)
             );
         }
 
@@ -531,13 +531,13 @@ contract SMate {
                 transactionType: _isStaking
                     ? bytes32(uint256(1))
                     : bytes32(uint256(2)),
-                amount: _amountOfSMate,
+                amount: _amountOfStaking,
                 timestamp: block.timestamp,
                 totalStaked: auxSMsteBalance
             })
         );
 
-        if (Evvm(EVVM_ADDRESS).isMateStaker(msg.sender)) {
+        if (Evvm(EVVM_ADDRESS).istakingStaker(msg.sender)) {
             makeCaPay(
                 MATE_TOKEN_ADDRESS,
                 msg.sender,
@@ -577,7 +577,7 @@ contract SMate {
                 userHistory[user][idToOverwriteUserHistory]
                     .timestamp = timestampToBeOverwritten;
 
-                if (Evvm(EVVM_ADDRESS).isMateStaker(msg.sender)) {
+                if (Evvm(EVVM_ADDRESS).istakingStaker(msg.sender)) {
                     makeCaPay(
                         MATE_TOKEN_ADDRESS,
                         msg.sender,
@@ -805,7 +805,7 @@ contract SMate {
         bool isExternalStaking,
         address signer,
         bool _isStaking,
-        uint256 _amountOfSMate,
+        uint256 _amountOfStaking,
         uint256 _nonce,
         bytes memory signature
     ) internal pure returns (bool) {
@@ -821,7 +821,7 @@ contract SMate {
                     ",",
                     _isStaking ? "true" : "false",
                     ",",
-                    Strings.toString(_amountOfSMate),
+                    Strings.toString(_amountOfStaking),
                     ",",
                     Strings.toString(_nonce)
                 ),
@@ -834,7 +834,7 @@ contract SMate {
         address signer,
         address _serviceAddress,
         bool _isStaking,
-        uint256 _amountOfSMate,
+        uint256 _amountOfStaking,
         uint256 _nonce,
         bytes memory signature
     ) internal pure returns (bool) {
@@ -847,7 +847,7 @@ contract SMate {
                     ",",
                     _isStaking ? "true" : "false",
                     ",",
-                    Strings.toString(_amountOfSMate),
+                    Strings.toString(_amountOfStaking),
                     ",",
                     Strings.toString(_nonce)
                 ),
@@ -879,7 +879,7 @@ contract SMate {
         return userHistory[_account][_index];
     }
 
-    function priceOfSMate() external pure returns (uint256) {
+    function priceOfStaking() external pure returns (uint256) {
         return PRICE_OF_SMATE;
     }
 
