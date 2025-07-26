@@ -18,7 +18,7 @@ import {Mns} from "@EVVM/playground/mns/Mns.sol";
 import {SignatureRecover} from "@EVVM/libraries/SignatureRecover.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
-import {ErrorsLib} from "@EVVM/playground/evvm/lib/ErrorsLib.sol";
+import {ErrorsLib} from "./lib/ErrorsLib.sol";
 
 contract EVVM is EvvmStorage {
     modifier onlyAdmin() {

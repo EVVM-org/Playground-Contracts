@@ -17,24 +17,11 @@ import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {SignatureRecover} from "@EVVM/libraries/SignatureRecover.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
+import {ErrorsLib} from "./lib/ErrorsLib.sol";
 
 contract Mns {
     using SignatureRecover for *;
     using AdvancedStrings for *;
-
-    error InvalidSignature();
-    error InvalidUsername();
-    error InvalidOwner();
-    error InvalidEmailOrPhoneNumber();
-    error HasNoCustomMetadata();
-    error InvalidSignatureOnMNS();
-    error UsernameAlreadyRegistered();
-    error NonceAlreadyUsed();
-    error checkIfUsernameOwner();
-    error checkIfUsernameHasWindowTime();
-    error OfferAlreadyWithdrawn();
-    error OfferExpired();
-    error Logic(uint256);
 
     struct AddressTypeProposal {
         address current;
@@ -100,23 +87,22 @@ contract Mns {
     uint256 private mateTokenLockedForWithdrawOffers;
 
     modifier onlyAdmin() {
-        if (msg.sender != admin.current) {
-            revert InvalidOwner();
-        }
+        if (msg.sender != admin.current) revert ErrorsLib.SenderIsNotAdmin();
+
         _;
     }
 
     modifier onlyOwnerOfIdentity(address _user, string memory _identity) {
-        if (identityDetails[_identity].owner != _user) {
-            revert checkIfUsernameOwner();
-        }
+        if (identityDetails[_identity].owner != _user)
+            revert ErrorsLib.UserIsNotOwnerOfIdentity();
+
         _;
     }
 
     modifier verifyIfNonceIsAvailable(address _user, uint256 _nonce) {
-        if (mateNameServiceNonce[_user][_nonce]) {
-            revert NonceAlreadyUsed();
-        }
+        if (mateNameServiceNonce[_user][_nonce])
+            revert ErrorsLib.NonceAlreadyUsed();
+
         _;
     }
 
@@ -181,9 +167,7 @@ contract Mns {
                 _nonce,
                 _signature
             )
-        ) {
-            revert InvalidSignatureOnMNS();
-        }
+        ) revert ErrorsLib.InvalidSignatureOnMNS();
 
         if (_priorityFeeForFisher > 0) {
             makePay(
@@ -247,14 +231,10 @@ contract Mns {
         bool _priority_Evvm,
         bytes memory _signature_Evvm
     ) public verifyIfNonceIsAvailable(_user, _nonce) {
-        if (admin.current != _user) {
-            if (!isValidUsername(_username)) {
-                revert InvalidUsername();
-            }
-        }
+        if (admin.current != _user) isValidUsername(_username);
 
         if (!isUsernameAvailable(_username)) {
-            revert UsernameAlreadyRegistered();
+            revert ErrorsLib.UsernameAlreadyRegistered();
         }
 
         if (
@@ -265,9 +245,7 @@ contract Mns {
                 _nonce,
                 _signature
             )
-        ) {
-            revert InvalidSignatureOnMNS();
-        }
+        ) revert ErrorsLib.InvalidSignatureOnMNS();
 
         makePay(
             _user,
@@ -288,9 +266,7 @@ contract Mns {
         if (
             identityDetails[_key].owner != _user ||
             identityDetails[_key].expireDate > block.timestamp
-        ) {
-            revert();
-        }
+        ) revert ErrorsLib.PreRegistrationNotValid();
 
         identityDetails[_username] = IdentityBaseMetadata({
             owner: _user,
@@ -529,9 +505,8 @@ contract Mns {
             !verifyIfIdentityExists(_username) ||
             _amount == 0 ||
             _expireDate <= block.timestamp
-        ) {
-            revert();
-        }
+        ) revert ErrorsLib.PreRegistrationNotValid();
+
         if (
             !verifyMessageSignedForMakeOffer(
                 _user,
@@ -541,9 +516,7 @@ contract Mns {
                 _nonce,
                 _signature
             )
-        ) {
-            revert InvalidSignature();
-        }
+        ) revert ErrorsLib.InvalidSignatureOnMNS();
 
         makePay(
             _user,
@@ -594,8 +567,10 @@ contract Mns {
         bool _priority_Evvm,
         bytes memory _signature_Evvm
     ) public verifyIfNonceIsAvailable(_user, _nonce) {
+        if (usernameOffers[_username][_offerID].offerer != _user)
+            revert ErrorsLib.UserIsNotOwnerOfOffer();
+
         if (
-            usernameOffers[_username][_offerID].offerer != _user ||
             !verifyMessageSignedForWithdrawOffer(
                 _user,
                 _username,
@@ -603,9 +578,7 @@ contract Mns {
                 _nonce,
                 _signature
             )
-        ) {
-            revert();
-        }
+        ) revert ErrorsLib.InvalidSignatureOnMNS();
 
         if (_priorityFeeForFisher > 0) {
             makePay(
@@ -675,9 +648,8 @@ contract Mns {
         if (
             usernameOffers[_username][_offerID].offerer == address(0) ||
             usernameOffers[_username][_offerID].expireDate < block.timestamp
-        ) {
-            revert();
-        }
+        ) revert ErrorsLib.AcceptOfferVerificationFailed();
+
         if (
             !verifyMessageSignedForAcceptOffer(
                 _user,
@@ -686,9 +658,7 @@ contract Mns {
                 _nonce,
                 _signature
             )
-        ) {
-            revert InvalidSignature();
-        }
+        ) revert ErrorsLib.InvalidSignatureOnMNS();
 
         if (_priorityFeeForFisher > 0) {
             makePay(
@@ -765,20 +735,17 @@ contract Mns {
     {
         if (
             identityDetails[_username].flagNotAUsername == 0x01 ||
+            identityDetails[_username].expireDate > block.timestamp + 36500 days
+        ) revert ErrorsLib.RenewUsernameVerificationFailed();
+
+        if (
             !verifyMessageSignedForRenewUsername(
                 _user,
                 _username,
                 _nonce,
                 _signature
             )
-        ) {
-            revert();
-        }
-        if (
-            identityDetails[_username].expireDate > block.timestamp + 36500 days
-        ) {
-            revert();
-        }
+        ) revert ErrorsLib.InvalidSignatureOnMNS();
 
         uint256 priceOfRenew = seePriceToRenew(_username);
 
@@ -853,6 +820,8 @@ contract Mns {
         onlyOwnerOfIdentity(_user, _identity)
         verifyIfNonceIsAvailable(_user, _nonce)
     {
+        if (bytes(_value).length == 0) revert ErrorsLib.EmptyCustomMetadata();
+
         if (
             !verifyMessageSignedForAddCustomMetadata(
                 _user,
@@ -861,13 +830,7 @@ contract Mns {
                 _nonce,
                 _signature
             )
-        ) {
-            revert();
-        }
-
-        if (bytes(_value).length == 0) {
-            revert();
-        }
+        ) revert ErrorsLib.InvalidSignatureOnMNS();
 
         makePay(
             _user,
@@ -890,7 +853,6 @@ contract Mns {
         identityCustomMetadata[_identity][
             identityDetails[_identity].customMetadataMaxSlots
         ] = _value;
-
 
         identityDetails[_identity].customMetadataMaxSlots++;
         mateNameServiceNonce[_user][_nonce] = true;
@@ -919,14 +881,11 @@ contract Mns {
                 _nonce,
                 _signature
             )
-        ) {
-            revert InvalidSignature();
-        }
+        ) revert ErrorsLib.InvalidSignatureOnMNS();
 
         //check if the key is greater than the number of custom metadata
-        if (identityDetails[_identity].customMetadataMaxSlots <= _key) {
-            revert();
-        }
+        if (identityDetails[_identity].customMetadataMaxSlots <= _key)
+            revert ErrorsLib.InvalidKey();
 
         makePay(
             _user,
@@ -986,13 +945,10 @@ contract Mns {
                 _nonce,
                 _signature
             )
-        ) {
-            revert InvalidSignatureOnMNS();
-        }
+        ) revert ErrorsLib.InvalidSignatureOnMNS();
 
-        if (identityDetails[_identity].customMetadataMaxSlots == 0) {
-            revert HasNoCustomMetadata();
-        }
+        if (identityDetails[_identity].customMetadataMaxSlots == 0)
+            revert ErrorsLib.EmptyCustomMetadata();
 
         makePay(
             _user,
@@ -1040,16 +996,17 @@ contract Mns {
     {
         if (
             block.timestamp >= identityDetails[_identity].expireDate ||
-            identityDetails[_identity].flagNotAUsername == 0x01 ||
+            identityDetails[_identity].flagNotAUsername == 0x01
+        ) revert ErrorsLib.FlushUsernameVerificationFailed();
+        
+        if (
             !verifyMessageSignedForFlushUsername(
                 _user,
                 _identity,
                 _nonce,
                 _signature
             )
-        ) {
-            revert Logic(1);
-        }
+        ) revert ErrorsLib.InvalidSignatureOnMNS();
 
         makePay(
             _user,
@@ -1312,30 +1269,23 @@ contract Mns {
     }
 
     //█Tools for identity validation███████████████████████████████████████████████████████████████
-    function isValidUsername(
-        string memory username
-    ) internal pure returns (bool) {
+    function isValidUsername(string memory username) internal pure {
         bytes memory usernameBytes = bytes(username);
 
         // Check if username length is at least 4 characters
-        if (usernameBytes.length < 4) {
-            revert();
-        }
+        if (usernameBytes.length < 4) revert ErrorsLib.InvalidUsername(0x01);
 
         // Check if username begins with a letter
-        if (!_isLetter(usernameBytes[0])) {
-            revert();
-        }
+        if (!_isLetter(usernameBytes[0]))
+            revert ErrorsLib.InvalidUsername(0x02);
 
         // Iterate through each character in the username
         for (uint256 i = 0; i < usernameBytes.length; i++) {
             // Check if character is not a digit or letter
             if (!_isDigit(usernameBytes[i]) && !_isLetter(usernameBytes[i])) {
-                revert();
+                revert ErrorsLib.InvalidUsername(0x03);
             }
         }
-
-        return true;
     }
 
     function isValidPhoneNumberNumber(
@@ -1792,7 +1742,8 @@ contract Mns {
             if (price == 0) {
                 price = 500 * 10 ** 18;
             } else {
-                uint256 mateReward = Evvm(evvmAddress.current).getRewardAmount();
+                uint256 mateReward = Evvm(evvmAddress.current)
+                    .getRewardAmount();
                 ///coloca el precio del username en un 0.5% del precio de la oferta más alta, con tope en 500,000 * mateReward
                 price = ((price * 5) / 1000) > (500000 * mateReward)
                     ? (500000 * mateReward)
