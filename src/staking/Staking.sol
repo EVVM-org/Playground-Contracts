@@ -25,11 +25,9 @@ import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {SignatureRecover} from "@EVVM/libraries/SignatureRecover.sol";
 import {NameService} from "@EVVM/playground/nameService/NameService.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
+import {ErrorsLib} from "./lib/ErrorsLib.sol";
 
 contract Staking {
-    error Time(uint256);
-    error Logic(string code);
-
     using SignatureRecover for *;
 
     struct presaleStakerMetadata {
@@ -85,7 +83,7 @@ contract Staking {
     BoolTypeProposal private allowPresaleStaking;
     BoolTypeProposal private allowPublicStaking;
 
-    address private constant MATE_TOKEN_ADDRESS =
+    address private constant PRINCIPAL_TOKEN_ADDRESS =
         0x0000000000000000000000000000000000000001;
 
     bytes1 private breakerSetupEstimatorAndEvvm;
@@ -97,9 +95,8 @@ contract Staking {
     mapping(address => HistoryMetadata[]) private userHistory;
 
     modifier onlyOwner() {
-        if (msg.sender != admin.actual) {
-            revert();
-        }
+        if (msg.sender != admin.actual) revert ErrorsLib.SenderIsNotAdmin();
+
         _;
     }
 
@@ -122,9 +119,8 @@ contract Staking {
         address _estimator,
         address _evvm
     ) external {
-        if (breakerSetupEstimatorAndEvvm == 0x00) {
-            revert();
-        }
+        if (breakerSetupEstimatorAndEvvm == 0x00) revert();
+
         estimator.actual = _estimator;
         EVVM_ADDRESS = _evvm;
         breakerSetupEstimatorAndEvvm = 0x00;
@@ -144,9 +140,8 @@ contract Staking {
         uint256 _amountOfStaking,
         bytes memory _signature_Evvm
     ) external {
-        if (msg.sender != goldenFisher.actual) {
-            revert();
-        }
+        if (msg.sender != goldenFisher.actual)
+            revert ErrorsLib.SenderIsNotGoldenFisher();
 
         stakingUserProcess(
             _isStaking,
@@ -199,18 +194,16 @@ contract Staking {
                 _nonce,
                 _signature
             )
-        ) {
-            revert Logic("sig");
-        }
-        if (checkIfStakeNonceUsed(_user, _nonce)) {
-            revert Logic("nonce");
-        }
+        ) revert ErrorsLib.InvalidSignatureOnStaking();
+
+        if (checkIfStakeNonceUsed(_user, _nonce))
+            revert ErrorsLib.StakingNonceAlreadyUsed();
 
         presaleClaims(_isStaking, _user);
 
-        if (!allowPresaleStaking.flag) {
-            revert();
-        }
+        if (!allowPresaleStaking.flag)
+            revert ErrorsLib.PresaleStakingDisabled();
+
         stakingUserProcess(
             _isStaking,
             _user,
@@ -241,27 +234,26 @@ contract Staking {
      */
     function presaleClaims(bool _isStaking, address _user) internal {
         if (allowPublicStaking.flag) {
-            revert();
+            revert ErrorsLib.PresaleStakingDisabled();
         } else {
             if (userPresaleStaker[_user].isAllow) {
                 if (_isStaking) {
                     // staking
 
-                    if (userPresaleStaker[_user].stakingAmount >= 2) {
-                        revert();
-                    }
+                    if (userPresaleStaker[_user].stakingAmount >= 2)
+                        revert ErrorsLib.UserPresaleStakerLimitExceeded();
+
                     userPresaleStaker[_user].stakingAmount++;
                 } else {
                     // unstaking
 
-                    if (userPresaleStaker[_user].stakingAmount == 0) {
-                        revert();
-                    }
+                    if (userPresaleStaker[_user].stakingAmount == 0)
+                        revert ErrorsLib.UserPresaleStakerLimitExceeded();
 
                     userPresaleStaker[_user].stakingAmount--;
                 }
             } else {
-                revert();
+                revert ErrorsLib.UserIsNotPresaleStaker();
             }
         }
     }
@@ -303,13 +295,10 @@ contract Staking {
                 _nonce,
                 _signature
             )
-        ) {
-            revert Logic("sig");
-        }
+        ) revert ErrorsLib.InvalidSignatureOnStaking();
 
-        if (checkIfStakeNonceUsed(_user, _nonce)) {
-            revert Logic("nonce");
-        }
+        if (checkIfStakeNonceUsed(_user, _nonce))
+            revert ErrorsLib.StakingNonceAlreadyUsed();
 
         stakingUserProcess(
             _isStaking,
@@ -336,9 +325,7 @@ contract Staking {
         bool _priority_Evvm,
         bytes memory _signature_Evvm
     ) external {
-        if (!allowPublicStaking.flag) {
-            revert();
-        }
+        if (!allowPublicStaking.flag) revert ErrorsLib.PublicStakingDisabled();
 
         uint256 size;
 
@@ -347,9 +334,7 @@ contract Staking {
             size := extcodesize(_service)
         }
 
-        if (size == 0) {
-            revert();
-        }
+        if (size == 0) revert ErrorsLib.AddressIsNotAService();
 
         if (_isStaking) {
             if (
@@ -361,18 +346,13 @@ contract Staking {
                     _nonce,
                     _signature
                 )
-            ) {
-                revert Logic("sig");
-            }
+            ) revert ErrorsLib.InvalidSignatureOnStaking();
         } else {
-            if (_service != _user) {
-                revert();
-            }
+            if (_service != _user) revert ErrorsLib.UserAndServiceMismatch();
         }
 
-        if (checkIfStakeNonceUsed(_user, _nonce)) {
-            revert Logic("nonce");
-        }
+        if (checkIfStakeNonceUsed(_user, _nonce))
+            revert ErrorsLib.StakingNonceAlreadyUsed();
 
         stakingServiceProcess(
             _isStaking,
@@ -469,9 +449,7 @@ contract Staking {
             if (
                 getTimeToUserUnlockStakingTime(_stakingAccount) >
                 block.timestamp
-            ) {
-                revert();
-            }
+            ) revert ErrorsLib.UserMustWaitToStakeAgain();
 
             makePay(
                 _user,
@@ -494,9 +472,7 @@ contract Staking {
                 if (
                     getTimeToUserUnlockFullUnstakingTime(_stakingAccount) >
                     block.timestamp
-                ) {
-                    revert();
-                }
+                ) revert ErrorsLib.UserMustWaitToFullUnstake();
 
                 Evvm(EVVM_ADDRESS).pointStaker(_stakingAccount, 0x00);
             }
@@ -520,7 +496,7 @@ contract Staking {
                 _amountOfStaking;
 
             makeCaPay(
-                MATE_TOKEN_ADDRESS,
+                PRINCIPAL_TOKEN_ADDRESS,
                 _stakingAccount,
                 (PRICE_OF_SMATE * _amountOfStaking)
             );
@@ -539,7 +515,7 @@ contract Staking {
 
         if (Evvm(EVVM_ADDRESS).istakingStaker(msg.sender)) {
             makeCaPay(
-                MATE_TOKEN_ADDRESS,
+                PRINCIPAL_TOKEN_ADDRESS,
                 msg.sender,
                 (Evvm(EVVM_ADDRESS).getRewardAmount() * 2) + _priorityFee_Evvm
             );
@@ -579,7 +555,7 @@ contract Staking {
 
                 if (Evvm(EVVM_ADDRESS).istakingStaker(msg.sender)) {
                     makeCaPay(
-                        MATE_TOKEN_ADDRESS,
+                        PRINCIPAL_TOKEN_ADDRESS,
                         msg.sender,
                         (Evvm(EVVM_ADDRESS).getRewardAmount() * 1)
                     );
@@ -605,7 +581,7 @@ contract Staking {
                 _user_Evvm,
                 address(this),
                 "",
-                MATE_TOKEN_ADDRESS,
+                PRINCIPAL_TOKEN_ADDRESS,
                 _amount_Evvm,
                 _priorityFee_Evvm,
                 _nonce_Evvm,
@@ -617,7 +593,7 @@ contract Staking {
                 _user_Evvm,
                 address(this),
                 "",
-                MATE_TOKEN_ADDRESS,
+                PRINCIPAL_TOKEN_ADDRESS,
                 _amount_Evvm,
                 _priorityFee_Evvm,
                 address(this),
@@ -631,11 +607,7 @@ contract Staking {
         address _user_Evvm,
         uint256 _amount_Evvm
     ) internal {
-        Evvm(EVVM_ADDRESS).caPay(
-            _user_Evvm,
-            _tokenAddress_Evvm,
-            _amount_Evvm
-        );
+        Evvm(EVVM_ADDRESS).caPay(_user_Evvm, _tokenAddress_Evvm, _amount_Evvm);
     }
 
     //▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀
@@ -993,7 +965,7 @@ contract Staking {
     }
 
     function getMateAddress() external pure returns (address) {
-        return MATE_TOKEN_ADDRESS;
+        return PRINCIPAL_TOKEN_ADDRESS;
     }
 
     function getOwner() external view returns (address) {
