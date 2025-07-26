@@ -65,10 +65,10 @@ make unitTestCorrectEvvmPayMultiple
 make unitTestRevertEvvmPayMultiple_syncExecution
 ```
 
-### SMate Contracts
+### Staking Contracts
 ```bash
-make unitTestCorrectSMate
-make unitTestRevertSMate
+make unitTestCorrectStaking
+make unitTestRevertStaking
 ```
 
 ### NameService
@@ -81,7 +81,7 @@ make unitTestRevertNameService
 ```bash
 make fuzzTestEvvmPayMultiple
 make fuzzTestMnsOffers
-make fuzzTestSMateGoldenStaking
+make fuzzTestStakingGoldenStaking
 ```
 
 ## Static Analysis

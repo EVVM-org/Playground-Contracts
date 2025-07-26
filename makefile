@@ -37,6 +37,35 @@ deploy:
 
 # Test commands
 
+fullTest:
+	@echo "Running all tests"
+	@echo "Running all EVVM unit correct tests"
+	@forge test --match-contract unitTestCorrect_EVVM --summary --detailed --gas-report -vvv --show-progress
+	@sleep 3
+	@echo "Running all EVVM unit revert tests"
+	@forge test --match-contract unitTestRevert_EVVM --summary --detailed --gas-report -vvv --show-progress
+	@sleep 3
+	@echo "Running all EVVM unit fuzz tests"
+	@forge test --match-contract fuzzTest_EVVM --summary --detailed --gas-report -vvv --show-progress
+	@sleep 5
+	@echo "Running all Staking unit correct tests"
+	@forge test --match-contract unitTestCorrect_Staking --summary --detailed --gas-report -vvv --show-progress
+	@sleep 3
+	@echo "Running all Staking unit revert tests"
+	@forge test --match-contract unitTestRevert_Staking --summary --detailed --gas-report -vvv --show-progress
+	@sleep 3
+	@echo "Running all Staking unit fuzz tests"
+	@forge test --match-contract fuzzTest_Staking --summary --detailed --gas-report -vvv --show-progress
+	@sleep 5
+	@echo "Running all NameService unit correct tests"
+	@forge test --match-contract unitTestCorrect_NameService --summary --detailed --gas-report -vvv --show-progress
+	@sleep 3
+	@echo "Running all NameService unit revert tests"
+	@forge test --match-contract unitTestRevert_NameService --summary --detailed --gas-report -vvv --show-progress
+	@sleep 3
+	@echo "Running all NameService unit fuzz tests"
+	@forge test --match-contract fuzzTest_NameService --summary --detailed --gas-report -vvv --show-progress
+
 ## EVVM
 
 testEvvm:
@@ -200,112 +229,112 @@ fuzzTestEvvmDisperseCaPay:
 	@echo "Running DisperseCaPay unit fuzz tests"
 	@forge test --match-path test/fuzz/evvm/fuzzTest_EVVM_disperseCaPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-## SMate
+## Staking
 
-testSMate:
-	@echo "Running all SMate unit correct tests"
-	@forge test --match-contract unitTestCorrect_SMate --summary --detailed --gas-report -vvv --show-progress
+testStaking:
+	@echo "Running all Staking unit correct tests"
+	@forge test --match-contract unitTestCorrect_Staking --summary --detailed --gas-report -vvv --show-progress
 	@sleep 3
-	@echo "Running all SMate unit revert tests"
-	@forge test --match-contract unitTestRevert_SMate --summary --detailed --gas-report -vvv --show-progress
+	@echo "Running all Staking unit revert tests"
+	@forge test --match-contract unitTestRevert_Staking --summary --detailed --gas-report -vvv --show-progress
 	@sleep 3
-	@echo "Running all SMate unit fuzz tests"
-	@forge test --match-contract fuzzTest_SMate --summary --detailed --gas-report -vvv --show-progress
+	@echo "Running all Staking unit fuzz tests"
+	@forge test --match-contract fuzzTest_Staking --summary --detailed --gas-report -vvv --show-progress
 
 ### Unit tests
 
-unitTestSMate:
-	@echo "Running all SMate unit correct tests"
-	@forge test --match-contract unitTestCorrect_SMate --summary --detailed --gas-report -vvv --show-progress
+unitTestStaking:
+	@echo "Running all Staking unit correct tests"
+	@forge test --match-contract unitTestCorrect_Staking --summary --detailed --gas-report -vvv --show-progress
 	@sleep 3
-	@echo "Running all SMate unit revert tests"
-	@forge test --match-contract unitTestRevert_SMate --summary --detailed --gas-report -vvv --show-progress
+	@echo "Running all Staking unit revert tests"
+	@forge test --match-contract unitTestRevert_Staking --summary --detailed --gas-report -vvv --show-progress
 
 #### Correct Tests
 
-unitTestCorrectSMate:
-	@echo "Running all SMate unit correct tests"
-	@forge test --match-contract unitTestCorrect_SMate --summary --detailed --gas-report -vvv --show-progress
+unitTestCorrectStaking:
+	@echo "Running all Staking unit correct tests"
+	@forge test --match-contract unitTestCorrect_Staking --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectSMateGoldenStaking:
+unitTestCorrectStakingGoldenStaking:
 	@echo "Running GoldenStaking unit correct tests"
-	@forge test --match-path test/unit/smate/correct/unitTestCorrect_SMate_goldenStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/smate/correct/unitTestCorrect_Staking_goldenStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectSMatePresaleStaking_AsyncExecutionOnPay:
+unitTestCorrectStakingPresaleStaking_AsyncExecutionOnPay:
 	@echo "Running PresaleStaking (async execution on pay) unit correct tests"
-	@forge test --match-path test/unit/smate/correct/unitTestCorrect_SMate_presaleStaking_AsyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/smate/correct/unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectSMatePresaleStaking_SyncExecutionOnPay:
+unitTestCorrectStakingPresaleStaking_SyncExecutionOnPay:
 	@echo "Running PresaleStaking (sync execution on pay) unit correct tests"
-	@forge test --match-path test/unit/smate/correct/unitTestCorrect_SMate_presaleStaking_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/smate/correct/unitTestCorrect_Staking_presaleStaking_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectSMatePublicStaking_AsyncExecutionOnPay:
+unitTestCorrectStakingPublicStaking_AsyncExecutionOnPay:
 	@echo "Running PublicStaking (async execution on pay) unit correct tests"
-	@forge test --match-path test/unit/smate/correct/unitTestCorrect_SMate_publicStaking_AsyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/smate/correct/unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectSMatePublicStaking_SyncExecutionOnPay:
+unitTestCorrectStakingPublicStaking_SyncExecutionOnPay:
 	@echo "Running PublicStaking (sync execution on pay) unit correct tests"
-	@forge test --match-path test/unit/smate/correct/unitTestCorrect_SMate_publicStaking_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/smate/correct/unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectSMatePublicServiceStaking_AsyncExecutionOnPay:
+unitTestCorrectStakingPublicServiceStaking_AsyncExecutionOnPay:
 	@echo "Running PublicServiceStaking (async execution on pay) unit correct tests"
-	@forge test --match-path test/unit/smate/correct/unitTestCorrect_SMate_publicServiceStaking_AsyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/smate/correct/unitTestCorrect_Staking_publicServiceStaking_AsyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectSMatePublicServiceStaking_SyncExecutionOnPay:
+unitTestCorrectStakingPublicServiceStaking_SyncExecutionOnPay:
 	@echo "Running PublicServiceStaking (sync execution on pay) unit correct tests"
-	@forge test --match-path test/unit/smate/correct/unitTestCorrect_SMate_publicServiceStaking_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/smate/correct/unitTestCorrect_Staking_publicServiceStaking_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectSMateAdminFunctions:
+unitTestCorrectStakingAdminFunctions:
 	@echo "Running AdminFunctions unit correct tests"
-	@forge test --match-path test/unit/smate/correct/unitTestCorrect_SMate_adminFunctions.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/smate/correct/unitTestCorrect_Staking_adminFunctions.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 #### Revert Tests
 
-unitTestRevertSMate:
-	@echo "Running all SMate unit revert tests"
-	@forge test --match-contract unitTestRevert_SMate --summary --detailed --gas-report -vvv --show-progress
+unitTestRevertStaking:
+	@echo "Running all Staking unit revert tests"
+	@forge test --match-contract unitTestRevert_Staking --summary --detailed --gas-report -vvv --show-progress
 
-unitTestRevertSMateGoldenStaking:
+unitTestRevertStakingGoldenStaking:
 	@echo "Running GoldenStaking unit revert tests"
-	@forge test --match-path test/unit/smate/revert/unitTestRevert_SMate_goldenStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/smate/revert/unitTestRevert_Staking_goldenStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestRevertSMatePresaleStaking:
+unitTestRevertStakingPresaleStaking:
 	@echo "Running PresaleStaking unit revert tests"
-	@forge test --match-path test/unit/smate/revert/unitTestRevert_SMate_presaleStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/smate/revert/unitTestRevert_Staking_presaleStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestRevertSMatePublicStaking:
+unitTestRevertStakingPublicStaking:
 	@echo "Running PublicStaking unit revert tests"
-	@forge test --match-path test/unit/smate/revert/unitTestRevert_SMate_publicStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/smate/revert/unitTestRevert_Staking_publicStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestRevertSMatePublicServiceStaking:
+unitTestRevertStakingPublicServiceStaking:
 	@echo "Running PublicServiceStaking unit revert tests"
-	@forge test --match-path test/unit/smate/revert/unitTestRevert_SMate_publicServiceStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/smate/revert/unitTestRevert_Staking_publicServiceStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestRevertSMateAdminFunctions:
+unitTestRevertStakingAdminFunctions:
 	@echo "Running AdminFunctions unit revert tests"
-	@forge test --match-path test/unit/smate/revert/unitTestRevert_SMate_adminFunctions.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/smate/revert/unitTestRevert_Staking_adminFunctions.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 #### Fuzz Tests
 
-fuzzTestSMate:
-	@echo "Running SMate unit fuzz tests"
-	@forge test --match-contract fuzzTest_SMate --summary --detailed --gas-report -vvv --show-progress
+fuzzTestStaking:
+	@echo "Running Staking unit fuzz tests"
+	@forge test --match-contract fuzzTest_Staking --summary --detailed --gas-report -vvv --show-progress
 
-fuzzTestSMateGoldenStaking:
+fuzzTestStakingGoldenStaking:
 	@echo "Running GoldenStaking unit fuzz tests"
-	@forge test --match-path test/fuzz/sMate/fuzzTest_SMate_goldenStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/fuzz/staking/fuzzTest_Staking_goldenStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-fuzzTestSMatePresaleStaking:
+fuzzTestStakingPresaleStaking:
 	@echo "Running PresaleStaking unit fuzz tests"
-	@forge test --match-path test/fuzz/sMate/fuzzTest_SMate_presaleStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/fuzz/staking/fuzzTest_Staking_presaleStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-fuzzTestSMatePublicStaking:
+fuzzTestStakingPublicStaking:
 	@echo "Running PublicStaking unit fuzz tests"
-	@forge test --match-path test/fuzz/sMate/fuzzTest_SMate_publicStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/fuzz/staking/fuzzTest_Staking_publicStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-fuzzTestSMatePublicServiceStaking:
+fuzzTestStakingPublicServiceStaking:
 	@echo "Running PublicServiceStaking unit fuzz tests"
-	@forge test --match-path test/fuzz/sMate/fuzzTest_SMate_publicServiceStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/fuzz/staking/fuzzTest_Staking_publicServiceStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 ## Estimator
 
@@ -570,17 +599,17 @@ help:
 	@echo "-----------------------=Test Suite Commands=----------------------"
 	@echo ""
 	@echo "  # Comprehensive Test Suites"
-	@echo "  make fullProtocolTest --- Execute complete test suite for all protocol components (EVVM + SMate + MNS + Estimator)"
+	@echo "  make fullProtocolTest --- Execute complete test suite for all protocol components (EVVM + Staking + MNS + Estimator)"
 	@echo ""
 	@echo "  # EVVM Test Suite"
 	@echo "  make fullTestEvvm ------- Run comprehensive EVVM test suite (unit correct + revert + fuzz tests)"
 	@echo "  make testEvvm ----------- Execute all EVVM unit tests that verify correct functionality"
 	@echo "  make testEvvmRevert ----- Execute all EVVM unit tests that verify proper revert conditions"
 	@echo ""
-	@echo "  # SMate Test Suite"
-	@echo "  make fullTestSMate ------ Run comprehensive SMate staking test suite (unit correct + revert + fuzz tests)"
-	@echo "  make testSMate ---------- Execute all SMate unit tests that verify correct staking functionality"
-	@echo "  make testSMateRevert ---- Execute all SMate unit tests that verify proper revert conditions"
+	@echo "  # Staking Test Suite"
+	@echo "  make fullTestStaking ------ Run comprehensive Staking staking test suite (unit correct + revert + fuzz tests)"
+	@echo "  make testStaking ---------- Execute all Staking unit tests that verify correct staking functionality"
+	@echo "  make testStakingRevert ---- Execute all Staking unit tests that verify proper revert conditions"
 	@echo ""
 	@echo "  # NameService (MNS) Test Suite"
 	@echo "  make fullTestMNS -------- Run comprehensive MNS test suite (unit correct + revert + fuzz tests)"
@@ -631,33 +660,33 @@ help:
 	@echo "  make fuzzTestEvvmCaPay --------------------------- Fuzz test CA payments with random contract interactions"
 	@echo "  make fuzzTestEvvmDisperseCaPay ------------------- Fuzz test CA payment dispersion with random contract arrays"
 	@echo ""
-	@echo "-----------------------=Individual SMate Tests=----------------------"
+	@echo "-----------------------=Individual Staking Tests=----------------------"
 	@echo ""
 	@echo "  # Unit Correct Tests - Verify Staking Mechanisms"
-	@echo "  make unitTestCorrectSMate ---------------------------------------- Run all SMate unit tests for correct staking behavior"
-	@echo "  make unitTestCorrectSMateGoldenStaking --------------------------- Test golden tier staking rewards and mechanics"
-	@echo "  make unitTestCorrectSMatePresaleStaking_AsyncExecutionOnPay ------ Test presale staking with async payment execution"
-	@echo "  make unitTestCorrectSMatePresaleStaking_SyncExecutionOnPay ------- Test presale staking with sync payment execution"
-	@echo "  make unitTestCorrectSMatePublicStaking_AsyncExecutionOnPay ------- Test public staking with async payment execution"
-	@echo "  make unitTestCorrectSMatePublicStaking_SyncExecutionOnPay -------- Test public staking with sync payment execution"
-	@echo "  make unitTestCorrectSMatePublicServiceStaking_AsyncExecutionOnPay  Test public service staking with async execution"
-	@echo "  make unitTestCorrectSMatePublicServiceStaking_SyncExecutionOnPay - Test public service staking with sync execution"
-	@echo "  make unitTestCorrectSMateAdminFunctions -------------------------- Test SMate administrative functions and governance"
+	@echo "  make unitTestCorrectStaking ---------------------------------------- Run all Staking unit tests for correct staking behavior"
+	@echo "  make unitTestCorrectStakingGoldenStaking --------------------------- Test golden tier staking rewards and mechanics"
+	@echo "  make unitTestCorrectStakingPresaleStaking_AsyncExecutionOnPay ------ Test presale staking with async payment execution"
+	@echo "  make unitTestCorrectStakingPresaleStaking_SyncExecutionOnPay ------- Test presale staking with sync payment execution"
+	@echo "  make unitTestCorrectStakingPublicStaking_AsyncExecutionOnPay ------- Test public staking with async payment execution"
+	@echo "  make unitTestCorrectStakingPublicStaking_SyncExecutionOnPay -------- Test public staking with sync payment execution"
+	@echo "  make unitTestCorrectStakingPublicServiceStaking_AsyncExecutionOnPay  Test public service staking with async execution"
+	@echo "  make unitTestCorrectStakingPublicServiceStaking_SyncExecutionOnPay - Test public service staking with sync execution"
+	@echo "  make unitTestCorrectStakingAdminFunctions -------------------------- Test Staking administrative functions and governance"
 	@echo ""
 	@echo "  # Unit Revert Tests - Verify Staking Error Conditions"
-	@echo "  make unitTestRevertSMate --------------------- Run all SMate revert tests for error handling"
-	@echo "  make unitTestRevertSMateGoldenStaking -------- Test revert conditions for golden staking operations"
-	@echo "  make unitTestRevertSMatePresaleStaking ------- Test revert conditions for presale staking violations"
-	@echo "  make unitTestRevertSMatePublicStaking -------- Test revert conditions for public staking violations"
-	@echo "  make unitTestRevertSMatePublicServiceStaking - Test revert conditions for public service staking violations"
-	@echo "  make unitTestRevertSMateAdminFunctions ------- Test revert conditions for unauthorized SMate admin access"
+	@echo "  make unitTestRevertStaking --------------------- Run all Staking revert tests for error handling"
+	@echo "  make unitTestRevertStakingGoldenStaking -------- Test revert conditions for golden staking operations"
+	@echo "  make unitTestRevertStakingPresaleStaking ------- Test revert conditions for presale staking violations"
+	@echo "  make unitTestRevertStakingPublicStaking -------- Test revert conditions for public staking violations"
+	@echo "  make unitTestRevertStakingPublicServiceStaking - Test revert conditions for public service staking violations"
+	@echo "  make unitTestRevertStakingAdminFunctions ------- Test revert conditions for unauthorized Staking admin access"
 	@echo ""
 	@echo "  # Fuzz Tests - Staking Property Testing"
-	@echo "  make fuzzTestSMate --------------------------- Fuzz test general SMate functionality with random inputs"
-	@echo "  make fuzzTestSMateGoldenStaking -------------- Fuzz test golden staking with random stake amounts and durations"
-	@echo "  make fuzzTestSMatePresaleStaking ------------- Fuzz test presale staking with random participant scenarios"
-	@echo "  make fuzzTestSMatePublicStaking -------------- Fuzz test public staking with random user interactions"
-	@echo "  make fuzzTestSMatePublicServiceStaking ------- Fuzz test public service staking with random service parameters"
+	@echo "  make fuzzTestStaking --------------------------- Fuzz test general Staking functionality with random inputs"
+	@echo "  make fuzzTestStakingGoldenStaking -------------- Fuzz test golden staking with random stake amounts and durations"
+	@echo "  make fuzzTestStakingPresaleStaking ------------- Fuzz test presale staking with random participant scenarios"
+	@echo "  make fuzzTestStakingPublicStaking -------------- Fuzz test public staking with random user interactions"
+	@echo "  make fuzzTestStakingPublicServiceStaking ------- Fuzz test public service staking with random service parameters"
 	@echo ""
 	@echo "-----------------------=Individual Estimator Tests=----------------------"
 	@echo ""
@@ -733,17 +762,17 @@ help:
 	@echo "  make fullTestMNS -------- Run all MNS tests"
 	@echo "  make testMNS ------------ Run MNS unit tests"
 	@echo "  make testMNSRevert ------ Run MNS revert tests"
-	@echo "  make fullTestSMate ------ Run all sMate tests"
-	@echo "  make testSMate ---------- Run sMate unit tests"
-	@echo "  make testSMateRevert ---- Run sMate revert tests"
+	@echo "  make fullTestStaking ------ Run all staking tests"
+	@echo "  make testStaking ---------- Run staking unit tests"
+	@echo "  make testStakingRevert ---- Run staking revert tests"
 	@echo "  make testEstimator ------ Run estimator tests"
 	@echo "  make fullProtocolTest --- Run all protocol tests"
 	@echo ""
 	@echo "  # Individual EVVM test commands"
 	@echo "  make unitTestCorrectEvvm, unitTestRevertEvvm, unitTestFuzzEvvm, etc."
 	@echo ""
-	@echo "  # Individual SMate test commands"
-	@echo "  make unitTestCorrectSMate, unitTestRevertSMate, fuzzTestSMate, etc."
+	@echo "  # Individual Staking test commands"
+	@echo "  make unitTestCorrectStaking, unitTestRevertStaking, fuzzTestStaking, etc."
 	@echo ""
 	@echo "  # Individual Estimator test commands"
 	@echo "  make unitTestCorrectEstimator, unitTestRevertEstimator"
@@ -763,12 +792,12 @@ help:
 	@echo "    make fuzzTestEvvmCaPay"
 	@echo "    make fuzzTestEvvmDisperseCaPay"
 	@echo ""
-	@echo "  SMate Fuzz tests"
-	@echo "    make fuzzTestSMate"
-	@echo "    make fuzzTestSMateGoldenStaking"
-	@echo "    make fuzzTestSMatePresaleStaking"
-	@echo "    make fuzzTestSMatePublicStaking"
-	@echo "    make fuzzTestSMatePublicServiceStaking"
+	@echo "  Staking Fuzz tests"
+	@echo "    make fuzzTestStaking"
+	@echo "    make fuzzTestStakingGoldenStaking"
+	@echo "    make fuzzTestStakingPresaleStaking"
+	@echo "    make fuzzTestStakingPublicStaking"
+	@echo "    make fuzzTestStakingPublicServiceStaking"
 	@echo ""
 	@echo "  MNS Fuzz tests"
 	@echo "    make fuzzTestNameServicePreRegistrationUsername"
