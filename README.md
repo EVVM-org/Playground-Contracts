@@ -71,10 +71,10 @@ make unitTestCorrectSMate
 make unitTestRevertSMate
 ```
 
-### MateNameService
+### NameService
 ```bash
-make unitTestCorrectMateNameService
-make unitTestRevertMateNameService
+make unitTestCorrectNameService
+make unitTestRevertNameService
 ```
 
 ### Fuzz Testing
@@ -91,7 +91,7 @@ make staticAnalysis  # Generates reportWake.txt
 
 ## Project Structure
 
-- `src/` — Main contract sources (core, staking, MateNameService, mocks)
+- `src/` — Main contract sources (core, staking, NameService, mocks)
 - `test/` — Unit and fuzz tests for all modules
 - `lib/` — External libraries (OpenZeppelin, Uniswap, EVVM-solidity-library, etc.)
 - `script/` — Deployment and utility scripts

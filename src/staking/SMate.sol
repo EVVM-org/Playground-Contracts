@@ -23,7 +23,7 @@ import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
 import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {SignatureRecover} from "@EVVM/libraries/SignatureRecover.sol";
-import {Mns} from "@EVVM/playground/mns/Mns.sol";
+import {NameService} from "@EVVM/playground/nameService/NameService.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 
 contract SMate {

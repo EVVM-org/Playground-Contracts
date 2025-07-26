@@ -336,208 +336,208 @@ unitTestRevertEstimator:
 	@forge test --match-contract unitTestRevert_Estimator --summary --detailed --gas-report -vvv --show-progress
 
 
-## MateNameService
+## NameService
 
-testMateNameService:
-	@echo "Running all MateNameService unit correct tests"
-	@forge test --match-contract unitTestCorrect_MateNameService --summary --detailed --gas-report -vvv --show-progress
+testNameService:
+	@echo "Running all NameService unit correct tests"
+	@forge test --match-contract unitTestCorrect_NameService --summary --detailed --gas-report -vvv --show-progress
 	@sleep 3
-	@echo "Running all MateNameService unit revert tests"
-	@forge test --match-contract unitTestRevert_MateNameService --summary --detailed --gas-report -vvv --show-progress
+	@echo "Running all NameService unit revert tests"
+	@forge test --match-contract unitTestRevert_NameService --summary --detailed --gas-report -vvv --show-progress
 	@sleep 3
-	@echo "Running all MateNameService unit fuzz tests"
-	@forge test --match-contract fuzzTest_MateNameService --summary --detailed --gas-report -vvv --show-progress
+	@echo "Running all NameService unit fuzz tests"
+	@forge test --match-contract fuzzTest_NameService --summary --detailed --gas-report -vvv --show-progress
 
 ### Unit tests
 
-unitTestMateNameService:
-	@echo "Running all MateNameService unit correct tests"
-	@forge test --match-contract unitTestCorrect_MateNameService --summary --detailed --gas-report -vvv --show-progress
+unitTestNameService:
+	@echo "Running all NameService unit correct tests"
+	@forge test --match-contract unitTestCorrect_NameService --summary --detailed --gas-report -vvv --show-progress
 	@sleep 3
-	@echo "Running all MateNameService unit revert tests"
-	@forge test --match-contract unitTestRevert_MateNameService --summary --detailed --gas-report -vvv --show-progress
+	@echo "Running all NameService unit revert tests"
+	@forge test --match-contract unitTestRevert_NameService --summary --detailed --gas-report -vvv --show-progress
 
 #### Correct Tests
 
-unitTestCorrectMateNameService:
-	@echo "Running all MateNameService unit correct tests"
-	@forge test --match-contract unitTestCorrect_MateNameService --summary --detailed --gas-report -vvv --show-progress
+unitTestCorrectNameService:
+	@echo "Running all NameService unit correct tests"
+	@forge test --match-contract unitTestCorrect_NameService --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectMateNameServicePreRegistrationUsername_AsyncExecutionOnPay:
-	@echo "Running MateNameService (async execution on pay) unit correct tests"
-	@forge test --match-path test/unit/mateNameService/correct/unitTestCorrect_MateNameService_preRegistrationUsername_AsyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestCorrectNameServicePreRegistrationUsername_AsyncExecutionOnPay:
+	@echo "Running NameService (async execution on pay) unit correct tests"
+	@forge test --match-path test/unit/nameService/correct/unitTestCorrect_NameService_preRegistrationUsername_AsyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectMateNameServicePreRegistrationUsername_SyncExecutionOnPay:
-	@echo "Running MateNameService (sync execution on pay) unit correct tests"
-	@forge test --match-path test/unit/mateNameService/correct/unitTestCorrect_MateNameService_preRegistrationUsername_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestCorrectNameServicePreRegistrationUsername_SyncExecutionOnPay:
+	@echo "Running NameService (sync execution on pay) unit correct tests"
+	@forge test --match-path test/unit/nameService/correct/unitTestCorrect_NameService_preRegistrationUsername_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectMateNameServiceRegistrationUsername_AsyncExecutionOnPay:
-	@echo "Running MateNameService (async execution on pay) unit correct tests"
-	@forge test --match-path test/unit/mateNameService/correct/unitTestCorrect_MateNameService_registrationUsername_AsyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestCorrectNameServiceRegistrationUsername_AsyncExecutionOnPay:
+	@echo "Running NameService (async execution on pay) unit correct tests"
+	@forge test --match-path test/unit/nameService/correct/unitTestCorrect_NameService_registrationUsername_AsyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectMateNameServiceRegistrationUsername_SyncExecutionOnPay:
-	@echo "Running MateNameService (sync execution on pay) unit correct tests"
-	@forge test --match-path test/unit/mateNameService/correct/unitTestCorrect_MateNameService_registrationUsername_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestCorrectNameServiceRegistrationUsername_SyncExecutionOnPay:
+	@echo "Running NameService (sync execution on pay) unit correct tests"
+	@forge test --match-path test/unit/nameService/correct/unitTestCorrect_NameService_registrationUsername_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectMateNameServiceMakeOffer_AsyncExecutionOnPay:
-	@echo "Running MateNameService (async execution on pay) unit correct tests"
-	@forge test --match-path test/unit/mateNameService/correct/unitTestCorrect_MateNameService_makeOffer_AsyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestCorrectNameServiceMakeOffer_AsyncExecutionOnPay:
+	@echo "Running NameService (async execution on pay) unit correct tests"
+	@forge test --match-path test/unit/nameService/correct/unitTestCorrect_NameService_makeOffer_AsyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectMateNameServiceMakeOffer_SyncExecutionOnPay:
-	@echo "Running MateNameService (sync execution on pay) unit correct tests"
-	@forge test --match-path test/unit/mateNameService/correct/unitTestCorrect_MateNameService_makeOffer_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestCorrectNameServiceMakeOffer_SyncExecutionOnPay:
+	@echo "Running NameService (sync execution on pay) unit correct tests"
+	@forge test --match-path test/unit/nameService/correct/unitTestCorrect_NameService_makeOffer_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectMateNameServiceWithdrawOffer_AsyncExecutionOnPay:
-	@echo "Running MateNameService (async execution on pay) unit correct tests"
-	@forge test --match-path test/unit/mateNameService/correct/unitTestCorrect_MateNameService_withdrawOffer_AsyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestCorrectNameServiceWithdrawOffer_AsyncExecutionOnPay:
+	@echo "Running NameService (async execution on pay) unit correct tests"
+	@forge test --match-path test/unit/nameService/correct/unitTestCorrect_NameService_withdrawOffer_AsyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectMateNameServiceWithdrawOffer_SyncExecutionOnPay:
-	@echo "Running MateNameService (sync execution on pay) unit correct tests"
-	@forge test --match-path test/unit/mateNameService/correct/unitTestCorrect_MateNameService_withdrawOffer_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestCorrectNameServiceWithdrawOffer_SyncExecutionOnPay:
+	@echo "Running NameService (sync execution on pay) unit correct tests"
+	@forge test --match-path test/unit/nameService/correct/unitTestCorrect_NameService_withdrawOffer_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectMateNameServiceAcceptOffer_AsyncExecutionOnPay:
-	@echo "Running MateNameService (async execution on pay) unit correct tests"
-	@forge test --match-path test/unit/mateNameService/correct/unitTestCorrect_MateNameService_acceptOffer_AsyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestCorrectNameServiceAcceptOffer_AsyncExecutionOnPay:
+	@echo "Running NameService (async execution on pay) unit correct tests"
+	@forge test --match-path test/unit/nameService/correct/unitTestCorrect_NameService_acceptOffer_AsyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectMateNameServiceAcceptOffer_SyncExecutionOnPay:
-	@echo "Running MateNameService (sync execution on pay) unit correct tests"
-	@forge test --match-path test/unit/mateNameService/correct/unitTestCorrect_MateNameService_acceptOffer_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestCorrectNameServiceAcceptOffer_SyncExecutionOnPay:
+	@echo "Running NameService (sync execution on pay) unit correct tests"
+	@forge test --match-path test/unit/nameService/correct/unitTestCorrect_NameService_acceptOffer_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectMateNameServiceRenewUsername_AsyncExecutionOnPay:
-	@echo "Running MateNameService (async execution on pay) unit correct tests"
-	@forge test --match-path test/unit/mateNameService/correct/unitTestCorrect_MateNameService_renewUsername_AsyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestCorrectNameServiceRenewUsername_AsyncExecutionOnPay:
+	@echo "Running NameService (async execution on pay) unit correct tests"
+	@forge test --match-path test/unit/nameService/correct/unitTestCorrect_NameService_renewUsername_AsyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectMateNameServiceRenewUsername_SyncExecutionOnPay:
-	@echo "Running MateNameService (sync execution on pay) unit correct tests"
-	@forge test --match-path test/unit/mateNameService/correct/unitTestCorrect_MateNameService_renewUsername_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestCorrectNameServiceRenewUsername_SyncExecutionOnPay:
+	@echo "Running NameService (sync execution on pay) unit correct tests"
+	@forge test --match-path test/unit/nameService/correct/unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectMateNameServiceAddCustomMetadata_AsyncExecutionOnPay:
-	@echo "Running MateNameService (async execution on pay) unit correct tests"
-	@forge test --match-path test/unit/mateNameService/correct/unitTestCorrect_MateNameService_addCustomMetadata_AsyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestCorrectNameServiceAddCustomMetadata_AsyncExecutionOnPay:
+	@echo "Running NameService (async execution on pay) unit correct tests"
+	@forge test --match-path test/unit/nameService/correct/unitTestCorrect_NameService_addCustomMetadata_AsyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectMateNameServiceAddCustomMetadata_SyncExecutionOnPay:
-	@echo "Running MateNameService (sync execution on pay) unit correct tests"
-	@forge test --match-path test/unit/mateNameService/correct/unitTestCorrect_MateNameService_addCustomMetadata_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestCorrectNameServiceAddCustomMetadata_SyncExecutionOnPay:
+	@echo "Running NameService (sync execution on pay) unit correct tests"
+	@forge test --match-path test/unit/nameService/correct/unitTestCorrect_NameService_addCustomMetadata_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectMateNameServiceRemoveCustomMetadata_AsyncExecutionOnPay:
-	@echo "Running MateNameService (async execution on pay) unit correct tests"
-	@forge test --match-path test/unit/mateNameService/correct/unitTestCorrect_MateNameService_removeCustomMetadata_AsyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestCorrectNameServiceRemoveCustomMetadata_AsyncExecutionOnPay:
+	@echo "Running NameService (async execution on pay) unit correct tests"
+	@forge test --match-path test/unit/nameService/correct/unitTestCorrect_NameService_removeCustomMetadata_AsyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectMateNameServiceRemoveCustomMetadata_SyncExecutionOnPay:
-	@echo "Running MateNameService (sync execution on pay) unit correct tests"
-	@forge test --match-path test/unit/mateNameService/correct/unitTestCorrect_MateNameService_removeCustomMetadata_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestCorrectNameServiceRemoveCustomMetadata_SyncExecutionOnPay:
+	@echo "Running NameService (sync execution on pay) unit correct tests"
+	@forge test --match-path test/unit/nameService/correct/unitTestCorrect_NameService_removeCustomMetadata_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectMateNameServiceFlushCustomMetadata_AsyncExecutionOnPay:
-	@echo "Running MateNameService (async execution on pay) unit correct tests"
-	@forge test --match-path test/unit/mateNameService/correct/unitTestCorrect_MateNameService_flushCustomMetadata_AsyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestCorrectNameServiceFlushCustomMetadata_AsyncExecutionOnPay:
+	@echo "Running NameService (async execution on pay) unit correct tests"
+	@forge test --match-path test/unit/nameService/correct/unitTestCorrect_NameService_flushCustomMetadata_AsyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectMateNameServiceFlushCustomMetadata_SyncExecutionOnPay:
-	@echo "Running MateNameService (sync execution on pay) unit correct tests"
-	@forge test --match-path test/unit/mateNameService/correct/unitTestCorrect_MateNameService_flushCustomMetadata_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestCorrectNameServiceFlushCustomMetadata_SyncExecutionOnPay:
+	@echo "Running NameService (sync execution on pay) unit correct tests"
+	@forge test --match-path test/unit/nameService/correct/unitTestCorrect_NameService_flushCustomMetadata_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectMateNameServiceFlushUsername_AsyncExecutionOnPay:
-	@echo "Running MateNameService (async execution on pay) unit correct tests"
-	@forge test --match-path test/unit/mateNameService/correct/unitTestCorrect_MateNameService_flushUsername_AsyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestCorrectNameServiceFlushUsername_AsyncExecutionOnPay:
+	@echo "Running NameService (async execution on pay) unit correct tests"
+	@forge test --match-path test/unit/nameService/correct/unitTestCorrect_NameService_flushUsername_AsyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectMateNameServiceFlushUsername_SyncExecutionOnPay:
-	@echo "Running MateNameService (sync execution on pay) unit correct tests"
-	@forge test --match-path test/unit/mateNameService/correct/unitTestCorrect_MateNameService_flushUsername_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestCorrectNameServiceFlushUsername_SyncExecutionOnPay:
+	@echo "Running NameService (sync execution on pay) unit correct tests"
+	@forge test --match-path test/unit/nameService/correct/unitTestCorrect_NameService_flushUsername_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectMateNameServiceAdminFunctions:
-	@echo "Running MateNameService unit correct tests"
-	@forge test --match-path test/unit/mateNameService/correct/unitTestCorrect_MateNameService_adminFunctions.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestCorrectNameServiceAdminFunctions:
+	@echo "Running NameService unit correct tests"
+	@forge test --match-path test/unit/nameService/correct/unitTestCorrect_NameService_adminFunctions.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 #### Revert tests
 
-unitTestRevertMateNameService:
-	@echo "Running MateNameService unit revert tests"
-	@forge test --match-contract unitTestRevert_MateNameService --summary --detailed --gas-report -vvv --show-progress
+unitTestRevertNameService:
+	@echo "Running NameService unit revert tests"
+	@forge test --match-contract unitTestRevert_NameService --summary --detailed --gas-report -vvv --show-progress
 
-unitTestRevertMateNameServicePreRegistrationUsername:
-	@echo "Running MateNameService unit revert tests"
-		@forge test --match-path test/unit/mateNameService/revert/unitTestRevert_MateNameService_preRegistrationUsername.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestRevertNameServicePreRegistrationUsername:
+	@echo "Running NameService unit revert tests"
+		@forge test --match-path test/unit/nameService/revert/unitTestRevert_NameService_preRegistrationUsername.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestRevertMateNameServiceRegistrationUsername:
-	@echo "Running MateNameService unit revert tests"
-		@forge test --match-path test/unit/mateNameService/revert/unitTestRevert_MateNameService_registrationUsername.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestRevertNameServiceRegistrationUsername:
+	@echo "Running NameService unit revert tests"
+		@forge test --match-path test/unit/nameService/revert/unitTestRevert_NameService_registrationUsername.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestRevertMateNameServiceMakeOffer:
-	@echo "Running MateNameService unit revert tests"
-	@forge test --match-path test/unit/mateNameService/revert/unitTestRevert_MateNameService_makeOffer.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestRevertNameServiceMakeOffer:
+	@echo "Running NameService unit revert tests"
+	@forge test --match-path test/unit/nameService/revert/unitTestRevert_NameService_makeOffer.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestRevertMateNameServiceWithdrawOffer:
-	@echo "Running MateNameService unit revert tests"
-	@forge test --match-path test/unit/mateNameService/revert/unitTestRevert_MateNameService_withdrawOffer.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestRevertNameServiceWithdrawOffer:
+	@echo "Running NameService unit revert tests"
+	@forge test --match-path test/unit/nameService/revert/unitTestRevert_NameService_withdrawOffer.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestRevertMateNameServiceAcceptOffer:
-	@echo "Running MateNameService unit revert tests"
-	@forge test --match-path test/unit/mateNameService/revert/unitTestRevert_MateNameService_acceptOffer.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestRevertNameServiceAcceptOffer:
+	@echo "Running NameService unit revert tests"
+	@forge test --match-path test/unit/nameService/revert/unitTestRevert_NameService_acceptOffer.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestRevertMateNameServiceRenewUsername:
-	@echo "Running MateNameService unit revert tests"
-	@forge test --match-path test/unit/mateNameService/revert/unitTestRevert_MateNameService_renewUsername.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestRevertNameServiceRenewUsername:
+	@echo "Running NameService unit revert tests"
+	@forge test --match-path test/unit/nameService/revert/unitTestRevert_NameService_renewUsername.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestRevertMateNameServiceAddCustomMetadata:
-	@echo "Running MateNameService unit revert tests"
-	@forge test --match-path test/unit/mateNameService/revert/unitTestRevert_MateNameService_addCustomMetadata.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestRevertNameServiceAddCustomMetadata:
+	@echo "Running NameService unit revert tests"
+	@forge test --match-path test/unit/nameService/revert/unitTestRevert_NameService_addCustomMetadata.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestRevertMateNameServiceRemoveCustomMetadata:
-	@echo "Running MateNameService unit revert tests"
-	@forge test --match-path test/unit/mateNameService/revert/unitTestRevert_MateNameService_removeCustomMetadata.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestRevertNameServiceRemoveCustomMetadata:
+	@echo "Running NameService unit revert tests"
+	@forge test --match-path test/unit/nameService/revert/unitTestRevert_NameService_removeCustomMetadata.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestRevertMateNameServiceFlushCustomMetadata:
-	@echo "Running MateNameService unit revert tests"
-	@forge test --match-path test/unit/mateNameService/revert/unitTestRevert_MateNameService_flushCustomMetadata.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestRevertNameServiceFlushCustomMetadata:
+	@echo "Running NameService unit revert tests"
+	@forge test --match-path test/unit/nameService/revert/unitTestRevert_NameService_flushCustomMetadata.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestRevertMateNameServiceFlushUsername:
-	@echo "Running MateNameService unit revert tests"
-	@forge test --match-path test/unit/mateNameService/revert/unitTestRevert_MateNameService_flushUsername.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestRevertNameServiceFlushUsername:
+	@echo "Running NameService unit revert tests"
+	@forge test --match-path test/unit/nameService/revert/unitTestRevert_NameService_flushUsername.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestRevertMateNameServiceAdminFunctions:
-	@echo "Running MateNameService unit revert tests"
-	@forge test --match-path test/unit/mateNameService/revert/unitTestRevert_MateNameService_adminFunctions.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestRevertNameServiceAdminFunctions:
+	@echo "Running NameService unit revert tests"
+	@forge test --match-path test/unit/nameService/revert/unitTestRevert_NameService_adminFunctions.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 #### Fuzz tests
 
-fuzzTestMateNameServicePreRegistrationUsername:
-	@echo "Running MateNameService fuzz tests for preRegistrationUsername"
-	@forge test --match-contract fuzzTest_MateNameService_preRegistrationUsername --summary --detailed --gas-report -vvv --show-progress
+fuzzTestNameServicePreRegistrationUsername:
+	@echo "Running NameService fuzz tests for preRegistrationUsername"
+	@forge test --match-contract fuzzTest_NameService_preRegistrationUsername --summary --detailed --gas-report -vvv --show-progress
 
-fuzzTestMateNameServiceRegistrationUsername:
-	@echo "Running MateNameService fuzz tests for registrationUsername"
-	@forge test --match-path test/fuzz/mns/fuzzTest_MateNameService_registrationUsername.t.sol --summary --detailed --gas-report -vvv --show-progress
+fuzzTestNameServiceRegistrationUsername:
+	@echo "Running NameService fuzz tests for registrationUsername"
+	@forge test --match-path test/fuzz/nameService/fuzzTest_NameService_registrationUsername.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-fuzzTestMateNameServiceMakeOffer:
-	@echo "Running MateNameService fuzz tests for makeOffer"
-	@forge test --match-path test/fuzz/mns/fuzzTest_MateNameService_makeOffer.t.sol --summary --detailed --gas-report -vvv --show-progress
+fuzzTestNameServiceMakeOffer:
+	@echo "Running NameService fuzz tests for makeOffer"
+	@forge test --match-path test/fuzz/nameService/fuzzTest_NameService_makeOffer.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-fuzzTestMateNameServiceWithdrawOffer:
-	@echo "Running MateNameService fuzz tests for withdrawOffer"
-	@forge test --match-path test/fuzz/mns/fuzzTest_MateNameService_withdrawOffer.t.sol --summary --detailed --gas-report -vvv --show-progress
+fuzzTestNameServiceWithdrawOffer:
+	@echo "Running NameService fuzz tests for withdrawOffer"
+	@forge test --match-path test/fuzz/nameService/fuzzTest_NameService_withdrawOffer.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-fuzzTestMateNameServiceAcceptOffer:
-	@echo "Running MateNameService fuzz tests for acceptOffer"
-	@forge test --match-path test/fuzz/mns/fuzzTest_MateNameService_acceptOffer.t.sol --summary --detailed --gas-report -vvv --show-progress
+fuzzTestNameServiceAcceptOffer:
+	@echo "Running NameService fuzz tests for acceptOffer"
+	@forge test --match-path test/fuzz/nameService/fuzzTest_NameService_acceptOffer.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-fuzzTestMateNameServiceRenewUsername:
-	@echo "Running MateNameService fuzz tests for renewUsername"
-	@forge test --match-path test/fuzz/mns/fuzzTest_MateNameService_renewUsername.t.sol --summary --detailed --gas-report -vvvv --show-progress
+fuzzTestNameServiceRenewUsername:
+	@echo "Running NameService fuzz tests for renewUsername"
+	@forge test --match-path test/fuzz/nameService/fuzzTest_NameService_renewUsername.t.sol --summary --detailed --gas-report -vvvv --show-progress
 
-fuzzTestMateNameServiceAddCustomMetadata:
-	@echo "Running MateNameService fuzz tests for addCustomMetadata"
-	@forge test --match-path test/fuzz/mns/fuzzTest_MateNameService_addCustomMetadata.t.sol --summary --detailed --gas-report -vvv --show-progress
+fuzzTestNameServiceAddCustomMetadata:
+	@echo "Running NameService fuzz tests for addCustomMetadata"
+	@forge test --match-path test/fuzz/nameService/fuzzTest_NameService_addCustomMetadata.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-fuzzTestMateNameServiceRemoveCustomMetadata:
-	@echo "Running MateNameService fuzz tests for removeCustomMetadata"
-	@forge test --match-path test/fuzz/mns/fuzzTest_MateNameService_removeCustomMetadata.t.sol --summary --detailed --gas-report -vvv --show-progress
+fuzzTestNameServiceRemoveCustomMetadata:
+	@echo "Running NameService fuzz tests for removeCustomMetadata"
+	@forge test --match-path test/fuzz/nameService/fuzzTest_NameService_removeCustomMetadata.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-fuzzTestMateNameServiceFlushCustomMetadata:
-	@echo "Running MateNameService fuzz tests for flushCustomMetadata"
-	@forge test --match-path test/fuzz/mns/fuzzTest_MateNameService_flushCustomMetadata.t.sol --summary --detailed --gas-report -vvv --show-progress
+fuzzTestNameServiceFlushCustomMetadata:
+	@echo "Running NameService fuzz tests for flushCustomMetadata"
+	@forge test --match-path test/fuzz/nameService/fuzzTest_NameService_flushCustomMetadata.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-fuzzTestMateNameServiceFlushUsername:
-	@echo "Running MateNameService fuzz tests for flushUsername"
-	@forge test --match-path test/fuzz/mns/fuzzTest_MateNameService_flushUsername.t.sol --summary --detailed --gas-report -vvv --show-progress
+fuzzTestNameServiceFlushUsername:
+	@echo "Running NameService fuzz tests for flushUsername"
+	@forge test --match-path test/fuzz/nameService/fuzzTest_NameService_flushUsername.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 ######################################################################################################
 
@@ -582,7 +582,7 @@ help:
 	@echo "  make testSMate ---------- Execute all SMate unit tests that verify correct staking functionality"
 	@echo "  make testSMateRevert ---- Execute all SMate unit tests that verify proper revert conditions"
 	@echo ""
-	@echo "  # MateNameService (MNS) Test Suite"
+	@echo "  # NameService (MNS) Test Suite"
 	@echo "  make fullTestMNS -------- Run comprehensive MNS test suite (unit correct + revert + fuzz tests)"
 	@echo "  make testMNS ------------ Execute all MNS unit tests that verify correct name service functionality"
 	@echo "  make testMNSRevert ------ Execute all MNS unit tests that verify proper revert conditions"
@@ -673,54 +673,54 @@ help:
 	@echo "-----------------------=Individual MNS Tests=----------------------"
 	@echo ""
 	@echo "  # Unit Correct Tests - Verify Name Service Operations"
-	@echo "  make unitTestCorrectMateNameService ---------------------------------- Run all MNS unit tests for correct functionality"
-	@echo "  make unitTestCorrectMateNameServicePreRegistrationUsername_AsyncExecutionOnPay  Test username pre-registration with async execution"
-	@echo "  make unitTestCorrectMateNameServicePreRegistrationUsername_SyncExecutionOnPay - Test username pre-registration with sync execution"
-	@echo "  make unitTestCorrectMateNameServiceRegistrationUsername_AsyncExecutionOnPay --- Test username registration with async execution"
-	@echo "  make unitTestCorrectMateNameServiceRegistrationUsername_SyncExecutionOnPay ---- Test username registration with sync execution"
-	@echo "  make unitTestCorrectMateNameServiceMakeOffer_AsyncExecutionOnPay -------------- Test username offer creation with async execution"
-	@echo "  make unitTestCorrectMateNameServiceMakeOffer_SyncExecutionOnPay --------------- Test username offer creation with sync execution"
-	@echo "  make unitTestCorrectMateNameServiceWithdrawOffer_AsyncExecutionOnPay ---------- Test offer withdrawal with async execution"
-	@echo "  make unitTestCorrectMateNameServiceWithdrawOffer_SyncExecutionOnPay ----------- Test offer withdrawal with sync execution"
-	@echo "  make unitTestCorrectMateNameServiceAcceptOffer_AsyncExecutionOnPay ------------ Test offer acceptance with async execution"
-	@echo "  make unitTestCorrectMateNameServiceAcceptOffer_SyncExecutionOnPay ------------- Test offer acceptance with sync execution"
-	@echo "  make unitTestCorrectMateNameServiceRenewUsername_AsyncExecutionOnPay ---------- Test username renewal with async execution"
-	@echo "  make unitTestCorrectMateNameServiceRenewUsername_SyncExecutionOnPay ----------- Test username renewal with sync execution"
-	@echo "  make unitTestCorrectMateNameServiceAddCustomMetadata_AsyncExecutionOnPay ------ Test custom metadata addition with async execution"
-	@echo "  make unitTestCorrectMateNameServiceAddCustomMetadata_SyncExecutionOnPay ------- Test custom metadata addition with sync execution"
-	@echo "  make unitTestCorrectMateNameServiceRemoveCustomMetadata_AsyncExecutionOnPay --- Test custom metadata removal with async execution"
-	@echo "  make unitTestCorrectMateNameServiceRemoveCustomMetadata_SyncExecutionOnPay ---- Test custom metadata removal with sync execution"
-	@echo "  make unitTestCorrectMateNameServiceFlushCustomMetadata_AsyncExecutionOnPay ---- Test metadata flush operations with async execution"
-	@echo "  make unitTestCorrectMateNameServiceFlushCustomMetadata_SyncExecutionOnPay ----- Test metadata flush operations with sync execution"
-	@echo "  make unitTestCorrectMateNameServiceFlushUsername_AsyncExecutionOnPay ---------- Test username flush operations with async execution"
-	@echo "  make unitTestCorrectMateNameServiceFlushUsername_SyncExecutionOnPay ----------- Test username flush operations with sync execution"
-	@echo "  make unitTestCorrectMateNameServiceAdminFunctions ---------------------------- Test MNS administrative functions and governance"
+	@echo "  make unitTestCorrectNameService ---------------------------------- Run all MNS unit tests for correct functionality"
+	@echo "  make unitTestCorrectNameServicePreRegistrationUsername_AsyncExecutionOnPay  Test username pre-registration with async execution"
+	@echo "  make unitTestCorrectNameServicePreRegistrationUsername_SyncExecutionOnPay - Test username pre-registration with sync execution"
+	@echo "  make unitTestCorrectNameServiceRegistrationUsername_AsyncExecutionOnPay --- Test username registration with async execution"
+	@echo "  make unitTestCorrectNameServiceRegistrationUsername_SyncExecutionOnPay ---- Test username registration with sync execution"
+	@echo "  make unitTestCorrectNameServiceMakeOffer_AsyncExecutionOnPay -------------- Test username offer creation with async execution"
+	@echo "  make unitTestCorrectNameServiceMakeOffer_SyncExecutionOnPay --------------- Test username offer creation with sync execution"
+	@echo "  make unitTestCorrectNameServiceWithdrawOffer_AsyncExecutionOnPay ---------- Test offer withdrawal with async execution"
+	@echo "  make unitTestCorrectNameServiceWithdrawOffer_SyncExecutionOnPay ----------- Test offer withdrawal with sync execution"
+	@echo "  make unitTestCorrectNameServiceAcceptOffer_AsyncExecutionOnPay ------------ Test offer acceptance with async execution"
+	@echo "  make unitTestCorrectNameServiceAcceptOffer_SyncExecutionOnPay ------------- Test offer acceptance with sync execution"
+	@echo "  make unitTestCorrectNameServiceRenewUsername_AsyncExecutionOnPay ---------- Test username renewal with async execution"
+	@echo "  make unitTestCorrectNameServiceRenewUsername_SyncExecutionOnPay ----------- Test username renewal with sync execution"
+	@echo "  make unitTestCorrectNameServiceAddCustomMetadata_AsyncExecutionOnPay ------ Test custom metadata addition with async execution"
+	@echo "  make unitTestCorrectNameServiceAddCustomMetadata_SyncExecutionOnPay ------- Test custom metadata addition with sync execution"
+	@echo "  make unitTestCorrectNameServiceRemoveCustomMetadata_AsyncExecutionOnPay --- Test custom metadata removal with async execution"
+	@echo "  make unitTestCorrectNameServiceRemoveCustomMetadata_SyncExecutionOnPay ---- Test custom metadata removal with sync execution"
+	@echo "  make unitTestCorrectNameServiceFlushCustomMetadata_AsyncExecutionOnPay ---- Test metadata flush operations with async execution"
+	@echo "  make unitTestCorrectNameServiceFlushCustomMetadata_SyncExecutionOnPay ----- Test metadata flush operations with sync execution"
+	@echo "  make unitTestCorrectNameServiceFlushUsername_AsyncExecutionOnPay ---------- Test username flush operations with async execution"
+	@echo "  make unitTestCorrectNameServiceFlushUsername_SyncExecutionOnPay ----------- Test username flush operations with sync execution"
+	@echo "  make unitTestCorrectNameServiceAdminFunctions ---------------------------- Test MNS administrative functions and governance"
 	@echo ""
 	@echo "  # Unit Revert Tests - Verify Name Service Error Conditions"
-	@echo "  make unitTestRevertMateNameService ------------------------- Run all MNS revert tests for error handling"
-	@echo "  make unitTestRevertMateNameServicePreRegistrationUsername -- Test revert conditions for invalid pre-registrations"
-	@echo "  make unitTestRevertMateNameServiceRegistrationUsername ----- Test revert conditions for invalid username registrations"
-	@echo "  make unitTestRevertMateNameServiceMakeOffer ---------------- Test revert conditions for invalid offer creation"
-	@echo "  make unitTestRevertMateNameServiceWithdrawOffer ------------ Test revert conditions for invalid offer withdrawals"
-	@echo "  make unitTestRevertMateNameServiceAcceptOffer -------------- Test revert conditions for invalid offer acceptance"
-	@echo "  make unitTestRevertMateNameServiceRenewUsername ------------ Test revert conditions for invalid username renewals"
-	@echo "  make unitTestRevertMateNameServiceAddCustomMetadata -------- Test revert conditions for invalid metadata additions"
-	@echo "  make unitTestRevertMateNameServiceRemoveCustomMetadata ----- Test revert conditions for invalid metadata removals"
-	@echo "  make unitTestRevertMateNameServiceFlushCustomMetadata ------ Test revert conditions for invalid metadata flush operations"
-	@echo "  make unitTestRevertMateNameServiceFlushUsername ------------ Test revert conditions for invalid username flush operations"
-	@echo "  make unitTestRevertMateNameServiceAdminFunctions ----------- Test revert conditions for unauthorized MNS admin access"
+	@echo "  make unitTestRevertNameService ------------------------- Run all MNS revert tests for error handling"
+	@echo "  make unitTestRevertNameServicePreRegistrationUsername -- Test revert conditions for invalid pre-registrations"
+	@echo "  make unitTestRevertNameServiceRegistrationUsername ----- Test revert conditions for invalid username registrations"
+	@echo "  make unitTestRevertNameServiceMakeOffer ---------------- Test revert conditions for invalid offer creation"
+	@echo "  make unitTestRevertNameServiceWithdrawOffer ------------ Test revert conditions for invalid offer withdrawals"
+	@echo "  make unitTestRevertNameServiceAcceptOffer -------------- Test revert conditions for invalid offer acceptance"
+	@echo "  make unitTestRevertNameServiceRenewUsername ------------ Test revert conditions for invalid username renewals"
+	@echo "  make unitTestRevertNameServiceAddCustomMetadata -------- Test revert conditions for invalid metadata additions"
+	@echo "  make unitTestRevertNameServiceRemoveCustomMetadata ----- Test revert conditions for invalid metadata removals"
+	@echo "  make unitTestRevertNameServiceFlushCustomMetadata ------ Test revert conditions for invalid metadata flush operations"
+	@echo "  make unitTestRevertNameServiceFlushUsername ------------ Test revert conditions for invalid username flush operations"
+	@echo "  make unitTestRevertNameServiceAdminFunctions ----------- Test revert conditions for unauthorized MNS admin access"
 	@echo ""
 	@echo "  # Fuzz Tests - Name Service Property Testing"
-	@echo "  make fuzzTestMateNameServicePreRegistrationUsername ---- Fuzz test pre-registration with random username patterns"
-	@echo "  make fuzzTestMateNameServiceRegistrationUsername ------- Fuzz test registration with random username and payment scenarios"
-	@echo "  make fuzzTestMateNameServiceMakeOffer ------------------ Fuzz test offer creation with random amounts and usernames"
-	@echo "  make fuzzTestMateNameServiceWithdrawOffer -------------- Fuzz test offer withdrawal with random timing and conditions"
-	@echo "  make fuzzTestMateNameServiceAcceptOffer ---------------- Fuzz test offer acceptance with random market scenarios"
-	@echo "  make fuzzTestMateNameServiceRenewUsername -------------- Fuzz test username renewal with random expiration scenarios"
-	@echo "  make fuzzTestMateNameServiceAddCustomMetadata ---------- Fuzz test metadata addition with random key-value pairs"
-	@echo "  make fuzzTestMateNameServiceRemoveCustomMetadata ------- Fuzz test metadata removal with random selection patterns"
-	@echo "  make fuzzTestMateNameServiceFlushCustomMetadata -------- Fuzz test metadata flush with random user scenarios"
-	@echo "  make fuzzTestMateNameServiceFlushUsername -------------- Fuzz test username flush with random ownership scenarios"
+	@echo "  make fuzzTestNameServicePreRegistrationUsername ---- Fuzz test pre-registration with random username patterns"
+	@echo "  make fuzzTestNameServiceRegistrationUsername ------- Fuzz test registration with random username and payment scenarios"
+	@echo "  make fuzzTestNameServiceMakeOffer ------------------ Fuzz test offer creation with random amounts and usernames"
+	@echo "  make fuzzTestNameServiceWithdrawOffer -------------- Fuzz test offer withdrawal with random timing and conditions"
+	@echo "  make fuzzTestNameServiceAcceptOffer ---------------- Fuzz test offer acceptance with random market scenarios"
+	@echo "  make fuzzTestNameServiceRenewUsername -------------- Fuzz test username renewal with random expiration scenarios"
+	@echo "  make fuzzTestNameServiceAddCustomMetadata ---------- Fuzz test metadata addition with random key-value pairs"
+	@echo "  make fuzzTestNameServiceRemoveCustomMetadata ------- Fuzz test metadata removal with random selection patterns"
+	@echo "  make fuzzTestNameServiceFlushCustomMetadata -------- Fuzz test metadata flush with random user scenarios"
+	@echo "  make fuzzTestNameServiceFlushUsername -------------- Fuzz test username flush with random ownership scenarios"
 	@echo ""
 	@echo "-----------------------=Development Tools=----------------------"
 	@echo ""
@@ -748,8 +748,8 @@ help:
 	@echo "  # Individual Estimator test commands"
 	@echo "  make unitTestCorrectEstimator, unitTestRevertEstimator"
 	@echo ""
-	@echo "  # Individual MateNameService test commands"
-	@echo "  make unitTestCorrectMateNameService, unitTestRevertMateNameService, fuzzTestMateNameServicePreRegistrationUsername, etc."
+	@echo "  # Individual NameService test commands"
+	@echo "  make unitTestCorrectNameService, unitTestRevertNameService, fuzzTestNameServicePreRegistrationUsername, etc."
 	@echo ""
 	@echo "-----------------------=Fuzz test commands=----------------------"
 	@echo ""
@@ -771,16 +771,16 @@ help:
 	@echo "    make fuzzTestSMatePublicServiceStaking"
 	@echo ""
 	@echo "  MNS Fuzz tests"
-	@echo "    make fuzzTestMateNameServicePreRegistrationUsername"
-	@echo "    make fuzzTestMateNameServiceRegistrationUsername"
-	@echo "    make fuzzTestMateNameServiceMakeOffer"
-	@echo "    make fuzzTestMateNameServiceWithdrawOffer"
-	@echo "    make fuzzTestMateNameServiceAcceptOffer"
-	@echo "    make fuzzTestMateNameServiceRenewUsername"
-	@echo "    make fuzzTestMateNameServiceAddCustomMetadata"
-	@echo "    make fuzzTestMateNameServiceRemoveCustomMetadata"
-	@echo "    make fuzzTestMateNameServiceFlushCustomMetadata"
-	@echo "    make fuzzTestMateNameServiceFlushUsername"
+	@echo "    make fuzzTestNameServicePreRegistrationUsername"
+	@echo "    make fuzzTestNameServiceRegistrationUsername"
+	@echo "    make fuzzTestNameServiceMakeOffer"
+	@echo "    make fuzzTestNameServiceWithdrawOffer"
+	@echo "    make fuzzTestNameServiceAcceptOffer"
+	@echo "    make fuzzTestNameServiceRenewUsername"
+	@echo "    make fuzzTestNameServiceAddCustomMetadata"
+	@echo "    make fuzzTestNameServiceRemoveCustomMetadata"
+	@echo "    make fuzzTestNameServiceFlushCustomMetadata"
+	@echo "    make fuzzTestNameServiceFlushUsername"
 	@echo ""
 	@echo "-----------------------=Other commands=----------------------"
 	@echo ""

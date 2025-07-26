@@ -5,13 +5,13 @@ import {Script, console2} from "forge-std/Script.sol";
 import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {SMate} from "@EVVM/playground/staking/SMate.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
-import {Mns} from "@EVVM/playground/mns/Mns.sol";
+import {NameService} from "@EVVM/playground/nameService/NameService.sol";
 
 contract DeployScript is Script {
     SMate sMate;
     Evvm evvm;
     Estimator estimator;
-    Mns mateNameService;
+    NameService nameService;
     address admin = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
     address goldenFisher = 0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc;
     address activator = 0x976EA74026E726554dB657fA54763abd0C3a0aa9;
@@ -29,10 +29,10 @@ contract DeployScript is Script {
             address(sMate),
             admin
         );
-        mateNameService = new Mns(address(evvm), admin);
+        nameService = new NameService(address(evvm), admin);
 
         sMate._setupEstimatorAndEvvm(address(estimator), address(evvm));
-        evvm._setupMateNameServiceAddress(address(mateNameService));
+        evvm._setupNameServiceAddress(address(nameService));
 
         vm.stopBroadcast();
 

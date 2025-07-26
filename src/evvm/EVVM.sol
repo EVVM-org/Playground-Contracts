@@ -14,7 +14,7 @@ pragma solidity ^0.8.0;
  */
 
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
-import {Mns} from "@EVVM/playground/mns/Mns.sol";
+import {NameService} from "@EVVM/playground/nameService/NameService.sol";
 import {SignatureRecover} from "@EVVM/libraries/SignatureRecover.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
@@ -39,18 +39,18 @@ contract EVVM is EvvmStorage {
 
         stakerList[_sMateContractAddress] = 0x01;
 
-        breakerSetupMateNameServiceAddress = 0x01;
+        breakerSetupNameServiceAddress = 0x01;
     }
 
-    function _setupMateNameServiceAddress(
-        address _mateNameServiceAddress
+    function _setupNameServiceAddress(
+        address _nameServiceAddress
     ) external {
-        if (breakerSetupMateNameServiceAddress == 0x00) {
+        if (breakerSetupNameServiceAddress == 0x00) {
             revert();
         }
-        mateNameServiceAddress = _mateNameServiceAddress;
-        balances[mateNameServiceAddress][evvmMetadata.principalTokenAddress] = 10000 * 10 ** 18;
-        stakerList[mateNameServiceAddress] = 0x01;
+        nameServiceAddress = _nameServiceAddress;
+        balances[nameServiceAddress][evvmMetadata.principalTokenAddress] = 10000 * 10 ** 18;
+        stakerList[nameServiceAddress] = 0x01;
     }
 
     fallback() external {
@@ -253,7 +253,7 @@ contract EVVM is EvvmStorage {
         }
 
         address to = !Strings.equal(to_identity, "")
-            ? Mns(mateNameServiceAddress).verifyStrictAndGetOwnerOfIdentity(
+            ? NameService(nameServiceAddress).verifyStrictAndGetOwnerOfIdentity(
                 to_identity
             )
             : to_address;
@@ -314,7 +314,7 @@ contract EVVM is EvvmStorage {
         }
 
         address to = !Strings.equal(to_identity, "")
-            ? Mns(mateNameServiceAddress).verifyStrictAndGetOwnerOfIdentity(
+            ? NameService(nameServiceAddress).verifyStrictAndGetOwnerOfIdentity(
                 to_identity
             )
             : to_address;
@@ -405,7 +405,7 @@ contract EVVM is EvvmStorage {
             }
 
             to_aux = !Strings.equal(payData[iteration].to_identity, "")
-                ? Mns(mateNameServiceAddress).verifyStrictAndGetOwnerOfIdentity(
+                ? NameService(nameServiceAddress).verifyStrictAndGetOwnerOfIdentity(
                     payData[iteration].to_identity
                 )
                 : payData[iteration].to_address;
@@ -510,11 +510,11 @@ contract EVVM is EvvmStorage {
 
             if (!Strings.equal(toData[i].to_identity, "")) {
                 if (
-                    Mns(mateNameServiceAddress).strictVerifyIfIdentityExist(
+                    NameService(nameServiceAddress).strictVerifyIfIdentityExist(
                         toData[i].to_identity
                     )
                 ) {
-                    to_aux = Mns(mateNameServiceAddress).getOwnerOfIdentity(
+                    to_aux = NameService(nameServiceAddress).getOwnerOfIdentity(
                         toData[i].to_identity
                     );
                 }
@@ -905,8 +905,8 @@ contract EVVM is EvvmStorage {
     }
 
     //░▒▓█MNS address███▓▒░
-    function setMNSAddress(address _mateNameServiceAddress) external onlyAdmin {
-        mateNameServiceAddress = _mateNameServiceAddress;
+    function setMNSAddress(address _nameServiceAddress) external onlyAdmin {
+        nameServiceAddress = _nameServiceAddress;
     }
 
     //░▒▓█Change admin███▓▒░
@@ -1049,8 +1049,8 @@ contract EVVM is EvvmStorage {
 
     //░▒▓█Getter functions██████████████████████████████████████████████████████▓▒░
 
-    function getMateNameServiceAddress() external view returns (address) {
-        return mateNameServiceAddress;
+    function getNameServiceAddress() external view returns (address) {
+        return nameServiceAddress;
     }
 
     function getSMateContractAddress() external view returns (address) {

@@ -20,7 +20,7 @@ import {Constants} from "test/Constants.sol";
 import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 import {SMate} from "@EVVM/playground/staking/SMate.sol";
-import {Mns} from "@EVVM/playground/mns/Mns.sol";
+import {NameService} from "@EVVM/playground/nameService/NameService.sol";
 import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
@@ -30,7 +30,7 @@ contract unitTestRevert_EVVM_payMateStaking_async is Test, Constants {
     SMate sMate;
     Evvm evvm;
     Estimator estimator;
-    Mns mns;
+    NameService nameService;
 
     AccountData COMMON_USER_STAKER_1 = COMMON_USER_STAKER;
     AccountData COMMON_USER_STAKER_2 = WILDCARD_USER;
@@ -44,10 +44,10 @@ contract unitTestRevert_EVVM_payMateStaking_async is Test, Constants {
             address(sMate),
             ADMIN.Address
         );
-        mns = new Mns(address(evvm), ADMIN.Address);
+        nameService = new NameService(address(evvm), ADMIN.Address);
 
         sMate._setupEstimatorAndEvvm(address(estimator), address(evvm));
-        evvm._setupMateNameServiceAddress(address(mns));
+        evvm._setupNameServiceAddress(address(nameService));
         
 
         evvm._setPointStaker(COMMON_USER_STAKER_1.Address, 0x01);
@@ -161,9 +161,9 @@ contract unitTestRevert_EVVM_payMateStaking_async is Test, Constants {
     function test__unit_revert__payMateStaking_async__bSigAtToIdentity()
         external
     {
-        mns._setIdentityBaseMetadata(
+        nameService._setIdentityBaseMetadata(
             "dummy",
-            Mns.IdentityBaseMetadata({
+            NameService.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,

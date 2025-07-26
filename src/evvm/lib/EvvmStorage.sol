@@ -23,7 +23,7 @@ abstract contract EvvmStorage is EvvmStructs {
 
     address mailboxHyperlane;
 
-    address mateNameServiceAddress;
+    address nameServiceAddress;
 
     address sMateContractAddress;
 
@@ -33,7 +33,7 @@ abstract contract EvvmStorage is EvvmStructs {
     address whitelistTokenToBeAdded_pool;
     uint256 whitelistTokenToBeAdded_dateToSet;
 
-    bytes1 breakerSetupMateNameServiceAddress;
+    bytes1 breakerSetupNameServiceAddress;
 
     EvvmMetadata evvmMetadata =
         EvvmMetadata({

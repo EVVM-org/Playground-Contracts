@@ -21,7 +21,7 @@ import {Constants} from "test/Constants.sol";
 import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 import {SMate} from "@EVVM/playground/staking/SMate.sol";
-import {Mns} from "@EVVM/playground/mns/Mns.sol";
+import {NameService} from "@EVVM/playground/nameService/NameService.sol";
 import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
@@ -31,7 +31,7 @@ contract fuzzTest_EVVM_disperseCaPay is Test, Constants {
     SMate sMate;
     Evvm evvm;
     Estimator estimator;
-    Mns mns;
+    NameService nameService;
 
     function setUp() public {
         sMate = new SMate(ADMIN.Address, GOLDEN_STAKER.Address);
@@ -42,10 +42,10 @@ contract fuzzTest_EVVM_disperseCaPay is Test, Constants {
             address(sMate),
             ADMIN.Address
         );
-        mns = new Mns(address(evvm), ADMIN.Address);
+        nameService = new NameService(address(evvm), ADMIN.Address);
 
         sMate._setupEstimatorAndEvvm(address(estimator), address(evvm));
-        evvm._setupMateNameServiceAddress(address(mns));
+        evvm._setupNameServiceAddress(address(nameService));
     }
 
     function addBalance(address user, address token, uint256 amount) private {

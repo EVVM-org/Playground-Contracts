@@ -20,7 +20,7 @@ import {Constants} from "test/Constants.sol";
 import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 import {SMate} from "@EVVM/playground/staking/SMate.sol";
-import {Mns} from "@EVVM/playground/mns/Mns.sol";
+import {NameService} from "@EVVM/playground/nameService/NameService.sol";
 import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
@@ -30,7 +30,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
     SMate sMate;
     Evvm evvm;
     Estimator estimator;
-    Mns mns;
+    NameService nameService;
 
     AccountData COMMON_USER_NO_STAKER_3 = WILDCARD_USER;
 
@@ -43,10 +43,10 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             address(sMate),
             ADMIN.Address
         );
-        mns = new Mns(address(evvm), ADMIN.Address);
+        nameService = new NameService(address(evvm), ADMIN.Address);
 
         sMate._setupEstimatorAndEvvm(address(estimator), address(evvm));
-        evvm._setupMateNameServiceAddress(address(mns));
+        evvm._setupNameServiceAddress(address(nameService));
         
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
@@ -72,9 +72,9 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
      */
 
     function test__unit_revert__payMultiple_syncExecution__bSigAtFrom() public {
-        mns._setIdentityBaseMetadata(
+        nameService._setIdentityBaseMetadata(
             "dummy",
-            Mns.IdentityBaseMetadata({
+            NameService.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,
@@ -140,9 +140,9 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
     function test__unit_revert__payMultiple_syncExecution__bSigAtToAddress()
         public
     {
-        mns._setIdentityBaseMetadata(
+        nameService._setIdentityBaseMetadata(
             "dummy",
-            Mns.IdentityBaseMetadata({
+            NameService.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,
@@ -208,9 +208,9 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
     function test__unit_revert__payMultiple_syncExecution__bSigAtToIdentity()
         public
     {
-        mns._setIdentityBaseMetadata(
+        nameService._setIdentityBaseMetadata(
             "dummy",
-            Mns.IdentityBaseMetadata({
+            NameService.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,
@@ -276,9 +276,9 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
     function test__unit_revert__payMultiple_syncExecution__bSigAtTokenAddress()
         public
     {
-        mns._setIdentityBaseMetadata(
+        nameService._setIdentityBaseMetadata(
             "dummy",
-            Mns.IdentityBaseMetadata({
+            NameService.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,
@@ -344,9 +344,9 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
     function test__unit_revert__payMultiple_syncExecution__bSigAtAmount()
         public
     {
-        mns._setIdentityBaseMetadata(
+        nameService._setIdentityBaseMetadata(
             "dummy",
-            Mns.IdentityBaseMetadata({
+            NameService.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,
@@ -412,9 +412,9 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
     function test__unit_revert__payMultiple_syncExecution__bSigAtPriorityFee()
         public
     {
-        mns._setIdentityBaseMetadata(
+        nameService._setIdentityBaseMetadata(
             "dummy",
-            Mns.IdentityBaseMetadata({
+            NameService.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,
@@ -480,9 +480,9 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
     function test__unit_revert__payMultiple_syncExecution__bSigAtNonce()
         public
     {
-        mns._setIdentityBaseMetadata(
+        nameService._setIdentityBaseMetadata(
             "dummy",
-            Mns.IdentityBaseMetadata({
+            NameService.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,
@@ -548,9 +548,9 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
     function test__unit_revert__payMultiple_syncExecution__bSigAtFlagPriority()
         public
     {
-        mns._setIdentityBaseMetadata(
+        nameService._setIdentityBaseMetadata(
             "dummy",
-            Mns.IdentityBaseMetadata({
+            NameService.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,
@@ -616,9 +616,9 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
     function test__unit_revert__payMultiple_syncExecution__bSigAtExecutor()
         public
     {
-        mns._setIdentityBaseMetadata(
+        nameService._setIdentityBaseMetadata(
             "dummy",
-            Mns.IdentityBaseMetadata({
+            NameService.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,
@@ -684,9 +684,9 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
     function test__unit_revert__payMultiple_syncExecution__diferentExecutor()
         public
     {
-        mns._setIdentityBaseMetadata(
+        nameService._setIdentityBaseMetadata(
             "dummy",
-            Mns.IdentityBaseMetadata({
+            NameService.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,
@@ -753,9 +753,9 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
     function test__unit_revert__payMultiple_syncExecution__amountMoreThanBalance()
         public
     {
-        mns._setIdentityBaseMetadata(
+        nameService._setIdentityBaseMetadata(
             "dummy",
-            Mns.IdentityBaseMetadata({
+            NameService.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,
@@ -822,9 +822,9 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
     function test__unit_revert__payMultiple_syncExecution__priorityFeeMoreThanBalance()
         public
     {
-        mns._setIdentityBaseMetadata(
+        nameService._setIdentityBaseMetadata(
             "dummy",
-            Mns.IdentityBaseMetadata({
+            NameService.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,
