@@ -40,7 +40,20 @@ contract unitTestCorrect_NameService_makeOffer_AsyncExecutionOnPay is
 
     function setUp() public {
         staking = new Staking(ADMIN.Address, GOLDEN_STAKER.Address);
-        evvm = new Evvm(ADMIN.Address, address(staking));
+        evvm = new Evvm(
+            ADMIN.Address,
+            address(staking),
+            EvvmStructs.EvvmMetadata({
+                EvvmName: "EVVM",
+                EvvmID: "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+                principalTokenName: "EVVM Staking Token",
+                principalTokenSymbol: "EVVM-STK",
+                principalTokenAddress: 0x0000000000000000000000000000000000000001,
+                totalSupply: 2033333333000000000000000000,
+                eraTokens: 2033333333000000000000000000 / 2,
+                reward: 5000000000000000000
+            })
+        );
         estimator = new Estimator(
             ACTIVATOR.Address,
             address(evvm),

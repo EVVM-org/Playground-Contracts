@@ -6,13 +6,15 @@ import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Staking} from "@EVVM/playground/staking/Staking.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {NameService} from "@EVVM/playground/nameService/NameService.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 contract DeployScript is Script {
     Staking staking;
     Evvm evvm;
     Estimator estimator;
     NameService nameService;
-    address admin = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
+
+    address admin = 0x5cBf2D4Bbf834912Ad0bD59980355b57695e8309;
     address goldenFisher = 0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc;
     address activator = 0x976EA74026E726554dB657fA54763abd0C3a0aa9;
 
@@ -22,7 +24,20 @@ contract DeployScript is Script {
         vm.startBroadcast();
 
         staking = new Staking(admin, goldenFisher);
-        evvm = new Evvm(admin, address(staking));
+        evvm = new Evvm(
+            admin,
+            address(staking),
+            EvvmStructs.EvvmMetadata({
+                EvvmName: "EVVM",
+                EvvmID: "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+                principalTokenName: "EVVM Staking Token",
+                principalTokenSymbol: "EVVM-STK",
+                principalTokenAddress: 0x0000000000000000000000000000000000000001,
+                totalSupply: 2033333333000000000000000000,
+                eraTokens: 2033333333000000000000000000 / 2,
+                reward: 5000000000000000000
+            })
+        );
         estimator = new Estimator(
             activator,
             address(evvm),

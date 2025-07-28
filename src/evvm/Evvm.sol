@@ -28,7 +28,7 @@ contract Evvm is EvvmStorage {
         _;
     }
 
-    constructor(address _initialOwner, address _stakingContractAddress) {
+    constructor(address _initialOwner, address _stakingContractAddress, EvvmMetadata memory _evvmMetadata) {
         stakingContractAddress = _stakingContractAddress;
 
         admin.current = _initialOwner;
@@ -40,6 +40,8 @@ contract Evvm is EvvmStorage {
         stakerList[_stakingContractAddress] = 0x01;
 
         breakerSetupNameServiceAddress = 0x01;
+
+        evvmMetadata = _evvmMetadata;
     }
 
     function _setupNameServiceAddress(
