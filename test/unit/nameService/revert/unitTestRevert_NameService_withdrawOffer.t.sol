@@ -26,6 +26,7 @@ import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
     Staking staking;
@@ -61,7 +62,6 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
 
@@ -137,11 +137,8 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
                 nonceNameService
             )
         );
-        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
+        bytes memory signatureNameService = Erc191TestBuilder
+            .buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -259,7 +256,11 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
                     nonceNameService
                 )
             );
-            signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
+            signatureNameService = Erc191TestBuilder.buildERC191Signature(
+                v,
+                r,
+                s
+            );
 
             (v, r, s) = vm.sign(
                 user.PrivateKey,
@@ -284,7 +285,11 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
                     nonceNameService
                 )
             );
-            signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
+            signatureNameService = Erc191TestBuilder.buildERC191Signature(
+                v,
+                r,
+                s
+            );
             signatureEVVM = "";
         }
     }
@@ -669,7 +674,9 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
         );
     }
 
-    function test__unit_revert__withdrawOffer__bSigAtNonceNameService() external {
+    function test__unit_revert__withdrawOffer__bSigAtNonceNameService()
+        external
+    {
         uint256 totalPriorityFee = addBalance(
             COMMON_USER_NO_STAKER_2,
             0.0001 ether
@@ -1129,9 +1136,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
         );
     }
 
-    function test__unit_revert__withdrawOffer__bPaySigAtPriorityFee()
-        external
-    {
+    function test__unit_revert__withdrawOffer__bPaySigAtPriorityFee() external {
         uint256 totalPriorityFee = addBalance(
             COMMON_USER_NO_STAKER_2,
             0.0001 ether
@@ -1561,7 +1566,9 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
         );
     }
 
-    function test__unit_revert__withdrawOffer__userTriesToCallOutOfBounds() external {
+    function test__unit_revert__withdrawOffer__userTriesToCallOutOfBounds()
+        external
+    {
         uint256 totalPriorityFee = addBalance(
             COMMON_USER_NO_STAKER_2,
             0.0001 ether

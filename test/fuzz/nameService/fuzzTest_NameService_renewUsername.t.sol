@@ -32,6 +32,7 @@ import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 contract fuzzTest_NameService_renewUsername is Test, Constants {
     Staking staking;
@@ -67,7 +68,6 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
 
@@ -132,11 +132,8 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
                 nonceNameService
             )
         );
-        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
+        bytes memory signatureNameService = Erc191TestBuilder
+            .buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -366,9 +363,8 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         vm.stopPrank();
 
-        (, uint256 newUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 newUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(newUsernameExpirationTime, block.timestamp + ((366 days) * 2));
 
@@ -407,7 +403,9 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
             true
         );
 
-        uint256 amountOffer = nameService.getSingleOfferOfUsername("test", 0).amount;
+        uint256 amountOffer = nameService
+            .getSingleOfferOfUsername("test", 0)
+            .amount;
 
         if (amountOffer != 0) {
             assertEq(
@@ -453,9 +451,8 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         vm.stopPrank();
 
-        (, uint256 newUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 newUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(newUsernameExpirationTime, block.timestamp + ((366 days) * 2));
 
@@ -479,7 +476,9 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         RenewUsernameFuzzTestInput_nPF_Ex memory input
     ) external {
         vm.assume(
-            input.nonceNameService > 1 && input.daysPassed < 365 && input.daysPassed > 0
+            input.nonceNameService > 1 &&
+                input.daysPassed < 365 &&
+                input.daysPassed > 0
         );
 
         skip((366 + uint256(input.daysPassed)) * 1 days);
@@ -501,7 +500,10 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
                 true
             );
 
-        assertEq(nameService.seePriceToRenew("test"), 500_000 * evvm.getRewardAmount());
+        assertEq(
+            nameService.seePriceToRenew("test"),
+            500_000 * evvm.getRewardAmount()
+        );
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
 
@@ -518,9 +520,8 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         vm.stopPrank();
 
-        (, uint256 newUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 newUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(
             newUsernameExpirationTime,
@@ -546,7 +547,9 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
     function test__unit_correct__renewUsername__nS_PF_nOf(
         RenewUsernameFuzzTestInput_PF_nOf memory input
     ) external {
-        vm.assume(input.nonceNameService > 1 && input.priorityFeeAmountEVVM > 0);
+        vm.assume(
+            input.nonceNameService > 1 && input.priorityFeeAmountEVVM > 0
+        );
 
         uint256 nonceEvvm = input.priorityFlagEVVM
             ? input.nonceEVVM
@@ -587,9 +590,8 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         vm.stopPrank();
 
-        (, uint256 newUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 newUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(newUsernameExpirationTime, block.timestamp + ((366 days) * 2));
 
@@ -632,7 +634,9 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
             true
         );
 
-        uint256 amountOffer = nameService.getSingleOfferOfUsername("test", 0).amount;
+        uint256 amountOffer = nameService
+            .getSingleOfferOfUsername("test", 0)
+            .amount;
 
         if (amountOffer != 0) {
             assertEq(
@@ -678,9 +682,8 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         vm.stopPrank();
 
-        (, uint256 newUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 newUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(newUsernameExpirationTime, block.timestamp + ((366 days) * 2));
 
@@ -704,7 +707,9 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         RenewUsernameFuzzTestInput_PF_Ex memory input
     ) external {
         vm.assume(
-            input.nonceNameService > 1 && input.daysPassed < 365 && input.daysPassed > 0
+            input.nonceNameService > 1 &&
+                input.daysPassed < 365 &&
+                input.daysPassed > 0
         );
 
         skip((366 + uint256(input.daysPassed)) * 1 days);
@@ -726,7 +731,10 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
                 true
             );
 
-        assertEq(nameService.seePriceToRenew("test"), 500_000 * evvm.getRewardAmount());
+        assertEq(
+            nameService.seePriceToRenew("test"),
+            500_000 * evvm.getRewardAmount()
+        );
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
 
@@ -743,9 +751,8 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         vm.stopPrank();
 
-        (, uint256 newUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 newUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(
             newUsernameExpirationTime,
@@ -818,9 +825,8 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         vm.stopPrank();
 
-        (, uint256 newUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 newUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(newUsernameExpirationTime, block.timestamp + ((366 days) * 2));
 
@@ -858,7 +864,9 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
             true
         );
 
-        uint256 amountOffer = nameService.getSingleOfferOfUsername("test", 0).amount;
+        uint256 amountOffer = nameService
+            .getSingleOfferOfUsername("test", 0)
+            .amount;
 
         if (amountOffer != 0) {
             assertEq(
@@ -910,9 +918,8 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         vm.stopPrank();
 
-        (, uint256 newUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 newUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(newUsernameExpirationTime, block.timestamp + ((366 days) * 2));
 
@@ -935,7 +942,9 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         RenewUsernameFuzzTestInput_nPF_Ex memory input
     ) external {
         vm.assume(
-            input.nonceNameService > 1 && input.daysPassed < 365 && input.daysPassed > 0
+            input.nonceNameService > 1 &&
+                input.daysPassed < 365 &&
+                input.daysPassed > 0
         );
 
         skip((366 + uint256(input.daysPassed)) * 1 days);
@@ -957,7 +966,10 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
                 true
             );
 
-        assertEq(nameService.seePriceToRenew("test"), 500_000 * evvm.getRewardAmount());
+        assertEq(
+            nameService.seePriceToRenew("test"),
+            500_000 * evvm.getRewardAmount()
+        );
 
         uint256 priceOfRenewBefore = nameService.seePriceToRenew("test");
         uint256 amountStakerBefore = evvm.getBalance(
@@ -980,9 +992,8 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         vm.stopPrank();
 
-        (, uint256 newUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 newUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(
             newUsernameExpirationTime,
@@ -1007,7 +1018,9 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
     function test__unit_correct__renewUsername__S_PF_nOf(
         RenewUsernameFuzzTestInput_PF_nOf memory input
     ) external {
-        vm.assume(input.nonceNameService > 1 && input.priorityFeeAmountEVVM > 0);
+        vm.assume(
+            input.nonceNameService > 1 && input.priorityFeeAmountEVVM > 0
+        );
 
         uint256 nonceEvvm = input.priorityFlagEVVM
             ? input.nonceEVVM
@@ -1054,9 +1067,8 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         vm.stopPrank();
 
-        (, uint256 newUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 newUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(newUsernameExpirationTime, block.timestamp + ((366 days) * 2));
 
@@ -1098,7 +1110,9 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
             true
         );
 
-        uint256 amountOffer = nameService.getSingleOfferOfUsername("test", 0).amount;
+        uint256 amountOffer = nameService
+            .getSingleOfferOfUsername("test", 0)
+            .amount;
 
         if (amountOffer != 0) {
             assertEq(
@@ -1150,9 +1164,8 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         vm.stopPrank();
 
-        (, uint256 newUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 newUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(newUsernameExpirationTime, block.timestamp + ((366 days) * 2));
 
@@ -1175,7 +1188,9 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         RenewUsernameFuzzTestInput_PF_Ex memory input
     ) external {
         vm.assume(
-            input.nonceNameService > 1 && input.daysPassed < 365 && input.daysPassed > 0
+            input.nonceNameService > 1 &&
+                input.daysPassed < 365 &&
+                input.daysPassed > 0
         );
 
         skip((366 + uint256(input.daysPassed)) * 1 days);
@@ -1197,7 +1212,10 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
                 true
             );
 
-        assertEq(nameService.seePriceToRenew("test"), 500_000 * evvm.getRewardAmount());
+        assertEq(
+            nameService.seePriceToRenew("test"),
+            500_000 * evvm.getRewardAmount()
+        );
 
         uint256 priceOfRenewBefore = nameService.seePriceToRenew("test");
         uint256 amountStakerBefore = evvm.getBalance(
@@ -1220,9 +1238,8 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         vm.stopPrank();
 
-        (, uint256 newUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 newUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(
             newUsernameExpirationTime,

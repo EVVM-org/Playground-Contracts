@@ -26,6 +26,7 @@ import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 contract unitTestCorrect_NameService_preRegistrationUsername_AsyncExecutionOnPay is
     Test,
@@ -62,7 +63,6 @@ contract unitTestCorrect_NameService_preRegistrationUsername_AsyncExecutionOnPay
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
     }
@@ -102,7 +102,11 @@ contract unitTestCorrect_NameService_preRegistrationUsername_AsyncExecutionOnPay
                     nonceNameService
                 )
             );
-            signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
+            signatureNameService = Erc191TestBuilder.buildERC191Signature(
+                v,
+                r,
+                s
+            );
             (v, r, s) = vm.sign(
                 COMMON_USER_NO_STAKER_1.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPay(
@@ -125,7 +129,11 @@ contract unitTestCorrect_NameService_preRegistrationUsername_AsyncExecutionOnPay
                     nonceNameService
                 )
             );
-            signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
+            signatureNameService = Erc191TestBuilder.buildERC191Signature(
+                v,
+                r,
+                s
+            );
             signatureEVVM = "";
         }
     }
@@ -139,15 +147,18 @@ contract unitTestCorrect_NameService_preRegistrationUsername_AsyncExecutionOnPay
      */
 
     function test__unit_correct__preRegistrationUsername__nS_nPF() external {
-        (bytes memory signatureNameService, ) = makePreRegistrationUsernameSignature(
-            "test",
-            10101,
-            1001,
-            false,
-            0,
-            0,
-            false
-        );
+        (
+            bytes memory signatureNameService,
+
+        ) = makePreRegistrationUsernameSignature(
+                "test",
+                10101,
+                1001,
+                false,
+                0,
+                0,
+                false
+            );
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
 
@@ -251,15 +262,18 @@ contract unitTestCorrect_NameService_preRegistrationUsername_AsyncExecutionOnPay
     }
 
     function test__unit_correct__preRegistrationUsername__S_nPF() external {
-        (bytes memory signatureNameService, ) = makePreRegistrationUsernameSignature(
-            "test",
-            10101,
-            1001,
-            false,
-            0,
-            0,
-            false
-        );
+        (
+            bytes memory signatureNameService,
+
+        ) = makePreRegistrationUsernameSignature(
+                "test",
+                10101,
+                1001,
+                false,
+                0,
+                0,
+                false
+            );
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 

@@ -26,6 +26,7 @@ import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 contract unitTestRevert_NameService_renewUsername is Test, Constants {
     Staking staking;
@@ -61,7 +62,6 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
 
@@ -137,11 +137,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
                 nonceNameService
             )
         );
-        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
+        bytes memory signatureNameService = Erc191TestBuilder
+            .buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -452,9 +449,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         );
         signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
-        (, uint256 beforeUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 beforeUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
@@ -472,9 +468,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
 
         vm.stopPrank();
 
-        (, uint256 afterUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 afterUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(afterUsernameExpirationTime, beforeUsernameExpirationTime);
 
@@ -527,9 +522,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         );
         signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
-        (, uint256 beforeUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 beforeUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
@@ -547,9 +541,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
 
         vm.stopPrank();
 
-        (, uint256 afterUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 afterUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(afterUsernameExpirationTime, beforeUsernameExpirationTime);
 
@@ -566,7 +559,9 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         );
     }
 
-    function test__unit_revert__renewUsername__bSigAtNonceNameService() external {
+    function test__unit_revert__renewUsername__bSigAtNonceNameService()
+        external
+    {
         (
             uint256 totalRenewalAmount,
             uint256 totalPriorityFeeAmount
@@ -599,9 +594,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         );
         signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
-        (, uint256 beforeUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 beforeUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
@@ -619,9 +613,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
 
         vm.stopPrank();
 
-        (, uint256 afterUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 afterUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(afterUsernameExpirationTime, beforeUsernameExpirationTime);
 
@@ -674,9 +667,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         );
         signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
-        (, uint256 beforeUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 beforeUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
@@ -694,9 +686,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
 
         vm.stopPrank();
 
-        (, uint256 afterUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 afterUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(afterUsernameExpirationTime, beforeUsernameExpirationTime);
 
@@ -749,9 +740,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         );
         signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
-        (, uint256 beforeUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 beforeUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
@@ -769,9 +759,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
 
         vm.stopPrank();
 
-        (, uint256 afterUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 afterUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(afterUsernameExpirationTime, beforeUsernameExpirationTime);
 
@@ -824,9 +813,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         );
         signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
-        (, uint256 beforeUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 beforeUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
@@ -844,9 +832,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
 
         vm.stopPrank();
 
-        (, uint256 afterUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 afterUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(afterUsernameExpirationTime, beforeUsernameExpirationTime);
 
@@ -901,9 +888,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         );
         signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
-        (, uint256 beforeUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 beforeUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
@@ -921,9 +907,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
 
         vm.stopPrank();
 
-        (, uint256 afterUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 afterUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(afterUsernameExpirationTime, beforeUsernameExpirationTime);
 
@@ -976,9 +961,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         );
         signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
-        (, uint256 beforeUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 beforeUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
@@ -996,9 +980,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
 
         vm.stopPrank();
 
-        (, uint256 afterUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 afterUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(afterUsernameExpirationTime, beforeUsernameExpirationTime);
 
@@ -1051,9 +1034,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         );
         signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
-        (, uint256 beforeUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 beforeUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
@@ -1071,9 +1053,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
 
         vm.stopPrank();
 
-        (, uint256 afterUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 afterUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(afterUsernameExpirationTime, beforeUsernameExpirationTime);
 
@@ -1126,9 +1107,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         );
         signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
-        (, uint256 beforeUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 beforeUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
@@ -1146,9 +1126,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
 
         vm.stopPrank();
 
-        (, uint256 afterUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 afterUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(afterUsernameExpirationTime, beforeUsernameExpirationTime);
 
@@ -1203,9 +1182,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         );
         signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
-        (, uint256 beforeUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 beforeUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
@@ -1223,9 +1201,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
 
         vm.stopPrank();
 
-        (, uint256 afterUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 afterUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(afterUsernameExpirationTime, beforeUsernameExpirationTime);
 
@@ -1278,9 +1255,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         );
         signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
-        (, uint256 beforeUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 beforeUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
@@ -1298,9 +1274,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
 
         vm.stopPrank();
 
-        (, uint256 afterUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 afterUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(afterUsernameExpirationTime, beforeUsernameExpirationTime);
 
@@ -1335,9 +1310,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
                 true
             );
 
-        (, uint256 beforeUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 beforeUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
@@ -1355,9 +1329,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
 
         vm.stopPrank();
 
-        (, uint256 afterUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 afterUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(afterUsernameExpirationTime, beforeUsernameExpirationTime);
 
@@ -1392,9 +1365,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
                 true
             );
 
-        (, uint256 beforeUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 beforeUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
@@ -1412,9 +1384,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
 
         vm.stopPrank();
 
-        (, uint256 afterUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 afterUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(afterUsernameExpirationTime, beforeUsernameExpirationTime);
 
@@ -1460,9 +1431,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
                 true
             );
 
-        (, uint256 beforeUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test@mail.com"
-        );
+        (, uint256 beforeUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test@mail.com");
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
@@ -1480,9 +1450,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
 
         vm.stopPrank();
 
-        (, uint256 afterUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test@mail.com"
-        );
+        (, uint256 afterUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test@mail.com");
 
         assertEq(afterUsernameExpirationTime, beforeUsernameExpirationTime);
 
@@ -1499,7 +1468,9 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         );
     }
 
-    function test__unit_revert__renewUsername__expirationDateMoreThan100Years() external {
+    function test__unit_revert__renewUsername__expirationDateMoreThan100Years()
+        external
+    {
         nameService._setIdentityBaseMetadata(
             "user",
             NameService.IdentityBaseMetadata(
@@ -1528,9 +1499,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
                 true
             );
 
-        (, uint256 beforeUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "user"
-        );
+        (, uint256 beforeUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("user");
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
@@ -1548,9 +1518,8 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
 
         vm.stopPrank();
 
-        (, uint256 afterUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "user"
-        );
+        (, uint256 afterUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("user");
 
         assertEq(afterUsernameExpirationTime, beforeUsernameExpirationTime);
 

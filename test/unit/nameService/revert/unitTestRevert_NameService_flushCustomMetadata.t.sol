@@ -26,6 +26,7 @@ import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
     Staking staking;
@@ -61,7 +62,6 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
 
@@ -110,8 +110,9 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         evvm._addBalance(
             user.Address,
             MATE_TOKEN_ADDRESS,
-            nameService.getPriceToFlushCustomMetadata(usernameToFlushCustomMetadata) +
-                priorityFeeAmount
+            nameService.getPriceToFlushCustomMetadata(
+                usernameToFlushCustomMetadata
+            ) + priorityFeeAmount
         );
 
         totalAmountFlush = nameService.getPriceToFlushCustomMetadata(
@@ -165,11 +166,8 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
                 nonceNameService
             )
         );
-        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
+        bytes memory signatureNameService = Erc191TestBuilder
+            .buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -229,11 +227,8 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
                 nonceNameService
             )
         );
-        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
+        bytes memory signatureNameService = Erc191TestBuilder
+            .buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -480,7 +475,9 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         );
         signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
-        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata("test");
+        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata(
+            "test"
+        );
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
@@ -498,7 +495,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        assertEq(nameService.getAmountOfCustomMetadata("test"), amountOfSlotsBefore);
+        assertEq(
+            nameService.getAmountOfCustomMetadata("test"),
+            amountOfSlotsBefore
+        );
 
         assertEq(
             evvm.getBalance(
@@ -552,7 +552,9 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         );
         signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
-        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata("test");
+        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata(
+            "test"
+        );
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
@@ -570,7 +572,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        assertEq(nameService.getAmountOfCustomMetadata("test"), amountOfSlotsBefore);
+        assertEq(
+            nameService.getAmountOfCustomMetadata("test"),
+            amountOfSlotsBefore
+        );
 
         assertEq(
             evvm.getBalance(
@@ -624,7 +629,9 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         );
         signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
-        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata("test");
+        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata(
+            "test"
+        );
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
@@ -642,7 +649,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        assertEq(nameService.getAmountOfCustomMetadata("test"), amountOfSlotsBefore);
+        assertEq(
+            nameService.getAmountOfCustomMetadata("test"),
+            amountOfSlotsBefore
+        );
 
         assertEq(
             evvm.getBalance(
@@ -696,7 +706,9 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         );
         signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
-        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata("test");
+        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata(
+            "test"
+        );
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
@@ -714,7 +726,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        assertEq(nameService.getAmountOfCustomMetadata("test"), amountOfSlotsBefore);
+        assertEq(
+            nameService.getAmountOfCustomMetadata("test"),
+            amountOfSlotsBefore
+        );
 
         assertEq(
             evvm.getBalance(
@@ -768,7 +783,9 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         );
         signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
-        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata("test");
+        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata(
+            "test"
+        );
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
@@ -786,7 +803,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        assertEq(nameService.getAmountOfCustomMetadata("test"), amountOfSlotsBefore);
+        assertEq(
+            nameService.getAmountOfCustomMetadata("test"),
+            amountOfSlotsBefore
+        );
 
         assertEq(
             evvm.getBalance(
@@ -840,7 +860,9 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         );
         signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
-        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata("test");
+        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata(
+            "test"
+        );
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
@@ -858,7 +880,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        assertEq(nameService.getAmountOfCustomMetadata("test"), amountOfSlotsBefore);
+        assertEq(
+            nameService.getAmountOfCustomMetadata("test"),
+            amountOfSlotsBefore
+        );
 
         assertEq(
             evvm.getBalance(
@@ -912,7 +937,9 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         );
         signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
-        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata("test");
+        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata(
+            "test"
+        );
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
@@ -930,7 +957,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        assertEq(nameService.getAmountOfCustomMetadata("test"), amountOfSlotsBefore);
+        assertEq(
+            nameService.getAmountOfCustomMetadata("test"),
+            amountOfSlotsBefore
+        );
 
         assertEq(
             evvm.getBalance(
@@ -984,7 +1014,9 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         );
         signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
-        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata("test");
+        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata(
+            "test"
+        );
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
@@ -1002,7 +1034,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        assertEq(nameService.getAmountOfCustomMetadata("test"), amountOfSlotsBefore);
+        assertEq(
+            nameService.getAmountOfCustomMetadata("test"),
+            amountOfSlotsBefore
+        );
 
         assertEq(
             evvm.getBalance(
@@ -1056,7 +1091,9 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         );
         signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
-        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata("test");
+        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata(
+            "test"
+        );
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
@@ -1074,7 +1111,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        assertEq(nameService.getAmountOfCustomMetadata("test"), amountOfSlotsBefore);
+        assertEq(
+            nameService.getAmountOfCustomMetadata("test"),
+            amountOfSlotsBefore
+        );
 
         assertEq(
             evvm.getBalance(
@@ -1128,7 +1168,9 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         );
         signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
-        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata("test");
+        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata(
+            "test"
+        );
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
@@ -1146,7 +1188,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        assertEq(nameService.getAmountOfCustomMetadata("test"), amountOfSlotsBefore);
+        assertEq(
+            nameService.getAmountOfCustomMetadata("test"),
+            amountOfSlotsBefore
+        );
 
         assertEq(
             evvm.getBalance(
@@ -1200,7 +1245,9 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         );
         signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
-        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata("test");
+        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata(
+            "test"
+        );
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
@@ -1218,7 +1265,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        assertEq(nameService.getAmountOfCustomMetadata("test"), amountOfSlotsBefore);
+        assertEq(
+            nameService.getAmountOfCustomMetadata("test"),
+            amountOfSlotsBefore
+        );
 
         assertEq(
             evvm.getBalance(
@@ -1272,7 +1322,9 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         );
         signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
-        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata("test");
+        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata(
+            "test"
+        );
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
@@ -1290,7 +1342,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        assertEq(nameService.getAmountOfCustomMetadata("test"), amountOfSlotsBefore);
+        assertEq(
+            nameService.getAmountOfCustomMetadata("test"),
+            amountOfSlotsBefore
+        );
 
         assertEq(
             evvm.getBalance(
@@ -1326,7 +1381,9 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
                 true
             );
 
-        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata("test");
+        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata(
+            "test"
+        );
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
@@ -1344,7 +1401,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        assertEq(nameService.getAmountOfCustomMetadata("test"), amountOfSlotsBefore);
+        assertEq(
+            nameService.getAmountOfCustomMetadata("test"),
+            amountOfSlotsBefore
+        );
 
         assertEq(
             evvm.getBalance(
@@ -1380,7 +1440,9 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
                 true
             );
 
-        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata("test");
+        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata(
+            "test"
+        );
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
@@ -1398,7 +1460,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        assertEq(nameService.getAmountOfCustomMetadata("test"), amountOfSlotsBefore);
+        assertEq(
+            nameService.getAmountOfCustomMetadata("test"),
+            amountOfSlotsBefore
+        );
 
         assertEq(
             evvm.getBalance(
@@ -1492,7 +1557,9 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
                 true
             );
 
-        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata("test");
+        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata(
+            "test"
+        );
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
@@ -1510,7 +1577,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        assertEq(nameService.getAmountOfCustomMetadata("test"), amountOfSlotsBefore);
+        assertEq(
+            nameService.getAmountOfCustomMetadata("test"),
+            amountOfSlotsBefore
+        );
 
         assertEq(
             evvm.getBalance(

@@ -31,6 +31,7 @@ import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 contract fuzzTest_NameService_registrationUsername is Test, Constants {
     Staking staking;
@@ -66,7 +67,6 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
     }
@@ -250,9 +250,8 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
         );
         vm.stopPrank();
 
-        (address user, uint256 expirationDate) = nameService.getIdentityBasicMetadata(
-            username
-        );
+        (address user, uint256 expirationDate) = nameService
+            .getIdentityBasicMetadata(username);
 
         assertEq(user, selectedUser.Address);
         assertEq(expirationDate, block.timestamp + 366 days);
@@ -317,9 +316,8 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
         );
         vm.stopPrank();
 
-        (address user, uint256 expirationDate) = nameService.getIdentityBasicMetadata(
-            username
-        );
+        (address user, uint256 expirationDate) = nameService
+            .getIdentityBasicMetadata(username);
 
         assertEq(user, selectedUser.Address);
         assertEq(expirationDate, block.timestamp + 366 days);
@@ -389,9 +387,8 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
         );
         vm.stopPrank();
 
-        (address user, uint256 expirationDate) = nameService.getIdentityBasicMetadata(
-            username
-        );
+        (address user, uint256 expirationDate) = nameService
+            .getIdentityBasicMetadata(username);
 
         assertEq(user, selectedUser.Address);
         assertEq(expirationDate, block.timestamp + 366 days);
@@ -458,9 +455,8 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
         );
         vm.stopPrank();
 
-        (address user, uint256 expirationDate) = nameService.getIdentityBasicMetadata(
-            username
-        );
+        (address user, uint256 expirationDate) = nameService
+            .getIdentityBasicMetadata(username);
 
         assertEq(user, selectedUser.Address);
         assertEq(expirationDate, block.timestamp + 366 days);

@@ -26,6 +26,7 @@ import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
     Staking staking;
@@ -59,7 +60,6 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
     }
@@ -111,8 +111,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
 
         PaymultipleSignatureMetadata[]
             memory payDataSignature = new PaymultipleSignatureMetadata[](8);
-        EvvmStructs.PayData[]
-            memory payData = new EvvmStructs.PayData[](8);
+        EvvmStructs.PayData[] memory payData = new EvvmStructs.PayData[](8);
 
         (
             payDataSignature[0].v,
@@ -426,7 +425,6 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
             }
         }
 
-
         assertEq(
             evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.00200004 ether
@@ -436,10 +434,8 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
             evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
             0.008 ether
         );
-
     }
 
-    
     function test_payMultiple_staker() external {
         nameService._setIdentityBaseMetadata(
             "dummy",
@@ -460,8 +456,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
         );
         PaymultipleSignatureMetadata[]
             memory payDataSignature = new PaymultipleSignatureMetadata[](8);
-        EvvmStructs.PayData[]
-            memory payData = new EvvmStructs.PayData[](8);
+        EvvmStructs.PayData[] memory payData = new EvvmStructs.PayData[](8);
 
         (
             payDataSignature[0].v,
@@ -795,5 +790,4 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
             0.00000004 ether
         );
     }
-    
 }

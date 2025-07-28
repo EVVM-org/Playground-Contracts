@@ -33,6 +33,7 @@ import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 contract fuzzTest_NameService_addCustomMetadata is Test, Constants {
     Staking staking;
@@ -68,7 +69,6 @@ contract fuzzTest_NameService_addCustomMetadata is Test, Constants {
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
 
@@ -132,11 +132,8 @@ contract fuzzTest_NameService_addCustomMetadata is Test, Constants {
                 nonceNameService
             )
         );
-        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
+        bytes memory signatureNameService = Erc191TestBuilder
+            .buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -318,7 +315,10 @@ contract fuzzTest_NameService_addCustomMetadata is Test, Constants {
                 ? input.nonceEVVM + i
                 : evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address);
 
-            (signatureNameService, signatureEVVM) = makeAddCustomMetadataSignatures(
+            (
+                signatureNameService,
+                signatureEVVM
+            ) = makeAddCustomMetadataSignatures(
                 COMMON_USER_NO_STAKER_1,
                 "test",
                 customMetadata,
@@ -343,13 +343,16 @@ contract fuzzTest_NameService_addCustomMetadata is Test, Constants {
             vm.stopPrank();
 
             assertEq(
-                bytes(nameService.getSingleCustomMetadataOfIdentity("test", i)).length,
+                bytes(nameService.getSingleCustomMetadataOfIdentity("test", i))
+                    .length,
                 bytes(customMetadata).length
             );
 
             assertEq(
                 keccak256(
-                    bytes(nameService.getSingleCustomMetadataOfIdentity("test", i))
+                    bytes(
+                        nameService.getSingleCustomMetadataOfIdentity("test", i)
+                    )
                 ),
                 keccak256(bytes(customMetadata))
             );
@@ -397,7 +400,10 @@ contract fuzzTest_NameService_addCustomMetadata is Test, Constants {
                 ? input.nonceEVVM + i
                 : evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address);
 
-            (signatureNameService, signatureEVVM) = makeAddCustomMetadataSignatures(
+            (
+                signatureNameService,
+                signatureEVVM
+            ) = makeAddCustomMetadataSignatures(
                 COMMON_USER_NO_STAKER_1,
                 "test",
                 customMetadata,
@@ -422,13 +428,16 @@ contract fuzzTest_NameService_addCustomMetadata is Test, Constants {
             vm.stopPrank();
 
             assertEq(
-                bytes(nameService.getSingleCustomMetadataOfIdentity("test", i)).length,
+                bytes(nameService.getSingleCustomMetadataOfIdentity("test", i))
+                    .length,
                 bytes(customMetadata).length
             );
 
             assertEq(
                 keccak256(
-                    bytes(nameService.getSingleCustomMetadataOfIdentity("test", i))
+                    bytes(
+                        nameService.getSingleCustomMetadataOfIdentity("test", i)
+                    )
                 ),
                 keccak256(bytes(customMetadata))
             );
@@ -478,7 +487,10 @@ contract fuzzTest_NameService_addCustomMetadata is Test, Constants {
                 ? input.nonceEVVM + i
                 : evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address);
 
-            (signatureNameService, signatureEVVM) = makeAddCustomMetadataSignatures(
+            (
+                signatureNameService,
+                signatureEVVM
+            ) = makeAddCustomMetadataSignatures(
                 COMMON_USER_NO_STAKER_1,
                 "test",
                 customMetadata,
@@ -507,13 +519,16 @@ contract fuzzTest_NameService_addCustomMetadata is Test, Constants {
             vm.stopPrank();
 
             assertEq(
-                bytes(nameService.getSingleCustomMetadataOfIdentity("test", i)).length,
+                bytes(nameService.getSingleCustomMetadataOfIdentity("test", i))
+                    .length,
                 bytes(customMetadata).length
             );
 
             assertEq(
                 keccak256(
-                    bytes(nameService.getSingleCustomMetadataOfIdentity("test", i))
+                    bytes(
+                        nameService.getSingleCustomMetadataOfIdentity("test", i)
+                    )
                 ),
                 keccak256(bytes(customMetadata))
             );
@@ -529,7 +544,8 @@ contract fuzzTest_NameService_addCustomMetadata is Test, Constants {
                 evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
                 amountBeforeExecution +
                     ((5 * evvm.getRewardAmount()) +
-                        ((nameService.getPriceToAddCustomMetadata() * 50) / 100))
+                        ((nameService.getPriceToAddCustomMetadata() * 50) /
+                            100))
             );
         }
     }
@@ -562,7 +578,10 @@ contract fuzzTest_NameService_addCustomMetadata is Test, Constants {
                 ? input.nonceEVVM + i
                 : evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address);
 
-            (signatureNameService, signatureEVVM) = makeAddCustomMetadataSignatures(
+            (
+                signatureNameService,
+                signatureEVVM
+            ) = makeAddCustomMetadataSignatures(
                 COMMON_USER_NO_STAKER_1,
                 "test",
                 customMetadata,
@@ -591,13 +610,16 @@ contract fuzzTest_NameService_addCustomMetadata is Test, Constants {
             vm.stopPrank();
 
             assertEq(
-                bytes(nameService.getSingleCustomMetadataOfIdentity("test", i)).length,
+                bytes(nameService.getSingleCustomMetadataOfIdentity("test", i))
+                    .length,
                 bytes(customMetadata).length
             );
 
             assertEq(
                 keccak256(
-                    bytes(nameService.getSingleCustomMetadataOfIdentity("test", i))
+                    bytes(
+                        nameService.getSingleCustomMetadataOfIdentity("test", i)
+                    )
                 ),
                 keccak256(bytes(customMetadata))
             );
@@ -613,7 +635,8 @@ contract fuzzTest_NameService_addCustomMetadata is Test, Constants {
                 evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
                 amountBeforeExecution +
                     ((5 * evvm.getRewardAmount()) +
-                        ((nameService.getPriceToAddCustomMetadata() * 50) / 100) +
+                        ((nameService.getPriceToAddCustomMetadata() * 50) /
+                            100) +
                         input.priorityFee)
             );
         }

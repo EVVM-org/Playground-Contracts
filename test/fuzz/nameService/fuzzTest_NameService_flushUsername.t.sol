@@ -33,6 +33,7 @@ import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 contract fuzzTest_NameService_flushUsername is Test, Constants {
     Staking staking;
@@ -68,7 +69,6 @@ contract fuzzTest_NameService_flushUsername is Test, Constants {
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
 
@@ -147,11 +147,8 @@ contract fuzzTest_NameService_flushUsername is Test, Constants {
                 nonceNameService
             )
         );
-        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
+        bytes memory signatureNameService = Erc191TestBuilder
+            .buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -211,11 +208,8 @@ contract fuzzTest_NameService_flushUsername is Test, Constants {
                 nonceNameService
             )
         );
-        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
+        bytes memory signatureNameService = Erc191TestBuilder
+            .buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -375,7 +369,9 @@ contract fuzzTest_NameService_flushUsername is Test, Constants {
                 input.priorityFlagEVVM
             );
 
-        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata("test");
+        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata(
+            "test"
+        );
 
         vm.startPrank(userToExecuteTx.Address);
 
@@ -392,9 +388,8 @@ contract fuzzTest_NameService_flushUsername is Test, Constants {
 
         vm.stopPrank();
 
-        (address user, uint256 expireDate) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (address user, uint256 expireDate) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(user, address(0));
         assertEq(expireDate, 0);
@@ -459,7 +454,9 @@ contract fuzzTest_NameService_flushUsername is Test, Constants {
                 input.priorityFlagEVVM
             );
 
-        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata("test");
+        uint256 amountOfSlotsBefore = nameService.getAmountOfCustomMetadata(
+            "test"
+        );
 
         vm.startPrank(userToExecuteTx.Address);
 
@@ -476,9 +473,8 @@ contract fuzzTest_NameService_flushUsername is Test, Constants {
 
         vm.stopPrank();
 
-        (address user, uint256 expireDate) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (address user, uint256 expireDate) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(user, address(0));
         assertEq(expireDate, 0);

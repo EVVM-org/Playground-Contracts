@@ -32,6 +32,7 @@ import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 contract fuzzTest_NameService_makeOffer is Test, Constants {
     Staking staking;
@@ -67,7 +68,6 @@ contract fuzzTest_NameService_makeOffer is Test, Constants {
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
     }
@@ -143,11 +143,8 @@ contract fuzzTest_NameService_makeOffer is Test, Constants {
                 nonceNameService
             )
         );
-        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
+        bytes memory signatureNameService = Erc191TestBuilder
+            .buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -257,7 +254,6 @@ contract fuzzTest_NameService_makeOffer is Test, Constants {
         bool electionTwo;
     }
 
-
     function test__unit_correct__makeOffer__nPF(
         MakeOfferFuzzTestInput_nPF memory input
     ) external {
@@ -275,11 +271,7 @@ contract fuzzTest_NameService_makeOffer is Test, Constants {
             ? input.nonceEVVM
             : evvm.getNextCurrentSyncNonce(selectedUser.Address);
 
-        addBalance(
-            selectedUser,
-            input.offerAmount,
-            0
-        );
+        addBalance(selectedUser, input.offerAmount, 0);
         (
             bytes memory signatureNameService,
             bytes memory signatureEVVM
@@ -316,12 +308,17 @@ contract fuzzTest_NameService_makeOffer is Test, Constants {
 
         assertEq(checkData.offerer, selectedUser.Address);
         assertEq(checkData.amount, ((uint256(input.offerAmount) * 995) / 1000));
-        assertEq(checkData.expireDate, block.timestamp + uint256(input.daysForExpire));
+        assertEq(
+            checkData.expireDate,
+            block.timestamp + uint256(input.daysForExpire)
+        );
 
         assertEq(evvm.getBalance(selectedUser.Address, MATE_TOKEN_ADDRESS), 0);
         assertEq(
             evvm.getBalance(selectedFisher.Address, MATE_TOKEN_ADDRESS),
-            evvm.getRewardAmount() + (uint256(input.offerAmount) * 125) / 100_000
+            evvm.getRewardAmount() +
+                (uint256(input.offerAmount) * 125) /
+                100_000
         );
     }
 
@@ -383,12 +380,18 @@ contract fuzzTest_NameService_makeOffer is Test, Constants {
 
         assertEq(checkData.offerer, selectedUser.Address);
         assertEq(checkData.amount, ((uint256(input.offerAmount) * 995) / 1000));
-        assertEq(checkData.expireDate, block.timestamp + uint256(input.daysForExpire));
+        assertEq(
+            checkData.expireDate,
+            block.timestamp + uint256(input.daysForExpire)
+        );
 
         assertEq(evvm.getBalance(selectedUser.Address, MATE_TOKEN_ADDRESS), 0);
         assertEq(
             evvm.getBalance(selectedFisher.Address, MATE_TOKEN_ADDRESS),
-            evvm.getRewardAmount() + (uint256(input.offerAmount) * 125) / 100_000 + input.priorityFeeAmountEVVM
+            evvm.getRewardAmount() +
+                (uint256(input.offerAmount) * 125) /
+                100_000 +
+                input.priorityFeeAmountEVVM
         );
     }
 }

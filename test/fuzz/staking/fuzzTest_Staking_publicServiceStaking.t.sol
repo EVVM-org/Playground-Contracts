@@ -31,6 +31,7 @@ import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 contract fuzzTest_Staking_publicServiceStaking is Test, Constants {
     Staking staking;
@@ -65,7 +66,6 @@ contract fuzzTest_Staking_publicServiceStaking is Test, Constants {
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
 
@@ -403,10 +403,10 @@ contract fuzzTest_Staking_publicServiceStaking is Test, Constants {
                             MATE_TOKEN_ADDRESS
                         ) ==
                             (amountBefore.service +
-                                (stakingFullAmountBefore * staking.priceOfStaking()))
+                                (stakingFullAmountBefore *
+                                    staking.priceOfStaking()))
                     );
                 } else {
-
                     assert(
                         evvm.getBalance(
                             address(mockContract),
@@ -451,8 +451,9 @@ contract fuzzTest_Staking_publicServiceStaking is Test, Constants {
                     history.totalStaked,
                     totalStakedBefore -
                         (
-                            staking.getUserAmountStaked(address(mockContract)) ==
-                                0
+                            staking.getUserAmountStaked(
+                                address(mockContract)
+                            ) == 0
                                 ? stakingFullAmountBefore
                                 : input[i].stakingAmount
                         )

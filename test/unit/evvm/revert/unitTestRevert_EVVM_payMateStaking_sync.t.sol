@@ -25,6 +25,7 @@ import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 contract unitTestRevert_EVVM_payMateStaking_sync is Test, Constants {
     Staking staking;
@@ -61,7 +62,6 @@ contract unitTestRevert_EVVM_payMateStaking_sync is Test, Constants {
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
 
         evvm._setPointStaker(COMMON_USER_STAKER_1.Address, 0x01);
         evvm._setPointStaker(COMMON_USER_STAKER_2.Address, 0x01);
@@ -503,9 +503,7 @@ contract unitTestRevert_EVVM_payMateStaking_sync is Test, Constants {
         );
     }
 
-    function test__unit_revert__payMateStaking_sync_wValAtExecutor()
-        external
-    {
+    function test__unit_revert__payMateStaking_sync_wValAtExecutor() external {
         addBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS, 0.11 ether);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
@@ -595,9 +593,7 @@ contract unitTestRevert_EVVM_payMateStaking_sync is Test, Constants {
         );
     }
 
-    function test__unit_revert__payMateStaking_sync__wValAtNonce()
-        external
-    {
+    function test__unit_revert__payMateStaking_sync__wValAtNonce() external {
         addBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS, 0.11 ether);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(

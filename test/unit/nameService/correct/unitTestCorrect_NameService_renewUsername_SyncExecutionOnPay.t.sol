@@ -26,6 +26,7 @@ import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
     Test,
@@ -64,7 +65,6 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
 
@@ -135,11 +135,8 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
                 nonceNameService
             )
         );
-        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
+        bytes memory signatureNameService = Erc191TestBuilder
+            .buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -318,9 +315,8 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
 
         vm.stopPrank();
 
-        (, uint256 newUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 newUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(newUsernameExpirationTime, block.timestamp + ((366 days) * 2));
 
@@ -371,10 +367,11 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
 
         assertEq(
             nameService.seePriceToRenew("test"),
-            ((nameService.getSingleOfferOfUsername("test", 0).amount * 5) / 1000) >
-                (500000 * evvm.getRewardAmount())
+            ((nameService.getSingleOfferOfUsername("test", 0).amount * 5) /
+                1000) > (500000 * evvm.getRewardAmount())
                 ? (500000 * evvm.getRewardAmount())
-                : ((nameService.getSingleOfferOfUsername("test", 0).amount * 5) / 1000)
+                : ((nameService.getSingleOfferOfUsername("test", 0).amount *
+                    5) / 1000)
         );
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
@@ -392,9 +389,8 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
 
         vm.stopPrank();
 
-        (, uint256 newUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 newUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(newUsernameExpirationTime, block.timestamp + ((366 days) * 2));
 
@@ -434,7 +430,10 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
                 false
             );
 
-        assertEq(nameService.seePriceToRenew("test"), 500_000 * evvm.getRewardAmount());
+        assertEq(
+            nameService.seePriceToRenew("test"),
+            500_000 * evvm.getRewardAmount()
+        );
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
 
@@ -451,9 +450,8 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
 
         vm.stopPrank();
 
-        (, uint256 newUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 newUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(newUsernameExpirationTime, block.timestamp + ((362 days)));
 
@@ -509,9 +507,8 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
 
         vm.stopPrank();
 
-        (, uint256 newUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 newUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(newUsernameExpirationTime, block.timestamp + ((366 days) * 2));
 
@@ -562,10 +559,11 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
 
         assertEq(
             nameService.seePriceToRenew("test"),
-            ((nameService.getSingleOfferOfUsername("test", 0).amount * 5) / 1000) >
-                (500000 * evvm.getRewardAmount())
+            ((nameService.getSingleOfferOfUsername("test", 0).amount * 5) /
+                1000) > (500000 * evvm.getRewardAmount())
                 ? (500000 * evvm.getRewardAmount())
-                : ((nameService.getSingleOfferOfUsername("test", 0).amount * 5) / 1000)
+                : ((nameService.getSingleOfferOfUsername("test", 0).amount *
+                    5) / 1000)
         );
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
@@ -583,9 +581,8 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
 
         vm.stopPrank();
 
-        (, uint256 newUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 newUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(newUsernameExpirationTime, block.timestamp + ((366 days) * 2));
 
@@ -625,7 +622,10 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
                 false
             );
 
-        assertEq(nameService.seePriceToRenew("test"), 500_000 * evvm.getRewardAmount());
+        assertEq(
+            nameService.seePriceToRenew("test"),
+            500_000 * evvm.getRewardAmount()
+        );
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
 
@@ -642,9 +642,8 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
 
         vm.stopPrank();
 
-        (, uint256 newUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 newUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(newUsernameExpirationTime, block.timestamp + ((362 days)));
 
@@ -702,9 +701,8 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
 
         vm.stopPrank();
 
-        (, uint256 newUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 newUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(newUsernameExpirationTime, block.timestamp + ((366 days) * 2));
 
@@ -754,10 +752,11 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
 
         assertEq(
             nameService.seePriceToRenew("test"),
-            ((nameService.getSingleOfferOfUsername("test", 0).amount * 5) / 1000) >
-                (500000 * evvm.getRewardAmount())
+            ((nameService.getSingleOfferOfUsername("test", 0).amount * 5) /
+                1000) > (500000 * evvm.getRewardAmount())
                 ? (500000 * evvm.getRewardAmount())
-                : ((nameService.getSingleOfferOfUsername("test", 0).amount * 5) / 1000)
+                : ((nameService.getSingleOfferOfUsername("test", 0).amount *
+                    5) / 1000)
         );
 
         uint256 priceOfRenewBefore = nameService.seePriceToRenew("test");
@@ -777,9 +776,8 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
 
         vm.stopPrank();
 
-        (, uint256 newUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 newUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(newUsernameExpirationTime, block.timestamp + ((366 days) * 2));
 
@@ -818,7 +816,10 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
                 false
             );
 
-        assertEq(nameService.seePriceToRenew("test"), 500_000 * evvm.getRewardAmount());
+        assertEq(
+            nameService.seePriceToRenew("test"),
+            500_000 * evvm.getRewardAmount()
+        );
 
         uint256 priceOfRenewBefore = nameService.seePriceToRenew("test");
 
@@ -837,9 +838,8 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
 
         vm.stopPrank();
 
-        (, uint256 newUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 newUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(newUsernameExpirationTime, block.timestamp + ((362 days)));
 
@@ -896,9 +896,8 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
 
         vm.stopPrank();
 
-        (, uint256 newUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 newUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(newUsernameExpirationTime, block.timestamp + ((366 days) * 2));
 
@@ -948,10 +947,11 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
 
         assertEq(
             nameService.seePriceToRenew("test"),
-            ((nameService.getSingleOfferOfUsername("test", 0).amount * 5) / 1000) >
-                (500000 * evvm.getRewardAmount())
+            ((nameService.getSingleOfferOfUsername("test", 0).amount * 5) /
+                1000) > (500000 * evvm.getRewardAmount())
                 ? (500000 * evvm.getRewardAmount())
-                : ((nameService.getSingleOfferOfUsername("test", 0).amount * 5) / 1000)
+                : ((nameService.getSingleOfferOfUsername("test", 0).amount *
+                    5) / 1000)
         );
 
         uint256 priceOfRenewBefore = nameService.seePriceToRenew("test");
@@ -971,9 +971,8 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
 
         vm.stopPrank();
 
-        (, uint256 newUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 newUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(newUsernameExpirationTime, block.timestamp + ((366 days) * 2));
 
@@ -1012,7 +1011,10 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
                 false
             );
 
-        assertEq(nameService.seePriceToRenew("test"), 500_000 * evvm.getRewardAmount());
+        assertEq(
+            nameService.seePriceToRenew("test"),
+            500_000 * evvm.getRewardAmount()
+        );
 
         uint256 priceOfRenewBefore = nameService.seePriceToRenew("test");
 
@@ -1031,9 +1033,8 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
 
         vm.stopPrank();
 
-        (, uint256 newUsernameExpirationTime) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (, uint256 newUsernameExpirationTime) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(newUsernameExpirationTime, block.timestamp + ((362 days)));
 

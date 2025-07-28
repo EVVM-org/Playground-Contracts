@@ -25,6 +25,7 @@ import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 contract fuzzTest_EVVM_caPay is Test, Constants {
     Staking staking;
@@ -59,7 +60,6 @@ contract fuzzTest_EVVM_caPay is Test, Constants {
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
 
-
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
     }
 
@@ -74,9 +74,7 @@ contract fuzzTest_EVVM_caPay is Test, Constants {
         bool isCaStaker;
     }
 
-    function test__fuzz__caPay(
-        caPayFuzzTestInput memory input
-    ) external {
+    function test__fuzz__caPay(caPayFuzzTestInput memory input) external {
         vm.assume(input.amount > 0);
         HelperCa c = new HelperCa{salt: input.salt}(address(evvm));
         if (input.isCaStaker) {
@@ -86,7 +84,7 @@ contract fuzzTest_EVVM_caPay is Test, Constants {
         addBalance(address(c), input.token, input.amount);
 
         c.makeCaPay(COMMON_USER_NO_STAKER_1.Address, input.token, input.amount);
-    
+
         assertEq(
             evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, input.token),
             input.amount

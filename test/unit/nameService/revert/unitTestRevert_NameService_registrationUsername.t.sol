@@ -26,11 +26,9 @@ import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
-contract unitTestRevert_NameService_registrationUsername is
-    Test,
-    Constants
-{
+contract unitTestRevert_NameService_registrationUsername is Test, Constants {
     Staking staking;
     Evvm evvm;
     Estimator estimator;
@@ -62,7 +60,6 @@ contract unitTestRevert_NameService_registrationUsername is
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
     }
@@ -278,9 +275,8 @@ contract unitTestRevert_NameService_registrationUsername is
         );
         vm.stopPrank();
 
-        (address user, uint256 expirationDate) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (address user, uint256 expirationDate) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
@@ -355,9 +351,8 @@ contract unitTestRevert_NameService_registrationUsername is
         );
         vm.stopPrank();
 
-        (address user, uint256 expirationDate) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (address user, uint256 expirationDate) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
@@ -432,9 +427,8 @@ contract unitTestRevert_NameService_registrationUsername is
         );
         vm.stopPrank();
 
-        (address user, uint256 expirationDate) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (address user, uint256 expirationDate) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
@@ -509,9 +503,8 @@ contract unitTestRevert_NameService_registrationUsername is
         );
         vm.stopPrank();
 
-        (address user, uint256 expirationDate) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (address user, uint256 expirationDate) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
@@ -586,9 +579,8 @@ contract unitTestRevert_NameService_registrationUsername is
         );
         vm.stopPrank();
 
-        (address user, uint256 expirationDate) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (address user, uint256 expirationDate) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
@@ -663,9 +655,8 @@ contract unitTestRevert_NameService_registrationUsername is
         );
         vm.stopPrank();
 
-        (address user, uint256 expirationDate) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (address user, uint256 expirationDate) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
@@ -740,9 +731,8 @@ contract unitTestRevert_NameService_registrationUsername is
         );
         vm.stopPrank();
 
-        (address user, uint256 expirationDate) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (address user, uint256 expirationDate) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
@@ -817,9 +807,8 @@ contract unitTestRevert_NameService_registrationUsername is
         );
         vm.stopPrank();
 
-        (address user, uint256 expirationDate) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (address user, uint256 expirationDate) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
@@ -894,9 +883,8 @@ contract unitTestRevert_NameService_registrationUsername is
         );
         vm.stopPrank();
 
-        (address user, uint256 expirationDate) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (address user, uint256 expirationDate) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
@@ -971,9 +959,8 @@ contract unitTestRevert_NameService_registrationUsername is
         );
         vm.stopPrank();
 
-        (address user, uint256 expirationDate) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (address user, uint256 expirationDate) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
@@ -1048,9 +1035,8 @@ contract unitTestRevert_NameService_registrationUsername is
         );
         vm.stopPrank();
 
-        (address user, uint256 expirationDate) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (address user, uint256 expirationDate) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
@@ -1125,9 +1111,8 @@ contract unitTestRevert_NameService_registrationUsername is
         );
         vm.stopPrank();
 
-        (address user, uint256 expirationDate) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (address user, uint256 expirationDate) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
@@ -1202,9 +1187,8 @@ contract unitTestRevert_NameService_registrationUsername is
         );
         vm.stopPrank();
 
-        (address user, uint256 expirationDate) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (address user, uint256 expirationDate) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
@@ -1257,9 +1241,8 @@ contract unitTestRevert_NameService_registrationUsername is
         );
         vm.stopPrank();
 
-        (address user, uint256 expirationDate) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (address user, uint256 expirationDate) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
@@ -1316,9 +1299,8 @@ contract unitTestRevert_NameService_registrationUsername is
         );
         vm.stopPrank();
 
-        (address user, uint256 expirationDate) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (address user, uint256 expirationDate) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
@@ -1378,9 +1360,8 @@ contract unitTestRevert_NameService_registrationUsername is
         );
         vm.stopPrank();
 
-        (address user, uint256 expirationDate) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (address user, uint256 expirationDate) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(user, address(0));
         assertEq(expirationDate, 0);
@@ -1437,9 +1418,8 @@ contract unitTestRevert_NameService_registrationUsername is
         );
         vm.stopPrank();
 
-        (address user, uint256 expirationDate) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (address user, uint256 expirationDate) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(user, address(0));
         assertEq(expirationDate, 0);

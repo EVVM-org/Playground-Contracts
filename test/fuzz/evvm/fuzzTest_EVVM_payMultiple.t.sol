@@ -30,6 +30,7 @@ import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 contract fuzzTest_EVVM_payMultiple is Test, Constants, EvvmStructs {
     Staking staking;
@@ -65,7 +66,6 @@ contract fuzzTest_EVVM_payMultiple is Test, Constants, EvvmStructs {
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
         nameService._setIdentityBaseMetadata(
@@ -151,8 +151,7 @@ contract fuzzTest_EVVM_payMultiple is Test, Constants, EvvmStructs {
                 input.token[1] != MATE_TOKEN_ADDRESS
         );
 
-        EvvmStructs.PayData[]
-            memory payData = new EvvmStructs.PayData[](2);
+        EvvmStructs.PayData[] memory payData = new EvvmStructs.PayData[](2);
 
         AccountData memory FISHER = input.useStaker
             ? COMMON_USER_STAKER

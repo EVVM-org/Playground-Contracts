@@ -32,6 +32,7 @@ import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 contract fuzzTest_NameService_flushCustomMetadata is Test, Constants {
     Staking staking;
@@ -67,7 +68,6 @@ contract fuzzTest_NameService_flushCustomMetadata is Test, Constants {
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
 
@@ -91,8 +91,9 @@ contract fuzzTest_NameService_flushCustomMetadata is Test, Constants {
         evvm._addBalance(
             user.Address,
             MATE_TOKEN_ADDRESS,
-            nameService.getPriceToFlushCustomMetadata(usernameToFlushCustomMetadata) +
-                priorityFeeAmount
+            nameService.getPriceToFlushCustomMetadata(
+                usernameToFlushCustomMetadata
+            ) + priorityFeeAmount
         );
 
         totalAmountFlush = nameService.getPriceToFlushCustomMetadata(
@@ -146,11 +147,8 @@ contract fuzzTest_NameService_flushCustomMetadata is Test, Constants {
                 nonceNameService
             )
         );
-        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
+        bytes memory signatureNameService = Erc191TestBuilder
+            .buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -210,11 +208,8 @@ contract fuzzTest_NameService_flushCustomMetadata is Test, Constants {
                 nonceNameService
             )
         );
-        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
+        bytes memory signatureNameService = Erc191TestBuilder
+            .buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,

@@ -33,6 +33,7 @@ import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 contract fuzzTest_NameService_preRegistrationUsername is Test, Constants {
     Staking staking;
@@ -68,7 +69,6 @@ contract fuzzTest_NameService_preRegistrationUsername is Test, Constants {
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
     }
@@ -109,7 +109,11 @@ contract fuzzTest_NameService_preRegistrationUsername is Test, Constants {
                     nonceNameService
                 )
             );
-            signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
+            signatureNameService = Erc191TestBuilder.buildERC191Signature(
+                v,
+                r,
+                s
+            );
             (v, r, s) = vm.sign(
                 user.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPay(
@@ -132,7 +136,11 @@ contract fuzzTest_NameService_preRegistrationUsername is Test, Constants {
                     nonceNameService
                 )
             );
-            signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
+            signatureNameService = Erc191TestBuilder.buildERC191Signature(
+                v,
+                r,
+                s
+            );
             signatureEVVM = "";
         }
     }
@@ -193,16 +201,19 @@ contract fuzzTest_NameService_preRegistrationUsername is Test, Constants {
             ? input.nonceEVVM
             : evvm.getNextCurrentSyncNonce(selectedUser.Address);
 
-        (bytes memory signatureNameService, ) = makePreRegistrationUsernameSignature(
-            selectedUser,
-            username,
-            input.clowNumber,
-            input.nonceNameService,
-            false,
-            0,
-            nonce,
-            input.priorityFlagEVVM
-        );
+        (
+            bytes memory signatureNameService,
+
+        ) = makePreRegistrationUsernameSignature(
+                selectedUser,
+                username,
+                input.clowNumber,
+                input.nonceNameService,
+                false,
+                0,
+                nonce,
+                input.priorityFlagEVVM
+            );
 
         vm.startPrank(COMMON_USER_NO_STAKER_3.Address);
 
@@ -341,16 +352,19 @@ contract fuzzTest_NameService_preRegistrationUsername is Test, Constants {
             ? input.nonceEVVM
             : evvm.getNextCurrentSyncNonce(selectedUser.Address);
 
-        (bytes memory signatureNameService, ) = makePreRegistrationUsernameSignature(
-            selectedUser,
-            username,
-            input.clowNumber,
-            input.nonceNameService,
-            false,
-            0,
-            nonce,
-            input.priorityFlagEVVM
-        );
+        (
+            bytes memory signatureNameService,
+
+        ) = makePreRegistrationUsernameSignature(
+                selectedUser,
+                username,
+                input.clowNumber,
+                input.nonceNameService,
+                false,
+                0,
+                nonce,
+                input.priorityFlagEVVM
+            );
 
         uint256 balanceStakerBefore = evvm.getBalance(
             COMMON_USER_STAKER.Address,
@@ -475,7 +489,9 @@ contract fuzzTest_NameService_preRegistrationUsername is Test, Constants {
         );
         assertEq(
             evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
-            evvm.getRewardAmount() + balanceStakerBefore + input.priorityFeeAmount
+            evvm.getRewardAmount() +
+                balanceStakerBefore +
+                input.priorityFeeAmount
         );
     }
 }

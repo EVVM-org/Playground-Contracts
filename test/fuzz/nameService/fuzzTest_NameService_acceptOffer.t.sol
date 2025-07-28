@@ -27,6 +27,7 @@ import {Constants} from "test/Constants.sol";
 import {Staking} from "@EVVM/playground/staking/Staking.sol";
 import {NameService} from "@EVVM/playground/nameService/NameService.sol";
 import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
@@ -66,7 +67,6 @@ contract fuzzTest_NameService_acceptOffer is Test, Constants {
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
 
@@ -133,11 +133,8 @@ contract fuzzTest_NameService_acceptOffer is Test, Constants {
                 nonceNameService
             )
         );
-        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
+        bytes memory signatureNameService = Erc191TestBuilder
+            .buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -255,7 +252,11 @@ contract fuzzTest_NameService_acceptOffer is Test, Constants {
                     nonceNameService
                 )
             );
-            signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
+            signatureNameService = Erc191TestBuilder.buildERC191Signature(
+                v,
+                r,
+                s
+            );
 
             (v, r, s) = vm.sign(
                 user.PrivateKey,
@@ -280,8 +281,16 @@ contract fuzzTest_NameService_acceptOffer is Test, Constants {
                     nonceNameService
                 )
             );
-            signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
-            signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
+            signatureNameService = Erc191TestBuilder.buildERC191Signature(
+                v,
+                r,
+                s
+            );
+            signatureNameService = Erc191TestBuilder.buildERC191Signature(
+                v,
+                r,
+                s
+            );
             signatureEVVM = "";
         }
     }

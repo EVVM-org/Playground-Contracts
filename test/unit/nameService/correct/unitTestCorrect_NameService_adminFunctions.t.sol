@@ -26,6 +26,7 @@ import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 contract unitTestCorrect_NameService_adminFunctions is Test, Constants {
     Staking staking;
@@ -61,7 +62,6 @@ contract unitTestCorrect_NameService_adminFunctions is Test, Constants {
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
     }
@@ -113,7 +113,10 @@ contract unitTestCorrect_NameService_adminFunctions is Test, Constants {
     }
 
     function test__unit_correct__proposeWithdrawMateTokens() external {
-        uint256 totalInEvvm = evvm.getBalance(address(nameService), MATE_TOKEN_ADDRESS);
+        uint256 totalInEvvm = evvm.getBalance(
+            address(nameService),
+            MATE_TOKEN_ADDRESS
+        );
         uint256 removeAmount = totalInEvvm / 10;
 
         vm.startPrank(ADMIN.Address);
@@ -128,7 +131,10 @@ contract unitTestCorrect_NameService_adminFunctions is Test, Constants {
     }
 
     function test__unit_correct__cancelWithdrawMateTokenss() external {
-        uint256 totalInEvvm = evvm.getBalance(address(nameService), MATE_TOKEN_ADDRESS);
+        uint256 totalInEvvm = evvm.getBalance(
+            address(nameService),
+            MATE_TOKEN_ADDRESS
+        );
         uint256 removeAmount = totalInEvvm / 10;
 
         vm.startPrank(ADMIN.Address);
@@ -144,7 +150,10 @@ contract unitTestCorrect_NameService_adminFunctions is Test, Constants {
     }
 
     function test__unit_correct__claimWithdrawMateTokens() external {
-        uint256 totalInEvvm = evvm.getBalance(address(nameService), MATE_TOKEN_ADDRESS);
+        uint256 totalInEvvm = evvm.getBalance(
+            address(nameService),
+            MATE_TOKEN_ADDRESS
+        );
         uint256 removeAmount = totalInEvvm / 10;
 
         vm.startPrank(ADMIN.Address);

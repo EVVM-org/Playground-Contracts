@@ -33,6 +33,7 @@ import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
     Staking staking;
@@ -81,13 +82,13 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
             20202
         );
 
-        for (uint256 i = 0; i <  MAX_AMOUNT_SLOTS_REGISTERED; i++) {
+        for (uint256 i = 0; i < MAX_AMOUNT_SLOTS_REGISTERED; i++) {
             makeAddCustomMetadata(
                 COMMON_USER_NO_STAKER_1,
                 "test",
                 string.concat("test>", Strings.toString(i)),
-                 uint256(type(uint32).max)+1 + i,
-                 uint256(type(uint32).max)+1 + i,
+                uint256(type(uint32).max) + 1 + i,
+                uint256(type(uint32).max) + 1 + i,
                 true
             );
         }
@@ -150,11 +151,8 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
                 nonceNameService
             )
         );
-        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
+        bytes memory signatureNameService = Erc191TestBuilder
+            .buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -214,11 +212,8 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
                 nonceNameService
             )
         );
-        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
+        bytes memory signatureNameService = Erc191TestBuilder
+            .buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -361,10 +356,8 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        string memory customMetadata = nameService.getSingleCustomMetadataOfIdentity(
-            "test",
-            input.indexToRemove
-        );
+        string memory customMetadata = nameService
+            .getSingleCustomMetadataOfIdentity("test", input.indexToRemove);
 
         console2.log("customMetadata: ", customMetadata);
 
@@ -477,10 +470,8 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        string memory customMetadata = nameService.getSingleCustomMetadataOfIdentity(
-            "test",
-            input.indexToRemove
-        );
+        string memory customMetadata = nameService
+            .getSingleCustomMetadataOfIdentity("test", input.indexToRemove);
 
         console2.log("customMetadata: ", customMetadata);
 
@@ -561,10 +552,8 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
 
         uint256 priorityFeeAmountEVVM = addBalance(COMMON_USER_NO_STAKER_1, 0);
 
-        string memory customMetadata = nameService.getSingleCustomMetadataOfIdentity(
-            "test",
-            input.indexToRemove
-        );
+        string memory customMetadata = nameService
+            .getSingleCustomMetadataOfIdentity("test", input.indexToRemove);
 
         console2.log("customMetadata: ", customMetadata);
 
@@ -597,7 +586,7 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-         customMetadata = nameService.getSingleCustomMetadataOfIdentity(
+        customMetadata = nameService.getSingleCustomMetadataOfIdentity(
             "test",
             input.indexToRemove
         );
@@ -710,10 +699,8 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        string memory customMetadata = nameService.getSingleCustomMetadataOfIdentity(
-            "test",
-            input.indexToRemove
-        );
+        string memory customMetadata = nameService
+            .getSingleCustomMetadataOfIdentity("test", input.indexToRemove);
 
         console2.log("customMetadata: ", customMetadata);
 

@@ -25,6 +25,7 @@ import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 contract unitTestCorrect_EVVM_caPay is Test, Constants {
     Staking staking;
@@ -58,7 +59,6 @@ contract unitTestCorrect_EVVM_caPay is Test, Constants {
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
     }
 
     function addBalance(
@@ -82,11 +82,7 @@ contract unitTestCorrect_EVVM_caPay is Test, Constants {
     function test__unit_correct__caPay__nS() external {
         addBalance(address(this), ETHER_ADDRESS, 0.001 ether, 0);
 
-        evvm.caPay(
-            COMMON_USER_NO_STAKER_2.Address,
-            ETHER_ADDRESS,
-            0.001 ether
-        );
+        evvm.caPay(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS, 0.001 ether);
 
         assertEq(
             evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
@@ -98,11 +94,7 @@ contract unitTestCorrect_EVVM_caPay is Test, Constants {
         addBalance(address(this), ETHER_ADDRESS, 0.001 ether, 0);
         evvm._setPointStaker(address(this), 0x01);
 
-        evvm.caPay(
-            COMMON_USER_NO_STAKER_2.Address,
-            ETHER_ADDRESS,
-            0.001 ether
-        );
+        evvm.caPay(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS, 0.001 ether);
 
         assertEq(
             evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),

@@ -26,6 +26,7 @@ import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 contract unitTestCorrect_NameService_preRegistrationUsername_SyncExecutionOnPay is
     Test,
@@ -62,13 +63,12 @@ contract unitTestCorrect_NameService_preRegistrationUsername_SyncExecutionOnPay 
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
     }
 
     /**
-     * Function to test: 
+     * Function to test:
      * nS: No staker
      * S: Staker
      * PF: Includes priority fee
@@ -110,7 +110,11 @@ contract unitTestCorrect_NameService_preRegistrationUsername_SyncExecutionOnPay 
                     nonceNameService
                 )
             );
-            signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
+            signatureNameService = Erc191TestBuilder.buildERC191Signature(
+                v,
+                r,
+                s
+            );
             (v, r, s) = vm.sign(
                 COMMON_USER_NO_STAKER_1.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPay(
@@ -133,23 +137,28 @@ contract unitTestCorrect_NameService_preRegistrationUsername_SyncExecutionOnPay 
                     nonceNameService
                 )
             );
-            signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
+            signatureNameService = Erc191TestBuilder.buildERC191Signature(
+                v,
+                r,
+                s
+            );
             signatureEVVM = "";
         }
     }
 
     function test__unit_correct__preRegistrationUsername__nS_nPF() external {
+        (
+            bytes memory signatureNameService,
 
-
-        (bytes memory signatureNameService, ) = makePreRegistrationUsernameSignature(
-            "test",
-            10101,
-            1001,
-            false,
-            0,
-            0,
-            false
-        );
+        ) = makePreRegistrationUsernameSignature(
+                "test",
+                10101,
+                1001,
+                false,
+                0,
+                0,
+                false
+            );
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
 
@@ -176,11 +185,17 @@ contract unitTestCorrect_NameService_preRegistrationUsername_SyncExecutionOnPay 
         );
 
         assertEq(
-            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(
+                COMMON_USER_NO_STAKER_1.Address,
+                MATE_TOKEN_ADDRESS
+            ),
             0
         );
         assertEq(
-            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(
+                COMMON_USER_NO_STAKER_2.Address,
+                MATE_TOKEN_ADDRESS
+            ),
             0
         );
     }
@@ -213,7 +228,7 @@ contract unitTestCorrect_NameService_preRegistrationUsername_SyncExecutionOnPay 
             totalPriorityFeeAmount,
             signatureNameService,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
-                false,
+            false,
             signatureEVVM
         );
         vm.stopPrank();
@@ -229,28 +244,34 @@ contract unitTestCorrect_NameService_preRegistrationUsername_SyncExecutionOnPay 
         assertEq(user, COMMON_USER_NO_STAKER_1.Address);
 
         assertEq(
-            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(
+                COMMON_USER_NO_STAKER_1.Address,
+                MATE_TOKEN_ADDRESS
+            ),
             0
         );
         assertEq(
-            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(
+                COMMON_USER_NO_STAKER_2.Address,
+                MATE_TOKEN_ADDRESS
+            ),
             0
         );
     }
 
-    
-
     function test__unit_correct__preRegistrationUsername__S_nPF() external {
-    
-        (bytes memory signatureNameService, ) = makePreRegistrationUsernameSignature(
-            "test",
-            10101,
-            1001,
-            false,
-            0,
-            0,
-            false
-        );
+        (
+            bytes memory signatureNameService,
+
+        ) = makePreRegistrationUsernameSignature(
+                "test",
+                10101,
+                1001,
+                false,
+                0,
+                0,
+                false
+            );
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
@@ -277,7 +298,10 @@ contract unitTestCorrect_NameService_preRegistrationUsername_SyncExecutionOnPay 
         );
 
         assertEq(
-            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(
+                COMMON_USER_NO_STAKER_1.Address,
+                MATE_TOKEN_ADDRESS
+            ),
             0
         );
         assertEq(
@@ -314,7 +338,7 @@ contract unitTestCorrect_NameService_preRegistrationUsername_SyncExecutionOnPay 
             totalPriorityFeeAmount,
             signatureNameService,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
-                false,
+            false,
             signatureEVVM
         );
         vm.stopPrank();
@@ -330,7 +354,10 @@ contract unitTestCorrect_NameService_preRegistrationUsername_SyncExecutionOnPay 
         assertEq(user, COMMON_USER_NO_STAKER_1.Address);
 
         assertEq(
-            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, MATE_TOKEN_ADDRESS),
+            evvm.getBalance(
+                COMMON_USER_NO_STAKER_1.Address,
+                MATE_TOKEN_ADDRESS
+            ),
             0
         );
         assertEq(

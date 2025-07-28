@@ -26,6 +26,7 @@ import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
     Staking staking;
@@ -61,7 +62,6 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
 
@@ -90,7 +90,8 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
             nameService.getPriceToAddCustomMetadata() + priorityFeeAmount
         );
 
-        totalPriceToAddCustomMetadata = nameService.getPriceToAddCustomMetadata();
+        totalPriceToAddCustomMetadata = nameService
+            .getPriceToAddCustomMetadata();
         totalPriorityFeeAmount = priorityFeeAmount;
     }
 
@@ -139,11 +140,8 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
                 nonceNameService
             )
         );
-        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
+        bytes memory signatureNameService = Erc191TestBuilder
+            .buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -427,10 +425,8 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        string memory customMetadata = nameService.getSingleCustomMetadataOfIdentity(
-            "test",
-            0
-        );
+        string memory customMetadata = nameService
+            .getSingleCustomMetadataOfIdentity("test", 0);
 
         assert(
             bytes(customMetadata).length == bytes("").length &&
@@ -507,10 +503,8 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        string memory customMetadata = nameService.getSingleCustomMetadataOfIdentity(
-            "test",
-            0
-        );
+        string memory customMetadata = nameService
+            .getSingleCustomMetadataOfIdentity("test", 0);
 
         assert(
             bytes(customMetadata).length == bytes("").length &&
@@ -589,10 +583,8 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        string memory customMetadata = nameService.getSingleCustomMetadataOfIdentity(
-            "test",
-            0
-        );
+        string memory customMetadata = nameService
+            .getSingleCustomMetadataOfIdentity("test", 0);
 
         assert(
             bytes(customMetadata).length == bytes("").length &&
@@ -614,7 +606,9 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         );
     }
 
-    function test__unit_revert__addCustomMetadata__bSigAtNonceNameService() external {
+    function test__unit_revert__addCustomMetadata__bSigAtNonceNameService()
+        external
+    {
         (
             uint256 totalPriceToAddCustomMetadata,
             uint256 totalPriorityFeeAmount
@@ -669,10 +663,8 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        string memory customMetadata = nameService.getSingleCustomMetadataOfIdentity(
-            "test",
-            0
-        );
+        string memory customMetadata = nameService
+            .getSingleCustomMetadataOfIdentity("test", 0);
 
         assert(
             bytes(customMetadata).length == bytes("").length &&
@@ -749,10 +741,8 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        string memory customMetadata = nameService.getSingleCustomMetadataOfIdentity(
-            "test",
-            0
-        );
+        string memory customMetadata = nameService
+            .getSingleCustomMetadataOfIdentity("test", 0);
 
         assert(
             bytes(customMetadata).length == bytes("").length &&
@@ -831,10 +821,8 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        string memory customMetadata = nameService.getSingleCustomMetadataOfIdentity(
-            "test",
-            0
-        );
+        string memory customMetadata = nameService
+            .getSingleCustomMetadataOfIdentity("test", 0);
 
         assert(
             bytes(customMetadata).length == bytes("").length &&
@@ -913,10 +901,8 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        string memory customMetadata = nameService.getSingleCustomMetadataOfIdentity(
-            "test",
-            0
-        );
+        string memory customMetadata = nameService
+            .getSingleCustomMetadataOfIdentity("test", 0);
 
         assert(
             bytes(customMetadata).length == bytes("").length &&
@@ -995,10 +981,8 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        string memory customMetadata = nameService.getSingleCustomMetadataOfIdentity(
-            "test",
-            0
-        );
+        string memory customMetadata = nameService
+            .getSingleCustomMetadataOfIdentity("test", 0);
 
         assert(
             bytes(customMetadata).length == bytes("").length &&
@@ -1075,10 +1059,8 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        string memory customMetadata = nameService.getSingleCustomMetadataOfIdentity(
-            "test",
-            0
-        );
+        string memory customMetadata = nameService
+            .getSingleCustomMetadataOfIdentity("test", 0);
 
         assert(
             bytes(customMetadata).length == bytes("").length &&
@@ -1157,10 +1139,8 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        string memory customMetadata = nameService.getSingleCustomMetadataOfIdentity(
-            "test",
-            0
-        );
+        string memory customMetadata = nameService
+            .getSingleCustomMetadataOfIdentity("test", 0);
 
         assert(
             bytes(customMetadata).length == bytes("").length &&
@@ -1239,10 +1219,8 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        string memory customMetadata = nameService.getSingleCustomMetadataOfIdentity(
-            "test",
-            0
-        );
+        string memory customMetadata = nameService
+            .getSingleCustomMetadataOfIdentity("test", 0);
 
         assert(
             bytes(customMetadata).length == bytes("").length &&
@@ -1321,10 +1299,8 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        string memory customMetadata = nameService.getSingleCustomMetadataOfIdentity(
-            "test",
-            0
-        );
+        string memory customMetadata = nameService
+            .getSingleCustomMetadataOfIdentity("test", 0);
 
         assert(
             bytes(customMetadata).length == bytes("").length &&
@@ -1403,10 +1379,8 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        string memory customMetadata = nameService.getSingleCustomMetadataOfIdentity(
-            "test",
-            0
-        );
+        string memory customMetadata = nameService
+            .getSingleCustomMetadataOfIdentity("test", 0);
 
         assert(
             bytes(customMetadata).length == bytes("").length &&
@@ -1464,10 +1438,8 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        string memory customMetadata = nameService.getSingleCustomMetadataOfIdentity(
-            "test",
-            0
-        );
+        string memory customMetadata = nameService
+            .getSingleCustomMetadataOfIdentity("test", 0);
 
         assert(
             bytes(customMetadata).length == bytes("").length &&
@@ -1525,10 +1497,8 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        string memory customMetadata = nameService.getSingleCustomMetadataOfIdentity(
-            "test",
-            0
-        );
+        string memory customMetadata = nameService
+            .getSingleCustomMetadataOfIdentity("test", 0);
 
         assert(
             bytes(customMetadata).length == bytes("").length &&
@@ -1588,10 +1558,8 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        string memory customMetadata = nameService.getSingleCustomMetadataOfIdentity(
-            "test",
-            0
-        );
+        string memory customMetadata = nameService
+            .getSingleCustomMetadataOfIdentity("test", 0);
 
         assert(
             bytes(customMetadata).length == bytes("").length &&
@@ -1648,10 +1616,8 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
 
         vm.stopPrank();
 
-        string memory customMetadata = nameService.getSingleCustomMetadataOfIdentity(
-            "test",
-            0
-        );
+        string memory customMetadata = nameService
+            .getSingleCustomMetadataOfIdentity("test", 0);
 
         assert(
             bytes(customMetadata).length == bytes("").length &&

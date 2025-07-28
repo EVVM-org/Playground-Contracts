@@ -26,11 +26,9 @@ import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
-contract unitTestRevert_NameService_preRegistrationUsername is
-    Test,
-    Constants
-{
+contract unitTestRevert_NameService_preRegistrationUsername is Test, Constants {
     Staking staking;
     Evvm evvm;
     Estimator estimator;
@@ -62,7 +60,6 @@ contract unitTestRevert_NameService_preRegistrationUsername is
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
     }
@@ -103,7 +100,11 @@ contract unitTestRevert_NameService_preRegistrationUsername is
                     nonceNameService
                 )
             );
-            signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
+            signatureNameService = Erc191TestBuilder.buildERC191Signature(
+                v,
+                r,
+                s
+            );
             (v, r, s) = vm.sign(
                 user.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPay(
@@ -126,7 +127,11 @@ contract unitTestRevert_NameService_preRegistrationUsername is
                     nonceNameService
                 )
             );
-            signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
+            signatureNameService = Erc191TestBuilder.buildERC191Signature(
+                v,
+                r,
+                s
+            );
             signatureEVVM = "";
         }
     }
@@ -1138,7 +1143,10 @@ contract unitTestRevert_NameService_preRegistrationUsername is
             0.001 ether
         );
 
-        (signatureNameService, signatureEVVM) = makePreRegistrationUsernameSignature(
+        (
+            signatureNameService,
+            signatureEVVM
+        ) = makePreRegistrationUsernameSignature(
             COMMON_USER_NO_STAKER_1,
             "user",
             10101,
@@ -1162,7 +1170,10 @@ contract unitTestRevert_NameService_preRegistrationUsername is
         );
         vm.stopPrank();
 
-        (signatureNameService, signatureEVVM) = makePreRegistrationUsernameSignature(
+        (
+            signatureNameService,
+            signatureEVVM
+        ) = makePreRegistrationUsernameSignature(
             COMMON_USER_NO_STAKER_1,
             "test",
             10101,

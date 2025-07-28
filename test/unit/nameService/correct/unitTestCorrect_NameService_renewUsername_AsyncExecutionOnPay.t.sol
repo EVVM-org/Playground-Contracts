@@ -25,7 +25,7 @@ import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
-import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
+import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 contract unitTestCorrect_NameService_renewUsername_AsyncExecutionOnPay is
     Test,

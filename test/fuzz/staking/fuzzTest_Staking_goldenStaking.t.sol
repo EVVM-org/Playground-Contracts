@@ -31,6 +31,7 @@ import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 contract fuzzTest_Staking_goldenStaking is Test, Constants {
     Staking staking;
@@ -66,7 +67,6 @@ contract fuzzTest_Staking_goldenStaking is Test, Constants {
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
 
@@ -250,8 +250,9 @@ contract fuzzTest_Staking_goldenStaking is Test, Constants {
                     input[i].isStaking
                         ? input[i].amount
                         : (
-                            staking.getUserAmountStaked(GOLDEN_STAKER.Address) ==
-                                0
+                            staking.getUserAmountStaked(
+                                GOLDEN_STAKER.Address
+                            ) == 0
                                 ? stakingFullAmountBefore
                                 : input[i].amount
                         )
@@ -267,8 +268,9 @@ contract fuzzTest_Staking_goldenStaking is Test, Constants {
                     history.totalStaked,
                     totalStakedBefore -
                         (
-                            staking.getUserAmountStaked(GOLDEN_STAKER.Address) ==
-                                0
+                            staking.getUserAmountStaked(
+                                GOLDEN_STAKER.Address
+                            ) == 0
                                 ? stakingFullAmountBefore
                                 : input[i].amount
                         )

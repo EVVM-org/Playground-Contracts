@@ -26,6 +26,7 @@ import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 contract unitTestCorrect_NameService_registrationUsername_AsyncExecutionOnPay is
     Test,
@@ -62,13 +63,12 @@ contract unitTestCorrect_NameService_registrationUsername_AsyncExecutionOnPay is
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
     }
 
     /**
-     * Function to test: 
+     * Function to test:
      * nS: No staker
      * S: Staker
      * PF: Includes priority fee
@@ -199,9 +199,8 @@ contract unitTestCorrect_NameService_registrationUsername_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        (address user, uint256 expirationDate) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (address user, uint256 expirationDate) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(user, COMMON_USER_NO_STAKER_1.Address);
         assertEq(expirationDate, block.timestamp + 366 days);
@@ -259,9 +258,8 @@ contract unitTestCorrect_NameService_registrationUsername_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        (address user, uint256 expirationDate) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (address user, uint256 expirationDate) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(user, COMMON_USER_NO_STAKER_1.Address);
         assertEq(expirationDate, block.timestamp + 366 days);
@@ -319,9 +317,8 @@ contract unitTestCorrect_NameService_registrationUsername_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        (address user, uint256 expirationDate) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (address user, uint256 expirationDate) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(user, COMMON_USER_NO_STAKER_1.Address);
         assertEq(expirationDate, block.timestamp + 366 days);
@@ -376,9 +373,8 @@ contract unitTestCorrect_NameService_registrationUsername_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        (address user, uint256 expirationDate) = nameService.getIdentityBasicMetadata(
-            "test"
-        );
+        (address user, uint256 expirationDate) = nameService
+            .getIdentityBasicMetadata("test");
 
         assertEq(user, COMMON_USER_NO_STAKER_1.Address);
         assertEq(expirationDate, block.timestamp + 366 days);
@@ -390,10 +386,7 @@ contract unitTestCorrect_NameService_registrationUsername_AsyncExecutionOnPay is
             0
         );
         assertEq(
-            evvm.getBalance(
-                COMMON_USER_STAKER.Address,
-                MATE_TOKEN_ADDRESS
-            ),
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             (evvm.getRewardAmount() * 50) + 0.001 ether
         );
     }

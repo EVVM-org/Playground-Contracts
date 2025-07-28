@@ -26,6 +26,7 @@ import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
+import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 
 contract unitTestCorrect_NameService_removeCustomMetadata_AsyncExecutionOnPay is
     Test,
@@ -64,7 +65,6 @@ contract unitTestCorrect_NameService_removeCustomMetadata_AsyncExecutionOnPay is
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
 
@@ -134,11 +134,8 @@ contract unitTestCorrect_NameService_removeCustomMetadata_AsyncExecutionOnPay is
                 nonceNameService
             )
         );
-        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
+        bytes memory signatureNameService = Erc191TestBuilder
+            .buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -198,11 +195,8 @@ contract unitTestCorrect_NameService_removeCustomMetadata_AsyncExecutionOnPay is
                 nonceNameService
             )
         );
-        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
+        bytes memory signatureNameService = Erc191TestBuilder
+            .buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -313,10 +307,7 @@ contract unitTestCorrect_NameService_removeCustomMetadata_AsyncExecutionOnPay is
             true
         );
 
-        uint256 priorityFeeAmountEVVM = addBalance(
-            COMMON_USER_NO_STAKER_1,
-            0
-        );
+        uint256 priorityFeeAmountEVVM = addBalance(COMMON_USER_NO_STAKER_1, 0);
 
         (
             bytes memory signatureNameService,
@@ -347,10 +338,8 @@ contract unitTestCorrect_NameService_removeCustomMetadata_AsyncExecutionOnPay is
 
         vm.stopPrank();
 
-        string memory customMetadata = nameService.getSingleCustomMetadataOfIdentity(
-            "test",
-            1
-        );
+        string memory customMetadata = nameService
+            .getSingleCustomMetadataOfIdentity("test", 1);
 
         assertEq(bytes(customMetadata).length, bytes("test>3").length);
         assertEq(keccak256(bytes(customMetadata)), keccak256(bytes("test>3")));
@@ -449,10 +438,8 @@ contract unitTestCorrect_NameService_removeCustomMetadata_AsyncExecutionOnPay is
 
         vm.stopPrank();
 
-        string memory customMetadata = nameService.getSingleCustomMetadataOfIdentity(
-            "test",
-            1
-        );
+        string memory customMetadata = nameService
+            .getSingleCustomMetadataOfIdentity("test", 1);
 
         assertEq(bytes(customMetadata).length, bytes("test>3").length);
         assertEq(keccak256(bytes(customMetadata)), keccak256(bytes("test>3")));
@@ -517,10 +504,7 @@ contract unitTestCorrect_NameService_removeCustomMetadata_AsyncExecutionOnPay is
             true
         );
 
-        uint256 priorityFeeAmountEVVM = addBalance(
-            COMMON_USER_NO_STAKER_1,
-            0
-        );
+        uint256 priorityFeeAmountEVVM = addBalance(COMMON_USER_NO_STAKER_1, 0);
 
         (
             bytes memory signatureNameService,
@@ -551,10 +535,8 @@ contract unitTestCorrect_NameService_removeCustomMetadata_AsyncExecutionOnPay is
 
         vm.stopPrank();
 
-        string memory customMetadata = nameService.getSingleCustomMetadataOfIdentity(
-            "test",
-            1
-        );
+        string memory customMetadata = nameService
+            .getSingleCustomMetadataOfIdentity("test", 1);
 
         assertEq(bytes(customMetadata).length, bytes("test>3").length);
         assertEq(keccak256(bytes(customMetadata)), keccak256(bytes("test>3")));
@@ -650,10 +632,8 @@ contract unitTestCorrect_NameService_removeCustomMetadata_AsyncExecutionOnPay is
 
         vm.stopPrank();
 
-        string memory customMetadata = nameService.getSingleCustomMetadataOfIdentity(
-            "test",
-            1
-        );
+        string memory customMetadata = nameService
+            .getSingleCustomMetadataOfIdentity("test", 1);
 
         assertEq(bytes(customMetadata).length, bytes("test>3").length);
         assertEq(keccak256(bytes(customMetadata)), keccak256(bytes("test>3")));
