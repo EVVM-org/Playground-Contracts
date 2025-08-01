@@ -7,8 +7,7 @@ import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 
 pragma solidity ^0.8.0;
 
-library SignatureFunctionsLib {
-    //░▒▓█Signature functions████████████████████████▓▒░
+library SignatureUtils {
     /**
      *  @dev using EIP-191 (https://eips.ethereum.org/EIPS/eip-191) can be used to sign and
      *       verify messages, the next functions are used to verify the messages signed
