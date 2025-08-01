@@ -227,7 +227,7 @@ contract fuzzTest_EVVM_payMultiple is Test, Constants, EvvmStructs {
                                 COMMON_USER_NO_STAKER_1.Address
                             )
                     ),
-                priority: input.priorityFlag[i],
+                priorityFlag: input.priorityFlag[i],
                 executor: input.useExecutor[i] ? FISHER.Address : address(0),
                 signature: signature[i]
             });

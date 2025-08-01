@@ -145,7 +145,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
             amount: 0.001 ether,
             priorityFee: 0,
             nonce: 1001001,
-            priority: true,
+            priorityFlag: true,
             executor: address(0),
             signature: payDataSignature[0].signatureEVVM
         });
@@ -182,7 +182,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
             amount: 0.001 ether,
             priorityFee: 0.00000001 ether,
             nonce: 2002002,
-            priority: true,
+            priorityFlag: true,
             executor: address(0),
             signature: payDataSignature[1].signatureEVVM
         });
@@ -219,7 +219,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
             amount: 0.001 ether,
             priorityFee: 0,
             nonce: 3003003,
-            priority: true,
+            priorityFlag: true,
             executor: address(0),
             signature: payDataSignature[2].signatureEVVM
         });
@@ -256,7 +256,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
             amount: 0.001 ether,
             priorityFee: 0.00000001 ether,
             nonce: 4004004,
-            priority: true,
+            priorityFlag: true,
             executor: address(0),
             signature: payDataSignature[3].signatureEVVM
         });
@@ -293,7 +293,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
             amount: 0.001 ether,
             priorityFee: 0,
             nonce: 5005005,
-            priority: true,
+            priorityFlag: true,
             executor: COMMON_USER_NO_STAKER_2.Address,
             signature: payDataSignature[4].signatureEVVM
         });
@@ -330,7 +330,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
             amount: 0.001 ether,
             priorityFee: 0.00000001 ether,
             nonce: 6006006,
-            priority: true,
+            priorityFlag: true,
             executor: COMMON_USER_NO_STAKER_2.Address,
             signature: payDataSignature[5].signatureEVVM
         });
@@ -367,7 +367,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
             amount: 0.001 ether,
             priorityFee: 0,
             nonce: 7007007,
-            priority: true,
+            priorityFlag: true,
             executor: COMMON_USER_NO_STAKER_2.Address,
             signature: payDataSignature[6].signatureEVVM
         });
@@ -404,7 +404,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
             amount: 0.001 ether,
             priorityFee: 0.00000001 ether,
             nonce: 8008008,
-            priority: true,
+            priorityFlag: true,
             executor: COMMON_USER_NO_STAKER_2.Address,
             signature: payDataSignature[7].signatureEVVM
         });
@@ -490,7 +490,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
             amount: 0.001 ether,
             priorityFee: 0,
             nonce: 1001001,
-            priority: true,
+            priorityFlag: true,
             executor: address(0),
             signature: payDataSignature[0].signatureEVVM
         });
@@ -527,7 +527,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
             amount: 0.001 ether,
             priorityFee: 0.00000001 ether,
             nonce: 2002002,
-            priority: true,
+            priorityFlag: true,
             executor: address(0),
             signature: payDataSignature[1].signatureEVVM
         });
@@ -564,7 +564,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
             amount: 0.001 ether,
             priorityFee: 0,
             nonce: 3003003,
-            priority: true,
+            priorityFlag: true,
             executor: address(0),
             signature: payDataSignature[2].signatureEVVM
         });
@@ -601,7 +601,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
             amount: 0.001 ether,
             priorityFee: 0.00000001 ether,
             nonce: 4004004,
-            priority: true,
+            priorityFlag: true,
             executor: address(0),
             signature: payDataSignature[3].signatureEVVM
         });
@@ -638,7 +638,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
             amount: 0.001 ether,
             priorityFee: 0,
             nonce: 5005005,
-            priority: true,
+            priorityFlag: true,
             executor: COMMON_USER_STAKER.Address,
             signature: payDataSignature[4].signatureEVVM
         });
@@ -675,7 +675,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
             amount: 0.001 ether,
             priorityFee: 0.00000001 ether,
             nonce: 6006006,
-            priority: true,
+            priorityFlag: true,
             executor: COMMON_USER_STAKER.Address,
             signature: payDataSignature[5].signatureEVVM
         });
@@ -712,7 +712,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
             amount: 0.001 ether,
             priorityFee: 0,
             nonce: 7007007,
-            priority: true,
+            priorityFlag: true,
             executor: COMMON_USER_STAKER.Address,
             signature: payDataSignature[6].signatureEVVM
         });
@@ -749,7 +749,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
             amount: 0.001 ether,
             priorityFee: 0.00000001 ether,
             nonce: 8008008,
-            priority: true,
+            priorityFlag: true,
             executor: COMMON_USER_STAKER.Address,
             signature: payDataSignature[7].signatureEVVM
         });

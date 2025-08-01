@@ -132,7 +132,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             amount: 0.1 ether,
             priorityFee: 0.01 ether,
             nonce: 0,
-            priority: false,
+            priorityFlag: false,
             executor: COMMON_USER_STAKER.Address,
             signature: signatureEVVM
         });
@@ -200,7 +200,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             amount: 0.1 ether,
             priorityFee: 0.01 ether,
             nonce: 0,
-            priority: false,
+            priorityFlag: false,
             executor: COMMON_USER_STAKER.Address,
             signature: signatureEVVM
         });
@@ -268,7 +268,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             amount: 0.1 ether,
             priorityFee: 0.01 ether,
             nonce: 0,
-            priority: false,
+            priorityFlag: false,
             executor: COMMON_USER_STAKER.Address,
             signature: signatureEVVM
         });
@@ -336,7 +336,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             amount: 0.1 ether,
             priorityFee: 0.01 ether,
             nonce: 0,
-            priority: false,
+            priorityFlag: false,
             executor: COMMON_USER_STAKER.Address,
             signature: signatureEVVM
         });
@@ -404,7 +404,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             amount: 1 ether,
             priorityFee: 0.01 ether,
             nonce: 0,
-            priority: false,
+            priorityFlag: false,
             executor: COMMON_USER_STAKER.Address,
             signature: signatureEVVM
         });
@@ -472,7 +472,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             amount: 0.1 ether,
             priorityFee: 0.07 ether,
             nonce: 0,
-            priority: false,
+            priorityFlag: false,
             executor: COMMON_USER_STAKER.Address,
             signature: signatureEVVM
         });
@@ -540,7 +540,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             amount: 0.1 ether,
             priorityFee: 0.01 ether,
             nonce: 0,
-            priority: false,
+            priorityFlag: false,
             executor: COMMON_USER_STAKER.Address,
             signature: signatureEVVM
         });
@@ -608,7 +608,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             amount: 0.1 ether,
             priorityFee: 0.01 ether,
             nonce: 0,
-            priority: true,
+            priorityFlag: true,
             executor: COMMON_USER_STAKER.Address,
             signature: signatureEVVM
         });
@@ -676,7 +676,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             amount: 0.1 ether,
             priorityFee: 0.01 ether,
             nonce: 0,
-            priority: false,
+            priorityFlag: false,
             executor: address(0),
             signature: signatureEVVM
         });
@@ -744,7 +744,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             amount: 0.1 ether,
             priorityFee: 0.01 ether,
             nonce: 0,
-            priority: false,
+            priorityFlag: false,
             executor: COMMON_USER_STAKER.Address,
             signature: signatureEVVM
         });
@@ -813,7 +813,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             amount: 1 ether,
             priorityFee: 0.01 ether,
             nonce: 0,
-            priority: false,
+            priorityFlag: false,
             executor: address(0),
             signature: signatureEVVM
         });
@@ -882,7 +882,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             amount: 0.1 ether,
             priorityFee: 0.1 ether,
             nonce: 0,
-            priority: false,
+            priorityFlag: false,
             executor: address(0),
             signature: signatureEVVM
         });
