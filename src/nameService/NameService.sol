@@ -15,7 +15,7 @@ pragma solidity ^0.8.0;
 
 import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
-import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
+import {AdvancedStrings} from "@EVVM/playground/lib/AdvancedStrings.sol";
 import {ErrorsLib} from "@EVVM/playground/nameService/lib/ErrorsLib.sol";
 import {SignatureUtils} from "@EVVM/playground/nameService/lib/SignatureUtils.sol";
 

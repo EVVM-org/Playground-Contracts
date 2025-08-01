@@ -22,7 +22,7 @@ import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
 import {Staking} from "@EVVM/playground/staking/Staking.sol";
 import {NameService} from "@EVVM/playground/nameService/NameService.sol";
 import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
-import {Erc191TestBuilder} from "@EVVM/libraries/Erc191TestBuilder.sol";
+import {Erc191TestBuilder} from "@EVVM/playground/lib/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 

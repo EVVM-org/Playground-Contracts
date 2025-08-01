@@ -1,8 +1,8 @@
 // Copyright (c) 2025 GERMAN MARIA ABAL BAZZANO
 // License: EVVM Noncommercial License v1.0 (see LICENSE file)
 
-import {SignatureRecover} from "@EVVM/libraries/SignatureRecover.sol";
-import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
+import {SignatureRecover} from "@EVVM/playground/lib/SignatureRecover.sol";
+import {AdvancedStrings} from "@EVVM/playground/lib/AdvancedStrings.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 
 pragma solidity ^0.8.0;

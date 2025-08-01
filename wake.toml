@@ -12,7 +12,7 @@ remappings = [
     "@uniswap/v3-core/contracts/=lib/v3-core/contracts/",
     "@EVVM/interfaces/=src/interfaces/",
     "@EVVM/core/=src/production/core/",
-    "@EVVM/libraries/==lib/EVVM-solidity-library/",
+    "@EVVM/playground/lib/==lib/EVVM-solidity-library/",
     "Tesnet-contracts/=src/testnet/",
     "@EVVM/playground/=src/mock/",
     "ds-test/=lib/forge-std/lib/ds-test/src/",

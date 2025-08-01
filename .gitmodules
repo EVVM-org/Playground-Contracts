@@ -4,6 +4,3 @@
 [submodule "lib/openzeppelin-contracts"]
 	path = lib/openzeppelin-contracts
 	url = https://github.com/OpenZeppelin/openzeppelin-contracts
-[submodule "lib/EVVM-solidity-library"]
-	path = lib/EVVM-solidity-library
-	url = https://github.com/EVVM-org/EVVM-solidity-library

@@ -20,9 +20,9 @@ Y8a 8 8 a8P  Y8a     a8P  88    `888'    88   d8'        `8b   88       88
  */
 
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
-import {AdvancedStrings} from "@EVVM/libraries/AdvancedStrings.sol";
+import {AdvancedStrings} from "@EVVM/playground/lib/AdvancedStrings.sol";
 import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
-import {SignatureRecover} from "@EVVM/libraries/SignatureRecover.sol";
+import {SignatureRecover} from "@EVVM/playground/lib/SignatureRecover.sol";
 import {NameService} from "@EVVM/playground/nameService/NameService.sol";
 import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
 import {ErrorsLib} from "./lib/ErrorsLib.sol";
