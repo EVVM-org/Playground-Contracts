@@ -16,7 +16,7 @@ pragma solidity ^0.8.0;
 import {NameService} from "@EVVM/playground/nameService/NameService.sol";
 import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
 import {ErrorsLib} from "@EVVM/playground/evvm/lib/ErrorsLib.sol";
-import {SignatureFunctionsLib} from "@EVVM/playground/evvm/lib/SignatureFunctionsLib.sol";
+import {SignatureUtils} from "@EVVM/playground/evvm/lib/SignatureUtils.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 
 contract Evvm is EvvmStorage {
@@ -132,7 +132,7 @@ contract Evvm is EvvmStorage {
         bytes calldata _options
     ) public payable {
         if (
-            !SignatureFunctionsLib.verifyMessageSignedForWithdrawal(
+            !SignatureUtils.verifyMessageSignedForWithdrawal(
                 user,
                 addressToReceive,
                 token,
@@ -180,7 +180,7 @@ contract Evvm is EvvmStorage {
         bytes calldata _options
     ) public payable {
         if (
-            !SignatureFunctionsLib.verifyMessageSignedForWithdrawal(
+            !SignatureUtils.verifyMessageSignedForWithdrawal(
                 user,
                 addressToReceive,
                 token,
@@ -240,7 +240,7 @@ contract Evvm is EvvmStorage {
         bytes memory signature
     ) external {
         if (
-            !SignatureFunctionsLib.verifyMessageSignedForPay(
+            !SignatureUtils.verifyMessageSignedForPay(
                 from,
                 to_address,
                 to_identity,
@@ -294,7 +294,7 @@ contract Evvm is EvvmStorage {
         bytes memory signature
     ) external {
         if (
-            !SignatureFunctionsLib.verifyMessageSignedForPay(
+            !SignatureUtils.verifyMessageSignedForPay(
                 from,
                 to_address,
                 to_identity,
@@ -348,7 +348,7 @@ contract Evvm is EvvmStorage {
         bytes memory signature
     ) external {
         if (
-            !SignatureFunctionsLib.verifyMessageSignedForPay(
+            !SignatureUtils.verifyMessageSignedForPay(
                 from,
                 to_address,
                 to_identity,
@@ -410,7 +410,7 @@ contract Evvm is EvvmStorage {
         bytes memory signature
     ) external {
         if (
-            !SignatureFunctionsLib.verifyMessageSignedForPay(
+            !SignatureUtils.verifyMessageSignedForPay(
                 from,
                 to_address,
                 to_identity,
@@ -467,7 +467,7 @@ contract Evvm is EvvmStorage {
         results = new bool[](payData.length);
         for (uint256 iteration = 0; iteration < payData.length; iteration++) {
             if (
-                !SignatureFunctionsLib.verifyMessageSignedForPay(
+                !SignatureUtils.verifyMessageSignedForPay(
                     payData[iteration].from,
                     payData[iteration].to_address,
                     payData[iteration].to_identity,
@@ -590,7 +590,7 @@ contract Evvm is EvvmStorage {
         bytes memory signature
     ) external {
         if (
-            !SignatureFunctionsLib.verifyMessageSignedForDispersePay(
+            !SignatureUtils.verifyMessageSignedForDispersePay(
                 from,
                 sha256(abi.encode(toData)),
                 token,
@@ -725,7 +725,7 @@ contract Evvm is EvvmStorage {
         bytes memory signature
     ) public {
         if (
-            !SignatureFunctionsLib.verifyMessageSignedForFisherBridge(
+            !SignatureUtils.verifyMessageSignedForFisherBridge(
                 user,
                 addressToReceive,
                 nextFisherWithdrawalNonce[user],
