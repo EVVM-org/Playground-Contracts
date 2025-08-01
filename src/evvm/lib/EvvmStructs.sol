@@ -23,7 +23,7 @@ abstract contract EvvmStructs {
         uint256 amount;
         uint256 priorityFee;
         uint256 nonce;
-        bool priority;
+        bool priorityFlag;
         address executor;
         bytes signature;
     }
@@ -65,8 +65,6 @@ abstract contract EvvmStructs {
         uint256 eraTokens;
         uint256 reward;
     }
-
-
 
     struct AddressTypeProposal {
         address current;

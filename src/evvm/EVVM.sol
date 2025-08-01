@@ -354,10 +354,10 @@ contract EVVM is EvvmStorage {
                     payData[iteration].token,
                     payData[iteration].amount,
                     payData[iteration].priorityFee,
-                    payData[iteration].priority
+                    payData[iteration].priorityFlag
                         ? payData[iteration].nonce
                         : nextSyncUsedNonce[payData[iteration].from],
-                    payData[iteration].priority,
+                    payData[iteration].priorityFlag,
                     payData[iteration].executor,
                     payData[iteration].signature
                 )
@@ -373,8 +373,8 @@ contract EVVM is EvvmStorage {
                 }
             }
 
-            if (payData[iteration].priority) {
-                /// @dev priority == true (async)
+            if (payData[iteration].priorityFlag) {
+                /// @dev priorityFlag == true (async)
 
                 if (
                     !asyncUsedNonce[payData[iteration].from][
@@ -466,7 +466,7 @@ contract EVVM is EvvmStorage {
         uint256 amount,
         uint256 priorityFee,
         uint256 nonce,
-        bool priority,
+        bool priorityFlag,
         address executor,
         bytes memory signature
     ) external {
@@ -477,8 +477,8 @@ contract EVVM is EvvmStorage {
                 token,
                 amount,
                 priorityFee,
-                priority ? nonce : nextSyncUsedNonce[from],
-                priority,
+                priorityFlag ? nonce : nextSyncUsedNonce[from],
+                priorityFlag,
                 executor,
                 signature
             )
@@ -492,7 +492,7 @@ contract EVVM is EvvmStorage {
             }
         }
 
-        if (priority) {
+        if (priorityFlag) {
             if (asyncUsedNonce[from][nonce]) {
                 revert ErrorsLib.InvalidAsyncNonce();
             }
@@ -536,7 +536,7 @@ contract EVVM is EvvmStorage {
             balances[from][token] += priorityFee;
         }
 
-        if (priority) {
+        if (priorityFlag) {
             asyncUsedNonce[from][nonce] = true;
         } else {
             nextSyncUsedNonce[from]++;
