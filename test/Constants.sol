@@ -15,8 +15,8 @@ pragma solidity ^0.8.0;
  *         the same storage layout.
  */
 
-import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
-import {Staking} from "@EVVM/playground/staking/Staking.sol";
+import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
+import {Staking} from "@EVVM/playground/contracts/staking/Staking.sol";
 
 abstract contract Constants {
     bytes32 constant DEPOSIT_HISTORY_SMATE_IDENTIFIER = bytes32(uint256(1));

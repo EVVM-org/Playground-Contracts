@@ -13,13 +13,13 @@ pragma solidity ^0.8.0;
 888       888  "Y88P"   "Y8888P 888  888       "Y8888P"   "Y88P"  888  888  "Y888 888    "Y888888  "Y8888P  "Y888                                                                                                          
  */
 
-import {NameService} from "@EVVM/playground/nameService/NameService.sol";
-import {EvvmStorage} from "@EVVM/playground/evvm/lib/EvvmStorage.sol";
-import {ErrorsLib} from "@EVVM/playground/evvm/lib/ErrorsLib.sol";
-import {SignatureUtils} from "@EVVM/playground/evvm/lib/SignatureUtils.sol";
+import {NameService} from "@EVVM/playground/contracts/nameService/NameService.sol";
+import {EvvmStorage} from "@EVVM/playground/contracts/evvm/lib/EvvmStorage.sol";
+import {ErrorsLib} from "@EVVM/playground/contracts/evvm/lib/ErrorsLib.sol";
+import {SignatureUtils} from "@EVVM/playground/contracts/evvm/lib/SignatureUtils.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 
-contract Evvm is EvvmStorage {
+contract EVVM is EvvmStorage {
     modifier onlyAdmin() {
         if (msg.sender != admin.current) {
             revert();
@@ -27,11 +27,7 @@ contract Evvm is EvvmStorage {
         _;
     }
 
-    constructor(
-        address _initialOwner,
-        address _stakingContractAddress,
-        EvvmMetadata memory _evvmMetadata
-    ) {
+    constructor(address _initialOwner, address _stakingContractAddress) {
         stakingContractAddress = _stakingContractAddress;
 
         admin.current = _initialOwner;
@@ -45,8 +41,6 @@ contract Evvm is EvvmStorage {
         stakerList[_stakingContractAddress] = 0x01;
 
         breakerSetupNameServiceAddress = 0x01;
-
-        evvmMetadata = _evvmMetadata;
     }
 
     function _setupNameServiceAddress(address _nameServiceAddress) external {
@@ -252,11 +246,14 @@ contract Evvm is EvvmStorage {
                 executor,
                 signature
             )
-        ) revert ErrorsLib.InvalidSignature();
+        ) {
+            revert();
+        }
 
         if (executor != address(0)) {
-            if (msg.sender != executor)
-                revert ErrorsLib.SenderIsNotTheExecutor();
+            if (msg.sender != executor) {
+                revert();
+            }
         }
 
         address to = !Strings.equal(to_identity, "")
@@ -265,14 +262,15 @@ contract Evvm is EvvmStorage {
             )
             : to_address;
 
-        if (!_updateBalance(from, to, token, amount))
-            revert ErrorsLib.UpdateBalanceFailed();
+        if (!_updateBalance(from, to, token, amount)) {
+            revert();
+        }
 
         nextSyncUsedNonce[from]++;
     }
 
     /**
-     *  @notice Pay function for non staking holders (asyncronous nonce)
+     *  @notice Pay function
      *  @param from user // who wants to pay
      *  @param to_address address of the receiver
      *  @param to_identity identity of the receiver
@@ -280,9 +278,11 @@ contract Evvm is EvvmStorage {
      *  @param amount amount to send
      *  @param priorityFee priorityFee to send to the staking holder
      *  @param nonce nonce of the transaction
+     *  @param priorityFlag if the transaction is priority or not (false = sync, true = async)
+     *  @param executor address of the executor
      *  @param signature signature of the user who wants to send the message
      */
-    function payNoMateStaking_async(
+    function pay(
         address from,
         address to_address,
         string memory to_identity,
@@ -290,6 +290,7 @@ contract Evvm is EvvmStorage {
         uint256 amount,
         uint256 priorityFee,
         uint256 nonce,
+        bool priorityFlag,
         address executor,
         bytes memory signature
     ) external {
@@ -301,19 +302,20 @@ contract Evvm is EvvmStorage {
                 token,
                 amount,
                 priorityFee,
-                nonce,
-                true,
+                priorityFlag ? nonce : nextSyncUsedNonce[from],
+                priorityFlag,
                 executor,
                 signature
             )
-        ) revert ErrorsLib.InvalidSignature();
+        ) revert();
 
         if (executor != address(0)) {
-            if (msg.sender != executor)
-                revert ErrorsLib.SenderIsNotTheExecutor();
+            if (msg.sender != executor) revert();
         }
 
-        if (asyncUsedNonce[from][nonce]) revert ErrorsLib.InvalidAsyncNonce();
+        if (priorityFlag) {
+            if (asyncUsedNonce[from][nonce]) revert();
+        }
 
         address to = !Strings.equal(to_identity, "")
             ? NameService(nameServiceAddress).verifyStrictAndGetOwnerOfIdentity(
@@ -321,136 +323,17 @@ contract Evvm is EvvmStorage {
             )
             : to_address;
 
-        if (!_updateBalance(from, to, token, amount))
-            revert ErrorsLib.UpdateBalanceFailed();
+        if (!_updateBalance(from, to, token, amount)) revert();
 
-        asyncUsedNonce[from][nonce] = true;
-    }
+        if (istakingStaker(msg.sender)) {
+            if (priorityFee > 0) {
+                if (!_updateBalance(from, msg.sender, token, priorityFee)) {
+                    revert();
+                }
+            }
 
-    /**
-     *  @notice Pay function for staking holders (syncronous nonce)
-     *  @param from user // who wants to pay
-     *  @param to_address address of the receiver
-     *  @param to_identity identity of the receiver
-     *  @param token address of the token to send
-     *  @param amount amount to send
-     *  @param priorityFee priorityFee to send to the staking holder
-     *  @param signature signature of the user who wants to send the message
-     */
-    function payMateStaking_sync(
-        address from,
-        address to_address,
-        string memory to_identity,
-        address token,
-        uint256 amount,
-        uint256 priorityFee,
-        address executor,
-        bytes memory signature
-    ) external {
-        if (
-            !SignatureUtils.verifyMessageSignedForPay(
-                from,
-                to_address,
-                to_identity,
-                token,
-                amount,
-                priorityFee,
-                nextSyncUsedNonce[from],
-                false,
-                executor,
-                signature
-            )
-        ) revert ErrorsLib.InvalidSignature();
-
-        if (executor != address(0)) {
-            if (msg.sender != executor)
-                revert ErrorsLib.SenderIsNotTheExecutor();
+            _giveMateReward(msg.sender, 1);
         }
-
-        if (!istakingStaker(msg.sender)) revert ErrorsLib.NotAnStaker();
-
-        address to = !Strings.equal(to_identity, "")
-            ? NameService(nameServiceAddress).verifyStrictAndGetOwnerOfIdentity(
-                to_identity
-            )
-            : to_address;
-
-        if (!_updateBalance(from, to, token, amount))
-            revert ErrorsLib.UpdateBalanceFailed();
-
-        if (priorityFee > 0) {
-            if (!_updateBalance(from, msg.sender, token, priorityFee))
-                revert ErrorsLib.UpdateBalanceFailed();
-        }
-        _giveMateReward(msg.sender, 1);
-
-        nextSyncUsedNonce[from]++;
-    }
-
-    /**
-     *  @notice Pay function for staking holders (asyncronous nonce)
-     *  @param from user // who wants to pay
-     *  @param to_address address of the receiver
-     *  @param to_identity identity of the receiver
-     *  @param token address of the token to send
-     *  @param amount amount to send
-     *  @param priorityFee priorityFee to send to the staking holder
-     *  @param nonce nonce of the transaction
-     *  @param signature signature of the user who wants to send the message
-     */
-    function payMateStaking_async(
-        address from,
-        address to_address,
-        string memory to_identity,
-        address token,
-        uint256 amount,
-        uint256 priorityFee,
-        uint256 nonce,
-        address executor,
-        bytes memory signature
-    ) external {
-        if (
-            !SignatureUtils.verifyMessageSignedForPay(
-                from,
-                to_address,
-                to_identity,
-                token,
-                amount,
-                priorityFee,
-                nonce,
-                true,
-                executor,
-                signature
-            )
-        ) revert ErrorsLib.InvalidSignature();
-
-        if (executor != address(0)) {
-            if (msg.sender != executor)
-                revert ErrorsLib.SenderIsNotTheExecutor();
-        }
-
-        if (!istakingStaker(msg.sender)) revert ErrorsLib.NotAnStaker();
-
-        if (asyncUsedNonce[from][nonce]) revert ErrorsLib.InvalidAsyncNonce();
-
-        address to = !Strings.equal(to_identity, "")
-            ? NameService(nameServiceAddress).verifyStrictAndGetOwnerOfIdentity(
-                to_identity
-            )
-            : to_address;
-
-        if (!_updateBalance(from, to, token, amount))
-            revert ErrorsLib.UpdateBalanceFailed();
-
-        if (priorityFee > 0) {
-            if (!_updateBalance(from, msg.sender, token, priorityFee))
-                revert ErrorsLib.UpdateBalanceFailed();
-        }
-
-        if (!_giveMateReward(msg.sender, 1))
-            revert ErrorsLib.UpdateBalanceFailed();
-
-        asyncUsedNonce[from][nonce] = true;
     }
 
     function payMultiple(
@@ -481,7 +364,9 @@ contract Evvm is EvvmStorage {
                     payData[iteration].executor,
                     payData[iteration].signature
                 )
-            ) revert ErrorsLib.InvalidSignature();
+            ) {
+                revert();
+            }
 
             if (payData[iteration].executor != address(0)) {
                 if (msg.sender != payData[iteration].executor) {
@@ -508,7 +393,7 @@ contract Evvm is EvvmStorage {
                     continue;
                 }
             } else {
-                /// @dev priorityFlag == false (sync)
+                /// @dev priority == false (sync)
 
                 if (
                     nextSyncUsedNonce[payData[iteration].from] ==
@@ -601,20 +486,25 @@ contract Evvm is EvvmStorage {
                 executor,
                 signature
             )
-        ) revert ErrorsLib.InvalidSignature();
+        ) {
+            revert ErrorsLib.InvalidSignature();
+        }
 
         if (executor != address(0)) {
-            if (msg.sender != executor)
-                revert ErrorsLib.SenderIsNotTheExecutor();
+            if (msg.sender != executor) {
+                revert();
+            }
         }
 
         if (priorityFlag) {
-            if (asyncUsedNonce[from][nonce])
+            if (asyncUsedNonce[from][nonce]) {
                 revert ErrorsLib.InvalidAsyncNonce();
+            }
         }
 
-        if (balances[from][token] < amount + priorityFee)
-            revert ErrorsLib.InsufficientBalance();
+        if (balances[from][token] < amount + priorityFee) {
+            revert();
+        }
 
         uint256 acomulatedAmount = 0;
         balances[from][token] -= (amount + priorityFee);
@@ -639,8 +529,9 @@ contract Evvm is EvvmStorage {
             balances[to_aux][token] += toData[i].amount;
         }
 
-        if (acomulatedAmount != amount)
-            revert ErrorsLib.InvalidAmount(acomulatedAmount, amount);
+        if (acomulatedAmount != amount) {
+            revert();
+        }
 
         if (istakingStaker(msg.sender)) {
             _giveMateReward(msg.sender, 1);
@@ -665,10 +556,13 @@ contract Evvm is EvvmStorage {
             size := extcodesize(from)
         }
 
-        if (size == 0) revert ErrorsLib.NotAnCA();
+        if (size == 0) {
+            revert();
+        }
 
-        if (!_updateBalance(from, to, token, amount))
-            revert ErrorsLib.UpdateBalanceFailed();
+        if (!_updateBalance(from, to, token, amount)) {
+            revert();
+        }
 
         if (istakingStaker(msg.sender)) {
             _giveMateReward(msg.sender, 1);
@@ -688,24 +582,29 @@ contract Evvm is EvvmStorage {
             size := extcodesize(from)
         }
 
-        if (size == 0) revert ErrorsLib.NotAnCA();
+        if (size == 0) {
+            revert();
+        }
 
         uint256 acomulatedAmount = 0;
-        if (balances[msg.sender][token] < amount)
-            revert ErrorsLib.InsufficientBalance();
+        if (balances[msg.sender][token] < amount) {
+            revert();
+        }
 
         balances[msg.sender][token] -= amount;
 
         for (uint256 i = 0; i < toData.length; i++) {
             acomulatedAmount += toData[i].amount;
-            if (acomulatedAmount > amount)
-                revert ErrorsLib.InvalidAmount(acomulatedAmount, amount);
+            if (acomulatedAmount > amount) {
+                revert();
+            }
 
             balances[toData[i].toAddress][token] += toData[i].amount;
         }
 
-        if (acomulatedAmount != amount)
-            revert ErrorsLib.InvalidAmount(acomulatedAmount, amount);
+        if (acomulatedAmount != amount) {
+            revert();
+        }
 
         if (istakingStaker(msg.sender)) {
             _giveMateReward(msg.sender, 1);
@@ -734,19 +633,21 @@ contract Evvm is EvvmStorage {
                 amount,
                 signature
             )
-        ) revert ErrorsLib.InvalidSignature();
+        ) {
+            revert ErrorsLib.InvalidSignature();
+        }
 
         if (
             token == evvmMetadata.principalTokenAddress ||
             balances[user][token] < amount + priorityFee
-        ) revert ErrorsLib.InsufficientBalance();
+        ) {
+            revert();
+        }
 
         if (token == ETH_ADDRESS) {
-            if (amount > maxAmountToWithdraw.current)
-                revert ErrorsLib.InvalidAmount(
-                    amount,
-                    maxAmountToWithdraw.current
-                );
+            if (amount > maxAmountToWithdraw.current) {
+                revert();
+            }
         }
 
         balances[user][token] -= (amount + priorityFee);
@@ -967,18 +868,6 @@ contract Evvm is EvvmStorage {
     }
 
     //░▒▓█Getter functions██████████████████████████████████████████████████████▓▒░
-
-    function getEvvmMetadata() external view returns (EvvmMetadata memory) {
-        return evvmMetadata;
-    }
-
-    function getWhitelistTokenToBeAddedDateToSet()
-        external
-        view
-        returns (uint256)
-    {
-        return whitelistTokenToBeAdded_dateToSet;
-    }
 
     function getNameServiceAddress() external view returns (address) {
         return nameServiceAddress;

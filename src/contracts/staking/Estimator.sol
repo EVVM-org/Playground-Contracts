@@ -15,8 +15,8 @@ MMMMMMMMMMMM
  * @author jistro.eth ariutokintumi.eth
  */
 
-import {Staking} from "@EVVM/playground/staking/Staking.sol";
-import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
+import {Staking} from "@EVVM/playground/contracts/staking/Staking.sol";
+import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
 import "forge-std/console2.sol";
 
 contract Estimator {

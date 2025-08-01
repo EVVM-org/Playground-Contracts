@@ -13,11 +13,11 @@ pragma solidity ^0.8.0;
 888       888  "Y88P"   "Y8888P 888  888       "Y8888P"   "Y88P"  888  888  "Y888 888    "Y888888  "Y8888P  "Y888                                                                                                          
  */
 
-import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
+import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {AdvancedStrings} from "@EVVM/playground/lib/AdvancedStrings.sol";
-import {ErrorsLib} from "@EVVM/playground/nameService/lib/ErrorsLib.sol";
-import {SignatureUtils} from "@EVVM/playground/nameService/lib/SignatureUtils.sol";
+import {ErrorsLib} from "@EVVM/playground/contracts/nameService/lib/ErrorsLib.sol";
+import {SignatureUtils} from "@EVVM/playground/contracts/nameService/lib/SignatureUtils.sol";
 
 contract NameService {
     struct AddressTypeProposal {

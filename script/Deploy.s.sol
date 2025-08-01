@@ -2,11 +2,11 @@
 pragma solidity ^0.8.13;
 
 import {Script, console2} from "forge-std/Script.sol";
-import {Evvm} from "@EVVM/playground/evvm/Evvm.sol";
-import {Staking} from "@EVVM/playground/staking/Staking.sol";
-import {Estimator} from "@EVVM/playground/staking/Estimator.sol";
-import {NameService} from "@EVVM/playground/nameService/NameService.sol";
-import {EvvmStructs} from "@EVVM/playground/evvm/lib/EvvmStructs.sol";
+import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
+import {Staking} from "@EVVM/playground/contracts/staking/Staking.sol";
+import {Estimator} from "@EVVM/playground/contracts/staking/Estimator.sol";
+import {NameService} from "@EVVM/playground/contracts/nameService/NameService.sol";
+import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
 
 contract DeployScript is Script {
     Staking staking;
