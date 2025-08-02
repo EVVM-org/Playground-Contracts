@@ -124,10 +124,10 @@ contract fuzzTest_NameService_makeOffer is Test, Constants {
 
         nameService.preRegistrationUsername(
             user.Address,
-            nonceNameServicePre,
             keccak256(abi.encodePacked(username, uint256(clowNumber))),
-            0,
+            nonceNameServicePre,
             Erc191TestBuilder.buildERC191Signature(v, r, s),
+            0,
             0,
             false,
             hex""
@@ -167,9 +167,9 @@ contract fuzzTest_NameService_makeOffer is Test, Constants {
 
         nameService.registrationUsername(
             user.Address,
-            nonceNameService,
             username,
             clowNumber,
+            nonceNameService,
             signatureNameService,
             0,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -290,12 +290,12 @@ contract fuzzTest_NameService_makeOffer is Test, Constants {
 
         nameService.makeOffer(
             selectedUser.Address,
-            input.nonceNameService,
             "test",
-            input.offerAmount,
             block.timestamp + input.daysForExpire,
-            0,
+            input.offerAmount,
+            input.nonceNameService,
             signatureNameService,
+            0,
             nonce,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -362,12 +362,12 @@ contract fuzzTest_NameService_makeOffer is Test, Constants {
 
         nameService.makeOffer(
             selectedUser.Address,
-            input.nonceNameService,
             "test",
-            input.offerAmount,
             block.timestamp + input.daysForExpire,
-            input.priorityFeeAmountEVVM,
+            input.offerAmount,
+            input.nonceNameService,
             signatureNameService,
+            input.priorityFeeAmountEVVM,
             nonce,
             input.priorityFlagEVVM,
             signatureEVVM

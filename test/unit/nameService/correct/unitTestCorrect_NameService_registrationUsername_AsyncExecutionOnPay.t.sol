@@ -108,10 +108,10 @@ contract unitTestCorrect_NameService_registrationUsername_AsyncExecutionOnPay is
 
         nameService.preRegistrationUsername(
             user.Address,
-            nonceNameService,
             keccak256(abi.encodePacked(username, uint256(clowNumber))),
-            0,
+            nonceNameService,
             Erc191TestBuilder.buildERC191Signature(v, r, s),
+            0,
             0,
             false,
             hex""
@@ -188,9 +188,9 @@ contract unitTestCorrect_NameService_registrationUsername_AsyncExecutionOnPay is
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         nameService.registrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            20202,
             "test",
             777,
+            20202,
             signatureNameService,
             0,
             1001,
@@ -247,9 +247,9 @@ contract unitTestCorrect_NameService_registrationUsername_AsyncExecutionOnPay is
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         nameService.registrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            20202,
             "test",
             777,
+            20202,
             signatureNameService,
             0.001 ether,
             1001,
@@ -306,9 +306,9 @@ contract unitTestCorrect_NameService_registrationUsername_AsyncExecutionOnPay is
         vm.startPrank(COMMON_USER_STAKER.Address);
         nameService.registrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            20202,
             "test",
             777,
+            20202,
             signatureNameService,
             0,
             1001,
@@ -362,9 +362,9 @@ contract unitTestCorrect_NameService_registrationUsername_AsyncExecutionOnPay is
         vm.startPrank(COMMON_USER_STAKER.Address);
         nameService.registrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            20202,
             "test",
             777,
+            20202,
             signatureNameService,
             0.001 ether,
             1001,

@@ -164,10 +164,10 @@ contract unitTestCorrect_NameService_preRegistrationUsername_AsyncExecutionOnPay
 
         nameService.preRegistrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
-            0,
+            1001,
             signatureNameService,
+            0,
             0,
             false,
             hex""
@@ -225,10 +225,10 @@ contract unitTestCorrect_NameService_preRegistrationUsername_AsyncExecutionOnPay
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         nameService.preRegistrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
-            totalPriorityFeeAmount,
+            1001,
             signatureNameService,
+            totalPriorityFeeAmount,
             101,
             true,
             signatureEVVM
@@ -279,10 +279,10 @@ contract unitTestCorrect_NameService_preRegistrationUsername_AsyncExecutionOnPay
 
         nameService.preRegistrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
-            0,
+            1001,
             signatureNameService,
+            0,
             0,
             false,
             hex""
@@ -337,10 +337,10 @@ contract unitTestCorrect_NameService_preRegistrationUsername_AsyncExecutionOnPay
         vm.startPrank(COMMON_USER_STAKER.Address);
         nameService.preRegistrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
-            totalPriorityFeeAmount,
+            1001,
             signatureNameService,
+            totalPriorityFeeAmount,
             101,
             true,
             signatureEVVM

@@ -128,10 +128,10 @@ contract fuzzTest_NameService_flushUsername is Test, Constants {
 
         nameService.preRegistrationUsername(
             user.Address,
-            nonceNameServicePre,
             keccak256(abi.encodePacked(username, uint256(clowNumber))),
-            0,
+            nonceNameServicePre,
             Erc191TestBuilder.buildERC191Signature(v, r, s),
+            0,
             0,
             false,
             hex""
@@ -171,9 +171,9 @@ contract fuzzTest_NameService_flushUsername is Test, Constants {
 
         nameService.registrationUsername(
             user.Address,
-            nonceNameService,
             username,
             clowNumber,
+            nonceNameService,
             signatureNameService,
             0,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),

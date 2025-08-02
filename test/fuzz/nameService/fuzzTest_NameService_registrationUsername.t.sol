@@ -104,10 +104,10 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
 
         nameService.preRegistrationUsername(
             user.Address,
-            nonceNameService,
             keccak256(abi.encodePacked(username, uint256(clowNumber))),
-            0,
+            nonceNameService,
             Erc191TestBuilder.buildERC191Signature(v, r, s),
+            0,
             0,
             false,
             hex""
@@ -239,9 +239,9 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
         vm.startPrank(COMMON_USER_NO_STAKER_3.Address);
         nameService.registrationUsername(
             selectedUser.Address,
-            input.nonceNameService,
             username,
             input.clowNumber,
+            input.nonceNameService,
             signatureNameService,
             0,
             nonce,
@@ -305,9 +305,9 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
         vm.startPrank(COMMON_USER_NO_STAKER_3.Address);
         nameService.registrationUsername(
             selectedUser.Address,
-            input.nonceNameService,
             username,
             input.clowNumber,
+            input.nonceNameService,
             signatureNameService,
             input.priorityFeeAmount,
             nonce,
@@ -376,9 +376,9 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER.Address);
         nameService.registrationUsername(
             selectedUser.Address,
-            input.nonceNameService,
             username,
             input.clowNumber,
+            input.nonceNameService,
             signatureNameService,
             0,
             nonce,
@@ -444,9 +444,9 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER.Address);
         nameService.registrationUsername(
             selectedUser.Address,
-            input.nonceNameService,
             username,
             input.clowNumber,
+            input.nonceNameService,
             signatureNameService,
             input.priorityFeeAmount,
             nonce,

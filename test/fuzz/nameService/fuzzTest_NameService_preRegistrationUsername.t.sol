@@ -219,10 +219,10 @@ contract fuzzTest_NameService_preRegistrationUsername is Test, Constants {
 
         nameService.preRegistrationUsername(
             selectedUser.Address,
-            input.nonceNameService,
             keccak256(abi.encodePacked(username, uint256(input.clowNumber))),
-            0,
+            input.nonceNameService,
             signatureNameService,
+            0,
             nonce,
             input.priorityFlagEVVM,
             hex""
@@ -298,10 +298,10 @@ contract fuzzTest_NameService_preRegistrationUsername is Test, Constants {
 
         nameService.preRegistrationUsername(
             selectedUser.Address,
-            input.nonceNameService,
             keccak256(abi.encodePacked(username, uint256(input.clowNumber))),
-            input.priorityFeeAmount,
+            input.nonceNameService,
             signatureNameService,
+            input.priorityFeeAmount,
             nonce,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -375,10 +375,10 @@ contract fuzzTest_NameService_preRegistrationUsername is Test, Constants {
 
         nameService.preRegistrationUsername(
             selectedUser.Address,
-            input.nonceNameService,
             keccak256(abi.encodePacked(username, uint256(input.clowNumber))),
-            0,
+            input.nonceNameService,
             signatureNameService,
+            0,
             nonce,
             input.priorityFlagEVVM,
             hex""
@@ -456,10 +456,10 @@ contract fuzzTest_NameService_preRegistrationUsername is Test, Constants {
 
         nameService.preRegistrationUsername(
             selectedUser.Address,
-            input.nonceNameService,
             keccak256(abi.encodePacked(username, uint256(input.clowNumber))),
-            input.priorityFeeAmount,
+            input.nonceNameService,
             signatureNameService,
+            input.priorityFeeAmount,
             nonce,
             input.priorityFlagEVVM,
             signatureEVVM

@@ -128,155 +128,152 @@ contract NameService {
     /**
      *  @notice This function is used to pre-register a username to avoid
      *          front-running attacks.
-     *  @param _user the address of the user who wants to pre-register
+     *  @param user the address of the user who wants to pre-register
      *               the username
-     *  @param _nonce the nonce of the user
-     *  @param _hashUsername the hash of pre-registered username
-     *  @param _priorityFeeForFisher the priority fee for the fisher who will include
-     *                       the transaction
-     *  @param _signature the signature of the transaction of the priority fee
+     *  @param hashPreRegisteredUsername the hash of pre-registered username
+     *  @param nonce the nonce of the user
+     *  @param signature the signature of the transaction of the priority fee
+     *  @param priorityFee_EVVM the priority fee for the fisher who will include
+     *                          the transaction
      *
      *  @notice if doesn't have a priority fee the next parameters are not necessary
      *
-     *  @param _nonce_Evvm the nonce of the user in the Evvm
-     *  @param _priority_Evvm the priority of the transaction in the
-     *                               Evvm's payMateStaker function
-     *  @param _signature_Evvm the signature of the transaction in the
+     *  @param nonce_EVVM the nonce of the user in the Evvm
+     *  @param priorityFlag_EVVM the priority of the transaction in the
+     *                           Evvm's payMateStaker function
+     *  @param signature_EVVM the signature of the transaction in the
      *                                payMateStaker function in the Evvm
      */
     function preRegistrationUsername(
-        address _user,
-        uint256 _nonce,
-        bytes32 _hashUsername,
-        uint256 _priorityFeeForFisher,
-        bytes memory _signature,
-        uint256 _nonce_Evvm,
-        bool _priority_Evvm,
-        bytes memory _signature_Evvm
-    ) public verifyIfNonceIsAvailable(_user, _nonce) {
+        address user,
+        bytes32 hashPreRegisteredUsername,
+        uint256 nonce,
+        bytes memory signature,
+        uint256 priorityFee_EVVM,
+        uint256 nonce_EVVM,
+        bool priorityFlag_EVVM,
+        bytes memory signature_EVVM
+    ) public verifyIfNonceIsAvailable(user, nonce) {
         if (
             !SignatureUtils.verifyMessageSignedForPreRegistrationUsername(
-                _user,
-                _hashUsername,
-                _nonce,
-                _signature
+                user,
+                hashPreRegisteredUsername,
+                nonce,
+                signature
             )
         ) revert ErrorsLib.InvalidSignatureOnNameService();
 
-        if (_priorityFeeForFisher > 0) {
+        if (priorityFee_EVVM > 0) {
             makePay(
-                _user,
-                _nonce_Evvm,
-                _priorityFeeForFisher,
+                user,
+                nonce_EVVM,
+                priorityFee_EVVM,
                 0,
-                _priority_Evvm,
-                _signature_Evvm
+                priorityFlag_EVVM,
+                signature_EVVM
             );
         }
         /// concatenamos @ con el hash del username para evitar que se pueda registrar un username que no sea un hash
-        string memory _key = string.concat(
+        string memory key = string.concat(
             "@",
-            AdvancedStrings.bytes32ToString(_hashUsername)
+            AdvancedStrings.bytes32ToString(hashPreRegisteredUsername)
         );
 
-        identityDetails[_key] = IdentityBaseMetadata({
-            owner: _user,
+        identityDetails[key] = IdentityBaseMetadata({
+            owner: user,
             expireDate: block.timestamp + 30 minutes,
             customMetadataMaxSlots: 0,
             offerMaxSlots: 0,
             flagNotAUsername: 0x01
         });
 
-        nameServiceNonce[_user][_nonce] = true;
+        nameServiceNonce[user][nonce] = true;
 
         if (Evvm(evvmAddress.current).istakingStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
-                Evvm(evvmAddress.current).getRewardAmount() +
-                    _priorityFeeForFisher
+                Evvm(evvmAddress.current).getRewardAmount() + priorityFee_EVVM
             );
         }
     }
 
     /**
      *  @notice This function is used to register a username
-     *  @param _user the address of the user who wants to register
-     *  @param _nonce the nonce of the user
-     *  @param _username the username to register
-     *  @param _clowNumber the random number of the pre-registration
+     *  @param user the address of the user who wants to register
+     *  @param username the username to register
+     *  @param clowNumber the random number of the pre-registration
      *                     hash of the username to verify if the user
      *                     is the owner of the pre-registration hash
-     *  @param _signature the signature of the transaction
-     *  @param _priorityFeeForFisher the priority fee for the fisher who will include
-     *  @param _nonce_Evvm the nonce of the user in the Evvm
-     *  @param _priority_Evvm the priority of the transaction in the
+     *  @param nonce the nonce of the user
+     *  @param signature the signature of the transaction
+     *  @param priorityFee_EVVM the priority fee for the fisher who will include
+     *  @param nonce_EVVM the nonce of the user in the Evvm
+     *  @param priorityFlag_EVVM the priority of the transaction in the
      *                               Evvm's payMateStaker function
-     *  @param _signature_Evvm the signature of the transaction in the
+     *  @param signature_EVVM the signature of the transaction in the
      *                                payMateStaker function in the Evvm
      */
     function registrationUsername(
-        address _user,
-        uint256 _nonce,
-        string memory _username,
-        uint256 _clowNumber,
-        bytes memory _signature,
-        uint256 _priorityFeeForFisher,
-        uint256 _nonce_Evvm,
-        bool _priority_Evvm,
-        bytes memory _signature_Evvm
-    ) public verifyIfNonceIsAvailable(_user, _nonce) {
-        if (admin.current != _user) isValidUsername(_username);
+        address user,
+        string memory username,
+        uint256 clowNumber,
+        uint256 nonce,
+        bytes memory signature,
+        uint256 priorityFee_EVVM,
+        uint256 nonce_EVVM,
+        bool priorityFlag_EVVM,
+        bytes memory signature_EVVM
+    ) public verifyIfNonceIsAvailable(user, nonce) {
+        if (admin.current != user) isValidUsername(username);
 
-        if (!isUsernameAvailable(_username)) {
+        if (!isUsernameAvailable(username)) {
             revert ErrorsLib.UsernameAlreadyRegistered();
         }
 
         if (
             !SignatureUtils.verifyMessageSignedForRegistrationUsername(
-                _user,
-                _username,
-                _clowNumber,
-                _nonce,
-                _signature
+                user,
+                username,
+                clowNumber,
+                nonce,
+                signature
             )
         ) revert ErrorsLib.InvalidSignatureOnNameService();
 
         makePay(
-            _user,
-            _nonce_Evvm,
+            user,
+            nonce_EVVM,
             getPricePerRegistration(),
-            _priorityFeeForFisher,
-            _priority_Evvm,
-            _signature_Evvm
+            priorityFee_EVVM,
+            priorityFlag_EVVM,
+            signature_EVVM
         );
 
         string memory _key = string.concat(
             "@",
-            AdvancedStrings.bytes32ToString(
-                hashUsername(_username, _clowNumber)
-            )
+            AdvancedStrings.bytes32ToString(hashUsername(username, clowNumber))
         );
 
         if (
-            identityDetails[_key].owner != _user ||
+            identityDetails[_key].owner != user ||
             identityDetails[_key].expireDate > block.timestamp
         ) revert ErrorsLib.PreRegistrationNotValid();
 
-        identityDetails[_username] = IdentityBaseMetadata({
-            owner: _user,
+        identityDetails[username] = IdentityBaseMetadata({
+            owner: user,
             expireDate: block.timestamp + 366 days,
             customMetadataMaxSlots: 0,
             offerMaxSlots: 0,
             flagNotAUsername: 0x00
         });
 
-        nameServiceNonce[_user][_nonce] = true;
+        nameServiceNonce[user][nonce] = true;
 
         if (Evvm(evvmAddress.current).istakingStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
                 (50 * Evvm(evvmAddress.current).getRewardAmount()) +
-                    _priorityFeeForFisher
+                    priorityFee_EVVM
             );
         }
 
@@ -483,71 +480,71 @@ contract NameService {
     */
 
     function makeOffer(
-        address _user,
-        uint256 _nonce,
-        string memory _username,
-        uint256 _amount,
-        uint256 _expireDate,
-        uint256 _priorityFeeForFisher,
-        bytes memory _signature,
-        uint256 _nonce_Evvm,
-        bool _priority_Evvm,
-        bytes memory _signature_Evvm
-    ) public verifyIfNonceIsAvailable(_user, _nonce) returns (uint256 offerID) {
+        address user,
+        string memory username,
+        uint256 expireDate,
+        uint256 amount,
+        uint256 nonce,
+        bytes memory signature,
+        uint256 priorityFee_EVVM,
+        uint256 nonce_EVVM,
+        bool priorityFlag_EVVM,
+        bytes memory signature_EVVM
+    ) public verifyIfNonceIsAvailable(user, nonce) returns (uint256 offerID) {
         if (
-            identityDetails[_username].flagNotAUsername == 0x01 ||
-            !verifyIfIdentityExists(_username) ||
-            _amount == 0 ||
-            _expireDate <= block.timestamp
+            identityDetails[username].flagNotAUsername == 0x01 ||
+            !verifyIfIdentityExists(username) ||
+            amount == 0 ||
+            expireDate <= block.timestamp
         ) revert ErrorsLib.PreRegistrationNotValid();
 
         if (
             !SignatureUtils.verifyMessageSignedForMakeOffer(
-                _user,
-                _username,
-                _expireDate,
-                _amount,
-                _nonce,
-                _signature
+                user,
+                username,
+                expireDate,
+                amount,
+                nonce,
+                signature
             )
         ) revert ErrorsLib.InvalidSignatureOnNameService();
 
         makePay(
-            _user,
-            _nonce_Evvm,
-            _amount,
-            _priorityFeeForFisher,
-            _priority_Evvm,
-            _signature_Evvm
+            user,
+            nonce_EVVM,
+            amount,
+            priorityFee_EVVM,
+            priorityFlag_EVVM,
+            signature_EVVM
         );
 
-        while (usernameOffers[_username][offerID].offerer != address(0)) {
+        while (usernameOffers[username][offerID].offerer != address(0)) {
             offerID++;
         }
 
-        usernameOffers[_username][offerID] = OfferMetadata({
-            offerer: _user,
-            expireDate: _expireDate,
-            amount: ((_amount * 995) / 1000) /// calcula el 99.5% del valor de la oferta
+        usernameOffers[username][offerID] = OfferMetadata({
+            offerer: user,
+            expireDate: expireDate,
+            amount: ((amount * 995) / 1000) /// calcula el 99.5% del valor de la oferta
         });
 
         makeCaPay(
             msg.sender,
             Evvm(evvmAddress.current).getRewardAmount() +
-                ((_amount * 125) / 100_000) +
-                _priorityFeeForFisher
+                ((amount * 125) / 100_000) +
+                priorityFee_EVVM
         );
         mateTokenLockedForWithdrawOffers +=
-            ((_amount * 995) / 1000) +
-            (_amount / 800);
+            ((amount * 995) / 1000) +
+            (amount / 800);
 
-        if (offerID > identityDetails[_username].offerMaxSlots) {
-            identityDetails[_username].offerMaxSlots++;
-        } else if (identityDetails[_username].offerMaxSlots == 0) {
-            identityDetails[_username].offerMaxSlots++;
+        if (offerID > identityDetails[username].offerMaxSlots) {
+            identityDetails[username].offerMaxSlots++;
+        } else if (identityDetails[username].offerMaxSlots == 0) {
+            identityDetails[username].offerMaxSlots++;
         }
 
-        nameServiceNonce[_user][_nonce] = true;
+        nameServiceNonce[user][nonce] = true;
     }
 
     function withdrawOffer(

@@ -118,10 +118,10 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
 
         nameService.preRegistrationUsername(
             user.Address,
-            nonceNameServicePre,
             keccak256(abi.encodePacked(username, uint256(clowNumber))),
-            0,
+            nonceNameServicePre,
             Erc191TestBuilder.buildERC191Signature(v, r, s),
+            0,
             0,
             false,
             hex""
@@ -161,9 +161,9 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
 
         nameService.registrationUsername(
             user.Address,
-            nonceNameService,
             username,
             clowNumber,
+            nonceNameService,
             signatureNameService,
             0,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -270,17 +270,16 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         vm.expectRevert();
         nameService.makeOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            10001,
             "test",
-            totalOfferAmount,
             block.timestamp + 30 days,
-            priorityFeeAmount,
+            totalOfferAmount,
+            10001,
             signatureNameService,
+            priorityFeeAmount,
             101,
             true,
             signatureEVVM
         );
-
         vm.stopPrank();
 
         NameService.OfferMetadata memory checkData = nameService
@@ -330,17 +329,16 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         vm.expectRevert();
         nameService.makeOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            10001,
             "test",
-            totalOfferAmount,
             block.timestamp + 30 days,
-            priorityFeeAmount,
+            totalOfferAmount,
+            10001,
             signatureNameService,
+            priorityFeeAmount,
             101,
             true,
             signatureEVVM
         );
-
         vm.stopPrank();
         
         NameService.OfferMetadata memory checkData = nameService
@@ -409,17 +407,16 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         vm.expectRevert();
         nameService.makeOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            10001,
             "test",
-            totalOfferAmount,
             block.timestamp + 30 days,
-            priorityFeeAmount,
+            totalOfferAmount,
+            10001,
             signatureNameService,
+            priorityFeeAmount,
             101,
             true,
             signatureEVVM
         );
-
         vm.stopPrank();
 
         NameService.OfferMetadata memory checkData = nameService
@@ -486,17 +483,16 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         vm.expectRevert();
         nameService.makeOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            10001,
             "test",
-            totalOfferAmount,
             block.timestamp + 30 days,
-            priorityFeeAmount,
+            totalOfferAmount,
+            10001,
             signatureNameService,
+            priorityFeeAmount,
             101,
             true,
             signatureEVVM
         );
-
         vm.stopPrank();
 
         NameService.OfferMetadata memory checkData = nameService
@@ -563,17 +559,16 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         vm.expectRevert();
         nameService.makeOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            10001,
             "test",
-            totalOfferAmount,
             block.timestamp + 30 days,
-            priorityFeeAmount,
+            totalOfferAmount,
+            10001,
             signatureNameService,
+            priorityFeeAmount,
             101,
             true,
             signatureEVVM
         );
-
         vm.stopPrank();
 
         NameService.OfferMetadata memory checkData = nameService
@@ -640,17 +635,16 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         vm.expectRevert();
         nameService.makeOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            10001,
             "test",
-            totalOfferAmount,
             block.timestamp + 30 days,
-            priorityFeeAmount,
+            totalOfferAmount,
+            10001,
             signatureNameService,
+            priorityFeeAmount,
             101,
             true,
             signatureEVVM
         );
-
         vm.stopPrank();
 
         NameService.OfferMetadata memory checkData = nameService
@@ -717,17 +711,16 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         vm.expectRevert();
         nameService.makeOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            10001,
             "test",
-            totalOfferAmount,
             block.timestamp + 30 days,
-            priorityFeeAmount,
+            totalOfferAmount,
+            10001,
             signatureNameService,
+            priorityFeeAmount,
             101,
             true,
             signatureEVVM
         );
-
         vm.stopPrank();
 
         NameService.OfferMetadata memory checkData = nameService
@@ -794,17 +787,16 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         vm.expectRevert();
         nameService.makeOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            10001,
             "test",
-            totalOfferAmount,
             block.timestamp + 30 days,
-            priorityFeeAmount,
+            totalOfferAmount,
+            10001,
             signatureNameService,
+            priorityFeeAmount,
             101,
             true,
             signatureEVVM
         );
-
         vm.stopPrank();
 
         NameService.OfferMetadata memory checkData = nameService
@@ -871,17 +863,16 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         vm.expectRevert();
         nameService.makeOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            10001,
             "test",
-            totalOfferAmount,
             block.timestamp + 30 days,
-            priorityFeeAmount,
+            totalOfferAmount,
+            10001,
             signatureNameService,
+            priorityFeeAmount,
             101,
             true,
             signatureEVVM
         );
-
         vm.stopPrank();
 
         NameService.OfferMetadata memory checkData = nameService
@@ -948,17 +939,16 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         vm.expectRevert();
         nameService.makeOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            10001,
             "test",
-            totalOfferAmount,
             block.timestamp + 30 days,
-            priorityFeeAmount,
+            totalOfferAmount,
+            10001,
             signatureNameService,
+            priorityFeeAmount,
             101,
             true,
             signatureEVVM
         );
-
         vm.stopPrank();
 
         NameService.OfferMetadata memory checkData = nameService
@@ -1025,17 +1015,16 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         vm.expectRevert();
         nameService.makeOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            10001,
             "test",
-            totalOfferAmount,
             block.timestamp + 30 days,
-            priorityFeeAmount,
+            totalOfferAmount,
+            10001,
             signatureNameService,
+            priorityFeeAmount,
             101,
             true,
             signatureEVVM
         );
-
         vm.stopPrank();
 
         NameService.OfferMetadata memory checkData = nameService
@@ -1102,17 +1091,16 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         vm.expectRevert();
         nameService.makeOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            10001,
             "test",
-            totalOfferAmount,
             block.timestamp + 30 days,
-            priorityFeeAmount,
+            totalOfferAmount,
+            10001,
             signatureNameService,
+            priorityFeeAmount,
             101,
             true,
             signatureEVVM
         );
-
         vm.stopPrank();
 
         NameService.OfferMetadata memory checkData = nameService
@@ -1181,17 +1169,16 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         vm.expectRevert();
         nameService.makeOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            10001,
             "test",
-            totalOfferAmount,
             block.timestamp + 30 days,
-            priorityFeeAmount,
+            totalOfferAmount,
+            10001,
             signatureNameService,
+            priorityFeeAmount,
             101,
             true,
             signatureEVVM
         );
-
         vm.stopPrank();
 
         NameService.OfferMetadata memory checkData = nameService
@@ -1258,17 +1245,16 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         vm.expectRevert();
         nameService.makeOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            10001,
             "test",
-            totalOfferAmount,
             block.timestamp + 30 days,
-            priorityFeeAmount,
+            totalOfferAmount,
+            10001,
             signatureNameService,
+            priorityFeeAmount,
             101,
             true,
             signatureEVVM
         );
-
         vm.stopPrank();
 
         NameService.OfferMetadata memory checkData = nameService
@@ -1335,17 +1321,16 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         vm.expectRevert();
         nameService.makeOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            10001,
             "test",
-            totalOfferAmount,
             block.timestamp + 30 days,
-            priorityFeeAmount,
+            totalOfferAmount,
+            10001,
             signatureNameService,
+            priorityFeeAmount,
             101,
             true,
             signatureEVVM
         );
-
         vm.stopPrank();
 
         NameService.OfferMetadata memory checkData = nameService
@@ -1412,17 +1397,16 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         vm.expectRevert();
         nameService.makeOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            10001,
             "test",
-            totalOfferAmount,
             block.timestamp + 30 days,
-            priorityFeeAmount,
+            totalOfferAmount,
+            10001,
             signatureNameService,
+            priorityFeeAmount,
             101,
             true,
             signatureEVVM
         );
-
         vm.stopPrank();
 
         NameService.OfferMetadata memory checkData = nameService
@@ -1470,12 +1454,12 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         vm.expectRevert();
         nameService.makeOffer(
             COMMON_USER_NO_STAKER_1.Address,
-            10101,
             "test",
-            totalOfferAmount,
             block.timestamp + 30 days,
-            priorityFeeAmount,
+            totalOfferAmount,
+            10101,
             signatureNameService,
+            priorityFeeAmount,
             101,
             true,
             signatureEVVM
@@ -1528,12 +1512,12 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         vm.expectRevert();
         nameService.makeOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            10001,
             "fake",
-            totalOfferAmount,
             block.timestamp + 30 days,
-            priorityFeeAmount,
+            totalOfferAmount,
+            10001,
             signatureNameService,
+            priorityFeeAmount,
             101,
             true,
             signatureEVVM
@@ -1596,12 +1580,12 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         vm.expectRevert();
         nameService.makeOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            10001,
             "test@mail.com",
-            totalOfferAmount,
             block.timestamp + 30 days,
-            priorityFeeAmount,
+            totalOfferAmount,
+            10001,
             signatureNameService,
+            priorityFeeAmount,
             101,
             true,
             signatureEVVM
@@ -1654,17 +1638,16 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         vm.expectRevert();
         nameService.makeOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            10001,
             "test",
-            totalOfferAmount,
             block.timestamp + 30 days,
-            priorityFeeAmount,
+            totalOfferAmount,
+            10001,
             signatureNameService,
+            priorityFeeAmount,
             101,
             true,
             signatureEVVM
         );
-
         vm.stopPrank();
 
         NameService.OfferMetadata memory checkData = nameService
@@ -1712,12 +1695,12 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         vm.expectRevert();
         nameService.makeOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            10001,
             "test",
-            totalOfferAmount,
             block.timestamp - 1,
-            priorityFeeAmount,
+            totalOfferAmount,
+            10001,
             signatureNameService,
+            priorityFeeAmount,
             101,
             true,
             signatureEVVM

@@ -129,10 +129,10 @@ contract unitTestCorrect_NameService_makeOffer_AsyncExecutionOnPay is
 
         nameService.preRegistrationUsername(
             user.Address,
-            nonceNameServicePre,
             keccak256(abi.encodePacked(username, uint256(clowNumber))),
-            0,
+            nonceNameServicePre,
             Erc191TestBuilder.buildERC191Signature(v, r, s),
+            0,
             0,
             false,
             hex""
@@ -172,9 +172,9 @@ contract unitTestCorrect_NameService_makeOffer_AsyncExecutionOnPay is
 
         nameService.registrationUsername(
             user.Address,
-            nonceNameService,
             username,
             clowNumber,
+            nonceNameService,
             signatureNameService,
             0,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -252,12 +252,12 @@ contract unitTestCorrect_NameService_makeOffer_AsyncExecutionOnPay is
 
         nameService.makeOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            10001,
             "test",
-            totalOfferAmount,
             block.timestamp + 30 days,
-            0,
+            totalOfferAmount,
+            10001,
             signatureNameService,
+            0,
             101,
             true,
             signatureEVVM
@@ -312,12 +312,12 @@ contract unitTestCorrect_NameService_makeOffer_AsyncExecutionOnPay is
 
         nameService.makeOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            10001,
             "test",
-            totalOfferAmount,
             block.timestamp + 30 days,
-            priorityFeeAmount,
+            totalOfferAmount,
+            10001,
             signatureNameService,
+            priorityFeeAmount,
             101,
             true,
             signatureEVVM
@@ -374,17 +374,16 @@ contract unitTestCorrect_NameService_makeOffer_AsyncExecutionOnPay is
 
         nameService.makeOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            10001,
             "test",
-            totalOfferAmount,
             block.timestamp + 30 days,
-            0,
+            totalOfferAmount,
+            10001,
             signatureNameService,
+            0,
             101,
             true,
             signatureEVVM
         );
-
         vm.stopPrank();
 
         NameService.OfferMetadata memory checkData = nameService
@@ -431,17 +430,16 @@ contract unitTestCorrect_NameService_makeOffer_AsyncExecutionOnPay is
 
         nameService.makeOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            10001,
             "test",
-            totalOfferAmount,
             block.timestamp + 30 days,
-            priorityFeeAmount,
+            totalOfferAmount,
+            10001,
             signatureNameService,
+            priorityFeeAmount,
             101,
             true,
             signatureEVVM
         );
-
         vm.stopPrank();
 
         NameService.OfferMetadata memory checkData = nameService

@@ -97,10 +97,10 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
 
         nameService.preRegistrationUsername(
             user.Address,
-            nonceNameService,
             keccak256(abi.encodePacked(username, uint256(clowNumber))),
-            0,
+            nonceNameService,
             Erc191TestBuilder.buildERC191Signature(v, r, s),
+            0,
             0,
             false,
             hex""
@@ -188,9 +188,9 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         vm.expectRevert();
         nameService.registrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            10101,
             "test",
             777,
+            10101,
             signatureNameService,
             totalPriorityFeeAmount,
             10001,
@@ -264,9 +264,9 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         vm.expectRevert();
         nameService.registrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            10101,
             "test",
             777,
+            10101,
             signatureNameService,
             totalPriorityFeeAmount,
             10001,
@@ -340,9 +340,9 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         vm.expectRevert();
         nameService.registrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            10101,
             "test",
             777,
+            10101,
             signatureNameService,
             totalPriorityFeeAmount,
             10001,
@@ -416,9 +416,9 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         vm.expectRevert();
         nameService.registrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            10101,
             "test",
             777,
+            10101,
             signatureNameService,
             totalPriorityFeeAmount,
             10001,
@@ -492,9 +492,9 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         vm.expectRevert();
         nameService.registrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            10101,
             "test",
             777,
+            10101,
             signatureNameService,
             totalPriorityFeeAmount,
             10001,
@@ -568,9 +568,9 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         vm.expectRevert();
         nameService.registrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            10101,
             "test",
             777,
+            10101,
             signatureNameService,
             totalPriorityFeeAmount,
             10001,
@@ -644,9 +644,9 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         vm.expectRevert();
         nameService.registrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            10101,
             "test",
             777,
+            10101,
             signatureNameService,
             totalPriorityFeeAmount,
             10001,
@@ -720,9 +720,9 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         vm.expectRevert();
         nameService.registrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            10101,
             "test",
             777,
+            10101,
             signatureNameService,
             totalPriorityFeeAmount,
             10001,
@@ -796,9 +796,9 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         vm.expectRevert();
         nameService.registrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            10101,
             "test",
             777,
+            10101,
             signatureNameService,
             totalPriorityFeeAmount,
             10001,
@@ -872,9 +872,9 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         vm.expectRevert();
         nameService.registrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            10101,
             "test",
             777,
+            10101,
             signatureNameService,
             totalPriorityFeeAmount,
             10001,
@@ -948,9 +948,9 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         vm.expectRevert();
         nameService.registrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            10101,
             "test",
             777,
+            10101,
             signatureNameService,
             totalPriorityFeeAmount,
             10001,
@@ -1024,9 +1024,9 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         vm.expectRevert();
         nameService.registrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            10101,
             "test",
             777,
+            10101,
             signatureNameService,
             totalPriorityFeeAmount,
             10001,
@@ -1100,9 +1100,9 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         vm.expectRevert();
         nameService.registrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            10101,
             "test",
             777,
+            10101,
             signatureNameService,
             totalPriorityFeeAmount,
             10001,
@@ -1176,9 +1176,9 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         vm.expectRevert();
         nameService.registrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            10101,
             "test",
             777,
+            10101,
             signatureNameService,
             totalPriorityFeeAmount,
             10001,
@@ -1230,9 +1230,9 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         vm.expectRevert();
         nameService.registrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            10101,
             "test",
             777,
+            10101,
             signatureNameService,
             totalPriorityFeeAmount,
             10001,
@@ -1288,9 +1288,9 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         vm.expectRevert();
         nameService.registrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            10101,
             "test",
             777,
+            10101,
             signatureNameService,
             totalPriorityFeeAmount,
             10001,
@@ -1349,9 +1349,9 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         vm.expectRevert();
         nameService.registrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            10101,
             "test",
             777,
+            10101,
             signatureNameService,
             0,
             10001,
@@ -1407,9 +1407,9 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         vm.expectRevert();
         nameService.registrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            10101,
             "test",
             777,
+            10101,
             signatureNameService,
             totalPriorityFeeAmount,
             10001,

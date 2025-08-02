@@ -186,10 +186,10 @@ contract unitTestRevert_NameService_preRegistrationUsername is Test, Constants {
         vm.expectRevert();
         nameService.preRegistrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
-            totalPriorityFeeAmount,
+            1001,
             signatureNameService,
+            totalPriorityFeeAmount,
             101,
             true,
             signatureEVVM
@@ -262,10 +262,10 @@ contract unitTestRevert_NameService_preRegistrationUsername is Test, Constants {
         vm.expectRevert();
         nameService.preRegistrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
-            totalPriorityFeeAmount,
+            1001,
             signatureNameService,
+            totalPriorityFeeAmount,
             101,
             true,
             signatureEVVM
@@ -338,10 +338,10 @@ contract unitTestRevert_NameService_preRegistrationUsername is Test, Constants {
         vm.expectRevert();
         nameService.preRegistrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
-            totalPriorityFeeAmount,
+            1001,
             signatureNameService,
+            totalPriorityFeeAmount,
             101,
             true,
             signatureEVVM
@@ -414,10 +414,10 @@ contract unitTestRevert_NameService_preRegistrationUsername is Test, Constants {
         vm.expectRevert();
         nameService.preRegistrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
-            totalPriorityFeeAmount,
+            1001,
             signatureNameService,
+            totalPriorityFeeAmount,
             101,
             true,
             signatureEVVM
@@ -490,10 +490,10 @@ contract unitTestRevert_NameService_preRegistrationUsername is Test, Constants {
         vm.expectRevert();
         nameService.preRegistrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
-            totalPriorityFeeAmount,
+            1001,
             signatureNameService,
+            totalPriorityFeeAmount,
             101,
             true,
             signatureEVVM
@@ -566,10 +566,10 @@ contract unitTestRevert_NameService_preRegistrationUsername is Test, Constants {
         vm.expectRevert();
         nameService.preRegistrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
-            totalPriorityFeeAmount,
+            1001,
             signatureNameService,
+            totalPriorityFeeAmount,
             101,
             true,
             signatureEVVM
@@ -642,10 +642,10 @@ contract unitTestRevert_NameService_preRegistrationUsername is Test, Constants {
         vm.expectRevert();
         nameService.preRegistrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
-            totalPriorityFeeAmount,
+            1001,
             signatureNameService,
+            totalPriorityFeeAmount,
             101,
             true,
             signatureEVVM
@@ -718,10 +718,10 @@ contract unitTestRevert_NameService_preRegistrationUsername is Test, Constants {
         vm.expectRevert();
         nameService.preRegistrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
-            totalPriorityFeeAmount,
+            1001,
             signatureNameService,
+            totalPriorityFeeAmount,
             101,
             true,
             signatureEVVM
@@ -794,10 +794,10 @@ contract unitTestRevert_NameService_preRegistrationUsername is Test, Constants {
         vm.expectRevert();
         nameService.preRegistrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
-            totalPriorityFeeAmount,
+            1001,
             signatureNameService,
+            totalPriorityFeeAmount,
             101,
             true,
             signatureEVVM
@@ -870,10 +870,10 @@ contract unitTestRevert_NameService_preRegistrationUsername is Test, Constants {
         vm.expectRevert();
         nameService.preRegistrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
-            totalPriorityFeeAmount,
+            1001,
             signatureNameService,
+            totalPriorityFeeAmount,
             101,
             true,
             signatureEVVM
@@ -946,10 +946,10 @@ contract unitTestRevert_NameService_preRegistrationUsername is Test, Constants {
         vm.expectRevert();
         nameService.preRegistrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
-            totalPriorityFeeAmount,
+            1001,
             signatureNameService,
+            totalPriorityFeeAmount,
             101,
             true,
             signatureEVVM
@@ -1022,10 +1022,10 @@ contract unitTestRevert_NameService_preRegistrationUsername is Test, Constants {
         vm.expectRevert();
         nameService.preRegistrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
-            totalPriorityFeeAmount,
+            1001,
             signatureNameService,
+            totalPriorityFeeAmount,
             101,
             true,
             signatureEVVM
@@ -1098,10 +1098,10 @@ contract unitTestRevert_NameService_preRegistrationUsername is Test, Constants {
         vm.expectRevert();
         nameService.preRegistrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
-            totalPriorityFeeAmount,
+            1001,
             signatureNameService,
+            totalPriorityFeeAmount,
             101,
             true,
             signatureEVVM
@@ -1160,10 +1160,10 @@ contract unitTestRevert_NameService_preRegistrationUsername is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER.Address);
         nameService.preRegistrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
             keccak256(abi.encodePacked("user", uint256(10101))),
-            0,
+            1001,
             signatureNameService,
+            0,
             101,
             true,
             signatureEVVM
@@ -1188,10 +1188,10 @@ contract unitTestRevert_NameService_preRegistrationUsername is Test, Constants {
         vm.expectRevert();
         nameService.preRegistrationUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
             keccak256(abi.encodePacked("test", uint256(10101))),
-            totalPriorityFeeAmount,
+            1001,
             signatureNameService,
+            totalPriorityFeeAmount,
             202,
             true,
             signatureEVVM
