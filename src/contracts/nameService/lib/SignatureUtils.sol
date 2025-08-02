@@ -161,7 +161,7 @@ library SignatureUtils {
                 string.concat(
                     "e6efeffa",
                     ",",
-                    _username,
+                    _identity,
                     ",",
                     _value,
                     ",",
