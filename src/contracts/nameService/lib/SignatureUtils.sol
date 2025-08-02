@@ -151,7 +151,7 @@ library SignatureUtils {
 
     function verifyMessageSignedForAddCustomMetadata(
         address signer,
-        string memory _username,
+        string memory _identity,
         string memory _value,
         uint256 _nameServiceNonce,
         bytes memory signature
