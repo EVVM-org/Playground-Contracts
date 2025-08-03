@@ -331,11 +331,11 @@ contract fuzzTest_NameService_addCustomMetadata is Test, Constants {
             vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
             nameService.addCustomMetadata(
                 COMMON_USER_NO_STAKER_1.Address,
-                input.nonceNameService + i,
                 "test",
                 customMetadata,
-                0,
+                input.nonceNameService + i,
                 signatureNameService,
+                0,
                 nonce,
                 input.priorityFlagEVVM,
                 signatureEVVM
@@ -416,11 +416,11 @@ contract fuzzTest_NameService_addCustomMetadata is Test, Constants {
             vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
             nameService.addCustomMetadata(
                 COMMON_USER_NO_STAKER_1.Address,
-                input.nonceNameService + i,
                 "test",
                 customMetadata,
-                input.priorityFee,
+                input.nonceNameService + i,
                 signatureNameService,
+                input.priorityFee,
                 nonce,
                 input.priorityFlagEVVM,
                 signatureEVVM
@@ -507,11 +507,11 @@ contract fuzzTest_NameService_addCustomMetadata is Test, Constants {
             vm.startPrank(COMMON_USER_STAKER.Address);
             nameService.addCustomMetadata(
                 COMMON_USER_NO_STAKER_1.Address,
-                input.nonceNameService + i,
                 "test",
                 customMetadata,
-                0,
+                input.nonceNameService + i,
                 signatureNameService,
+                0,
                 nonce,
                 input.priorityFlagEVVM,
                 signatureEVVM
@@ -598,11 +598,11 @@ contract fuzzTest_NameService_addCustomMetadata is Test, Constants {
             vm.startPrank(COMMON_USER_STAKER.Address);
             nameService.addCustomMetadata(
                 COMMON_USER_NO_STAKER_1.Address,
-                input.nonceNameService + i,
                 "test",
                 customMetadata,
-                input.priorityFee,
+                input.nonceNameService + i,
                 signatureNameService,
+                input.priorityFee,
                 nonce,
                 input.priorityFlagEVVM,
                 signatureEVVM

@@ -236,11 +236,11 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
 
         nameService.addCustomMetadata(
             user.Address,
-            nonceNameService,
             username,
             customMetadata,
-            0,
+            nonceNameService,
             signatureNameService,
+            0,
             nonceEVVM,
             priorityFlagEVVM,
             signatureEVVM

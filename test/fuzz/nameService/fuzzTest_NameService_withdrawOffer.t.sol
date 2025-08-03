@@ -371,11 +371,11 @@ contract fuzzTest_NameService_withdrawOffer is Test, Constants {
 
         nameService.withdrawOffer(
             selectedUser.Address,
-            input.nonceNameService,
             "test",
             indexSelected,
-            0,
+            input.nonceNameService,
             signatureNameService,
+            0,
             nonceEvvm,
             input.priorityFlagEVVM,
             ""
@@ -465,11 +465,11 @@ contract fuzzTest_NameService_withdrawOffer is Test, Constants {
 
         nameService.withdrawOffer(
             selectedUser.Address,
-            input.nonceNameService,
             "test",
             indexSelected,
-            input.priorityFeeAmountEVVM,
+            input.nonceNameService,
             signatureNameService,
+            input.priorityFeeAmountEVVM,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM

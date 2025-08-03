@@ -352,10 +352,10 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceNameService,
             "test",
-            priorityFeeAmount,
+            input.nonceNameService,
             signatureNameService,
+            priorityFeeAmount,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -440,10 +440,10 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceNameService,
             "test",
-            priorityFeeAmount,
+            input.nonceNameService,
             signatureNameService,
+            priorityFeeAmount,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -509,10 +509,10 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1000001000001,
             "test",
-            priorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            priorityFeeAmount,
             11111111,
             true,
             signatureEVVM
@@ -579,10 +579,10 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceNameService,
             "test",
-            priorityFeeAmount,
+            input.nonceNameService,
             signatureNameService,
+            priorityFeeAmount,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -671,10 +671,10 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceNameService,
             "test",
-            priorityFeeAmount,
+            input.nonceNameService,
             signatureNameService,
+            priorityFeeAmount,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -740,10 +740,10 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1000001000001,
             "test",
-            priorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            priorityFeeAmount,
             11111111,
             true,
             signatureEVVM
@@ -814,10 +814,10 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceNameService,
             "test",
-            priorityFeeAmount,
+            input.nonceNameService,
             signatureNameService,
+            priorityFeeAmount,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -907,10 +907,10 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceNameService,
             "test",
-            priorityFeeAmount,
+            input.nonceNameService,
             signatureNameService,
+            priorityFeeAmount,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -981,10 +981,10 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1000001000001,
             "test",
-            priorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            priorityFeeAmount,
             11111111,
             true,
             signatureEVVM
@@ -1056,10 +1056,10 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceNameService,
             "test",
-            priorityFeeAmount,
+            input.nonceNameService,
             signatureNameService,
+            priorityFeeAmount,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -1153,10 +1153,10 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceNameService,
             "test",
-            priorityFeeAmount,
+            input.nonceNameService,
             signatureNameService,
+            priorityFeeAmount,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -1227,10 +1227,10 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
 
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1000001000001,
             "test",
-            priorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            priorityFeeAmount,
             11111111,
             true,
             signatureEVVM

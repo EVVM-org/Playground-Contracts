@@ -329,11 +329,11 @@ contract unitTestCorrect_NameService_acceptOffer_SyncExecutionOnPay is
 
         nameService.acceptOffer(
             COMMON_USER_NO_STAKER_1.Address,
-            10000000001,
             "test",
             0,
-            0,
+            10000000001,
             signatureNameService,
+            0,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             ""
@@ -388,11 +388,11 @@ contract unitTestCorrect_NameService_acceptOffer_SyncExecutionOnPay is
 
         nameService.acceptOffer(
             COMMON_USER_NO_STAKER_1.Address,
-            10000000001,
             "test",
             0,
-            amountPriorityFee,
+            10000000001,
             signatureNameService,
+            amountPriorityFee,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -439,11 +439,11 @@ contract unitTestCorrect_NameService_acceptOffer_SyncExecutionOnPay is
 
         nameService.acceptOffer(
             COMMON_USER_NO_STAKER_1.Address,
-            10000000001,
             "test",
             0,
-            0,
+            10000000001,
             signatureNameService,
+            0,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             ""
@@ -495,11 +495,11 @@ contract unitTestCorrect_NameService_acceptOffer_SyncExecutionOnPay is
 
         nameService.acceptOffer(
             COMMON_USER_NO_STAKER_1.Address,
-            10000000001,
             "test",
             0,
-            amountPriorityFee,
+            10000000001,
             signatureNameService,
+            amountPriorityFee,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM

@@ -258,11 +258,11 @@ contract unitTestRevert_NameService_removeCustomMetadata is
 
         nameService.addCustomMetadata(
             user.Address,
-            nonceNameService,
             username,
             customMetadata,
-            0,
+            nonceNameService,
             signatureNameService,
+            0,
             nonceEVVM,
             priorityFlagEVVM,
             signatureEVVM

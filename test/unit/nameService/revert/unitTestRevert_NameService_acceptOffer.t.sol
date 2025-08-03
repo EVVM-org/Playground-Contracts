@@ -25,7 +25,8 @@ import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/playground/lib/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/contracts/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/contracts/evvm/lib/EvvmStorage.sol";
-import {AdvancedStrings} from "@EVVM/playground/lib/AdvancedStrings.sol";import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
+import {AdvancedStrings} from "@EVVM/playground/lib/AdvancedStrings.sol";
+import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
 
 contract unitTestRevert_NameService_acceptOffer is Test, Constants {
     Staking staking;
@@ -61,7 +62,6 @@ contract unitTestRevert_NameService_acceptOffer is Test, Constants {
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
 
@@ -137,11 +137,8 @@ contract unitTestRevert_NameService_acceptOffer is Test, Constants {
                 nonceNameService
             )
         );
-        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
+        bytes memory signatureNameService = Erc191TestBuilder
+            .buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -259,7 +256,11 @@ contract unitTestRevert_NameService_acceptOffer is Test, Constants {
                     nonceNameService
                 )
             );
-            signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
+            signatureNameService = Erc191TestBuilder.buildERC191Signature(
+                v,
+                r,
+                s
+            );
 
             (v, r, s) = vm.sign(
                 user.PrivateKey,
@@ -284,8 +285,16 @@ contract unitTestRevert_NameService_acceptOffer is Test, Constants {
                     nonceNameService
                 )
             );
-            signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
-            signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
+            signatureNameService = Erc191TestBuilder.buildERC191Signature(
+                v,
+                r,
+                s
+            );
+            signatureNameService = Erc191TestBuilder.buildERC191Signature(
+                v,
+                r,
+                s
+            );
             signatureEVVM = "";
         }
     }
@@ -341,11 +350,11 @@ contract unitTestRevert_NameService_acceptOffer is Test, Constants {
 
         nameService.acceptOffer(
             COMMON_USER_NO_STAKER_1.Address,
-            10000000001,
             "test",
             0,
-            amountPriorityFee,
+            10000000001,
             signatureNameService,
+            amountPriorityFee,
             1001,
             true,
             signatureEVVM
@@ -398,11 +407,11 @@ contract unitTestRevert_NameService_acceptOffer is Test, Constants {
 
         nameService.acceptOffer(
             COMMON_USER_NO_STAKER_1.Address,
-            10000000001,
             "test",
             0,
-            amountPriorityFee,
+            10000000001,
             signatureNameService,
+            amountPriorityFee,
             1001,
             true,
             signatureEVVM
@@ -428,7 +437,7 @@ contract unitTestRevert_NameService_acceptOffer is Test, Constants {
     }
     */
 
-   function test__unit_revert__acceptOffer__bSigAtSigner() external {
+    function test__unit_revert__acceptOffer__bSigAtSigner() external {
         uint256 amountPriorityFee = addBalance(
             COMMON_USER_NO_STAKER_1,
             0.001 ether
@@ -471,11 +480,11 @@ contract unitTestRevert_NameService_acceptOffer is Test, Constants {
 
         nameService.acceptOffer(
             COMMON_USER_NO_STAKER_1.Address,
-            10000000001,
             "test",
             0,
-            amountPriorityFee,
+            10000000001,
             signatureNameService,
+            amountPriorityFee,
             1001,
             true,
             signatureEVVM
@@ -543,11 +552,11 @@ contract unitTestRevert_NameService_acceptOffer is Test, Constants {
 
         nameService.acceptOffer(
             COMMON_USER_NO_STAKER_1.Address,
-            10000000001,
             "test",
             0,
-            amountPriorityFee,
+            10000000001,
             signatureNameService,
+            amountPriorityFee,
             1001,
             true,
             signatureEVVM
@@ -615,11 +624,11 @@ contract unitTestRevert_NameService_acceptOffer is Test, Constants {
 
         nameService.acceptOffer(
             COMMON_USER_NO_STAKER_1.Address,
-            10000000001,
             "test",
             0,
-            amountPriorityFee,
+            10000000001,
             signatureNameService,
+            amountPriorityFee,
             1001,
             true,
             signatureEVVM
@@ -658,11 +667,7 @@ contract unitTestRevert_NameService_acceptOffer is Test, Constants {
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
-            Erc191TestBuilder.buildMessageSignedForAcceptOffer(
-                "test",
-                0,
-                777
-            )
+            Erc191TestBuilder.buildMessageSignedForAcceptOffer("test", 0, 777)
         );
         signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
@@ -687,11 +692,11 @@ contract unitTestRevert_NameService_acceptOffer is Test, Constants {
 
         nameService.acceptOffer(
             COMMON_USER_NO_STAKER_1.Address,
-            10000000001,
             "test",
             0,
-            amountPriorityFee,
+            10000000001,
             signatureNameService,
+            amountPriorityFee,
             1001,
             true,
             signatureEVVM
@@ -759,11 +764,11 @@ contract unitTestRevert_NameService_acceptOffer is Test, Constants {
 
         nameService.acceptOffer(
             COMMON_USER_NO_STAKER_1.Address,
-            10000000001,
             "test",
             0,
-            amountPriorityFee,
+            10000000001,
             signatureNameService,
+            amountPriorityFee,
             1001,
             true,
             signatureEVVM
@@ -831,11 +836,11 @@ contract unitTestRevert_NameService_acceptOffer is Test, Constants {
 
         nameService.acceptOffer(
             COMMON_USER_NO_STAKER_1.Address,
-            10000000001,
             "test",
             0,
-            amountPriorityFee,
+            10000000001,
             signatureNameService,
+            amountPriorityFee,
             1001,
             true,
             signatureEVVM
@@ -903,11 +908,11 @@ contract unitTestRevert_NameService_acceptOffer is Test, Constants {
 
         nameService.acceptOffer(
             COMMON_USER_NO_STAKER_1.Address,
-            10000000001,
             "test",
             0,
-            amountPriorityFee,
+            10000000001,
             signatureNameService,
+            amountPriorityFee,
             1001,
             true,
             signatureEVVM
@@ -975,11 +980,11 @@ contract unitTestRevert_NameService_acceptOffer is Test, Constants {
 
         nameService.acceptOffer(
             COMMON_USER_NO_STAKER_1.Address,
-            10000000001,
             "test",
             0,
-            amountPriorityFee,
+            10000000001,
             signatureNameService,
+            amountPriorityFee,
             1001,
             true,
             signatureEVVM
@@ -1047,11 +1052,11 @@ contract unitTestRevert_NameService_acceptOffer is Test, Constants {
 
         nameService.acceptOffer(
             COMMON_USER_NO_STAKER_1.Address,
-            10000000001,
             "test",
             0,
-            amountPriorityFee,
+            10000000001,
             signatureNameService,
+            amountPriorityFee,
             1001,
             true,
             signatureEVVM
@@ -1119,11 +1124,11 @@ contract unitTestRevert_NameService_acceptOffer is Test, Constants {
 
         nameService.acceptOffer(
             COMMON_USER_NO_STAKER_1.Address,
-            10000000001,
             "test",
             0,
-            amountPriorityFee,
+            10000000001,
             signatureNameService,
+            amountPriorityFee,
             1001,
             true,
             signatureEVVM
@@ -1191,11 +1196,11 @@ contract unitTestRevert_NameService_acceptOffer is Test, Constants {
 
         nameService.acceptOffer(
             COMMON_USER_NO_STAKER_1.Address,
-            10000000001,
             "test",
             0,
-            amountPriorityFee,
+            10000000001,
             signatureNameService,
+            amountPriorityFee,
             1001,
             true,
             signatureEVVM
@@ -1263,11 +1268,11 @@ contract unitTestRevert_NameService_acceptOffer is Test, Constants {
 
         nameService.acceptOffer(
             COMMON_USER_NO_STAKER_1.Address,
-            10000000001,
             "test",
             0,
-            amountPriorityFee,
+            10000000001,
             signatureNameService,
+            amountPriorityFee,
             1001,
             true,
             signatureEVVM
@@ -1335,11 +1340,11 @@ contract unitTestRevert_NameService_acceptOffer is Test, Constants {
 
         nameService.acceptOffer(
             COMMON_USER_NO_STAKER_1.Address,
-            10000000001,
             "test",
             0,
-            amountPriorityFee,
+            10000000001,
             signatureNameService,
+            amountPriorityFee,
             1001,
             true,
             signatureEVVM
@@ -1390,11 +1395,11 @@ contract unitTestRevert_NameService_acceptOffer is Test, Constants {
 
         nameService.acceptOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            10000000001,
             "test",
             0,
-            amountPriorityFee,
+            10000000001,
             signatureNameService,
+            amountPriorityFee,
             1001,
             true,
             signatureEVVM
@@ -1445,11 +1450,11 @@ contract unitTestRevert_NameService_acceptOffer is Test, Constants {
 
         nameService.acceptOffer(
             COMMON_USER_NO_STAKER_1.Address,
-            10101,
             "test",
             0,
-            amountPriorityFee,
+            10101,
             signatureNameService,
+            amountPriorityFee,
             1001,
             true,
             signatureEVVM
@@ -1512,11 +1517,11 @@ contract unitTestRevert_NameService_acceptOffer is Test, Constants {
 
         nameService.acceptOffer(
             COMMON_USER_NO_STAKER_1.Address,
-            10000000001,
             "test",
             1,
-            amountPriorityFee,
+            10000000001,
             signatureNameService,
+            amountPriorityFee,
             1001,
             true,
             signatureEVVM
@@ -1567,11 +1572,11 @@ contract unitTestRevert_NameService_acceptOffer is Test, Constants {
 
         nameService.acceptOffer(
             COMMON_USER_NO_STAKER_1.Address,
-            10000000001,
             "test",
             1,
-            amountPriorityFee,
+            10000000001,
             signatureNameService,
+            amountPriorityFee,
             1001,
             true,
             signatureEVVM

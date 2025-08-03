@@ -324,11 +324,11 @@ contract unitTestCorrect_NameService_withdrawOffer_SyncExecutionOnPay is
 
         nameService.withdrawOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            100010001,
             "test",
             0,
-            0,
+            100010001,
             signatureNameService,
+            0,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_2.Address),
             false,
             ""
@@ -386,11 +386,11 @@ contract unitTestCorrect_NameService_withdrawOffer_SyncExecutionOnPay is
 
         nameService.withdrawOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            100010001,
             "test",
             0,
-            totalPriorityFee,
+            100010001,
             signatureNameService,
+            totalPriorityFee,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_2.Address),
             false,
             signatureEVVM
@@ -442,16 +442,15 @@ contract unitTestCorrect_NameService_withdrawOffer_SyncExecutionOnPay is
 
         nameService.withdrawOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            100010001,
             "test",
             0,
-            0,
+            100010001,
             signatureNameService,
+            0,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_2.Address),
             false,
             ""
         );
-
         vm.stopPrank();
 
         NameService.OfferMetadata memory checkDataAfter = nameService
@@ -501,16 +500,15 @@ contract unitTestCorrect_NameService_withdrawOffer_SyncExecutionOnPay is
 
         nameService.withdrawOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            100010001,
             "test",
             0,
-            totalPriorityFee,
+            100010001,
             signatureNameService,
+            totalPriorityFee,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_2.Address),
             false,
             signatureEVVM
         );
-
         vm.stopPrank();
 
         NameService.OfferMetadata memory checkDataAfter = nameService

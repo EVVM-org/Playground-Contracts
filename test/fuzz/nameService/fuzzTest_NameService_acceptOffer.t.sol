@@ -355,11 +355,11 @@ contract fuzzTest_NameService_acceptOffer is Test, Constants {
 
         nameService.acceptOffer(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceNameService,
             "test",
             0,
-            0,
+            input.nonceNameService,
             signatureNameService,
+            0,
             nonceEvvm,
             input.priorityFlagEVVM,
             ""
@@ -432,11 +432,11 @@ contract fuzzTest_NameService_acceptOffer is Test, Constants {
 
         nameService.acceptOffer(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceNameService,
             "test",
             0,
-            amountPriorityFee,
+            input.nonceNameService,
             signatureNameService,
+            amountPriorityFee,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -506,11 +506,11 @@ contract fuzzTest_NameService_acceptOffer is Test, Constants {
 
         nameService.acceptOffer(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceNameService,
             "test",
             0,
-            0,
+            input.nonceNameService,
             signatureNameService,
+            0,
             nonceEvvm,
             input.priorityFlagEVVM,
             ""
@@ -587,11 +587,11 @@ contract fuzzTest_NameService_acceptOffer is Test, Constants {
 
         nameService.acceptOffer(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceNameService,
             "test",
             0,
-            amountPriorityFee,
+            input.nonceNameService,
             signatureNameService,
+            amountPriorityFee,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM

@@ -548,43 +548,43 @@ contract NameService {
     }
 
     function withdrawOffer(
-        address _user,
-        uint256 _nonce,
-        string memory _username,
-        uint256 _offerID,
-        uint256 _priorityFeeForFisher,
-        bytes memory _signature,
-        uint256 _nonce_Evvm,
-        bool _priority_Evvm,
-        bytes memory _signature_Evvm
-    ) public verifyIfNonceIsAvailable(_user, _nonce) {
-        if (usernameOffers[_username][_offerID].offerer != _user)
+        address user,
+        string memory username,
+        uint256 offerID,
+        uint256 nonce,
+        bytes memory signature,
+        uint256 priorityFee_EVVM,
+        uint256 nonce_EVVM,
+        bool priorityFlag_EVVM,
+        bytes memory signature_EVVM
+    ) public verifyIfNonceIsAvailable(user, nonce) {
+        if (usernameOffers[username][offerID].offerer != user)
             revert ErrorsLib.UserIsNotOwnerOfOffer();
 
         if (
             !SignatureUtils.verifyMessageSignedForWithdrawOffer(
-                _user,
-                _username,
-                _offerID,
-                _nonce,
-                _signature
+                user,
+                username,
+                offerID,
+                nonce,
+                signature
             )
         ) revert ErrorsLib.InvalidSignatureOnNameService();
 
-        if (_priorityFeeForFisher > 0) {
+        if (priorityFee_EVVM > 0) {
             makePay(
-                _user,
-                _nonce_Evvm,
-                _priorityFeeForFisher,
+                user,
+                nonce_EVVM,
+                priorityFee_EVVM,
                 0,
-                _priority_Evvm,
-                _signature_Evvm
+                priorityFlag_EVVM,
+                signature_EVVM
             );
         }
 
-        makeCaPay(_user, usernameOffers[_username][_offerID].amount);
+        makeCaPay(user, usernameOffers[username][offerID].amount);
 
-        usernameOffers[_username][_offerID].offerer = address(0);
+        usernameOffers[username][offerID].offerer = address(0);
 
         makeCaPay(
             msg.sender,
@@ -592,98 +592,97 @@ contract NameService {
                 //obtenemos el 0.5% y dividimos entre 4 para obtener el 0.125%
                 //+ ((usernameOffers[_username][_offerID].amount  * 1 / 199)/4)
                 //mas simplificado
-                ((usernameOffers[_username][_offerID].amount * 1) / 796) +
-                _priorityFeeForFisher
+                ((usernameOffers[username][offerID].amount * 1) / 796) +
+                priorityFee_EVVM
         );
 
         mateTokenLockedForWithdrawOffers -=
-            (usernameOffers[_username][_offerID].amount) +
-            (((usernameOffers[_username][_offerID].amount * 1) / 199) / 4);
+            (usernameOffers[username][offerID].amount) +
+            (((usernameOffers[username][offerID].amount * 1) / 199) / 4);
 
-        nameServiceNonce[_user][_nonce] = true;
+        nameServiceNonce[user][nonce] = true;
     }
 
     /**
      *  @notice This function is used to accept an offer for a username
-     *  @param _user the address of the user who owns the username
-     *  @param _nonce the nonce of the user
-     *  @param _username the username to accept the offer
-     *  @param _offerID the ID of the offer to accept
-     *  @param _priorityFeeForFisher the priority fee for the fisher who will include the
+     *  @param user the address of the user who owns the username
+     *  @param username the username to accept the offer
+     *  @param offerID the ID of the offer to accept
+     *  @param nonce the nonce of the user
+     *  @param signature the signature of the transaction
+     *  @param priorityFee_EVVM the priority fee for the fisher who will include the
      *                       transaction
-     *  @param _signature the signature of the transaction
-     *
      *  @notice if doesn't have a priority fee the next parameters are not necessary
      *
-     *  @param _nonce_Evvm the nonce of the user in the Evvm
-     *  @param _priority_Evvm the priority of the transaction in the
+     *  @param nonce_EVVM the nonce of the user in the Evvm
+     *  @param priorityFlag_EVVM the priority of the transaction in the
      *                               Evvm's payMateStaker function
-     *  @param _signature_Evvm the signature of the transaction in the
+     *  @param signature_EVVM the signature of the transaction in the
      *                                payMateStaker function in the Evvm
      */
     function acceptOffer(
-        address _user,
-        uint256 _nonce,
-        string memory _username,
-        uint256 _offerID,
-        uint256 _priorityFeeForFisher,
-        bytes memory _signature,
-        uint256 _nonce_Evvm,
-        bool _priority_Evvm,
-        bytes memory _signature_Evvm
+        address user,
+        string memory username,
+        uint256 offerID,
+        uint256 nonce,
+        bytes memory signature,
+        uint256 priorityFee_EVVM,
+        uint256 nonce_EVVM,
+        bool priorityFlag_EVVM,
+        bytes memory signature_EVVM
     )
         public
-        onlyOwnerOfIdentity(_user, _username)
-        verifyIfNonceIsAvailable(_user, _nonce)
+        onlyOwnerOfIdentity(user, username)
+        verifyIfNonceIsAvailable(user, nonce)
     {
         if (
-            usernameOffers[_username][_offerID].offerer == address(0) ||
-            usernameOffers[_username][_offerID].expireDate < block.timestamp
+            usernameOffers[username][offerID].offerer == address(0) ||
+            usernameOffers[username][offerID].expireDate < block.timestamp
         ) revert ErrorsLib.AcceptOfferVerificationFailed();
 
         if (
             !SignatureUtils.verifyMessageSignedForAcceptOffer(
-                _user,
-                _username,
-                _offerID,
-                _nonce,
-                _signature
+                user,
+                username,
+                offerID,
+                nonce,
+                signature
             )
         ) revert ErrorsLib.InvalidSignatureOnNameService();
 
-        if (_priorityFeeForFisher > 0) {
+        if (priorityFee_EVVM > 0) {
             makePay(
-                _user,
-                _nonce_Evvm,
-                _priorityFeeForFisher,
+                user,
+                nonce_EVVM,
+                priorityFee_EVVM,
                 0,
-                _priority_Evvm,
-                _signature_Evvm
+                priorityFlag_EVVM,
+                signature_EVVM
             );
         }
 
-        makeCaPay(_user, usernameOffers[_username][_offerID].amount);
+        makeCaPay(user, usernameOffers[username][offerID].amount);
 
-        identityDetails[_username].owner = usernameOffers[_username][_offerID]
+        identityDetails[username].owner = usernameOffers[username][offerID]
             .offerer;
 
-        usernameOffers[_username][_offerID].offerer = address(0);
+        usernameOffers[username][offerID].offerer = address(0);
 
         if (Evvm(evvmAddress.current).istakingStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
                 (Evvm(evvmAddress.current).getRewardAmount()) +
-                    (((usernameOffers[_username][_offerID].amount * 1) / 199) /
+                    (((usernameOffers[username][offerID].amount * 1) / 199) /
                         4) +
-                    _priorityFeeForFisher
+                    priorityFee_EVVM
             );
         }
 
         mateTokenLockedForWithdrawOffers -=
-            (usernameOffers[_username][_offerID].amount) +
-            (((usernameOffers[_username][_offerID].amount * 1) / 199) / 4);
+            (usernameOffers[username][offerID].amount) +
+            (((usernameOffers[username][offerID].amount * 1) / 199) / 4);
 
-        nameServiceNonce[_user][_nonce] = true;
+        nameServiceNonce[user][nonce] = true;
     }
 
     /**
@@ -698,55 +697,55 @@ contract NameService {
      *      one year before the expiration date, the price is 500,000
      *      MATE and can be renewed up to 100 years
      *
-     *  @param _user the address of the user who owns the username
-     *  @param _nonce the nonce of the user
-     *  @param _username the username to renew
-     *  @param _priorityFeeForFisher the priority fee for the fisher who will include the
+     *  @param user the address of the user who owns the username
+     *  @param username the username to renew
+     *  @param nonce the nonce of the user
+     *  @param signature the signature of the transaction
+     *  @param priorityFee_EVVM the priority fee for the fisher who will include the
      *                       transaction
-     *  @param _signature the signature of the transaction
-     *  @param _nonce_Evvm the nonce of the user in the Evvm
-     *  @param _priority_Evvm the priority of the transaction in the
+     *  @param nonce_EVVM the nonce of the user in the Evvm
+     *  @param priorityFlag_EVVM the priority of the transaction in the
      *                               Evvm's payMateStaker function
-     *  @param _signature_Evvm the signature of the transaction in the
+     *  @param signature_EVVM the signature of the transaction in the
      *                                payMateStaker function in the Evvm
      */
     function renewUsername(
-        address _user,
-        uint256 _nonce,
-        string memory _username,
-        uint256 _priorityFeeForFisher,
-        bytes memory _signature,
-        uint256 _nonce_Evvm,
-        bool _priority_Evvm,
-        bytes memory _signature_Evvm
+        address user,
+        string memory username,
+        uint256 nonce,
+        bytes memory signature,
+        uint256 priorityFee_EVVM,
+        uint256 nonce_EVVM,
+        bool priorityFlag_EVVM,
+        bytes memory signature_EVVM
     )
         public
-        onlyOwnerOfIdentity(_user, _username)
-        verifyIfNonceIsAvailable(_user, _nonce)
+        onlyOwnerOfIdentity(user, username)
+        verifyIfNonceIsAvailable(user, nonce)
     {
         if (
-            identityDetails[_username].flagNotAUsername == 0x01 ||
-            identityDetails[_username].expireDate > block.timestamp + 36500 days
+            identityDetails[username].flagNotAUsername == 0x01 ||
+            identityDetails[username].expireDate > block.timestamp + 36500 days
         ) revert ErrorsLib.RenewUsernameVerificationFailed();
 
         if (
             !SignatureUtils.verifyMessageSignedForRenewUsername(
-                _user,
-                _username,
-                _nonce,
-                _signature
+                user,
+                username,
+                nonce,
+                signature
             )
         ) revert ErrorsLib.InvalidSignatureOnNameService();
 
-        uint256 priceOfRenew = seePriceToRenew(_username);
+        uint256 priceOfRenew = seePriceToRenew(username);
 
         makePay(
-            _user,
-            _nonce_Evvm,
+            user,
+            nonce_EVVM,
             priceOfRenew,
-            _priorityFeeForFisher,
-            _priority_Evvm,
-            _signature_Evvm
+            priorityFee_EVVM,
+            priorityFlag_EVVM,
+            signature_EVVM
         );
 
         if (Evvm(evvmAddress.current).istakingStaker(msg.sender)) {
@@ -754,12 +753,12 @@ contract NameService {
                 msg.sender,
                 Evvm(evvmAddress.current).getRewardAmount() +
                     ((priceOfRenew * 50) / 100) + //? no estamos siendo muy generosos con el priority fee
-                    _priorityFeeForFisher
+                    priorityFee_EVVM
             );
         }
 
-        identityDetails[_username].expireDate += 366 days;
-        nameServiceNonce[_user][_nonce] = true;
+        identityDetails[username].expireDate += 366 days;
+        nameServiceNonce[user][nonce] = true;
     }
 
     /*
@@ -797,39 +796,39 @@ contract NameService {
      * - In case of social networks, the 'schema' should be "socialMedia" and the 'subschema' should be the social network name
      */
     function addCustomMetadata(
-        address _user,
-        uint256 _nonce,
-        string memory _identity,
-        string memory _value,
-        uint256 _priorityFeeForFisher,
-        bytes memory _signature,
-        uint256 _nonce_Evvm_forAddCustomMetadata,
-        bool _priority_Evvm_forAddCustomMetadata,
-        bytes memory _signature_Evvm_forAddCustomMetadata
+        address user,
+        string memory identity,
+        string memory value,
+        uint256 nonce,
+        bytes memory signature,
+        uint256 priorityFee_EVVM,
+        uint256 nonce_EVVM,
+        bool priorityFlag_EVVM,
+        bytes memory signature_EVVM
     )
         public
-        onlyOwnerOfIdentity(_user, _identity)
-        verifyIfNonceIsAvailable(_user, _nonce)
+        onlyOwnerOfIdentity(user, identity)
+        verifyIfNonceIsAvailable(user, nonce)
     {
-        if (bytes(_value).length == 0) revert ErrorsLib.EmptyCustomMetadata();
+        if (bytes(value).length == 0) revert ErrorsLib.EmptyCustomMetadata();
 
         if (
             !SignatureUtils.verifyMessageSignedForAddCustomMetadata(
-                _user,
-                _identity,
-                _value,
-                _nonce,
-                _signature
+                user,
+                identity,
+                value,
+                nonce,
+                signature
             )
         ) revert ErrorsLib.InvalidSignatureOnNameService();
 
         makePay(
-            _user,
-            _nonce_Evvm_forAddCustomMetadata,
+            user,
+            nonce_EVVM,
             getPriceToAddCustomMetadata(),
-            _priorityFeeForFisher,
-            _priority_Evvm_forAddCustomMetadata,
-            _signature_Evvm_forAddCustomMetadata
+            priorityFee_EVVM,
+            priorityFlag_EVVM,
+            signature_EVVM
         );
 
         if (Evvm(evvmAddress.current).istakingStaker(msg.sender)) {
@@ -837,16 +836,16 @@ contract NameService {
                 msg.sender,
                 (5 * Evvm(evvmAddress.current).getRewardAmount()) +
                     ((getPriceToAddCustomMetadata() * 50) / 100) +
-                    _priorityFeeForFisher
+                    priorityFee_EVVM
             );
         }
 
-        identityCustomMetadata[_identity][
-            identityDetails[_identity].customMetadataMaxSlots
-        ] = _value;
+        identityCustomMetadata[identity][
+            identityDetails[identity].customMetadataMaxSlots
+        ] = value;
 
-        identityDetails[_identity].customMetadataMaxSlots++;
-        nameServiceNonce[_user][_nonce] = true;
+        identityDetails[identity].customMetadataMaxSlots++;
+        nameServiceNonce[user][nonce] = true;
     }
 
     function removeCustomMetadata(

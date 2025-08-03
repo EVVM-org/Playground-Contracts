@@ -324,11 +324,11 @@ contract unitTestCorrect_NameService_withdrawOffer_AsyncExecutionOnPay is
 
         nameService.withdrawOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            100010001,
             "test",
             0,
-            0,
+            100010001,
             signatureNameService,
+            0,
             10000001,
             true,
             ""
@@ -386,11 +386,11 @@ contract unitTestCorrect_NameService_withdrawOffer_AsyncExecutionOnPay is
 
         nameService.withdrawOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            100010001,
             "test",
             0,
-            totalPriorityFee,
+            100010001,
             signatureNameService,
+            totalPriorityFee,
             10000001,
             true,
             signatureEVVM
@@ -442,11 +442,11 @@ contract unitTestCorrect_NameService_withdrawOffer_AsyncExecutionOnPay is
 
         nameService.withdrawOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            100010001,
             "test",
             0,
-            0,
+            100010001,
             signatureNameService,
+            0,
             10000001,
             true,
             ""
@@ -501,11 +501,11 @@ contract unitTestCorrect_NameService_withdrawOffer_AsyncExecutionOnPay is
 
         nameService.withdrawOffer(
             COMMON_USER_NO_STAKER_2.Address,
-            100010001,
             "test",
             0,
-            totalPriorityFee,
+            100010001,
             signatureNameService,
+            totalPriorityFee,
             10000001,
             true,
             signatureEVVM

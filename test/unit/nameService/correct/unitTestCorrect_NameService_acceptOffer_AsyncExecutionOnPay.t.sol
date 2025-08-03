@@ -329,11 +329,11 @@ contract unitTestCorrect_NameService_acceptOffer_AsyncExecutionOnPay is
 
         nameService.acceptOffer(
             COMMON_USER_NO_STAKER_1.Address,
-            10000000001,
             "test",
             0,
-            0,
+            10000000001,
             signatureNameService,
+            0,
             1001,
             true,
             ""
@@ -388,11 +388,11 @@ contract unitTestCorrect_NameService_acceptOffer_AsyncExecutionOnPay is
 
         nameService.acceptOffer(
             COMMON_USER_NO_STAKER_1.Address,
-            10000000001,
             "test",
             0,
-            amountPriorityFee,
+            10000000001,
             signatureNameService,
+            amountPriorityFee,
             1001,
             true,
             signatureEVVM
@@ -439,11 +439,11 @@ contract unitTestCorrect_NameService_acceptOffer_AsyncExecutionOnPay is
 
         nameService.acceptOffer(
             COMMON_USER_NO_STAKER_1.Address,
-            10000000001,
             "test",
             0,
-            0,
+            10000000001,
             signatureNameService,
+            0,
             1001,
             true,
             ""
@@ -495,11 +495,11 @@ contract unitTestCorrect_NameService_acceptOffer_AsyncExecutionOnPay is
 
         nameService.acceptOffer(
             COMMON_USER_NO_STAKER_1.Address,
-            10000000001,
             "test",
             0,
-            amountPriorityFee,
+            10000000001,
             signatureNameService,
+            amountPriorityFee,
             1001,
             true,
             signatureEVVM

@@ -323,10 +323,10 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         vm.expectRevert();
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1000001000001,
             "test",
-            totalPriorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            totalPriorityFeeAmount,
             11111111,
             true,
             signatureEVVM
@@ -382,10 +382,10 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         vm.expectRevert();
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1000001000001,
             "test",
-            totalPriorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            totalPriorityFeeAmount,
             11111111,
             true,
             signatureEVVM
@@ -457,10 +457,10 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         vm.expectRevert();
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1000001000001,
             "test",
-            totalPriorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            totalPriorityFeeAmount,
             11111111,
             true,
             signatureEVVM
@@ -530,10 +530,10 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         vm.expectRevert();
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1000001000001,
             "test",
-            totalPriorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            totalPriorityFeeAmount,
             11111111,
             true,
             signatureEVVM
@@ -602,10 +602,10 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         vm.expectRevert();
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1000001000001,
             "test",
-            totalPriorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            totalPriorityFeeAmount,
             11111111,
             true,
             signatureEVVM
@@ -675,10 +675,10 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         vm.expectRevert();
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1000001000001,
             "test",
-            totalPriorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            totalPriorityFeeAmount,
             11111111,
             true,
             signatureEVVM
@@ -748,10 +748,10 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         vm.expectRevert();
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1000001000001,
             "test",
-            totalPriorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            totalPriorityFeeAmount,
             11111111,
             true,
             signatureEVVM
@@ -821,10 +821,10 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         vm.expectRevert();
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1000001000001,
             "test",
-            totalPriorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            totalPriorityFeeAmount,
             11111111,
             true,
             signatureEVVM
@@ -896,10 +896,10 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         vm.expectRevert();
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1000001000001,
             "test",
-            totalPriorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            totalPriorityFeeAmount,
             11111111,
             true,
             signatureEVVM
@@ -969,10 +969,10 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         vm.expectRevert();
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1000001000001,
             "test",
-            totalPriorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            totalPriorityFeeAmount,
             11111111,
             true,
             signatureEVVM
@@ -1042,10 +1042,10 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         vm.expectRevert();
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1000001000001,
             "test",
-            totalPriorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            totalPriorityFeeAmount,
             11111111,
             true,
             signatureEVVM
@@ -1115,10 +1115,10 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         vm.expectRevert();
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1000001000001,
             "test",
-            totalPriorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            totalPriorityFeeAmount,
             11111111,
             true,
             signatureEVVM
@@ -1190,10 +1190,10 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         vm.expectRevert();
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1000001000001,
             "test",
-            totalPriorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            totalPriorityFeeAmount,
             11111111,
             true,
             signatureEVVM
@@ -1263,10 +1263,10 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         vm.expectRevert();
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1000001000001,
             "test",
-            totalPriorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            totalPriorityFeeAmount,
             11111111,
             true,
             signatureEVVM
@@ -1318,10 +1318,10 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         vm.expectRevert();
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_2.Address,
-            1000001000001,
             "test",
-            totalPriorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            totalPriorityFeeAmount,
             11111111,
             true,
             signatureEVVM
@@ -1373,10 +1373,10 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         vm.expectRevert();
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            10101,
             "test",
-            totalPriorityFeeAmount,
+            10101,
             signatureNameService,
+            totalPriorityFeeAmount,
             11111111,
             true,
             signatureEVVM
@@ -1439,10 +1439,10 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         vm.expectRevert();
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1000001000001,
             "test@mail.com",
-            totalPriorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            totalPriorityFeeAmount,
             11111111,
             true,
             signatureEVVM
@@ -1507,10 +1507,10 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         vm.expectRevert();
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1000001000001,
             "user",
-            totalPriorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            totalPriorityFeeAmount,
             11111111,
             true,
             signatureEVVM

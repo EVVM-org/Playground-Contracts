@@ -232,11 +232,11 @@ contract fuzzTest_NameService_flushCustomMetadata is Test, Constants {
 
         nameService.addCustomMetadata(
             user.Address,
-            nonceNameService,
             username,
             customMetadata,
-            0,
+            nonceNameService,
             signatureNameService,
+            0,
             nonceEVVM,
             priorityFlagEVVM,
             signatureEVVM

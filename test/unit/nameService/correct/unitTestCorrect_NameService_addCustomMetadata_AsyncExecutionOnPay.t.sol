@@ -240,11 +240,11 @@ contract unitTestCorrect_NameService_addCustomMetadata_AsyncExecutionOnPay is
 
         nameService.addCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
             "test>1",
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             1001,
             true,
             signatureEVVM
@@ -301,11 +301,11 @@ contract unitTestCorrect_NameService_addCustomMetadata_AsyncExecutionOnPay is
 
         nameService.addCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
             "test>1",
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             1001,
             true,
             signatureEVVM
@@ -359,11 +359,11 @@ contract unitTestCorrect_NameService_addCustomMetadata_AsyncExecutionOnPay is
 
         nameService.addCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
             "test>1",
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             1001,
             true,
             signatureEVVM
@@ -419,11 +419,11 @@ contract unitTestCorrect_NameService_addCustomMetadata_AsyncExecutionOnPay is
 
         nameService.addCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
             "test>1",
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             1001,
             true,
             signatureEVVM

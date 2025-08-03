@@ -304,10 +304,10 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
 
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1000001000001,
             "test",
-            priorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            priorityFeeAmount,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -378,10 +378,10 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
 
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1000001000001,
             "test",
-            priorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            priorityFeeAmount,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -439,10 +439,10 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
 
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1000001000001,
             "test",
-            priorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            priorityFeeAmount,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -496,10 +496,10 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
 
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1000001000001,
             "test",
-            priorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            priorityFeeAmount,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -570,10 +570,10 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
 
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1000001000001,
             "test",
-            priorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            priorityFeeAmount,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -631,10 +631,10 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
 
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1000001000001,
             "test",
-            priorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            priorityFeeAmount,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -690,10 +690,10 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
 
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1000001000001,
             "test",
-            priorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            priorityFeeAmount,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -765,10 +765,10 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
 
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1000001000001,
             "test",
-            priorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            priorityFeeAmount,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -827,10 +827,10 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
 
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1000001000001,
             "test",
-            priorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            priorityFeeAmount,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -885,10 +885,10 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
 
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1000001000001,
             "test",
-            priorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            priorityFeeAmount,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -960,10 +960,10 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
 
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1000001000001,
             "test",
-            priorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            priorityFeeAmount,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -1022,10 +1022,10 @@ contract unitTestCorrect_NameService_renewUsername_SyncExecutionOnPay is
 
         nameService.renewUsername(
             COMMON_USER_NO_STAKER_1.Address,
-            1000001000001,
             "test",
-            priorityFeeAmount,
+            1000001000001,
             signatureNameService,
+            priorityFeeAmount,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
