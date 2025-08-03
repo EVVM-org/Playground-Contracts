@@ -197,7 +197,7 @@ library SignatureUtils {
 
     function verifyMessageSignedForFlushCustomMetadata(
         address signer,
-        string memory _username,
+        string memory _identity,
         uint256 _nonce,
         bytes memory signature
     ) internal pure returns (bool) {
@@ -206,7 +206,7 @@ library SignatureUtils {
                 string.concat(
                     "3e7899a1",
                     ",",
-                    _username,
+                    _identity,
                     ",",
                     Strings.toString(_nonce)
                 ),
