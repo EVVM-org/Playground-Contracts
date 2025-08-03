@@ -166,9 +166,9 @@ contract NameService {
         if (priorityFee_EVVM > 0) {
             makePay(
                 user,
-                nonce_EVVM,
                 priorityFee_EVVM,
                 0,
+                nonce_EVVM,
                 priorityFlag_EVVM,
                 signature_EVVM
             );
@@ -242,9 +242,9 @@ contract NameService {
 
         makePay(
             user,
-            nonce_EVVM,
             getPricePerRegistration(),
             priorityFee_EVVM,
+            nonce_EVVM,
             priorityFlag_EVVM,
             signature_EVVM
         );
@@ -511,9 +511,9 @@ contract NameService {
 
         makePay(
             user,
-            nonce_EVVM,
             amount,
             priorityFee_EVVM,
+            nonce_EVVM,
             priorityFlag_EVVM,
             signature_EVVM
         );
@@ -574,9 +574,9 @@ contract NameService {
         if (priorityFee_EVVM > 0) {
             makePay(
                 user,
-                nonce_EVVM,
                 priorityFee_EVVM,
                 0,
+                nonce_EVVM,
                 priorityFlag_EVVM,
                 signature_EVVM
             );
@@ -653,9 +653,9 @@ contract NameService {
         if (priorityFee_EVVM > 0) {
             makePay(
                 user,
-                nonce_EVVM,
                 priorityFee_EVVM,
                 0,
+                nonce_EVVM,
                 priorityFlag_EVVM,
                 signature_EVVM
             );
@@ -741,9 +741,9 @@ contract NameService {
 
         makePay(
             user,
-            nonce_EVVM,
             priceOfRenew,
             priorityFee_EVVM,
+            nonce_EVVM,
             priorityFlag_EVVM,
             signature_EVVM
         );
@@ -824,9 +824,9 @@ contract NameService {
 
         makePay(
             user,
-            nonce_EVVM,
             getPriceToAddCustomMetadata(),
             priorityFee_EVVM,
+            nonce_EVVM,
             priorityFlag_EVVM,
             signature_EVVM
         );
@@ -879,9 +879,9 @@ contract NameService {
 
         makePay(
             user,
-            nonce_EVVM,
             getPriceToRemoveCustomMetadata(),
             priorityFee_EVVM,
+            nonce_EVVM,
             priorityFlag_EVVM,
             signature_EVVM
         );
@@ -942,9 +942,9 @@ contract NameService {
 
         makePay(
             user,
-            nonce_EVVM,
             getPriceToFlushCustomMetadata(identity),
             priorityFee_EVVM,
+            nonce_EVVM,
             priorityFlag_EVVM,
             signature_EVVM
         );
@@ -1000,9 +1000,9 @@ contract NameService {
 
         makePay(
             user,
-            nonce_EVVM,
             getPriceToFlushUsername(username),
             priorityFee_EVVM,
+            nonce_EVVM,
             priorityFlag_EVVM,
             signature_EVVM
         );
@@ -1224,35 +1224,35 @@ contract NameService {
     //█Tools for Evvm payment████████████████████
 
     function makePay(
-        address _user_Evvm,
-        uint256 _nonce_Evvm,
-        uint256 _ammount_Evvm,
-        uint256 _priorityFee_Evvm,
-        bool _priority_Evvm,
-        bytes memory _signature_Evvm
+        address user_EVVM,
+        uint256 ammount_EVVM,
+        uint256 priorityFee_EVVM,
+        uint256 nonce_EVVM,
+        bool priorityFlag_EVVM,
+        bytes memory signature_EVVM
     ) internal {
-        if (_priority_Evvm) {
+        if (priorityFlag_EVVM) {
             Evvm(evvmAddress.current).payMateStaking_async(
-                _user_Evvm,
+                user_EVVM,
                 address(this),
                 "",
                 PRINCIPAL_TOKEN_ADDRESS,
-                _ammount_Evvm,
-                _priorityFee_Evvm,
-                _nonce_Evvm,
+                ammount_EVVM,
+                priorityFee_EVVM,
+                nonce_EVVM,
                 address(this),
-                _signature_Evvm
+                signature_EVVM
             );
         } else {
             Evvm(evvmAddress.current).payMateStaking_sync(
-                _user_Evvm,
+                user_EVVM,
                 address(this),
                 "",
                 PRINCIPAL_TOKEN_ADDRESS,
-                _ammount_Evvm,
-                _priorityFee_Evvm,
+                ammount_EVVM,
+                priorityFee_EVVM,
                 address(this),
-                _signature_Evvm
+                signature_EVVM
             );
         }
     }
