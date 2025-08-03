@@ -19,13 +19,12 @@ Y8a 8 8 a8P  Y8a     a8P  88    `888'    88   d8'        `8b   88       88
  * @author jistro.eth ariutokintumi.eth
  */
 
-import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
-import {AdvancedStrings} from "@EVVM/playground/lib/AdvancedStrings.sol";
 import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
 import {SignatureRecover} from "@EVVM/playground/lib/SignatureRecover.sol";
 import {NameService} from "@EVVM/playground/contracts/nameService/NameService.sol";
 import {Estimator} from "@EVVM/playground/contracts/staking/Estimator.sol";
 import {ErrorsLib} from "./lib/ErrorsLib.sol";
+import {SignatureUtils} from "@EVVM/playground/contracts/staking/lib/SignatureUtils.sol";
 
 contract Staking {
     using SignatureRecover for *;
@@ -186,9 +185,9 @@ contract Staking {
         bytes memory _signature_Evvm
     ) external {
         if (
-            !verifyMessageSignedForStake(
-                false,
+            !SignatureUtils.verifyMessageSignedForStake(
                 _user,
+                false,
                 _isStaking,
                 1,
                 _nonce,
@@ -287,9 +286,9 @@ contract Staking {
         }
 
         if (
-            !verifyMessageSignedForStake(
-                true,
+            !SignatureUtils.verifyMessageSignedForStake(
                 _user,
+                true,
                 _isStaking,
                 _amountOfStaking,
                 _nonce,
@@ -338,7 +337,7 @@ contract Staking {
 
         if (_isStaking) {
             if (
-                !verifyMessageSignedForPublicServiceStake(
+                !SignatureUtils.verifyMessageSignedForPublicServiceStake(
                     _user,
                     _service,
                     _isStaking,
@@ -768,64 +767,6 @@ contract Staking {
         estimator.actual = estimator.proposal;
         estimator.proposal = address(0);
         estimator.timeToAccept = 0;
-    }
-
-    //▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀
-    // Signature Verification Functions
-    //▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀
-    function verifyMessageSignedForStake(
-        bool isExternalStaking,
-        address signer,
-        bool _isStaking,
-        uint256 _amountOfStaking,
-        uint256 _nonce,
-        bytes memory signature
-    ) internal pure returns (bool) {
-        return
-            SignatureRecover.signatureVerification(
-                string.concat(
-                    /**
-                     * @dev if isExternalStaking is true,
-                     * the function selector is for publicStaking
-                     * else is for presaleInternalExecution
-                     */
-                    isExternalStaking ? "21cc1749" : "6257deec",
-                    ",",
-                    _isStaking ? "true" : "false",
-                    ",",
-                    Strings.toString(_amountOfStaking),
-                    ",",
-                    Strings.toString(_nonce)
-                ),
-                signature,
-                signer
-            );
-    }
-
-    function verifyMessageSignedForPublicServiceStake(
-        address signer,
-        address _serviceAddress,
-        bool _isStaking,
-        uint256 _amountOfStaking,
-        uint256 _nonce,
-        bytes memory signature
-    ) internal pure returns (bool) {
-        return
-            SignatureRecover.signatureVerification(
-                string.concat(
-                    "21cc1749",
-                    ",",
-                    AdvancedStrings.addressToString(_serviceAddress),
-                    ",",
-                    _isStaking ? "true" : "false",
-                    ",",
-                    Strings.toString(_amountOfStaking),
-                    ",",
-                    Strings.toString(_nonce)
-                ),
-                signature,
-                signer
-            );
     }
 
     //▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀
