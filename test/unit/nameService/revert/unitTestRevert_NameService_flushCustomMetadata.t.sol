@@ -356,10 +356,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         vm.expectRevert();
         nameService.flushCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             1000001,
             true,
             signatureEVVM
@@ -410,10 +410,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         vm.expectRevert();
         nameService.flushCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             1000001,
             true,
             signatureEVVM
@@ -484,10 +484,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         vm.expectRevert();
         nameService.flushCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             1000001,
             true,
             signatureEVVM
@@ -561,10 +561,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         vm.expectRevert();
         nameService.flushCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             1000001,
             true,
             signatureEVVM
@@ -638,10 +638,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         vm.expectRevert();
         nameService.flushCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             1000001,
             true,
             signatureEVVM
@@ -715,10 +715,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         vm.expectRevert();
         nameService.flushCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             1000001,
             true,
             signatureEVVM
@@ -792,10 +792,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         vm.expectRevert();
         nameService.flushCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             1000001,
             true,
             signatureEVVM
@@ -869,10 +869,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         vm.expectRevert();
         nameService.flushCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             1000001,
             true,
             signatureEVVM
@@ -946,10 +946,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         vm.expectRevert();
         nameService.flushCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             1000001,
             true,
             signatureEVVM
@@ -1023,10 +1023,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         vm.expectRevert();
         nameService.flushCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             1000001,
             true,
             signatureEVVM
@@ -1100,10 +1100,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         vm.expectRevert();
         nameService.flushCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             1000001,
             true,
             signatureEVVM
@@ -1177,10 +1177,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         vm.expectRevert();
         nameService.flushCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             1000001,
             true,
             signatureEVVM
@@ -1254,10 +1254,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         vm.expectRevert();
         nameService.flushCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             1000001,
             true,
             signatureEVVM
@@ -1331,10 +1331,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         vm.expectRevert();
         nameService.flushCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             1000001,
             true,
             signatureEVVM
@@ -1390,10 +1390,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         vm.expectRevert();
         nameService.flushCustomMetadata(
             COMMON_USER_NO_STAKER_2.Address,
-            100010001,
             "test",
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             1000001,
             true,
             signatureEVVM
@@ -1449,10 +1449,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         vm.expectRevert();
         nameService.flushCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            11,
             "test",
-            totalPriorityFeeAmount,
+            11,
             signatureNameService,
+            totalPriorityFeeAmount,
             1000001,
             true,
             signatureEVVM
@@ -1515,10 +1515,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         vm.expectRevert();
         nameService.flushCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "user",
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             1000001,
             true,
             signatureEVVM
@@ -1566,10 +1566,10 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         vm.expectRevert();
         nameService.flushCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             1000001,
             true,
             signatureEVVM

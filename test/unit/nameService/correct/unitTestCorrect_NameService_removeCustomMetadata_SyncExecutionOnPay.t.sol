@@ -326,11 +326,11 @@ contract unitTestCorrect_NameService_removeCustomMetadata_SyncExecutionOnPay is
 
         nameService.removeCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
             1,
-            priorityFeeAmountEVVM,
+            100010001,
             signatureNameService,
+            priorityFeeAmountEVVM,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -410,11 +410,11 @@ contract unitTestCorrect_NameService_removeCustomMetadata_SyncExecutionOnPay is
 
         nameService.removeCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
             1,
-            priorityFeeAmountEVVM,
+            100010001,
             signatureNameService,
+            priorityFeeAmountEVVM,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -507,11 +507,11 @@ contract unitTestCorrect_NameService_removeCustomMetadata_SyncExecutionOnPay is
 
         nameService.removeCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
             1,
-            priorityFeeAmountEVVM,
+            100010001,
             signatureNameService,
+            priorityFeeAmountEVVM,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -604,11 +604,11 @@ contract unitTestCorrect_NameService_removeCustomMetadata_SyncExecutionOnPay is
 
         nameService.removeCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
             1,
-            priorityFeeAmountEVVM,
+            100010001,
             signatureNameService,
+            priorityFeeAmountEVVM,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM

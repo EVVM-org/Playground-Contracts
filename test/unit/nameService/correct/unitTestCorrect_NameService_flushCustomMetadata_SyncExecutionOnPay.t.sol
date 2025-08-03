@@ -337,10 +337,10 @@ contract unitTestCorrect_NameService_flushCustomMetadata_SyncExecutionOnPay is
 
         nameService.flushCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -389,10 +389,10 @@ contract unitTestCorrect_NameService_flushCustomMetadata_SyncExecutionOnPay is
 
         nameService.flushCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -445,10 +445,10 @@ contract unitTestCorrect_NameService_flushCustomMetadata_SyncExecutionOnPay is
 
         nameService.flushCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -499,10 +499,10 @@ contract unitTestCorrect_NameService_flushCustomMetadata_SyncExecutionOnPay is
 
         nameService.flushCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM

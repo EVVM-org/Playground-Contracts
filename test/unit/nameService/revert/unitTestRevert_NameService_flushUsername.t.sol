@@ -356,9 +356,9 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         nameService.flushUsername(
             COMMON_USER_NO_STAKER_1.Address,
             "test",
-            totalPriorityFeeAmount,
             110010011,
             signatureNameService,
+            totalPriorityFeeAmount,
             1001,
             true,
             signatureEVVM
@@ -416,9 +416,9 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         nameService.flushUsername(
             COMMON_USER_NO_STAKER_1.Address,
             "test",
-            totalPriorityFeeAmount,
             110010011,
             signatureNameService,
+            totalPriorityFeeAmount,
             1001,
             true,
             signatureEVVM
@@ -493,9 +493,9 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         nameService.flushUsername(
             COMMON_USER_NO_STAKER_1.Address,
             "test",
-            totalPriorityFeeAmount,
             110010011,
             signatureNameService,
+            totalPriorityFeeAmount,
             1001,
             true,
             signatureEVVM
@@ -568,9 +568,9 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         nameService.flushUsername(
             COMMON_USER_NO_STAKER_1.Address,
             "test",
-            totalPriorityFeeAmount,
             110010011,
             signatureNameService,
+            totalPriorityFeeAmount,
             1001,
             true,
             signatureEVVM
@@ -642,9 +642,9 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         nameService.flushUsername(
             COMMON_USER_NO_STAKER_1.Address,
             "test",
-            totalPriorityFeeAmount,
             110010011,
             signatureNameService,
+            totalPriorityFeeAmount,
             1001,
             true,
             signatureEVVM
@@ -717,9 +717,9 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         nameService.flushUsername(
             COMMON_USER_NO_STAKER_1.Address,
             "test",
-            totalPriorityFeeAmount,
             110010011,
             signatureNameService,
+            totalPriorityFeeAmount,
             1001,
             true,
             signatureEVVM
@@ -792,9 +792,9 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         nameService.flushUsername(
             COMMON_USER_NO_STAKER_1.Address,
             "test",
-            totalPriorityFeeAmount,
             110010011,
             signatureNameService,
+            totalPriorityFeeAmount,
             1001,
             true,
             signatureEVVM
@@ -867,9 +867,9 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         nameService.flushUsername(
             COMMON_USER_NO_STAKER_1.Address,
             "test",
-            totalPriorityFeeAmount,
             110010011,
             signatureNameService,
+            totalPriorityFeeAmount,
             1001,
             true,
             signatureEVVM
@@ -944,9 +944,9 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         nameService.flushUsername(
             COMMON_USER_NO_STAKER_1.Address,
             "test",
-            totalPriorityFeeAmount,
             110010011,
             signatureNameService,
+            totalPriorityFeeAmount,
             1001,
             true,
             signatureEVVM
@@ -1019,9 +1019,9 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         nameService.flushUsername(
             COMMON_USER_NO_STAKER_1.Address,
             "test",
-            totalPriorityFeeAmount,
             110010011,
             signatureNameService,
+            totalPriorityFeeAmount,
             1001,
             true,
             signatureEVVM
@@ -1096,9 +1096,9 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         nameService.flushUsername(
             COMMON_USER_NO_STAKER_1.Address,
             "test",
-            totalPriorityFeeAmount,
             110010011,
             signatureNameService,
+            totalPriorityFeeAmount,
             1001,
             true,
             signatureEVVM
@@ -1171,9 +1171,9 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         nameService.flushUsername(
             COMMON_USER_NO_STAKER_1.Address,
             "test",
-            totalPriorityFeeAmount,
             110010011,
             signatureNameService,
+            totalPriorityFeeAmount,
             1001,
             true,
             signatureEVVM
@@ -1248,9 +1248,9 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         nameService.flushUsername(
             COMMON_USER_NO_STAKER_1.Address,
             "test",
-            totalPriorityFeeAmount,
             110010011,
             signatureNameService,
+            totalPriorityFeeAmount,
             1001,
             true,
             signatureEVVM
@@ -1323,9 +1323,9 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         nameService.flushUsername(
             COMMON_USER_NO_STAKER_1.Address,
             "test",
-            totalPriorityFeeAmount,
             110010011,
             signatureNameService,
+            totalPriorityFeeAmount,
             1001,
             true,
             signatureEVVM
@@ -1380,9 +1380,9 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         nameService.flushUsername(
             COMMON_USER_NO_STAKER_1.Address,
             "test",
-            totalPriorityFeeAmount,
             11,
             signatureNameService,
+            totalPriorityFeeAmount,
             1001,
             true,
             signatureEVVM
@@ -1437,9 +1437,9 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         nameService.flushUsername(
             COMMON_USER_NO_STAKER_2.Address,
             "test",
-            totalPriorityFeeAmount,
             110010011,
             signatureNameService,
+            totalPriorityFeeAmount,
             1001,
             true,
             signatureEVVM
@@ -1498,9 +1498,9 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         nameService.flushUsername(
             COMMON_USER_NO_STAKER_1.Address,
             "test",
-            totalPriorityFeeAmount,
             110010011,
             signatureNameService,
+            totalPriorityFeeAmount,
             1001,
             true,
             signatureEVVM
@@ -1567,9 +1567,9 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         nameService.flushUsername(
             COMMON_USER_NO_STAKER_1.Address,
             "test@mail.com",
-            totalPriorityFeeAmount,
             110010011,
             signatureNameService,
+            totalPriorityFeeAmount,
             1001,
             true,
             signatureEVVM
@@ -1623,9 +1623,9 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         nameService.flushUsername(
             COMMON_USER_NO_STAKER_1.Address,
             "test",
-            totalPriorityFeeAmount,
             110010011,
             signatureNameService,
+            totalPriorityFeeAmount,
             1001,
             true,
             signatureEVVM

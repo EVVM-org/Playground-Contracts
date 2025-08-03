@@ -344,11 +344,11 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
 
         nameService.removeCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceNameService,
             "test",
             input.indexToRemove,
-            priorityFeeAmountEVVM,
+            input.nonceNameService,
             signatureNameService,
+            priorityFeeAmountEVVM,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -458,11 +458,11 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
 
         nameService.removeCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceNameService,
             "test",
             input.indexToRemove,
-            priorityFeeAmountEVVM,
+            input.nonceNameService,
             signatureNameService,
+            priorityFeeAmountEVVM,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -574,11 +574,11 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
 
         nameService.removeCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceNameService,
             "test",
             input.indexToRemove,
-            priorityFeeAmountEVVM,
+            input.nonceNameService,
             signatureNameService,
+            priorityFeeAmountEVVM,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -687,11 +687,11 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
 
         nameService.removeCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceNameService,
             "test",
             input.indexToRemove,
-            priorityFeeAmountEVVM,
+            input.nonceNameService,
             signatureNameService,
+            priorityFeeAmountEVVM,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM

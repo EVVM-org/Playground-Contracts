@@ -849,187 +849,187 @@ contract NameService {
     }
 
     function removeCustomMetadata(
-        address _user,
-        uint256 _nonce,
-        string memory _identity,
-        uint256 _key,
-        uint256 _priorityFeeForFisher,
-        bytes memory _signature,
-        uint256 _nonce_Evvm,
-        bool _priority_Evvm,
-        bytes memory _signature_Evvm
+        address user,
+        string memory identity,
+        uint256 key,
+        uint256 nonce,
+        bytes memory signature,
+        uint256 priorityFee_EVVM,
+        uint256 nonce_EVVM,
+        bool priorityFlag_EVVM,
+        bytes memory signature_EVVM
     )
         public
-        onlyOwnerOfIdentity(_user, _identity)
-        verifyIfNonceIsAvailable(_user, _nonce)
+        onlyOwnerOfIdentity(user, identity)
+        verifyIfNonceIsAvailable(user, nonce)
     {
         if (
             !SignatureUtils.verifyMessageSignedForRemoveCustomMetadata(
-                _user,
-                _identity,
-                _key,
-                _nonce,
-                _signature
+                user,
+                identity,
+                key,
+                nonce,
+                signature
             )
         ) revert ErrorsLib.InvalidSignatureOnNameService();
 
         //check if the key is greater than the number of custom metadata
-        if (identityDetails[_identity].customMetadataMaxSlots <= _key)
+        if (identityDetails[identity].customMetadataMaxSlots <= key)
             revert ErrorsLib.InvalidKey();
 
         makePay(
-            _user,
-            _nonce_Evvm,
+            user,
+            nonce_EVVM,
             getPriceToRemoveCustomMetadata(),
-            _priorityFeeForFisher,
-            _priority_Evvm,
-            _signature_Evvm
+            priorityFee_EVVM,
+            priorityFlag_EVVM,
+            signature_EVVM
         );
 
         //si es el ultimo elemento
-        if (identityDetails[_identity].customMetadataMaxSlots == _key) {
-            delete identityCustomMetadata[_identity][_key];
+        if (identityDetails[identity].customMetadataMaxSlots == key) {
+            delete identityCustomMetadata[identity][key];
         } else {
             for (
-                uint256 i = _key;
-                i < identityDetails[_identity].customMetadataMaxSlots;
+                uint256 i = key;
+                i < identityDetails[identity].customMetadataMaxSlots;
                 i++
             ) {
-                identityCustomMetadata[_identity][i] = identityCustomMetadata[
-                    _identity
+                identityCustomMetadata[identity][i] = identityCustomMetadata[
+                    identity
                 ][i + 1];
             }
-            delete identityCustomMetadata[_identity][
-                identityDetails[_identity].customMetadataMaxSlots
+            delete identityCustomMetadata[identity][
+                identityDetails[identity].customMetadataMaxSlots
             ];
         }
-        identityDetails[_identity].customMetadataMaxSlots--;
-        nameServiceNonce[_user][_nonce] = true;
+        identityDetails[identity].customMetadataMaxSlots--;
+        nameServiceNonce[user][nonce] = true;
         if (Evvm(evvmAddress.current).istakingStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
                 (5 * Evvm(evvmAddress.current).getRewardAmount()) +
-                    _priorityFeeForFisher
+                    priorityFee_EVVM
             );
         }
     }
 
     function flushCustomMetadata(
-        address _user,
-        uint256 _nonce,
-        string memory _identity,
-        uint256 _priorityFeeForFisher,
-        bytes memory _signature,
-        uint256 _nonce_Evvm,
-        bool _priority_Evvm,
-        bytes memory _signature_Evvm
+        address user,
+        string memory identity,
+        uint256 nonce,
+        bytes memory signature,
+        uint256 priorityFee_EVVM,
+        uint256 nonce_EVVM,
+        bool priorityFlag_EVVM,
+        bytes memory signature_EVVM
     )
         public
-        onlyOwnerOfIdentity(_user, _identity)
-        verifyIfNonceIsAvailable(_user, _nonce)
+        onlyOwnerOfIdentity(user, identity)
+        verifyIfNonceIsAvailable(user, nonce)
     {
         if (
             !SignatureUtils.verifyMessageSignedForFlushCustomMetadata(
-                _user,
-                _identity,
-                _nonce,
-                _signature
+                user,
+                identity,
+                nonce,
+                signature
             )
         ) revert ErrorsLib.InvalidSignatureOnNameService();
 
-        if (identityDetails[_identity].customMetadataMaxSlots == 0)
+        if (identityDetails[identity].customMetadataMaxSlots == 0)
             revert ErrorsLib.EmptyCustomMetadata();
 
         makePay(
-            _user,
-            _nonce_Evvm,
-            getPriceToFlushCustomMetadata(_identity),
-            _priorityFeeForFisher,
-            _priority_Evvm,
-            _signature_Evvm
+            user,
+            nonce_EVVM,
+            getPriceToFlushCustomMetadata(identity),
+            priorityFee_EVVM,
+            priorityFlag_EVVM,
+            signature_EVVM
         );
 
         for (
             uint256 i = 0;
-            i < identityDetails[_identity].customMetadataMaxSlots;
+            i < identityDetails[identity].customMetadataMaxSlots;
             i++
         ) {
-            delete identityCustomMetadata[_identity][i];
+            delete identityCustomMetadata[identity][i];
         }
 
         if (Evvm(evvmAddress.current).istakingStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
                 ((5 * Evvm(evvmAddress.current).getRewardAmount()) *
-                    identityDetails[_identity].customMetadataMaxSlots) +
-                    _priorityFeeForFisher
+                    identityDetails[identity].customMetadataMaxSlots) +
+                    priorityFee_EVVM
             );
         }
 
-        identityDetails[_identity].customMetadataMaxSlots = 0;
-        nameServiceNonce[_user][_nonce] = true;
+        identityDetails[identity].customMetadataMaxSlots = 0;
+        nameServiceNonce[user][nonce] = true;
     }
 
     function flushUsername(
-        address _user,
-        string memory _identity,
-        uint256 _priorityFeeForFisher,
-        uint256 _nonce,
-        bytes memory _signature,
-        uint256 _nonce_Evvm,
-        bool _priority_Evvm,
-        bytes memory _signature_Evvm
+        address user,
+        string memory username,
+        uint256 nonce,
+        bytes memory signature,
+        uint256 priorityFee_EVVM,
+        uint256 nonce_EVVM,
+        bool priorityFlag_EVVM,
+        bytes memory signature_EVVM
     )
         public
-        verifyIfNonceIsAvailable(_user, _nonce)
-        onlyOwnerOfIdentity(_user, _identity)
+        verifyIfNonceIsAvailable(user, nonce)
+        onlyOwnerOfIdentity(user, username)
     {
         if (
-            block.timestamp >= identityDetails[_identity].expireDate ||
-            identityDetails[_identity].flagNotAUsername == 0x01
+            block.timestamp >= identityDetails[username].expireDate ||
+            identityDetails[username].flagNotAUsername == 0x01
         ) revert ErrorsLib.FlushUsernameVerificationFailed();
 
         if (
             !SignatureUtils.verifyMessageSignedForFlushUsername(
-                _user,
-                _identity,
-                _nonce,
-                _signature
+                user,
+                username,
+                nonce,
+                signature
             )
         ) revert ErrorsLib.InvalidSignatureOnNameService();
 
         makePay(
-            _user,
-            _nonce_Evvm,
-            getPriceToFlushUsername(_identity),
-            _priorityFeeForFisher,
-            _priority_Evvm,
-            _signature_Evvm
+            user,
+            nonce_EVVM,
+            getPriceToFlushUsername(username),
+            priorityFee_EVVM,
+            priorityFlag_EVVM,
+            signature_EVVM
         );
 
         for (
             uint256 i = 0;
-            i < identityDetails[_identity].customMetadataMaxSlots;
+            i < identityDetails[username].customMetadataMaxSlots;
             i++
         ) {
-            delete identityCustomMetadata[_identity][i];
+            delete identityCustomMetadata[username][i];
         }
 
         makeCaPay(
             msg.sender,
             ((5 * Evvm(evvmAddress.current).getRewardAmount()) *
-                identityDetails[_identity].customMetadataMaxSlots) +
-                _priorityFeeForFisher
+                identityDetails[username].customMetadataMaxSlots) +
+                priorityFee_EVVM
         );
 
-        identityDetails[_identity] = IdentityBaseMetadata({
+        identityDetails[username] = IdentityBaseMetadata({
             owner: address(0),
             expireDate: 0,
             customMetadataMaxSlots: 0,
-            offerMaxSlots: identityDetails[_identity].offerMaxSlots,
+            offerMaxSlots: identityDetails[username].offerMaxSlots,
             flagNotAUsername: 0x00
         });
-        nameServiceNonce[msg.sender][_nonce_Evvm] = true;
+        nameServiceNonce[user][nonce] = true;
     }
 
     //█Tools for admin█████████████████████████████████████████████████████████████████████████████

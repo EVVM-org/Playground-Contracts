@@ -341,9 +341,9 @@ contract unitTestCorrect_NameService_flushUsername_SyncExecutionOnPay is
         nameService.flushUsername(
             COMMON_USER_NO_STAKER_1.Address,
             "test",
-            totalPriorityFeeAmount,
             110010011,
             signatureNameService,
+            totalPriorityFeeAmount,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -402,9 +402,9 @@ contract unitTestCorrect_NameService_flushUsername_SyncExecutionOnPay is
         nameService.flushUsername(
             COMMON_USER_NO_STAKER_1.Address,
             "test",
-            totalPriorityFeeAmount,
             110010011,
             signatureNameService,
+            totalPriorityFeeAmount,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -463,9 +463,9 @@ contract unitTestCorrect_NameService_flushUsername_SyncExecutionOnPay is
         nameService.flushUsername(
             COMMON_USER_NO_STAKER_1.Address,
             "test",
-            totalPriorityFeeAmount,
             110010011,
             signatureNameService,
+            totalPriorityFeeAmount,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM
@@ -521,9 +521,9 @@ contract unitTestCorrect_NameService_flushUsername_SyncExecutionOnPay is
         nameService.flushUsername(
             COMMON_USER_NO_STAKER_1.Address,
             "test",
-            totalPriorityFeeAmount,
             110010011,
             signatureNameService,
+            totalPriorityFeeAmount,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
             false,
             signatureEVVM

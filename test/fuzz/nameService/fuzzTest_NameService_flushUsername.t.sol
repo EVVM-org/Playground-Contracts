@@ -378,9 +378,9 @@ contract fuzzTest_NameService_flushUsername is Test, Constants {
         nameService.flushUsername(
             COMMON_USER_NO_STAKER_1.Address,
             "test",
-            totalPriorityFeeAmount,
             input.nonceNameService,
             signatureNameService,
+            totalPriorityFeeAmount,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -463,9 +463,9 @@ contract fuzzTest_NameService_flushUsername is Test, Constants {
         nameService.flushUsername(
             COMMON_USER_NO_STAKER_1.Address,
             "test",
-            totalPriorityFeeAmount,
             input.nonceNameService,
             signatureNameService,
+            totalPriorityFeeAmount,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM

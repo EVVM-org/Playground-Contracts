@@ -368,10 +368,10 @@ contract fuzzTest_NameService_flushCustomMetadata is Test, Constants {
 
         nameService.flushCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceNameService,
             "test",
-            totalPriorityFeeAmount,
+            input.nonceNameService,
             signatureNameService,
+            totalPriorityFeeAmount,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -442,10 +442,10 @@ contract fuzzTest_NameService_flushCustomMetadata is Test, Constants {
 
         nameService.flushCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceNameService,
             "test",
-            totalPriorityFeeAmount,
+            input.nonceNameService,
             signatureNameService,
+            totalPriorityFeeAmount,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -515,10 +515,10 @@ contract fuzzTest_NameService_flushCustomMetadata is Test, Constants {
 
         nameService.flushCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceNameService,
             "test",
-            totalPriorityFeeAmount,
+            input.nonceNameService,
             signatureNameService,
+            totalPriorityFeeAmount,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM
@@ -587,10 +587,10 @@ contract fuzzTest_NameService_flushCustomMetadata is Test, Constants {
 
         nameService.flushCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            input.nonceNameService,
             "test",
-            totalPriorityFeeAmount,
+            input.nonceNameService,
             signatureNameService,
+            totalPriorityFeeAmount,
             nonceEvvm,
             input.priorityFlagEVVM,
             signatureEVVM

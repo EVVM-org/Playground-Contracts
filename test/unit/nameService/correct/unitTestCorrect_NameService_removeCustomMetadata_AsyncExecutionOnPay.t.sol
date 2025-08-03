@@ -326,11 +326,11 @@ contract unitTestCorrect_NameService_removeCustomMetadata_AsyncExecutionOnPay is
 
         nameService.removeCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
             1,
-            priorityFeeAmountEVVM,
+            100010001,
             signatureNameService,
+            priorityFeeAmountEVVM,
             100010001,
             true,
             signatureEVVM
@@ -426,11 +426,11 @@ contract unitTestCorrect_NameService_removeCustomMetadata_AsyncExecutionOnPay is
 
         nameService.removeCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
             1,
-            priorityFeeAmountEVVM,
+            100010001,
             signatureNameService,
+            priorityFeeAmountEVVM,
             100010001,
             true,
             signatureEVVM
@@ -523,11 +523,11 @@ contract unitTestCorrect_NameService_removeCustomMetadata_AsyncExecutionOnPay is
 
         nameService.removeCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
             1,
-            priorityFeeAmountEVVM,
+            100010001,
             signatureNameService,
+            priorityFeeAmountEVVM,
             100010001,
             true,
             signatureEVVM
@@ -620,11 +620,11 @@ contract unitTestCorrect_NameService_removeCustomMetadata_AsyncExecutionOnPay is
 
         nameService.removeCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
             1,
-            priorityFeeAmountEVVM,
+            100010001,
             signatureNameService,
+            priorityFeeAmountEVVM,
             100010001,
             true,
             signatureEVVM

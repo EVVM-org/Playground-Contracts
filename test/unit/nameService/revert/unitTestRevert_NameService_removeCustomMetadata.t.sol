@@ -25,12 +25,10 @@ import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/playground/lib/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/contracts/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/contracts/evvm/lib/EvvmStorage.sol";
-import {AdvancedStrings} from "@EVVM/playground/lib/AdvancedStrings.sol";import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
+import {AdvancedStrings} from "@EVVM/playground/lib/AdvancedStrings.sol";
+import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
 
-contract unitTestRevert_NameService_removeCustomMetadata is
-    Test,
-    Constants
-{
+contract unitTestRevert_NameService_removeCustomMetadata is Test, Constants {
     Staking staking;
     Evvm evvm;
     Estimator estimator;
@@ -64,7 +62,6 @@ contract unitTestRevert_NameService_removeCustomMetadata is
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
 
@@ -118,7 +115,8 @@ contract unitTestRevert_NameService_removeCustomMetadata is
             nameService.getPriceToRemoveCustomMetadata() + priorityFeeAmount
         );
 
-        totalPriceRemovedCustomMetadata = nameService.getPriceToRemoveCustomMetadata();
+        totalPriceRemovedCustomMetadata = nameService
+            .getPriceToRemoveCustomMetadata();
         totalPriorityFeeAmount = priorityFeeAmount;
     }
 
@@ -167,11 +165,8 @@ contract unitTestRevert_NameService_removeCustomMetadata is
                 nonceNameService
             )
         );
-        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
+        bytes memory signatureNameService = Erc191TestBuilder
+            .buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -231,11 +226,8 @@ contract unitTestRevert_NameService_removeCustomMetadata is
                 nonceNameService
             )
         );
-        bytes memory signatureNameService = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
+        bytes memory signatureNameService = Erc191TestBuilder
+            .buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,
@@ -362,11 +354,11 @@ contract unitTestRevert_NameService_removeCustomMetadata is
         vm.expectRevert();
         nameService.removeCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
             1,
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             100010001,
             true,
             signatureEVVM
@@ -424,11 +416,11 @@ contract unitTestRevert_NameService_removeCustomMetadata is
         vm.expectRevert();
         nameService.removeCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
             1,
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             100010001,
             true,
             signatureEVVM
@@ -503,11 +495,11 @@ contract unitTestRevert_NameService_removeCustomMetadata is
         vm.expectRevert();
         nameService.removeCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
             1,
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             100010001,
             true,
             signatureEVVM
@@ -515,10 +507,8 @@ contract unitTestRevert_NameService_removeCustomMetadata is
 
         vm.stopPrank();
 
-        string memory customMetadata = nameService.getSingleCustomMetadataOfIdentity(
-            "test",
-            1
-        );
+        string memory customMetadata = nameService
+            .getSingleCustomMetadataOfIdentity("test", 1);
 
         assertEq(bytes(customMetadata).length, bytes("test>2").length);
         assertEq(keccak256(bytes(customMetadata)), keccak256(bytes("test>2")));
@@ -583,11 +573,11 @@ contract unitTestRevert_NameService_removeCustomMetadata is
         vm.expectRevert();
         nameService.removeCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
             1,
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             100010001,
             true,
             signatureEVVM
@@ -595,10 +585,8 @@ contract unitTestRevert_NameService_removeCustomMetadata is
 
         vm.stopPrank();
 
-        string memory customMetadata = nameService.getSingleCustomMetadataOfIdentity(
-            "test",
-            1
-        );
+        string memory customMetadata = nameService
+            .getSingleCustomMetadataOfIdentity("test", 1);
 
         assertEq(bytes(customMetadata).length, bytes("test>2").length);
         assertEq(keccak256(bytes(customMetadata)), keccak256(bytes("test>2")));
@@ -661,11 +649,11 @@ contract unitTestRevert_NameService_removeCustomMetadata is
         vm.expectRevert();
         nameService.removeCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
             1,
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             100010001,
             true,
             signatureEVVM
@@ -673,10 +661,8 @@ contract unitTestRevert_NameService_removeCustomMetadata is
 
         vm.stopPrank();
 
-        string memory customMetadata = nameService.getSingleCustomMetadataOfIdentity(
-            "test",
-            1
-        );
+        string memory customMetadata = nameService
+            .getSingleCustomMetadataOfIdentity("test", 1);
 
         assertEq(bytes(customMetadata).length, bytes("test>2").length);
         assertEq(keccak256(bytes(customMetadata)), keccak256(bytes("test>2")));
@@ -741,11 +727,11 @@ contract unitTestRevert_NameService_removeCustomMetadata is
         vm.expectRevert();
         nameService.removeCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
             1,
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             100010001,
             true,
             signatureEVVM
@@ -753,10 +739,8 @@ contract unitTestRevert_NameService_removeCustomMetadata is
 
         vm.stopPrank();
 
-        string memory customMetadata = nameService.getSingleCustomMetadataOfIdentity(
-            "test",
-            1
-        );
+        string memory customMetadata = nameService
+            .getSingleCustomMetadataOfIdentity("test", 1);
 
         assertEq(bytes(customMetadata).length, bytes("test>2").length);
         assertEq(keccak256(bytes(customMetadata)), keccak256(bytes("test>2")));
@@ -803,11 +787,11 @@ contract unitTestRevert_NameService_removeCustomMetadata is
         vm.expectRevert();
         nameService.removeCustomMetadata(
             COMMON_USER_NO_STAKER_2.Address,
-            100010001,
             "test",
             1,
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             100010001,
             true,
             signatureEVVM
@@ -815,10 +799,8 @@ contract unitTestRevert_NameService_removeCustomMetadata is
 
         vm.stopPrank();
 
-        string memory customMetadata = nameService.getSingleCustomMetadataOfIdentity(
-            "test",
-            1
-        );
+        string memory customMetadata = nameService
+            .getSingleCustomMetadataOfIdentity("test", 1);
 
         assertEq(bytes(customMetadata).length, bytes("test>2").length);
         assertEq(keccak256(bytes(customMetadata)), keccak256(bytes("test>2")));
@@ -865,11 +847,11 @@ contract unitTestRevert_NameService_removeCustomMetadata is
         vm.expectRevert();
         nameService.removeCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            11,
             "test",
             1,
-            totalPriorityFeeAmount,
+            11,
             signatureNameService,
+            totalPriorityFeeAmount,
             100010001,
             true,
             signatureEVVM
@@ -877,10 +859,8 @@ contract unitTestRevert_NameService_removeCustomMetadata is
 
         vm.stopPrank();
 
-        string memory customMetadata = nameService.getSingleCustomMetadataOfIdentity(
-            "test",
-            1
-        );
+        string memory customMetadata = nameService
+            .getSingleCustomMetadataOfIdentity("test", 1);
 
         assertEq(bytes(customMetadata).length, bytes("test>2").length);
         assertEq(keccak256(bytes(customMetadata)), keccak256(bytes("test>2")));
@@ -927,11 +907,11 @@ contract unitTestRevert_NameService_removeCustomMetadata is
         vm.expectRevert();
         nameService.removeCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
             777,
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             100010001,
             true,
             signatureEVVM
@@ -978,11 +958,11 @@ contract unitTestRevert_NameService_removeCustomMetadata is
         vm.expectRevert();
         nameService.removeCustomMetadata(
             COMMON_USER_NO_STAKER_1.Address,
-            100010001,
             "test",
             1,
-            totalPriorityFeeAmount,
+            100010001,
             signatureNameService,
+            totalPriorityFeeAmount,
             100010001,
             true,
             signatureEVVM
@@ -990,10 +970,8 @@ contract unitTestRevert_NameService_removeCustomMetadata is
 
         vm.stopPrank();
 
-        string memory customMetadata = nameService.getSingleCustomMetadataOfIdentity(
-            "test",
-            1
-        );
+        string memory customMetadata = nameService
+            .getSingleCustomMetadataOfIdentity("test", 1);
 
         assertEq(bytes(customMetadata).length, bytes("test>2").length);
         assertEq(keccak256(bytes(customMetadata)), keccak256(bytes("test>2")));
