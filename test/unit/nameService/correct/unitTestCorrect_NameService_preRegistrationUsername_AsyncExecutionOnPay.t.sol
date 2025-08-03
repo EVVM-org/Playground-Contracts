@@ -113,8 +113,8 @@ contract unitTestCorrect_NameService_preRegistrationUsername_AsyncExecutionOnPay
                     address(nameService),
                     "",
                     MATE_TOKEN_ADDRESS,
-                    priorityFeeAmount,
                     0,
+                    priorityFeeAmount,
                     nonceEVVM,
                     priorityEVVM,
                     address(nameService)

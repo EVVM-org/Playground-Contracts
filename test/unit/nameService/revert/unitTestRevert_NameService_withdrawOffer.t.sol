@@ -268,8 +268,8 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
                     address(nameService),
                     "",
                     MATE_TOKEN_ADDRESS,
-                    priorityFeeAmountEVVM,
                     0,
+                    priorityFeeAmountEVVM,
                     nonceEVVM,
                     priorityFlagEVVM,
                     address(nameService)

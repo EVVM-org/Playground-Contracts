@@ -120,8 +120,8 @@ contract fuzzTest_NameService_preRegistrationUsername is Test, Constants {
                     address(nameService),
                     "",
                     MATE_TOKEN_ADDRESS,
-                    priorityFeeAmount,
                     0,
+                    priorityFeeAmount,
                     nonceEVVM,
                     priorityEVVM,
                     address(nameService)

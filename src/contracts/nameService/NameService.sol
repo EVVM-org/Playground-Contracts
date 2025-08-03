@@ -166,8 +166,8 @@ contract NameService {
         if (priorityFee_EVVM > 0) {
             makePay(
                 user,
-                priorityFee_EVVM,
                 0,
+                priorityFee_EVVM,
                 nonce_EVVM,
                 priorityFlag_EVVM,
                 signature_EVVM
@@ -574,8 +574,8 @@ contract NameService {
         if (priorityFee_EVVM > 0) {
             makePay(
                 user,
-                priorityFee_EVVM,
                 0,
+                priorityFee_EVVM,
                 nonce_EVVM,
                 priorityFlag_EVVM,
                 signature_EVVM
@@ -653,8 +653,8 @@ contract NameService {
         if (priorityFee_EVVM > 0) {
             makePay(
                 user,
-                priorityFee_EVVM,
                 0,
+                priorityFee_EVVM,
                 nonce_EVVM,
                 priorityFlag_EVVM,
                 signature_EVVM

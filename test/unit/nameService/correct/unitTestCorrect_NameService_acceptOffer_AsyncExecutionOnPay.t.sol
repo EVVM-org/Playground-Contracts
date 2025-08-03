@@ -271,8 +271,8 @@ contract unitTestCorrect_NameService_acceptOffer_AsyncExecutionOnPay is
                     address(nameService),
                     "",
                     MATE_TOKEN_ADDRESS,
-                    priorityFeeAmountEVVM,
                     0,
+                    priorityFeeAmountEVVM,
                     nonceEVVM,
                     priorityFlagEVVM,
                     address(nameService)
