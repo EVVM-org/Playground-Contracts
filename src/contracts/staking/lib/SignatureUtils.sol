@@ -45,7 +45,7 @@ library SignatureUtils {
 
     function verifyMessageSignedForPublicServiceStake(
         address user,
-        address _serviceAddress,
+        address serviceAddress,
         bool _isStaking,
         uint256 _amountOfStaking,
         uint256 _nonce,
@@ -56,7 +56,7 @@ library SignatureUtils {
                 string.concat(
                     "21cc1749",
                     ",",
-                    AdvancedStrings.addressToString(_serviceAddress),
+                    AdvancedStrings.addressToString(serviceAddress),
                     ",",
                     _isStaking ? "true" : "false",
                     ",",
