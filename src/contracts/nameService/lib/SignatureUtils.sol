@@ -23,7 +23,7 @@ library SignatureUtils {
         return
             SignatureRecover.signatureVerification(
                 string.concat(
-                    "393b9c6f",
+                    "5d232a55",
                     ",",
                     AdvancedStrings.bytes32ToString(_hashUsername),
                     ",",
@@ -44,7 +44,7 @@ library SignatureUtils {
         return
             SignatureRecover.signatureVerification(
                 string.concat(
-                    "d134f8b4",
+                    "afabc8db",
                     ",",
                     _username,
                     ",",
@@ -68,7 +68,7 @@ library SignatureUtils {
         return
             SignatureRecover.signatureVerification(
                 string.concat(
-                    "52649c2e",
+                    "d82e5d8b",
                     ",",
                     _username,
                     ",",
@@ -93,7 +93,7 @@ library SignatureUtils {
         return
             SignatureRecover.signatureVerification(
                 string.concat(
-                    "21811609",
+                    "5761d8ed",
                     ",",
                     _username,
                     ",",
@@ -116,7 +116,7 @@ library SignatureUtils {
         return
             SignatureRecover.signatureVerification(
                 string.concat(
-                    "ae36fe72", //methodIdentifier
+                    "8e3bde43",
                     ",",
                     _username,
                     ",",
@@ -138,7 +138,7 @@ library SignatureUtils {
         return
             SignatureRecover.signatureVerification(
                 string.concat(
-                    "f1747483",
+                    "35723e23",
                     ",",
                     _username,
                     ",",
@@ -159,7 +159,7 @@ library SignatureUtils {
         return
             SignatureRecover.signatureVerification(
                 string.concat(
-                    "e6efeffa",
+                    "4cfe021f",
                     ",",
                     _identity,
                     ",",
@@ -182,7 +182,7 @@ library SignatureUtils {
         return
             SignatureRecover.signatureVerification(
                 string.concat(
-                    "8001a999",
+                    "8adf3927",
                     ",",
                     _username,
                     ",",
@@ -204,7 +204,7 @@ library SignatureUtils {
         return
             SignatureRecover.signatureVerification(
                 string.concat(
-                    "3e7899a1",
+                    "3ca44e54",
                     ",",
                     _identity,
                     ",",
@@ -224,7 +224,7 @@ library SignatureUtils {
         return
             SignatureRecover.signatureVerification(
                 string.concat(
-                    "d22c816c",
+                    "044695cb",
                     ",",
                     _username,
                     ",",
