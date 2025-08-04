@@ -61,7 +61,6 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
 
@@ -206,8 +205,8 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             1000001000001,
             signatureStaking,
             0,
@@ -282,8 +281,8 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             1000001000001,
             signatureStaking,
             totalOfPriorityFee,
@@ -336,8 +335,8 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             100,
             signatureStaking,
             0,
@@ -357,8 +356,8 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             101,
             signatureStaking,
             0,
@@ -378,8 +377,8 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.presaleStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
+            false,
             102,
             signatureStaking,
             0,
@@ -440,8 +439,8 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             100,
             signatureStaking,
             0,
@@ -461,8 +460,8 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             101,
             signatureStaking,
             0,
@@ -482,8 +481,8 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.presaleStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
+            false,
             102,
             signatureStaking,
             0,
@@ -505,8 +504,8 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.presaleStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
+            false,
             103,
             signatureStaking,
             0,
@@ -581,8 +580,8 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             100,
             signatureStaking,
             0.001 ether,
@@ -604,8 +603,8 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             101,
             signatureStaking,
             0.001 ether,
@@ -627,8 +626,8 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.presaleStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
+            false,
             102,
             signatureStaking,
             0.001 ether,
@@ -652,8 +651,8 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.presaleStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
+            false,
             103,
             signatureStaking,
             0.001 ether,
@@ -756,8 +755,8 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             1000001000001,
             signatureStaking,
             0,
@@ -837,8 +836,8 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             1000001000001,
             signatureStaking,
             totalOfPriorityFee,
@@ -896,8 +895,8 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             100,
             signatureStaking,
             0,
@@ -917,8 +916,8 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             101,
             signatureStaking,
             0,
@@ -938,8 +937,8 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.presaleStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
+            false,
             102,
             signatureStaking,
             0,
@@ -1002,8 +1001,8 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             100,
             signatureStaking,
             0,
@@ -1023,8 +1022,8 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             101,
             signatureStaking,
             0,
@@ -1044,8 +1043,8 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.presaleStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
+            false,
             102,
             signatureStaking,
             0,
@@ -1071,8 +1070,8 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.presaleStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
+            false,
             103,
             signatureStaking,
             0,
@@ -1145,8 +1144,8 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             100,
             signatureStaking,
             0.001 ether,
@@ -1168,8 +1167,8 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             101,
             signatureStaking,
             0.001 ether,
@@ -1191,8 +1190,8 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.presaleStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
+            false,
             102,
             signatureStaking,
             0.001 ether,
@@ -1216,8 +1215,8 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.presaleStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
+            false,
             103,
             signatureStaking,
             0.001 ether,

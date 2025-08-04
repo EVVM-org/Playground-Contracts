@@ -61,7 +61,6 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
 
@@ -183,10 +182,10 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             10,
+            1001,
             signatureStaking,
             totalOfPriorityFee,
             1001,
@@ -238,10 +237,10 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             10,
+            1001,
             signatureStaking,
             totalOfPriorityFee,
             1001,
@@ -261,10 +260,10 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
-            1002,
+            false,
             5,
+            1002,
             signatureStaking,
             totalOfPriorityFee,
             1002,
@@ -321,10 +320,10 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             10,
+            1001,
             signatureStaking,
             totalOfPriorityFee,
             1001,
@@ -346,10 +345,10 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
-            1002,
+            false,
             10,
+            1002,
             signatureStaking,
             totalOfPriorityFee,
             1002,
@@ -388,7 +387,9 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
         assertEq(history[1].totalStaked, 0);
     }
 
-    function test__unit_correct__publicStaking__stakeAfterFullUnstake_nS_nPF() external {
+    function test__unit_correct__publicStaking__stakeAfterFullUnstake_nS_nPF()
+        external
+    {
         (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
             COMMON_USER_NO_STAKER_1.Address,
             10,
@@ -409,10 +410,10 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             10,
+            1001,
             signatureStaking,
             totalOfPriorityFee,
             1001,
@@ -434,10 +435,10 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
-            1002,
+            false,
             10,
+            1002,
             signatureStaking,
             totalOfPriorityFee,
             1002,
@@ -459,10 +460,10 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1003,
+            true,
             10,
+            1003,
             signatureStaking,
             totalOfPriorityFee,
             1003,
@@ -532,10 +533,10 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             10,
+            1001,
             signatureStaking,
             totalOfPriorityFee,
             1001,
@@ -587,10 +588,10 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             10,
+            1001,
             signatureStaking,
             0.001 ether,
             1001,
@@ -610,10 +611,10 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
-            1002,
+            false,
             5,
+            1002,
             signatureStaking,
             0.001 ether,
             1002,
@@ -670,10 +671,10 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             10,
+            1001,
             signatureStaking,
             0.001 ether,
             1001,
@@ -695,10 +696,10 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
-            1002,
+            false,
             10,
+            1002,
             signatureStaking,
             0.001 ether,
             1002,
@@ -737,7 +738,9 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
         assertEq(history[1].totalStaked, 0);
     }
 
-    function test__unit_correct__publicStaking__stakeAfterFullUnstake_nS_PF() external {
+    function test__unit_correct__publicStaking__stakeAfterFullUnstake_nS_PF()
+        external
+    {
         (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
             COMMON_USER_NO_STAKER_1.Address,
             10,
@@ -758,10 +761,10 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             10,
+            1001,
             signatureStaking,
             0.001 ether,
             1001,
@@ -783,10 +786,10 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
-            1002,
+            false,
             10,
+            1002,
             signatureStaking,
             0.001 ether,
             1002,
@@ -808,10 +811,10 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1003,
+            true,
             10,
+            1003,
             signatureStaking,
             0.001 ether,
             1003,
@@ -881,10 +884,10 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             10,
+            1001,
             signatureStaking,
             totalOfPriorityFee,
             1001,
@@ -933,10 +936,10 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             10,
+            1001,
             signatureStaking,
             totalOfPriorityFee,
             1001,
@@ -956,10 +959,10 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
-            1002,
+            false,
             5,
+            1002,
             signatureStaking,
             totalOfPriorityFee,
             1002,
@@ -1013,10 +1016,10 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             10,
+            1001,
             signatureStaking,
             totalOfPriorityFee,
             1001,
@@ -1038,10 +1041,10 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
-            1002,
+            false,
             10,
+            1002,
             signatureStaking,
             totalOfPriorityFee,
             1002,
@@ -1077,7 +1080,9 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
         assertEq(history[1].totalStaked, 0);
     }
 
-    function test__unit_correct__publicStaking__stakeAfterFullUnstake_S_nPF() external {
+    function test__unit_correct__publicStaking__stakeAfterFullUnstake_S_nPF()
+        external
+    {
         (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
             COMMON_USER_NO_STAKER_1.Address,
             10,
@@ -1098,10 +1103,10 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             10,
+            1001,
             signatureStaking,
             totalOfPriorityFee,
             1001,
@@ -1123,10 +1128,10 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
-            1002,
+            false,
             10,
+            1002,
             signatureStaking,
             totalOfPriorityFee,
             1002,
@@ -1148,10 +1153,10 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1003,
+            true,
             10,
+            1003,
             signatureStaking,
             totalOfPriorityFee,
             1003,
@@ -1218,10 +1223,10 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             10,
+            1001,
             signatureStaking,
             totalOfPriorityFee,
             1001,
@@ -1270,10 +1275,10 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             10,
+            1001,
             signatureStaking,
             0.001 ether,
             1001,
@@ -1293,10 +1298,10 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
-            1002,
+            false,
             5,
+            1002,
             signatureStaking,
             0.001 ether,
             1002,
@@ -1350,10 +1355,10 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             10,
+            1001,
             signatureStaking,
             0.001 ether,
             1001,
@@ -1375,10 +1380,10 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
-            1002,
+            false,
             10,
+            1002,
             signatureStaking,
             0.001 ether,
             1002,
@@ -1414,7 +1419,9 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
         assertEq(history[1].totalStaked, 0);
     }
 
-    function test__unit_correct__publicStaking__stakeAfterFullUnstake_S_PF() external {
+    function test__unit_correct__publicStaking__stakeAfterFullUnstake_S_PF()
+        external
+    {
         (uint256 totalOfMate, uint256 totalOfPriorityFee) = giveMateToExecute(
             COMMON_USER_NO_STAKER_1.Address,
             10,
@@ -1435,10 +1442,10 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             10,
+            1001,
             signatureStaking,
             0.001 ether,
             1001,
@@ -1460,10 +1467,10 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
-            1002,
+            false,
             10,
+            1002,
             signatureStaking,
             0.001 ether,
             1002,
@@ -1485,10 +1492,10 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1003,
+            true,
             10,
+            1003,
             signatureStaking,
             0.001 ether,
             1003,

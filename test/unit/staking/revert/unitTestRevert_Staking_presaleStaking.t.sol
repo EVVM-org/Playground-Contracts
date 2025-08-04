@@ -58,7 +58,6 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
 
@@ -209,8 +208,8 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
 
         vm.expectRevert();
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             1001001,
             signatureStaking,
             totalOfPriorityFee,
@@ -286,8 +285,8 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
 
         vm.expectRevert();
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             1001001,
             signatureStaking,
             totalOfPriorityFee,
@@ -367,8 +366,8 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
 
         vm.expectRevert();
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             1001001,
             signatureStaking,
             totalOfPriorityFee,
@@ -395,7 +394,9 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
         );
     }
 
-    function test__unitRevert__presaleStaking__bPaySigAtTokenAddress() external {
+    function test__unitRevert__presaleStaking__bPaySigAtTokenAddress()
+        external
+    {
         uint8 v;
         bytes32 r;
         bytes32 s;
@@ -444,8 +445,8 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
 
         vm.expectRevert();
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             1001001,
             signatureStaking,
             totalOfPriorityFee,
@@ -521,8 +522,8 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
 
         vm.expectRevert();
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             1001001,
             signatureStaking,
             totalOfPriorityFee,
@@ -598,8 +599,8 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
 
         vm.expectRevert();
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             1001001,
             signatureStaking,
             totalOfPriorityFee,
@@ -675,8 +676,8 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
 
         vm.expectRevert();
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             1001001,
             signatureStaking,
             totalOfPriorityFee,
@@ -703,7 +704,9 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
         );
     }
 
-    function test__unitRevert__presaleStaking__bPaySigAtPriorityFlag() external {
+    function test__unitRevert__presaleStaking__bPaySigAtPriorityFlag()
+        external
+    {
         uint8 v;
         bytes32 r;
         bytes32 s;
@@ -752,8 +755,8 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
 
         vm.expectRevert();
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             1001001,
             signatureStaking,
             totalOfPriorityFee,
@@ -829,8 +832,8 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
 
         vm.expectRevert();
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             1001001,
             signatureStaking,
             totalOfPriorityFee,
@@ -906,8 +909,8 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
 
         vm.expectRevert();
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             1001001,
             signatureStaking,
             totalOfPriorityFee,
@@ -985,8 +988,8 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
 
         vm.expectRevert();
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             1001001,
             signatureStaking,
             totalOfPriorityFee,
@@ -1062,8 +1065,8 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
 
         vm.expectRevert();
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             1001001,
             signatureStaking,
             totalOfPriorityFee,
@@ -1135,8 +1138,8 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
 
         vm.expectRevert();
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             1001001,
             signatureStaking,
             totalOfPriorityFee,
@@ -1212,9 +1215,9 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER.Address);
 
         vm.expectRevert();
-        staking.presaleStaking(
-            true,
+                staking.presaleStaking(
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             1001001,
             signatureStaking,
             totalOfPriorityFee,
@@ -1294,8 +1297,8 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
 
         vm.expectRevert();
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_2.Address,
+            true,
             1001001,
             signatureStaking,
             totalOfPriorityFee,
@@ -1345,8 +1348,8 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             1001001,
             signatureStaking,
             0,
@@ -1386,8 +1389,8 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
 
         vm.expectRevert();
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             1001001,
             signatureStaking,
             totalOfPriorityFee,
@@ -1472,8 +1475,8 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
 
         vm.expectRevert();
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             1001001,
             signatureStaking,
             totalOfPriorityFee,
@@ -1551,8 +1554,8 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
 
         vm.expectRevert();
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             1001001,
             signatureStaking,
             totalOfPriorityFee,
@@ -1604,8 +1607,8 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             100,
             signatureStaking,
             0,
@@ -1625,8 +1628,8 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             101,
             signatureStaking,
             0,
@@ -1648,8 +1651,8 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
 
         vm.expectRevert();
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             102,
             signatureStaking,
             totalOfPriorityFee,
@@ -1727,8 +1730,8 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
 
         vm.expectRevert();
         staking.presaleStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
+            false,
             1001001,
             signatureStaking,
             totalOfPriorityFee,
@@ -1777,8 +1780,8 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             100,
             signatureStaking,
             0,
@@ -1798,8 +1801,8 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             101,
             signatureStaking,
             0,
@@ -1819,8 +1822,8 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.presaleStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
+            false,
             102,
             signatureStaking,
             0,
@@ -1842,8 +1845,8 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
 
         vm.expectRevert();
         staking.presaleStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
+            false,
             103,
             signatureStaking,
             0,
@@ -1891,8 +1894,8 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             100,
             signatureStaking,
             0,
@@ -1912,8 +1915,8 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             101,
             signatureStaking,
             0,
@@ -1933,8 +1936,8 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.presaleStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
+            false,
             102,
             signatureStaking,
             0,
@@ -1956,8 +1959,8 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.presaleStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
+            false,
             103,
             signatureStaking,
             0,
@@ -1978,8 +1981,8 @@ contract unitTestRevert_Staking_presaleStaking is Test, Constants {
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         vm.expectRevert();
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             104,
             signatureStaking,
             0,

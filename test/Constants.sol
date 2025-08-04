@@ -150,13 +150,17 @@ contract MockContract {
         evvm = Evvm(staking.getEvvmAddress());
     }
 
-    function unstake(uint256 amount, uint256 nonceStaking, address _user) public {
+    function unstake(
+        uint256 amount,
+        uint256 nonceStaking,
+        address _user
+    ) public {
         staking.publicServiceStaking(
-            false,
             _user,
             address(this),
-            nonceStaking,
+            false,
             amount,
+            nonceStaking,
             bytes(""),
             0,
             0,

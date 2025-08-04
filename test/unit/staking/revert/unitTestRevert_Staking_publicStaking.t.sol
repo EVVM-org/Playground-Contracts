@@ -58,7 +58,6 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
 
@@ -202,10 +201,10 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
 
         vm.expectRevert();
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001001,
+            true,
             111,
+            1001001,
             signatureStaking,
             totalOfPriorityFee,
             1001,
@@ -267,10 +266,10 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
 
         vm.expectRevert();
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001001,
+            true,
             111,
+            1001001,
             signatureStaking,
             totalOfPriorityFee,
             1001,
@@ -336,10 +335,10 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
 
         vm.expectRevert();
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001001,
+            true,
             111,
+            1001001,
             signatureStaking,
             totalOfPriorityFee,
             1001,
@@ -401,10 +400,10 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
 
         vm.expectRevert();
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001001,
+            true,
             111,
+            1001001,
             signatureStaking,
             totalOfPriorityFee,
             1001,
@@ -466,10 +465,10 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
 
         vm.expectRevert();
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001001,
+            true,
             111,
+            1001001,
             signatureStaking,
             totalOfPriorityFee,
             1001,
@@ -531,10 +530,10 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
 
         vm.expectRevert();
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001001,
+            true,
             111,
+            1001001,
             signatureStaking,
             totalOfPriorityFee,
             1001,
@@ -596,10 +595,10 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
 
         vm.expectRevert();
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001001,
+            true,
             111,
+            1001001,
             signatureStaking,
             totalOfPriorityFee,
             1001,
@@ -661,10 +660,10 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
 
         vm.expectRevert();
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001001,
+            true,
             111,
+            1001001,
             signatureStaking,
             totalOfPriorityFee,
             1001,
@@ -726,10 +725,10 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
 
         vm.expectRevert();
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001001,
+            true,
             111,
+            1001001,
             signatureStaking,
             totalOfPriorityFee,
             1001,
@@ -791,10 +790,10 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
 
         vm.expectRevert();
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001001,
+            true,
             111,
+            1001001,
             signatureStaking,
             totalOfPriorityFee,
             1001,
@@ -858,10 +857,10 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
 
         vm.expectRevert();
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001001,
+            true,
             111,
+            1001001,
             signatureStaking,
             totalOfPriorityFee,
             1001,
@@ -923,10 +922,10 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
 
         vm.expectRevert();
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001001,
+            true,
             111,
+            1001001,
             signatureStaking,
             totalOfPriorityFee,
             1001,
@@ -977,21 +976,17 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
-            Erc191TestBuilder.buildMessageSignedForPublicStaking(
-                true,
-                111,
-                777
-            )
+            Erc191TestBuilder.buildMessageSignedForPublicStaking(true, 111, 777)
         );
         signatureStaking = Erc191TestBuilder.buildERC191Signature(v, r, s);
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
 
         vm.expectRevert();
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001001,
+            true,
             111,
+            1001001,
             signatureStaking,
             totalOfPriorityFee,
             1001,
@@ -1033,10 +1028,10 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             1,
+            1001,
             signatureStaking,
             totalOfPriorityFee,
             1001001,
@@ -1058,10 +1053,10 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
 
         vm.expectRevert();
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001001,
+            true,
             1,
+            1001001,
             signatureStaking,
             totalOfPriorityFee,
             2002002,
@@ -1104,10 +1099,10 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             111,
+            1001,
             signatureStaking,
             totalOfPriorityFee,
             1001001,
@@ -1129,10 +1124,10 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         vm.expectRevert();
         staking.publicStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
-            2002,
+            false,
             111,
+            2002,
             signatureStaking,
             totalOfPriorityFee,
             2002002,
@@ -1179,10 +1174,10 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             111,
+            1001,
             signatureStaking,
             totalOfPriorityFee,
             1001001,
@@ -1205,10 +1200,10 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
-            2002,
+            false,
             111,
+            2002,
             signatureStaking,
             totalOfPriorityFee,
             2002002,
@@ -1230,10 +1225,10 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         vm.expectRevert();
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            3003,
+            true,
             111,
+            3003,
             signatureStaking,
             totalOfPriorityFee,
             3003003,
@@ -1277,10 +1272,10 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         vm.expectRevert();
         staking.publicStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            false,
             111,
+            1001,
             signatureStaking,
             totalOfPriorityFee,
             1001001,
@@ -1330,10 +1325,10 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         vm.expectRevert();
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             111,
+            1001,
             signatureStaking,
             totalOfPriorityFee,
             1001001,

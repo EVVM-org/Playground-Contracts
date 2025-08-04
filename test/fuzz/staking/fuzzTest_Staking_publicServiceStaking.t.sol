@@ -95,11 +95,11 @@ contract fuzzTest_Staking_publicServiceStaking is Test, Constants {
             );
 
         staking.publicServiceStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
             address(mockContract),
-            0,
+            true,
             10,
+            0,
             signatureStaking,
             0,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -315,11 +315,11 @@ contract fuzzTest_Staking_publicServiceStaking is Test, Constants {
                 vm.startPrank(FISHER.Address);
 
                 staking.publicServiceStaking(
-                    input[i].isStaking,
                     COMMON_USER_NO_STAKER_1.Address,
                     address(mockContract),
-                    input[i].nonceStaking,
+                    input[i].isStaking,
                     input[i].stakingAmount,
+                    input[i].nonceStaking,
                     signatureStaking,
                     totalOfPriorityFee,
                     (

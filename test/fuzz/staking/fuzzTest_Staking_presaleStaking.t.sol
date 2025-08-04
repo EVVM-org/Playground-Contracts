@@ -85,8 +85,8 @@ contract fuzzTest_Staking_presaleStaking is Test, Constants {
         ) = makeSignature(true, 0, 0, 0, false);
 
         staking.presaleStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
+            true,
             0,
             signatureStaking,
             0,
@@ -289,8 +289,8 @@ contract fuzzTest_Staking_presaleStaking is Test, Constants {
 
                 vm.startPrank(FISHER.Address);
                 staking.presaleStaking(
-                    input[i].isStaking,
                     COMMON_USER_NO_STAKER_1.Address,
+                    input[i].isStaking,
                     input[i].nonceStaking,
                     signatureStaking,
                     (
@@ -360,8 +360,8 @@ contract fuzzTest_Staking_presaleStaking is Test, Constants {
 
                 vm.startPrank(FISHER.Address);
                 staking.presaleStaking(
-                    input[i].isStaking,
                     COMMON_USER_NO_STAKER_1.Address,
+                    input[i].isStaking,
                     input[i].nonceStaking,
                     signatureStaking,
                     (

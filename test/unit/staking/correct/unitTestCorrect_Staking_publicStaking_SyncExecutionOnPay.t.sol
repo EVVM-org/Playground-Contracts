@@ -183,10 +183,10 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             10,
+            1001,
             signatureStaking,
             totalOfPriorityFee,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -238,10 +238,10 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             10,
+            1001,
             signatureStaking,
             totalOfPriorityFee,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -261,10 +261,10 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
-            1002,
+            false,
             5,
+            1002,
             signatureStaking,
             totalOfPriorityFee,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -321,10 +321,10 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             10,
+            1001,
             signatureStaking,
             totalOfPriorityFee,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -346,10 +346,10 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
-            1002,
+            false,
             10,
+            1002,
             signatureStaking,
             totalOfPriorityFee,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -409,10 +409,10 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             10,
+            1001,
             signatureStaking,
             totalOfPriorityFee,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -434,10 +434,10 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
-            1002,
+            false,
             10,
+            1002,
             signatureStaking,
             totalOfPriorityFee,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -459,10 +459,10 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1003,
+            true,
             10,
+            1003,
             signatureStaking,
             totalOfPriorityFee,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -532,10 +532,10 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             10,
+            1001,
             signatureStaking,
             totalOfPriorityFee,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -587,10 +587,10 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             10,
+            1001,
             signatureStaking,
             0.001 ether,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -610,10 +610,10 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
-            1002,
+            false,
             5,
+            1002,
             signatureStaking,
             0.001 ether,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -670,10 +670,10 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             10,
+            1001,
             signatureStaking,
             0.001 ether,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -695,10 +695,10 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
-            1002,
+            false,
             10,
+            1002,
             signatureStaking,
             0.001 ether,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -758,10 +758,10 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             10,
+            1001,
             signatureStaking,
             0.001 ether,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -783,10 +783,10 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
-            1002,
+            false,
             10,
+            1002,
             signatureStaking,
             0.001 ether,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -808,10 +808,10 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1003,
+            true,
             10,
+            1003,
             signatureStaking,
             0.001 ether,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -881,10 +881,10 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             10,
+            1001,
             signatureStaking,
             totalOfPriorityFee,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -933,10 +933,10 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             10,
+            1001,
             signatureStaking,
             totalOfPriorityFee,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -956,10 +956,10 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
-            1002,
+            false,
             5,
+            1002,
             signatureStaking,
             totalOfPriorityFee,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -1013,10 +1013,10 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             10,
+            1001,
             signatureStaking,
             totalOfPriorityFee,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -1038,10 +1038,10 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
-            1002,
+            false,
             10,
+            1002,
             signatureStaking,
             totalOfPriorityFee,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -1098,10 +1098,10 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             10,
+            1001,
             signatureStaking,
             totalOfPriorityFee,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -1123,10 +1123,10 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
-            1002,
+            false,
             10,
+            1002,
             signatureStaking,
             totalOfPriorityFee,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -1148,10 +1148,10 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1003,
+            true,
             10,
+            1003,
             signatureStaking,
             totalOfPriorityFee,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -1218,10 +1218,10 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             10,
+            1001,
             signatureStaking,
             totalOfPriorityFee,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -1270,10 +1270,10 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             10,
+            1001,
             signatureStaking,
             0.001 ether,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -1293,10 +1293,10 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
-            1002,
+            false,
             5,
+            1002,
             signatureStaking,
             0.001 ether,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -1350,10 +1350,10 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             10,
+            1001,
             signatureStaking,
             0.001 ether,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -1375,10 +1375,10 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
-            1002,
+            false,
             10,
+            1002,
             signatureStaking,
             0.001 ether,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -1435,10 +1435,10 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1001,
+            true,
             10,
+            1001,
             signatureStaking,
             0.001 ether,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -1460,10 +1460,10 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
-            false,
             COMMON_USER_NO_STAKER_1.Address,
-            1002,
+            false,
             10,
+            1002,
             signatureStaking,
             0.001 ether,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -1485,10 +1485,10 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
 
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            1003,
+            true,
             10,
+            1003,
             signatureStaking,
             0.001 ether,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),

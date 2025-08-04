@@ -127,29 +127,29 @@ contract Staking {
 
     /**
      *  @dev goldenStaking allows the goldenFisher address to make a stakingProcess.
-     *  @param _isStaking boolean to check if the user is staking or unstaking
-     *  @param _amountOfStaking amount of sMATE to stake/unstake
-     *  @param _signature_Evvm signature for the Evvm contract
+     *  @param isStaking boolean to check if the user is staking or unstaking
+     *  @param amountOfStaking amount of sMATE to stake/unstake
+     *  @param signature_EVVM signature for the Evvm contract
      *
      * @notice only the goldenFisher address can call this function and only
      *         can use sync evvm nonces
      */
     function goldenStaking(
-        bool _isStaking,
-        uint256 _amountOfStaking,
-        bytes memory _signature_Evvm
+        bool isStaking,
+        uint256 amountOfStaking,
+        bytes memory signature_EVVM
     ) external {
         if (msg.sender != goldenFisher.actual)
             revert ErrorsLib.SenderIsNotGoldenFisher();
 
         stakingUserProcess(
-            _isStaking,
             goldenFisher.actual,
-            _amountOfStaking,
+            amountOfStaking,
+            isStaking,
             0,
             Evvm(EVVM_ADDRESS).getNextCurrentSyncNonce(msg.sender),
             false,
-            _signature_Evvm
+            signature_EVVM
         );
     }
 
@@ -163,57 +163,57 @@ contract Staking {
 
     /**
      *  @dev presaleStaking allows the presale users to make a stakingProcess.
-     *  @param _isStaking boolean to check if the user is staking or unstaking
-     *  @param _user user address of the user that wants to stake/unstake
-     *  @param _nonce nonce for the Staking contract
-     *  @param _signature signature for the Staking contract
-     *  @param _priorityFee_Evvm priority fee for the Evvm contract
-     *  @param _nonce_Evvm nonce for the Evvm contract // staking or unstaking
-     *  @param _priority_Evvm priority for the Evvm contract (true for async, false for sync)
-     *  @param _signature_Evvm signature for the Evvm contract // staking or unstaking
+     *  @param user user address of the user that wants to stake/unstake
+     *  @param isStaking boolean to check if the user is staking or unstaking
+     *  @param nonce nonce for the Staking contract
+     *  @param signature signature for the Staking contract
+     *  @param priorityFee_EVVM priority fee for the Evvm contract
+     *  @param nonce_EVVM nonce for the Evvm contract // staking or unstaking
+     *  @param priorityFlag_EVVM priority for the Evvm contract (true for async, false for sync)
+     *  @param signature_EVVM signature for the Evvm contract // staking or unstaking
      *
      *  @notice the presale users can only take 2 Staking tokens, and only one at a time
      */
     function presaleStaking(
-        bool _isStaking,
-        address _user,
-        uint256 _nonce,
-        bytes memory _signature,
-        uint256 _priorityFee_Evvm,
-        uint256 _nonce_Evvm,
-        bool _priority_Evvm,
-        bytes memory _signature_Evvm
+        address user,
+        bool isStaking,
+        uint256 nonce,
+        bytes memory signature,
+        uint256 priorityFee_EVVM,
+        uint256 nonce_EVVM,
+        bool priorityFlag_EVVM,
+        bytes memory signature_EVVM
     ) external {
         if (
             !SignatureUtils.verifyMessageSignedForStake(
-                _user,
+                user,
                 false,
-                _isStaking,
+                isStaking,
                 1,
-                _nonce,
-                _signature
+                nonce,
+                signature
             )
         ) revert ErrorsLib.InvalidSignatureOnStaking();
 
-        if (checkIfStakeNonceUsed(_user, _nonce))
+        if (checkIfStakeNonceUsed(user, nonce))
             revert ErrorsLib.StakingNonceAlreadyUsed();
 
-        presaleClaims(_isStaking, _user);
+        presaleClaims(isStaking, user);
 
         if (!allowPresaleStaking.flag)
             revert ErrorsLib.PresaleStakingDisabled();
 
         stakingUserProcess(
-            _isStaking,
-            _user,
+            user,
             1,
-            _priorityFee_Evvm,
-            _nonce_Evvm,
-            _priority_Evvm,
-            _signature_Evvm
+            isStaking,
+            priorityFee_EVVM,
+            nonce_EVVM,
+            priorityFlag_EVVM,
+            signature_EVVM
         );
 
-        stakingNonce[_user][_nonce] = true;
+        stakingNonce[user][nonce] = true;
     }
 
     /*
@@ -259,27 +259,27 @@ contract Staking {
 
     /**
      *  @dev publicStaking allows the users to make a stakingProcess.
-     *  @param _isStaking boolean to check if the user is staking or unstaking
-     *  @param _user user address of the user that wants to stake/unstake
-     *  @param _nonce nonce for the Staking contract
-     *  @param _amountOfStaking amount of sMATE to stake/unstake
-     *  @param _signature signature for the Staking contract
-     *  @param _priorityFee_Evvm priority fee for the Evvm contract // staking or unstaking
-     *  @param _nonce_Evvm nonce for the Evvm contract // staking or unstaking
-     *  @param _priority_Evvm priority for the Evvm contract (true for async, false for sync) // staking or unstaking
-     *  @param _signature_Evvm signature for the Evvm contract // staking or unstaking
+     *  @param user user address of the user that wants to stake/unstake
+     *  @param isStaking boolean to check if the user is staking or unstaking
+     *  @param amountOfStaking amount of sMATE to stake/unstake
+     *  @param nonce nonce for the Staking contract
+     *  @param signature signature for the Staking contract
+     *  @param priorityFee_EVVM priority fee for the Evvm contract // staking or unstaking
+     *  @param nonce_EVVM nonce for the Evvm contract // staking or unstaking
+     *  @param priorityFlag_EVVM priority for the Evvm contract (true for async, false for sync) // staking or unstaking
+     *  @param signature_EVVM signature for the Evvm contract // staking or unstaking
      */
 
     function publicStaking(
-        bool _isStaking,
-        address _user,
-        uint256 _nonce,
-        uint256 _amountOfStaking,
-        bytes memory _signature,
-        uint256 _priorityFee_Evvm,
-        uint256 _nonce_Evvm,
-        bool _priority_Evvm,
-        bytes memory _signature_Evvm
+        address user,
+        bool isStaking,
+        uint256 amountOfStaking,
+        uint256 nonce,
+        bytes memory signature,
+        uint256 priorityFee_EVVM,
+        uint256 nonce_EVVM,
+        bool priorityFlag_EVVM,
+        bytes memory signature_EVVM
     ) external {
         if (!allowPublicStaking.flag) {
             revert();
@@ -287,42 +287,42 @@ contract Staking {
 
         if (
             !SignatureUtils.verifyMessageSignedForStake(
-                _user,
+                user,
                 true,
-                _isStaking,
-                _amountOfStaking,
-                _nonce,
-                _signature
+                isStaking,
+                amountOfStaking,
+                nonce,
+                signature
             )
         ) revert ErrorsLib.InvalidSignatureOnStaking();
 
-        if (checkIfStakeNonceUsed(_user, _nonce))
+        if (checkIfStakeNonceUsed(user, nonce))
             revert ErrorsLib.StakingNonceAlreadyUsed();
 
         stakingUserProcess(
-            _isStaking,
-            _user,
-            _amountOfStaking,
-            _priorityFee_Evvm,
-            _nonce_Evvm,
-            _priority_Evvm,
-            _signature_Evvm
+            user,
+            amountOfStaking,
+            isStaking,
+            priorityFee_EVVM,
+            nonce_EVVM,
+            priorityFlag_EVVM,
+            signature_EVVM
         );
 
-        stakingNonce[_user][_nonce] = true;
+        stakingNonce[user][nonce] = true;
     }
 
     function publicServiceStaking(
-        bool _isStaking,
-        address _user,
-        address _service,
-        uint256 _nonce,
-        uint256 _amountOfStaking,
-        bytes memory _signature,
-        uint256 _priorityFee_Evvm,
-        uint256 _nonce_Evvm,
-        bool _priority_Evvm,
-        bytes memory _signature_Evvm
+        address user,
+        address service,
+        bool isStaking,
+        uint256 amountOfStaking,
+        uint256 nonce,
+        bytes memory signature,
+        uint256 priorityFee_EVVM,
+        uint256 nonce_EVVM,
+        bool priorityFlag_EVVM,
+        bytes memory signature_EVVM
     ) external {
         if (!allowPublicStaking.flag) revert ErrorsLib.PublicStakingDisabled();
 
@@ -330,183 +330,182 @@ contract Staking {
 
         assembly {
             /// @dev check the size of the opcode of the address
-            size := extcodesize(_service)
+            size := extcodesize(service)
         }
 
         if (size == 0) revert ErrorsLib.AddressIsNotAService();
 
-        if (_isStaking) {
+        if (isStaking) {
             if (
                 !SignatureUtils.verifyMessageSignedForPublicServiceStake(
-                    _user,
-                    _service,
-                    _isStaking,
-                    _amountOfStaking,
-                    _nonce,
-                    _signature
+                    user,
+                    service,
+                    isStaking,
+                    amountOfStaking,
+                    nonce,
+                    signature
                 )
             ) revert ErrorsLib.InvalidSignatureOnStaking();
         } else {
-            if (_service != _user) revert ErrorsLib.UserAndServiceMismatch();
+            if (service != user) revert ErrorsLib.UserAndServiceMismatch();
         }
 
-        if (checkIfStakeNonceUsed(_user, _nonce))
+        if (checkIfStakeNonceUsed(user, nonce))
             revert ErrorsLib.StakingNonceAlreadyUsed();
 
         stakingServiceProcess(
-            _isStaking,
-            _user,
-            _service,
-            _amountOfStaking,
-            _isStaking ? _priorityFee_Evvm : 0,
-            _isStaking ? _nonce_Evvm : 0,
-            _isStaking ? _priority_Evvm : false,
-            _isStaking ? _signature_Evvm : bytes("")
+            user,
+            service,
+            isStaking,
+            amountOfStaking,
+            isStaking ? priorityFee_EVVM : 0,
+            isStaking ? nonce_EVVM : 0,
+            isStaking ? priorityFlag_EVVM : false,
+            isStaking ? signature_EVVM : bytes("")
         );
 
-        stakingNonce[_user][_nonce] = true;
+        stakingNonce[user][nonce] = true;
     }
 
     function stakingServiceProcess(
-        bool _isStaking,
-        address _user,
-        address _service,
-        uint256 _amountOfStaking,
-        uint256 _priorityFee_Evvm,
-        uint256 _nonce_Evvm,
-        bool _priority_Evvm,
-        bytes memory _signature_Evvm
+        address user,
+        address service,
+        bool isStaking,
+        uint256 amountOfStaking,
+        uint256 priorityFee_EVVM,
+        uint256 nonce_EVVM,
+        bool priorityFlag_EVVM,
+        bytes memory signature_EVVM
     ) internal {
         stakingBaseProcess(
-            _isStaking,
-            _user,
-            _service,
-            _amountOfStaking,
-            _priorityFee_Evvm,
-            _nonce_Evvm,
-            _priority_Evvm,
-            _signature_Evvm
+            user,
+            service,
+            isStaking,
+            amountOfStaking,
+            priorityFee_EVVM,
+            nonce_EVVM,
+            priorityFlag_EVVM,
+            signature_EVVM
         );
     }
 
     /**
      *  @dev stakingUserProcess allows the contract to make a stakingProcess.
-     *  @param _isStaking boolean to check if the user is staking or unstaking
-     *  @param _user user address of the user that wants to stake/unstake
-     *  @param _amountOfStaking amount of sMATE to stake/unstake
-     *  @param _priorityFee_Evvm priority fee for the Evvm contract
-     *  @param _nonce_Evvm nonce for the Evvm contract
-     *  @param _priority_Evvm priority for the Evvm contract (true for async, false for sync)
-     *  @param _signature_Evvm signature for the Evvm contract
+     *  @param user user address of the user that wants to stake/unstake
+     *  @param amountOfStaking amount of sMATE to stake/unstake
+     *  @param isStaking boolean to check if the user is staking or unstaking
+     *  @param priorityFee_EVVM priority fee for the Evvm contract
+     *  @param nonce_EVVM nonce for the Evvm contract
+     *  @param priorityFlag_EVVM priority for the Evvm contract (true for async, false for sync)
+     *  @param signature_EVVM signature for the Evvm contract
      */
 
     function stakingUserProcess(
-        bool _isStaking,
-        address _user,
-        uint256 _amountOfStaking,
-        uint256 _priorityFee_Evvm,
-        uint256 _nonce_Evvm,
-        bool _priority_Evvm,
-        bytes memory _signature_Evvm
+        address user,
+        uint256 amountOfStaking,
+        bool isStaking,
+        uint256 priorityFee_EVVM,
+        uint256 nonce_EVVM,
+        bool priorityFlag_EVVM,
+        bytes memory signature_EVVM
     ) internal {
         stakingBaseProcess(
-            _isStaking,
-            _user,
-            _user,
-            _amountOfStaking,
-            _priorityFee_Evvm,
-            _nonce_Evvm,
-            _priority_Evvm,
-            _signature_Evvm
+            user,
+            user,
+            isStaking,
+            amountOfStaking,
+            priorityFee_EVVM,
+            nonce_EVVM,
+            priorityFlag_EVVM,
+            signature_EVVM
         );
     }
 
     /**
      * @dev Base function that handles both service and user staking processes
-     * @param _isStaking boolean indicating if staking or unstaking
-     * @param _user address of the user paying for the transaction
-     * @param _stakingAccount address that will receive the stake/unstake
-     * @param _amountOfStaking amount of sMATE tokens
-     * @param _priorityFee_Evvm priority fee for EVVM
-     * @param _nonce_Evvm nonce for EVVM
-     * @param _priority_Evvm priority flag for EVVM
-     * @param _signature_Evvm signature for EVVM
+     * @param userAccount address of the user paying for the transaction
+     * @param stakingAccount address that will receive the stake/unstake
+     * @param isStaking boolean indicating if staking or unstaking
+     * @param amountOfStaking amount of sMATE tokens
+     * @param priorityFee_EVVM priority fee for EVVM
+     * @param nonce_EVVM nonce for EVVM
+     * @param priorityFlag_EVVM priority flag for EVVM
+     * @param signature_EVVM signature for EVVM
      */
     function stakingBaseProcess(
-        bool _isStaking,
-        address _user,
-        address _stakingAccount,
-        uint256 _amountOfStaking,
-        uint256 _priorityFee_Evvm,
-        uint256 _nonce_Evvm,
-        bool _priority_Evvm,
-        bytes memory _signature_Evvm
+        address userAccount,
+        address stakingAccount,
+        bool isStaking,
+        uint256 amountOfStaking,
+        uint256 priorityFee_EVVM,
+        uint256 nonce_EVVM,
+        bool priorityFlag_EVVM,
+        bytes memory signature_EVVM
     ) internal {
         uint256 auxSMsteBalance;
 
-        if (_isStaking) {
+        if (isStaking) {
             if (
-                getTimeToUserUnlockStakingTime(_stakingAccount) >
-                block.timestamp
+                getTimeToUserUnlockStakingTime(stakingAccount) > block.timestamp
             ) revert ErrorsLib.UserMustWaitToStakeAgain();
 
             makePay(
-                _user,
-                (PRICE_OF_SMATE * _amountOfStaking),
-                _priorityFee_Evvm,
-                _priority_Evvm,
-                _nonce_Evvm,
-                _signature_Evvm
+                userAccount,
+                (PRICE_OF_SMATE * amountOfStaking),
+                priorityFee_EVVM,
+                priorityFlag_EVVM,
+                nonce_EVVM,
+                signature_EVVM
             );
 
-            Evvm(EVVM_ADDRESS).pointStaker(_stakingAccount, 0x01);
+            Evvm(EVVM_ADDRESS).pointStaker(stakingAccount, 0x01);
 
-            auxSMsteBalance = userHistory[_stakingAccount].length == 0
-                ? _amountOfStaking
-                : userHistory[_stakingAccount][
-                    userHistory[_stakingAccount].length - 1
-                ].totalStaked + _amountOfStaking;
+            auxSMsteBalance = userHistory[stakingAccount].length == 0
+                ? amountOfStaking
+                : userHistory[stakingAccount][
+                    userHistory[stakingAccount].length - 1
+                ].totalStaked + amountOfStaking;
         } else {
-            if (_amountOfStaking == getUserAmountStaked(_stakingAccount)) {
+            if (amountOfStaking == getUserAmountStaked(stakingAccount)) {
                 if (
-                    getTimeToUserUnlockFullUnstakingTime(_stakingAccount) >
+                    getTimeToUserUnlockFullUnstakingTime(stakingAccount) >
                     block.timestamp
                 ) revert ErrorsLib.UserMustWaitToFullUnstake();
 
-                Evvm(EVVM_ADDRESS).pointStaker(_stakingAccount, 0x00);
+                Evvm(EVVM_ADDRESS).pointStaker(stakingAccount, 0x00);
             }
 
             // Only for user unstaking, not service
-            if (_user == _stakingAccount && _priorityFee_Evvm != 0) {
+            if (userAccount == stakingAccount && priorityFee_EVVM != 0) {
                 makePay(
-                    _user,
-                    _priorityFee_Evvm,
+                    userAccount,
+                    priorityFee_EVVM,
                     0,
-                    _priority_Evvm,
-                    _nonce_Evvm,
-                    _signature_Evvm
+                    priorityFlag_EVVM,
+                    nonce_EVVM,
+                    signature_EVVM
                 );
             }
 
             auxSMsteBalance =
-                userHistory[_stakingAccount][
-                    userHistory[_stakingAccount].length - 1
+                userHistory[stakingAccount][
+                    userHistory[stakingAccount].length - 1
                 ].totalStaked -
-                _amountOfStaking;
+                amountOfStaking;
 
             makeCaPay(
                 PRINCIPAL_TOKEN_ADDRESS,
-                _stakingAccount,
-                (PRICE_OF_SMATE * _amountOfStaking)
+                stakingAccount,
+                (PRICE_OF_SMATE * amountOfStaking)
             );
         }
 
-        userHistory[_stakingAccount].push(
+        userHistory[stakingAccount].push(
             HistoryMetadata({
-                transactionType: _isStaking
+                transactionType: isStaking
                     ? bytes32(uint256(1))
                     : bytes32(uint256(2)),
-                amount: _amountOfStaking,
+                amount: amountOfStaking,
                 timestamp: block.timestamp,
                 totalStaked: auxSMsteBalance
             })
@@ -516,7 +515,7 @@ contract Staking {
             makeCaPay(
                 PRINCIPAL_TOKEN_ADDRESS,
                 msg.sender,
-                (Evvm(EVVM_ADDRESS).getRewardAmount() * 2) + _priorityFee_Evvm
+                (Evvm(EVVM_ADDRESS).getRewardAmount() * 2) + priorityFee_EVVM
             );
         }
     }
@@ -568,35 +567,35 @@ contract Staking {
     //▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀
 
     function makePay(
-        address _user_Evvm,
-        uint256 _amount_Evvm,
-        uint256 _priorityFee_Evvm,
-        bool _priority_Evvm,
-        uint256 _nonce_Evvm,
-        bytes memory _signature_Evvm
+        address user,
+        uint256 amount,
+        uint256 priorityFee,
+        bool priorityFlag,
+        uint256 nonce,
+        bytes memory signature
     ) internal {
-        if (_priority_Evvm) {
+        if (priorityFlag) {
             Evvm(EVVM_ADDRESS).payMateStaking_async(
-                _user_Evvm,
+                user,
                 address(this),
                 "",
                 PRINCIPAL_TOKEN_ADDRESS,
-                _amount_Evvm,
-                _priorityFee_Evvm,
-                _nonce_Evvm,
+                amount,
+                priorityFee,
+                nonce,
                 address(this),
-                _signature_Evvm
+                signature
             );
         } else {
             Evvm(EVVM_ADDRESS).payMateStaking_sync(
-                _user_Evvm,
+                user,
                 address(this),
                 "",
                 PRINCIPAL_TOKEN_ADDRESS,
-                _amount_Evvm,
-                _priorityFee_Evvm,
+                amount,
+                priorityFee,
                 address(this),
-                _signature_Evvm
+                signature
             );
         }
     }

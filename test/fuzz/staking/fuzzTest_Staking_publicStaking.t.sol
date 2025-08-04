@@ -91,10 +91,10 @@ contract fuzzTest_Staking_publicStaking is Test, Constants {
             );
 
         staking.publicStaking(
-            true,
             COMMON_USER_NO_STAKER_1.Address,
-            0,
+            true,
             10,
+            0,
             signatureStaking,
             0,
             evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
@@ -296,10 +296,10 @@ contract fuzzTest_Staking_publicStaking is Test, Constants {
                 vm.startPrank(FISHER.Address);
 
                 staking.publicStaking(
-                    input[i].isStaking,
                     COMMON_USER_NO_STAKER_1.Address,
-                    input[i].nonceStaking,
+                    input[i].isStaking,
                     input[i].stakingAmount,
+                    input[i].nonceStaking,
                     signatureStaking,
                     totalOfPriorityFee,
                     (
@@ -358,10 +358,10 @@ contract fuzzTest_Staking_publicStaking is Test, Constants {
                     vm.startPrank(FISHER.Address);
 
                     staking.publicStaking(
-                        input[i].isStaking,
                         COMMON_USER_NO_STAKER_1.Address,
-                        input[i].nonceStaking,
+                        input[i].isStaking,
                         stakingFullAmountBefore,
+                        input[i].nonceStaking,
                         signatureStaking,
                         totalOfPriorityFee,
                         (
@@ -405,10 +405,10 @@ contract fuzzTest_Staking_publicStaking is Test, Constants {
                     vm.startPrank(FISHER.Address);
 
                     staking.publicStaking(
-                        input[i].isStaking,
                         COMMON_USER_NO_STAKER_1.Address,
-                        input[i].nonceStaking,
+                        input[i].isStaking,
                         input[i].stakingAmount,
+                        input[i].nonceStaking,
                         signatureStaking,
                         totalOfPriorityFee,
                         (
