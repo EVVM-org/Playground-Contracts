@@ -1224,44 +1224,44 @@ contract NameService {
     //█Tools for Evvm payment████████████████████
 
     function makePay(
-        address user_EVVM,
-        uint256 ammount_EVVM,
-        uint256 priorityFee_EVVM,
-        uint256 nonce_EVVM,
-        bool priorityFlag_EVVM,
-        bytes memory signature_EVVM
+        address user,
+        uint256 ammount,
+        uint256 priorityFee,
+        uint256 nonce,
+        bool priorityFlag,
+        bytes memory signature
     ) internal {
-        if (priorityFlag_EVVM) {
+        if (priorityFlag) {
             Evvm(evvmAddress.current).payMateStaking_async(
-                user_EVVM,
+                user,
                 address(this),
                 "",
                 PRINCIPAL_TOKEN_ADDRESS,
-                ammount_EVVM,
-                priorityFee_EVVM,
-                nonce_EVVM,
+                ammount,
+                priorityFee,
+                nonce,
                 address(this),
-                signature_EVVM
+                signature
             );
         } else {
             Evvm(evvmAddress.current).payMateStaking_sync(
-                user_EVVM,
+                user,
                 address(this),
                 "",
                 PRINCIPAL_TOKEN_ADDRESS,
-                ammount_EVVM,
-                priorityFee_EVVM,
+                ammount,
+                priorityFee,
                 address(this),
-                signature_EVVM
+                signature
             );
         }
     }
 
-    function makeCaPay(address _user_Evvm, uint256 _ammount_Evvm) internal {
+    function makeCaPay(address user, uint256 amount) internal {
         Evvm(evvmAddress.current).caPay(
-            _user_Evvm,
+            user,
             PRINCIPAL_TOKEN_ADDRESS,
-            _ammount_Evvm
+            amount
         );
     }
 

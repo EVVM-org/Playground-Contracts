@@ -601,11 +601,11 @@ contract Staking {
     }
 
     function makeCaPay(
-        address _tokenAddress_Evvm,
-        address _user_Evvm,
-        uint256 _amount_Evvm
+        address tokenAddress,
+        address user,
+        uint256 amount
     ) internal {
-        Evvm(EVVM_ADDRESS).caPay(_user_Evvm, _tokenAddress_Evvm, _amount_Evvm);
+        Evvm(EVVM_ADDRESS).caPay(user, tokenAddress, amount);
     }
 
     //▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀
