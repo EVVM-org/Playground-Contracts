@@ -295,7 +295,7 @@ library Erc191TestBuilder {
         return
             buildHashForSign(
                 string.concat(
-                    "21cc1749",
+                    "e2ccd470",
                     ",",
                     AdvancedStrings.addressToString(_serviceAddress),
                     ",",
@@ -316,7 +316,7 @@ library Erc191TestBuilder {
         return
             buildHashForSign(
                 string.concat(
-                    "21cc1749",
+                    "c769095c",
                     ",",
                     _isStaking ? "true" : "false",
                     ",",
@@ -335,7 +335,7 @@ library Erc191TestBuilder {
         return
             buildHashForSign(
                 string.concat(
-                    "6257deec",
+                    "c0f6e7d1",
                     ",",
                     _isStaking ? "true" : "false",
                     ",",

@@ -30,7 +30,7 @@ library SignatureUtils {
                      * the function selector is for publicStaking
                      * else is for presaleInternalExecution
                      */
-                    isExternalStaking ? "21cc1749" : "6257deec",
+                    isExternalStaking ? "c769095c" : "c0f6e7d1",
                     ",",
                     _isStaking ? "true" : "false",
                     ",",
@@ -54,7 +54,7 @@ library SignatureUtils {
         return
             SignatureRecover.signatureVerification(
                 string.concat(
-                    "21cc1749",
+                    "e2ccd470",
                     ",",
                     AdvancedStrings.addressToString(serviceAddress),
                     ",",
