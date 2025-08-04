@@ -214,62 +214,6 @@ contract EVVM is EvvmStorage {
     //░▒▓█Pay functions█████████████████████████████████████████████████████████▓▒░
 
     /**
-     *  @notice Pay function for non staking holders (syncronous nonce)
-     *  @param from user // who wants to pay
-     *  @param to_address address of the receiver
-     *  @param to_identity identity of the receiver
-     *  @param token address of the token to send
-     *  @param amount amount to send
-     *  @param priorityFee priorityFee to send to the staking holder
-     *  @param signature signature of the user who wants to send the message
-     */
-    function payNoMateStaking_sync(
-        address from,
-        address to_address,
-        string memory to_identity,
-        address token,
-        uint256 amount,
-        uint256 priorityFee,
-        address executor,
-        bytes memory signature
-    ) external {
-        if (
-            !SignatureUtils.verifyMessageSignedForPay(
-                from,
-                to_address,
-                to_identity,
-                token,
-                amount,
-                priorityFee,
-                nextSyncUsedNonce[from],
-                false,
-                executor,
-                signature
-            )
-        ) {
-            revert();
-        }
-
-        if (executor != address(0)) {
-            if (msg.sender != executor) {
-                revert();
-            }
-        }
-
-        address to = !Strings.equal(to_identity, "")
-            ? NameService(nameServiceAddress).verifyStrictAndGetOwnerOfIdentity(
-                to_identity
-            )
-            : to_address;
-
-        if (!_updateBalance(from, to, token, amount)) {
-            revert();
-        }
-
-        nextSyncUsedNonce[from]++;
-    }
-
-    /**
      *  @notice Pay function
      *  @param from user // who wants to pay
      *  @param to_address address of the receiver
