@@ -172,7 +172,7 @@ contract fuzzTest_Staking_goldenStaking is Test, Constants {
 
                 vm.stopPrank();
 
-                assert(evvm.istakingStaker(GOLDEN_STAKER.Address));
+                assert(evvm.isAddressStaker(GOLDEN_STAKER.Address));
             } else {
                 // unstaking
                 if (
@@ -198,7 +198,7 @@ contract fuzzTest_Staking_goldenStaking is Test, Constants {
 
                     vm.stopPrank();
 
-                    assert(!evvm.istakingStaker(GOLDEN_STAKER.Address));
+                    assert(!evvm.isAddressStaker(GOLDEN_STAKER.Address));
                 } else {
                     vm.startPrank(GOLDEN_STAKER.Address);
 
@@ -219,7 +219,7 @@ contract fuzzTest_Staking_goldenStaking is Test, Constants {
                 evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
                 amountBefore +
                     calculateRewardPerExecution(
-                        evvm.istakingStaker(GOLDEN_STAKER.Address) ? 1 : 0
+                        evvm.isAddressStaker(GOLDEN_STAKER.Address) ? 1 : 0
                     ) +
                     (
                         input[i].isStaking

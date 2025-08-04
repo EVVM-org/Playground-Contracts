@@ -202,7 +202,7 @@ contract unitTestCorrect_Staking_publicServiceStaking_SyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        assert(evvm.istakingStaker(address(mock)));
+        assert(evvm.isAddressStaker(address(mock)));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -263,7 +263,7 @@ contract unitTestCorrect_Staking_publicServiceStaking_SyncExecutionOnPay is
 
         mock.unstake(5, 1002, address(mock));
 
-        assert(evvm.istakingStaker(address(mock)));
+        assert(evvm.isAddressStaker(address(mock)));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -331,7 +331,7 @@ contract unitTestCorrect_Staking_publicServiceStaking_SyncExecutionOnPay is
 
         mock.unstake(10, 1002, address(mock));
 
-        assert(!evvm.istakingStaker(address(mock)));
+        assert(!evvm.isAddressStaker(address(mock)));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -431,7 +431,7 @@ contract unitTestCorrect_Staking_publicServiceStaking_SyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        assert(evvm.istakingStaker(address(mock)));
+        assert(evvm.isAddressStaker(address(mock)));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -506,7 +506,7 @@ contract unitTestCorrect_Staking_publicServiceStaking_SyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        assert(evvm.istakingStaker(address(mock)));
+        assert(evvm.isAddressStaker(address(mock)));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -567,7 +567,7 @@ contract unitTestCorrect_Staking_publicServiceStaking_SyncExecutionOnPay is
 
         mock.unstake(5, 1002, address(mock));
 
-        assert(evvm.istakingStaker(address(mock)));
+        assert(evvm.isAddressStaker(address(mock)));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -635,7 +635,7 @@ contract unitTestCorrect_Staking_publicServiceStaking_SyncExecutionOnPay is
 
         mock.unstake(10, 1002, address(mock));
 
-        assert(!evvm.istakingStaker(address(mock)));
+        assert(!evvm.isAddressStaker(address(mock)));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -735,7 +735,7 @@ contract unitTestCorrect_Staking_publicServiceStaking_SyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        assert(evvm.istakingStaker(address(mock)));
+        assert(evvm.isAddressStaker(address(mock)));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -810,7 +810,7 @@ contract unitTestCorrect_Staking_publicServiceStaking_SyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        assert(evvm.istakingStaker(address(mock)));
+        assert(evvm.isAddressStaker(address(mock)));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -876,7 +876,7 @@ contract unitTestCorrect_Staking_publicServiceStaking_SyncExecutionOnPay is
 
         mock.unstake(5, 1002, address(mock));
 
-        assert(evvm.istakingStaker(address(mock)));
+        assert(evvm.isAddressStaker(address(mock)));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -949,7 +949,7 @@ contract unitTestCorrect_Staking_publicServiceStaking_SyncExecutionOnPay is
 
         mock.unstake(10, 1002, address(mock));
 
-        assert(!evvm.istakingStaker(address(mock)));
+        assert(!evvm.isAddressStaker(address(mock)));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -1054,7 +1054,7 @@ contract unitTestCorrect_Staking_publicServiceStaking_SyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        assert(evvm.istakingStaker(address(mock)));
+        assert(evvm.isAddressStaker(address(mock)));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -1134,7 +1134,7 @@ contract unitTestCorrect_Staking_publicServiceStaking_SyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        assert(evvm.istakingStaker(address(mock)));
+        assert(evvm.isAddressStaker(address(mock)));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -1198,7 +1198,7 @@ contract unitTestCorrect_Staking_publicServiceStaking_SyncExecutionOnPay is
 
         mock.unstake(5, 1002, address(mock));
 
-        assert(evvm.istakingStaker(address(mock)));
+        assert(evvm.isAddressStaker(address(mock)));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -1271,7 +1271,7 @@ contract unitTestCorrect_Staking_publicServiceStaking_SyncExecutionOnPay is
 
         mock.unstake(10, 1002, address(mock));
 
-        assert(!evvm.istakingStaker(address(mock)));
+        assert(!evvm.isAddressStaker(address(mock)));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -1376,7 +1376,7 @@ contract unitTestCorrect_Staking_publicServiceStaking_SyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        assert(evvm.istakingStaker(address(mock)));
+        assert(evvm.isAddressStaker(address(mock)));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,

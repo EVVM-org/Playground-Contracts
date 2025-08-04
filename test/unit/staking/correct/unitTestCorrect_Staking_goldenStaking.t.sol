@@ -113,7 +113,7 @@ contract unitTestCorrect_Staking_goldenStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(evvm.istakingStaker(GOLDEN_STAKER.Address));
+        assert(evvm.isAddressStaker(GOLDEN_STAKER.Address));
 
         Staking.HistoryMetadata[]
             memory history = new Staking.HistoryMetadata[](
@@ -166,7 +166,7 @@ contract unitTestCorrect_Staking_goldenStaking is Test, Constants {
             );
         history = staking.getAddressHistory(GOLDEN_STAKER.Address);
 
-        assert(evvm.istakingStaker(GOLDEN_STAKER.Address));
+        assert(evvm.isAddressStaker(GOLDEN_STAKER.Address));
 
         assertEq(
             evvm.getBalance(GOLDEN_STAKER.Address, MATE_TOKEN_ADDRESS),
@@ -227,7 +227,7 @@ contract unitTestCorrect_Staking_goldenStaking is Test, Constants {
             (calculateRewardPerExecution(1)) + (staking.priceOfStaking() * 2)
         );
 
-        assert(!evvm.istakingStaker(GOLDEN_STAKER.Address));
+        assert(!evvm.isAddressStaker(GOLDEN_STAKER.Address));
 
         Staking.HistoryMetadata[]
             memory history = new Staking.HistoryMetadata[](

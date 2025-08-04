@@ -18,6 +18,9 @@ import {EvvmStructs} from "./EvvmStructs.sol";
  */
 
 abstract contract EvvmStorage is EvvmStructs {
+    address constant ETH_ADDRESS = address(0);
+    bytes1 constant FLAG_IS_STAKER = 0x01;
+
     address gasServiceAddress;
     address routerCCIP;
 
@@ -26,8 +29,6 @@ abstract contract EvvmStorage is EvvmStructs {
     address nameServiceAddress;
 
     address stakingContractAddress;
-
-    address constant ETH_ADDRESS = address(0);
 
     address whitelistTokenToBeAdded_address;
     address whitelistTokenToBeAdded_pool;

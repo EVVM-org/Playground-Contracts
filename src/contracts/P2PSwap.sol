@@ -192,7 +192,7 @@ contract P2PSwap {
             metadata.amountB
         );
 
-        if (Evvm(evvmAddress).istakingStaker(msg.sender)) {
+        if (Evvm(evvmAddress).isAddressStaker(msg.sender)) {
             if (_priorityFee_Evvm > 0) {
                 makeCaPay(msg.sender, metadata.tokenA, _priorityFee_Evvm);
             }
@@ -260,7 +260,7 @@ contract P2PSwap {
 
         ordersInsideMarket[market][metadata.orderId].seller = address(0);
 
-        if (Evvm(evvmAddress).istakingStaker(msg.sender)) {
+        if (Evvm(evvmAddress).isAddressStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
                 MATE_TOKEN_ADDRESS,
@@ -364,7 +364,7 @@ contract P2PSwap {
             ordersInsideMarket[market][metadata.orderId].amountA
         );
 
-        if (Evvm(evvmAddress).istakingStaker(msg.sender)) {
+        if (Evvm(evvmAddress).isAddressStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
                 MATE_TOKEN_ADDRESS,
@@ -484,7 +484,7 @@ contract P2PSwap {
             ordersInsideMarket[market][metadata.orderId].amountA
         );
 
-        if (Evvm(evvmAddress).istakingStaker(msg.sender)) {
+        if (Evvm(evvmAddress).isAddressStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
                 MATE_TOKEN_ADDRESS,

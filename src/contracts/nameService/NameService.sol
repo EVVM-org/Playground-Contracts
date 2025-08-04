@@ -189,7 +189,7 @@ contract NameService {
 
         nameServiceNonce[user][nonce] = true;
 
-        if (Evvm(evvmAddress.current).istakingStaker(msg.sender)) {
+        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
                 Evvm(evvmAddress.current).getRewardAmount() + priorityFee_EVVM
@@ -269,7 +269,7 @@ contract NameService {
 
         nameServiceNonce[user][nonce] = true;
 
-        if (Evvm(evvmAddress.current).istakingStaker(msg.sender)) {
+        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
                 (50 * Evvm(evvmAddress.current).getRewardAmount()) +
@@ -326,7 +326,7 @@ contract NameService {
             });
         }
 
-        if (Evvm(evvmAddress.current).istakingStaker(msg.sender)) {
+        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
                 (multiple * Evvm(evvmAddress.current).getRewardAmount()) +
@@ -352,7 +352,7 @@ contract NameService {
             addressPhoneNumberRegistery.current
         ).reverseTransfer(_user, _phoneNumber, _timestamp, _signature);
 
-        if (Evvm(evvmAddress.current).istakingStaker(msg.sender)) {
+        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
                 (multiple * Evvm(evvmAddress.current).getRewardAmount())
@@ -373,7 +373,7 @@ contract NameService {
 
         identityDetails[_phoneNumber].owner = newOwner;
 
-        if (Evvm(evvmAddress.current).istakingStaker(msg.sender)) {
+        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
                 (multiple * Evvm(evvmAddress.current).getRewardAmount())
@@ -425,7 +425,7 @@ contract NameService {
             });
         }
 
-        if (Evvm(evvmAddress.current).istakingStaker(msg.sender)) {
+        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
                 (multiple * Evvm(evvmAddress.current).getRewardAmount()) +
@@ -450,7 +450,7 @@ contract NameService {
         uint256 multiple = IEmailRegistery(addressEmailRegistery.current)
             .reverseTransfer(_user, _email, _timestamp, _signature);
 
-        if (Evvm(evvmAddress.current).istakingStaker(msg.sender)) {
+        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
                 (multiple * Evvm(evvmAddress.current).getRewardAmount())
@@ -470,7 +470,7 @@ contract NameService {
 
         identityDetails[_email].owner = newOwner;
 
-        if (Evvm(evvmAddress.current).istakingStaker(msg.sender)) {
+        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
                 (multiple * Evvm(evvmAddress.current).getRewardAmount())
@@ -668,7 +668,7 @@ contract NameService {
 
         usernameOffers[username][offerID].offerer = address(0);
 
-        if (Evvm(evvmAddress.current).istakingStaker(msg.sender)) {
+        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
                 (Evvm(evvmAddress.current).getRewardAmount()) +
@@ -748,7 +748,7 @@ contract NameService {
             signature_EVVM
         );
 
-        if (Evvm(evvmAddress.current).istakingStaker(msg.sender)) {
+        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
                 Evvm(evvmAddress.current).getRewardAmount() +
@@ -831,7 +831,7 @@ contract NameService {
             signature_EVVM
         );
 
-        if (Evvm(evvmAddress.current).istakingStaker(msg.sender)) {
+        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
                 (5 * Evvm(evvmAddress.current).getRewardAmount()) +
@@ -905,7 +905,7 @@ contract NameService {
         }
         identityDetails[identity].customMetadataMaxSlots--;
         nameServiceNonce[user][nonce] = true;
-        if (Evvm(evvmAddress.current).istakingStaker(msg.sender)) {
+        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
                 (5 * Evvm(evvmAddress.current).getRewardAmount()) +
@@ -957,7 +957,7 @@ contract NameService {
             delete identityCustomMetadata[identity][i];
         }
 
-        if (Evvm(evvmAddress.current).istakingStaker(msg.sender)) {
+        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
                 ((5 * Evvm(evvmAddress.current).getRewardAmount()) *

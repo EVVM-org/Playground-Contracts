@@ -269,7 +269,7 @@ contract EVVM is EvvmStorage {
 
         if (!_updateBalance(from, to, token, amount)) revert();
 
-        if (istakingStaker(msg.sender)) {
+        if (isAddressStaker(msg.sender)) {
             if (priorityFee > 0) {
                 if (!_updateBalance(from, msg.sender, token, priorityFee)) {
                     revert();
@@ -381,7 +381,7 @@ contract EVVM is EvvmStorage {
             } else {
                 if (
                     payData[iteration].priorityFee > 0 &&
-                    istakingStaker(msg.sender)
+                    isAddressStaker(msg.sender)
                 ) {
                     if (
                         !_updateBalance(
@@ -402,7 +402,7 @@ contract EVVM is EvvmStorage {
             }
         }
 
-        if (istakingStaker(msg.sender)) {
+        if (isAddressStaker(msg.sender)) {
             _giveMateReward(msg.sender, successfulTransactions);
         }
     }
@@ -477,7 +477,7 @@ contract EVVM is EvvmStorage {
             revert();
         }
 
-        if (istakingStaker(msg.sender)) {
+        if (isAddressStaker(msg.sender)) {
             _giveMateReward(msg.sender, 1);
             balances[msg.sender][token] += priorityFee;
         } else {
@@ -508,7 +508,7 @@ contract EVVM is EvvmStorage {
             revert();
         }
 
-        if (istakingStaker(msg.sender)) {
+        if (isAddressStaker(msg.sender)) {
             _giveMateReward(msg.sender, 1);
         }
     }
@@ -550,7 +550,7 @@ contract EVVM is EvvmStorage {
             revert();
         }
 
-        if (istakingStaker(msg.sender)) {
+        if (isAddressStaker(msg.sender)) {
             _giveMateReward(msg.sender, 1);
         }
     }
@@ -857,7 +857,7 @@ contract EVVM is EvvmStorage {
         return balances[user][token];
     }
 
-    function istakingStaker(address user) public view returns (bool) {
+    function isAddressStaker(address user) public view returns (bool) {
         return stakerList[user] == 0x01;
     }
 

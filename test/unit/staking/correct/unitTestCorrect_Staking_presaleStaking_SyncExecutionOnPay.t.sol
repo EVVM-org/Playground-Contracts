@@ -222,7 +222,7 @@ contract unitTestCorrect_Staking_presaleStaking_SyncExecutionOnPay is
             );
         history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
-        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -298,7 +298,7 @@ contract unitTestCorrect_Staking_presaleStaking_SyncExecutionOnPay is
             );
         history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
-        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -394,7 +394,7 @@ contract unitTestCorrect_Staking_presaleStaking_SyncExecutionOnPay is
             );
         history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
-        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -521,7 +521,7 @@ contract unitTestCorrect_Staking_presaleStaking_SyncExecutionOnPay is
             );
         history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
-        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -670,7 +670,7 @@ contract unitTestCorrect_Staking_presaleStaking_SyncExecutionOnPay is
             );
         history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
-        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -772,7 +772,7 @@ contract unitTestCorrect_Staking_presaleStaking_SyncExecutionOnPay is
             );
         history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
-        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -853,7 +853,7 @@ contract unitTestCorrect_Staking_presaleStaking_SyncExecutionOnPay is
             );
         history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
-        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -954,7 +954,7 @@ contract unitTestCorrect_Staking_presaleStaking_SyncExecutionOnPay is
             );
         history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
-        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
             evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
@@ -1087,7 +1087,7 @@ contract unitTestCorrect_Staking_presaleStaking_SyncExecutionOnPay is
             );
         history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
-        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
             evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
@@ -1234,7 +1234,7 @@ contract unitTestCorrect_Staking_presaleStaking_SyncExecutionOnPay is
             );
         history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
-        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
 
         assertEq(
             evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),

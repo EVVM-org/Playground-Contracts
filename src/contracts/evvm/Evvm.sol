@@ -42,9 +42,9 @@ contract Evvm is EvvmStorage {
             getRewardAmount() *
             2;
 
-        stakerList[_stakingContractAddress] = 0x01;
+        stakerList[_stakingContractAddress] = FLAG_IS_STAKER;
 
-        breakerSetupNameServiceAddress = 0x01;
+        breakerSetupNameServiceAddress = FLAG_IS_STAKER;
 
         evvmMetadata = _evvmMetadata;
     }
@@ -57,7 +57,7 @@ contract Evvm is EvvmStorage {
         balances[nameServiceAddress][evvmMetadata.principalTokenAddress] =
             10000 *
             10 ** 18;
-        stakerList[nameServiceAddress] = 0x01;
+        stakerList[nameServiceAddress] = FLAG_IS_STAKER;
     }
 
     fallback() external {
@@ -367,7 +367,7 @@ contract Evvm is EvvmStorage {
                 revert ErrorsLib.SenderIsNotTheExecutor();
         }
 
-        if (!istakingStaker(msg.sender)) revert ErrorsLib.NotAnStaker();
+        if (!isAddressStaker(msg.sender)) revert ErrorsLib.NotAnStaker();
 
         address to = !Strings.equal(to_identity, "")
             ? NameService(nameServiceAddress).verifyStrictAndGetOwnerOfIdentity(
@@ -429,7 +429,7 @@ contract Evvm is EvvmStorage {
                 revert ErrorsLib.SenderIsNotTheExecutor();
         }
 
-        if (!istakingStaker(msg.sender)) revert ErrorsLib.NotAnStaker();
+        if (!isAddressStaker(msg.sender)) revert ErrorsLib.NotAnStaker();
 
         if (asyncUsedNonce[from][nonce]) revert ErrorsLib.InvalidAsyncNonce();
 
@@ -552,7 +552,7 @@ contract Evvm is EvvmStorage {
             } else {
                 if (
                     payData[iteration].priorityFee > 0 &&
-                    istakingStaker(msg.sender)
+                    isAddressStaker(msg.sender)
                 ) {
                     if (
                         !_updateBalance(
@@ -573,7 +573,7 @@ contract Evvm is EvvmStorage {
             }
         }
 
-        if (istakingStaker(msg.sender)) {
+        if (isAddressStaker(msg.sender)) {
             _giveMateReward(msg.sender, successfulTransactions);
         }
     }
@@ -642,7 +642,7 @@ contract Evvm is EvvmStorage {
         if (acomulatedAmount != amount)
             revert ErrorsLib.InvalidAmount(acomulatedAmount, amount);
 
-        if (istakingStaker(msg.sender)) {
+        if (isAddressStaker(msg.sender)) {
             _giveMateReward(msg.sender, 1);
             balances[msg.sender][token] += priorityFee;
         } else {
@@ -670,7 +670,7 @@ contract Evvm is EvvmStorage {
         if (!_updateBalance(from, to, token, amount))
             revert ErrorsLib.UpdateBalanceFailed();
 
-        if (istakingStaker(msg.sender)) {
+        if (isAddressStaker(msg.sender)) {
             _giveMateReward(msg.sender, 1);
         }
     }
@@ -707,7 +707,7 @@ contract Evvm is EvvmStorage {
         if (acomulatedAmount != amount)
             revert ErrorsLib.InvalidAmount(acomulatedAmount, amount);
 
-        if (istakingStaker(msg.sender)) {
+        if (isAddressStaker(msg.sender)) {
             _giveMateReward(msg.sender, 1);
         }
     }
@@ -757,8 +757,6 @@ contract Evvm is EvvmStorage {
             .reward;
 
         nextFisherWithdrawalNonce[user]++;
-
-        nextFisherWithdrawalNonce[user]++;
     }
 
     //░▒▓█Internal functions████████████████████████████████████████████████████▓▒░
@@ -771,15 +769,14 @@ contract Evvm is EvvmStorage {
         uint256 value
     ) internal returns (bool) {
         uint256 fromBalance = balances[from][token];
-        uint256 toBalance = balances[to][token];
         if (fromBalance < value) {
             return false;
         } else {
-            balances[from][token] = fromBalance - value;
-
-            balances[to][token] = toBalance + value;
-
-            return (toBalance + value == balances[to][token]);
+            unchecked {
+                balances[from][token] = fromBalance - value;
+                balances[to][token] += value;
+            }
+            return true;
         }
     }
 
@@ -1024,8 +1021,8 @@ contract Evvm is EvvmStorage {
         return balances[user][token];
     }
 
-    function istakingStaker(address user) public view returns (bool) {
-        return stakerList[user] == 0x01;
+    function isAddressStaker(address user) public view returns (bool) {
+        return stakerList[user] == FLAG_IS_STAKER;
     }
 
     function getEraPrincipalToken() public view returns (uint256) {

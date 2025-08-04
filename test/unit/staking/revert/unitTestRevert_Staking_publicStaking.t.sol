@@ -214,7 +214,7 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -279,7 +279,7 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -348,7 +348,7 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -413,7 +413,7 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -478,7 +478,7 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -543,7 +543,7 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -608,7 +608,7 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -673,7 +673,7 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -738,7 +738,7 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -803,7 +803,7 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -870,7 +870,7 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -935,7 +935,7 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -996,7 +996,7 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
 
         vm.stopPrank();
 
-        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -1065,7 +1065,7 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
         );
         vm.stopPrank();
 
-        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -1136,7 +1136,7 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
         );
         vm.stopPrank();
 
-        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -1237,7 +1237,7 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
         );
         vm.stopPrank();
 
-        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -1284,7 +1284,7 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
         );
         vm.stopPrank();
 
-        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,
@@ -1337,7 +1337,7 @@ contract unitTestRevert_Staking_publicStaking is Test, Constants {
         );
         vm.stopPrank();
 
-        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_1.Address,

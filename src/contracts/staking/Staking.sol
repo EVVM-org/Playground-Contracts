@@ -511,7 +511,7 @@ contract Staking {
             })
         );
 
-        if (Evvm(EVVM_ADDRESS).istakingStaker(msg.sender)) {
+        if (Evvm(EVVM_ADDRESS).isAddressStaker(msg.sender)) {
             makeCaPay(
                 PRINCIPAL_TOKEN_ADDRESS,
                 msg.sender,
@@ -551,7 +551,7 @@ contract Staking {
                 userHistory[user][idToOverwriteUserHistory]
                     .timestamp = timestampToBeOverwritten;
 
-                if (Evvm(EVVM_ADDRESS).istakingStaker(msg.sender)) {
+                if (Evvm(EVVM_ADDRESS).isAddressStaker(msg.sender)) {
                     makeCaPay(
                         PRINCIPAL_TOKEN_ADDRESS,
                         msg.sender,

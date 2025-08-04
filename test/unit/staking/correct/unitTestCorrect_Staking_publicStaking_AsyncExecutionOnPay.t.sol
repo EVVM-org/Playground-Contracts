@@ -194,7 +194,7 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -272,7 +272,7 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -357,7 +357,7 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -472,7 +472,7 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -545,7 +545,7 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -623,7 +623,7 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -708,7 +708,7 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -823,7 +823,7 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
         );
         vm.stopPrank();
 
-        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(
                 COMMON_USER_NO_STAKER_2.Address,
@@ -903,7 +903,7 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
-        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             getAmountOfRewardsPerExecution(history.length) + totalOfPriorityFee
@@ -978,7 +978,7 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
-        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             getAmountOfRewardsPerExecution(history.length) + totalOfPriorityFee
@@ -1060,7 +1060,7 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
-        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             getAmountOfRewardsPerExecution(history.length) + totalOfPriorityFee
@@ -1172,7 +1172,7 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
-        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             getAmountOfRewardsPerExecution(history.length) + totalOfPriorityFee
@@ -1242,7 +1242,7 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
-        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             getAmountOfRewardsPerExecution(history.length) + totalOfPriorityFee
@@ -1317,7 +1317,7 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
-        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             getAmountOfRewardsPerExecution(history.length) + totalOfPriorityFee
@@ -1399,7 +1399,7 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
-        assert(!evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(!evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             getAmountOfRewardsPerExecution(history.length) + totalOfPriorityFee
@@ -1511,7 +1511,7 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
 
         history = staking.getAddressHistory(COMMON_USER_NO_STAKER_1.Address);
 
-        assert(evvm.istakingStaker(COMMON_USER_NO_STAKER_1.Address));
+        assert(evvm.isAddressStaker(COMMON_USER_NO_STAKER_1.Address));
         assertEq(
             evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
             getAmountOfRewardsPerExecution(history.length) + totalOfPriorityFee
