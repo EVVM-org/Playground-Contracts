@@ -5,13 +5,19 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+GRAY='\033[0;90m'
+EVVM_GREEN='\033[38;2;1;240;148m'
 NC='\033[0m' # No Color
 
 # Banner
-echo -e "${BLUE}"
-echo "=================================================="
-echo "           EVVM Deployment Configurator          "
-echo "=================================================="
+echo -e "${EVVM_GREEN}"
+echo "░▒▓████████▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓██████████████▓▒░  "
+echo "░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░ "
+echo "░▒▓█▓▒░       ░▒▓█▓▒▒▓█▓▒░ ░▒▓█▓▒▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░ " 
+echo "░▒▓██████▓▒░  ░▒▓█▓▒▒▓█▓▒░ ░▒▓█▓▒▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░ "
+echo "░▒▓█▓▒░        ░▒▓█▓▓█▓▒░   ░▒▓█▓▓█▓▒░ ░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░ "
+echo "░▒▓█▓▒░        ░▒▓█▓▓█▓▒░   ░▒▓█▓▓█▓▒░ ░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░ "
+echo "░▒▓████████▓▒░  ░▒▓██▓▒░     ░▒▓██▓▒░  ░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░ "
 echo -e "${NC}"
 
 # Crear directorio input si no existe
@@ -69,32 +75,33 @@ done
 
 echo -e "${GREEN}=== EVVM Metadata Configuration ===${NC}"
 
-read -p "EVVM Name [EVVM]: " evvmName
+read -p "$(echo -e "EVVM Name ${GRAY}[EVVM]${NC}: ")" evvmName
 evvmName=${evvmName:-"EVVM"}
 
 while true; do
-    read -p "EVVM ID (number) [8888888]: " evvmID
-    evvmID=${evvmID:-"8888888"}
-    if validate_number "$evvmID"; then
+    read -p "EVVM ID (number - required): " evvmID
+    if [[ -z "$evvmID" ]]; then
+        echo -e "${RED}Error: EVVM ID is required. Please enter a valid number.${NC}"
+    elif validate_number "$evvmID"; then
         break
     else
         echo -e "${RED}Error: Must be a valid number${NC}"
     fi
 done
 
-read -p "Principal Token Name [Mate token]: " principalTokenName
+read -p "$(echo -e "Principal Token Name ${GRAY}[Mate token]${NC}: ")" principalTokenName
 principalTokenName=${principalTokenName:-"Mate token"}
 
-read -p "Principal Token Symbol [MATE]: " principalTokenSymbol
+read -p "$(echo -e "Principal Token Symbol ${GRAY}[MATE]${NC}: ")" principalTokenSymbol
 principalTokenSymbol=${principalTokenSymbol:-"MATE"}
 
 echo -e "\n${BLUE}=== Advanced Configuration (Optional) ===${NC}"
-read -p "Do you want to configure advanced metadata? (y/n) [n]: " configAdvanced
+read -p "$(echo -e "Do you want to configure advanced metadata? (y/n) ${GRAY}[n]${NC}: ")" configAdvanced
 configAdvanced=${configAdvanced:-"n"}
 
 if [[ $configAdvanced == "y" || $configAdvanced == "Y" ]]; then
     while true; do
-        read -p "Total Supply [2033333333000000000000000000]: " totalSupply
+        read -p "$(echo -e "Total Supply ${GRAY}[2033333333000000000000000000]${NC}: ")" totalSupply
         totalSupply=${totalSupply:-"2033333333000000000000000000"}
         if validate_number "$totalSupply"; then
             break
@@ -104,7 +111,7 @@ if [[ $configAdvanced == "y" || $configAdvanced == "Y" ]]; then
     done
 
     while true; do
-        read -p "Era Tokens [1016666666500000000000000000]: " eraTokens
+        read -p "$(echo -e "Era Tokens ${GRAY}[1016666666500000000000000000]${NC}: ")" eraTokens
         eraTokens=${eraTokens:-"1016666666500000000000000000"}
         if validate_number "$eraTokens"; then
             break
@@ -114,7 +121,7 @@ if [[ $configAdvanced == "y" || $configAdvanced == "Y" ]]; then
     done
 
     while true; do
-        read -p "Reward per operation [5000000000000000000]: " reward
+        read -p "$(echo -e "Reward per operation ${GRAY}[5000000000000000000]${NC}: ")" reward
         reward=${reward:-"5000000000000000000"}
         if validate_number "$reward"; then
             break
