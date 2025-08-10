@@ -1,0 +1,199 @@
+#!/bin/bash
+
+# Colores para la salida
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Banner
+echo -e "${BLUE}"
+echo "=================================================="
+echo "           EVVM Deployment Configurator          "
+echo "=================================================="
+echo -e "${NC}"
+
+# Crear directorio input si no existe
+mkdir -p input
+
+echo -e "${YELLOW}Configuring deployment variables...${NC}\n"
+
+# Function to validate Ethereum addresses
+validate_address() {
+    if [[ $1 =~ ^0x[a-fA-F0-9]{40}$ ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Function to validate numbers
+validate_number() {
+    if [[ $1 =~ ^[0-9]+$ ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Gather information
+echo -e "${GREEN}=== Administrator Configuration ===${NC}"
+
+while true; do
+    read -p "Admin address (0x...): " admin
+    if validate_address "$admin"; then
+        break
+    else
+        echo -e "${RED}Error: Invalid address. Must be a valid Ethereum address (0x + 40 hex characters)${NC}"
+    fi
+done
+
+while true; do
+    read -p "Golden Fisher address (0x...): " goldenFisher
+    if validate_address "$goldenFisher"; then
+        break
+    else
+        echo -e "${RED}Error: Invalid address. Must be a valid Ethereum address (0x + 40 hex characters)${NC}"
+    fi
+done
+
+while true; do
+    read -p "Activator address (0x...): " activator
+    if validate_address "$activator"; then
+        break
+    else
+        echo -e "${RED}Error: Invalid address. Must be a valid Ethereum address (0x + 40 hex characters)${NC}"
+    fi
+done
+
+echo -e "${GREEN}=== EVVM Metadata Configuration ===${NC}"
+
+read -p "EVVM Name [EVVM]: " evvmName
+evvmName=${evvmName:-"EVVM"}
+
+while true; do
+    read -p "EVVM ID (number) [8888888]: " evvmID
+    evvmID=${evvmID:-"8888888"}
+    if validate_number "$evvmID"; then
+        break
+    else
+        echo -e "${RED}Error: Must be a valid number${NC}"
+    fi
+done
+
+read -p "Principal Token Name [Mate token]: " principalTokenName
+principalTokenName=${principalTokenName:-"Mate token"}
+
+read -p "Principal Token Symbol [MATE]: " principalTokenSymbol
+principalTokenSymbol=${principalTokenSymbol:-"MATE"}
+
+echo -e "\n${BLUE}=== Advanced Configuration (Optional) ===${NC}"
+read -p "Do you want to configure advanced metadata? (y/n) [n]: " configAdvanced
+configAdvanced=${configAdvanced:-"n"}
+
+if [[ $configAdvanced == "y" || $configAdvanced == "Y" ]]; then
+    while true; do
+        read -p "Total Supply [2033333333000000000000000000]: " totalSupply
+        totalSupply=${totalSupply:-"2033333333000000000000000000"}
+        if validate_number "$totalSupply"; then
+            break
+        else
+            echo -e "${RED}Error: Must be a valid number${NC}"
+        fi
+    done
+
+    while true; do
+        read -p "Era Tokens [1016666666500000000000000000]: " eraTokens
+        eraTokens=${eraTokens:-"1016666666500000000000000000"}
+        if validate_number "$eraTokens"; then
+            break
+        else
+            echo -e "${RED}Error: Must be a valid number${NC}"
+        fi
+    done
+
+    while true; do
+        read -p "Reward per operation [5000000000000000000]: " reward
+        reward=${reward:-"5000000000000000000"}
+        if validate_number "$reward"; then
+            break
+        else
+            echo -e "${RED}Error: Must be a valid number${NC}"
+        fi
+    done
+else
+    # Default values
+    totalSupply="2033333333000000000000000000"
+    eraTokens="1016666666500000000000000000"
+    reward="5000000000000000000"
+    echo -e "${YELLOW}Using default advanced values${NC}"
+fi
+
+# Show summary
+echo -e "\n${YELLOW}=== Configuration Summary ===${NC}"
+echo -e "Admin: ${GREEN}$admin${NC}"
+echo -e "Golden Fisher: ${GREEN}$goldenFisher${NC}"
+echo -e "Activator: ${GREEN}$activator${NC}"
+echo -e "EVVM Name: ${GREEN}$evvmName${NC}"
+echo -e "EVVM ID: ${GREEN}$evvmID${NC}"
+echo -e "Principal Token Name: ${GREEN}$principalTokenName${NC}"
+echo -e "Principal Token Symbol: ${GREEN}$principalTokenSymbol${NC}"
+echo -e "Total Supply: ${GREEN}$totalSupply${NC}"
+echo -e "Era Tokens: ${GREEN}$eraTokens${NC}"
+echo -e "Reward: ${GREEN}$reward${NC}"
+
+echo ""
+read -p "Is the data correct? (y/n): " confirm
+
+if [[ $confirm != "y" && $confirm != "Y" ]]; then
+    echo -e "${RED}Configuration cancelled.${NC}"
+    exit 1
+fi
+
+# Generate JSON files
+# Address file
+cat > input/address.json << EOF
+{
+  "admin": "$admin",
+  "goldenFisher": "$goldenFisher",
+  "activator": "$activator"
+}
+EOF
+
+# Basic metadata file
+cat > input/evvmBasicMetadata.json << EOF
+{
+  "EvvmName": "$evvmName",
+  "EvvmID": $evvmID,
+  "principalTokenName": "$principalTokenName",
+  "principalTokenSymbol": "$principalTokenSymbol"
+}
+EOF
+
+# Advanced metadata file
+cat > input/evvmAdvancedMetadata.json << EOF
+{
+  "totalSupply": $totalSupply,
+  "eraTokens": $eraTokens,
+  "reward": $reward
+}
+EOF
+
+echo -e "${GREEN}✅ Configuration files generated:${NC}"
+echo -e "   - input/address.json"
+echo -e "   - input/evvmBasicMetadata.json"
+echo -e "   - input/evvmAdvancedMetadata.json"
+
+# Ask if they want to deploy immediately
+echo ""
+read -p "Do you want to deploy the contracts now? (y/n): " deployNow
+
+if [[ $deployNow == "y" || $deployNow == "Y" ]]; then
+    echo -e "${BLUE}Starting deployment...${NC}"
+    make deploy
+else
+    echo -e "${YELLOW}To deploy later, run: make deploy${NC}"
+fi
+
+echo -e "${GREEN}Configuration completed!${NC}"
