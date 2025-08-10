@@ -18,20 +18,94 @@ contract DeployScript is Script {
     address goldenFisher = 0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc;
     address activator = 0x976EA74026E726554dB657fA54763abd0C3a0aa9;
 
+    struct AddressData {
+        address activator;
+        address admin;
+        address goldenFisher;
+    }
+
+    struct BasicMetadata {
+        uint256 EvvmID;
+        string EvvmName;
+        string principalTokenName;
+        string principalTokenSymbol;
+    }
+
+    struct AdvancedMetadata {
+        uint256 eraTokens;
+        uint256 reward;
+        uint256 totalSupply;
+    }
+
     function setUp() public {}
 
     function run() public {
-        vm.startBroadcast();
+        string memory path = "input/address.json";
+        assert(vm.isFile(path));
+        string memory data = vm.readFile(path);
+        bytes memory dataJson = vm.parseJson(data);
 
+        AddressData memory addressData = abi.decode(dataJson, (AddressData));
+
+        path = "input/evvmBasicMetadata.json";
+        data = vm.readFile(path);
+        //console2.log("Deploy without parsing:", data);
+        dataJson = vm.parseJson(data);
+        //console2.logBytes(dataJson);
+
+        BasicMetadata memory basicMetadata = abi.decode(
+            dataJson,
+            (BasicMetadata)
+        );
+
+        path = "input/evvmAdvancedMetadata.json";
+        data = vm.readFile(path);
+        console2.log("Deploy without parsing:", data);
+        dataJson = vm.parseJson(data);
+        console2.logBytes(dataJson);
+
+        AdvancedMetadata memory advancedMetadata = abi.decode(
+            dataJson,
+            (AdvancedMetadata)
+        );
+
+        console2.log("Admin:", addressData.admin);
+        console2.log("GoldenFisher:", addressData.goldenFisher);
+        console2.log("Activator:", addressData.activator);
+        console2.log("EvvmName:", basicMetadata.EvvmName);
+        console2.log("EvvmID:", basicMetadata.EvvmID);
+        console2.log("PrincipalTokenName:", basicMetadata.principalTokenName);
+        console2.log(
+            "PrincipalTokenSymbol:",
+            basicMetadata.principalTokenSymbol
+        );
+        console2.log("TotalSupply:", advancedMetadata.totalSupply);
+        console2.log("EraTokens:", advancedMetadata.eraTokens);
+        console2.log("Reward:", advancedMetadata.reward);
+
+        EvvmStructs.EvvmMetadata memory inputMetadata = EvvmStructs
+            .EvvmMetadata({
+                EvvmName: basicMetadata.EvvmName,
+                EvvmID: basicMetadata.EvvmID,
+                principalTokenName: basicMetadata.principalTokenName,
+                principalTokenSymbol: basicMetadata.principalTokenSymbol,
+                principalTokenAddress: 0x0000000000000000000000000000000000000001,
+                totalSupply: advancedMetadata.totalSupply,
+                eraTokens: advancedMetadata.eraTokens,
+                reward: advancedMetadata.reward
+            });
+
+        vm.startBroadcast();
+        /*
         staking = new Staking(admin, goldenFisher);
         evvm = new Evvm(
             admin,
             address(staking),
             EvvmStructs.EvvmMetadata({
-                EvvmName: "EVVM",
-                EvvmID: "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
-                principalTokenName: "EVVM Staking Token",
-                principalTokenSymbol: "EVVM-STK",
+                EvvmName: basicMetadata.EvvmName,
+                EvvmID: basicMetadata.EvvmID,
+                principalTokenName: basicMetadata.principalTokenName,
+                principalTokenSymbol: basicMetadata.principalTokenSymbol,
                 principalTokenAddress: 0x0000000000000000000000000000000000000001,
                 totalSupply: 2033333333000000000000000000,
                 eraTokens: 2033333333000000000000000000 / 2,
@@ -48,11 +122,13 @@ contract DeployScript is Script {
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-
+        */
         vm.stopBroadcast();
 
+        /*
         console2.log("Staking deployed at:", address(staking));
         console2.log("Evvm deployed at:", address(evvm));
         console2.log("Estimator deployed at:", address(estimator));
+        */
     }
 }
