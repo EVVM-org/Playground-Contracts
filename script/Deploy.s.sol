@@ -96,21 +96,12 @@ contract DeployScript is Script {
             });
 
         vm.startBroadcast();
-        /*
+        
         staking = new Staking(admin, goldenFisher);
         evvm = new Evvm(
             admin,
             address(staking),
-            EvvmStructs.EvvmMetadata({
-                EvvmName: basicMetadata.EvvmName,
-                EvvmID: basicMetadata.EvvmID,
-                principalTokenName: basicMetadata.principalTokenName,
-                principalTokenSymbol: basicMetadata.principalTokenSymbol,
-                principalTokenAddress: 0x0000000000000000000000000000000000000001,
-                totalSupply: 2033333333000000000000000000,
-                eraTokens: 2033333333000000000000000000 / 2,
-                reward: 5000000000000000000
-            })
+            inputMetadata
         );
         estimator = new Estimator(
             activator,
@@ -122,13 +113,13 @@ contract DeployScript is Script {
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        */
+        
         vm.stopBroadcast();
 
-        /*
+        
         console2.log("Staking deployed at:", address(staking));
         console2.log("Evvm deployed at:", address(evvm));
         console2.log("Estimator deployed at:", address(estimator));
-        */
+        
     }
 }
