@@ -72,7 +72,7 @@ contract Staking {
 
     uint256 private constant LIMIT_PRESALE_STAKER = 800;
     uint256 private presaleStakerCount;
-    uint256 private constant PRICE_OF_SMATE = 5083 * (10 ** 18);
+    uint256 private constant PRICE_OF_STAKING = 5083 * (10 ** 18);
 
     AddressTypeProposal private admin;
     AddressTypeProposal private goldenFisher;
@@ -451,7 +451,7 @@ contract Staking {
 
             makePay(
                 userAccount,
-                (PRICE_OF_SMATE * amountOfStaking),
+                (PRICE_OF_STAKING * amountOfStaking),
                 priorityFee_EVVM,
                 priorityFlag_EVVM,
                 nonce_EVVM,
@@ -496,7 +496,7 @@ contract Staking {
             makeCaPay(
                 PRINCIPAL_TOKEN_ADDRESS,
                 stakingAccount,
-                (PRICE_OF_SMATE * amountOfStaking)
+                (PRICE_OF_STAKING * amountOfStaking)
             );
         }
 
@@ -792,7 +792,7 @@ contract Staking {
     }
 
     function priceOfStaking() external pure returns (uint256) {
-        return PRICE_OF_SMATE;
+        return PRICE_OF_STAKING;
     }
 
     function getTimeToUserUnlockFullUnstakingTime(

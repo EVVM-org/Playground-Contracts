@@ -39,9 +39,9 @@ abstract contract EvvmStorage is EvvmStructs {
     EvvmMetadata evvmMetadata =
         EvvmMetadata({
             EvvmName: "EVVM",
-            EvvmID: "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
-            principalTokenName: "EVVM Staking Token",
-            principalTokenSymbol: "EVVM-STK",
+            EvvmID: 777,
+            principalTokenName: "MATE Token",
+            principalTokenSymbol: "MATE",
             principalTokenAddress: 0x0000000000000000000000000000000000000001,
             totalSupply: 2033333333000000000000000000,
             eraTokens: 2033333333000000000000000000 / 2,

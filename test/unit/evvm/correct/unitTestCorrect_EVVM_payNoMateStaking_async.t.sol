@@ -40,7 +40,7 @@ contract unitTestCorrect_EVVM_payNoMateStaking_async is Test, Constants {
             address(staking),
             EvvmStructs.EvvmMetadata({
                 EvvmName: "EVVM",
-                EvvmID: "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+                EvvmID: 777,
                 principalTokenName: "EVVM Staking Token",
                 principalTokenSymbol: "EVVM-STK",
                 principalTokenAddress: 0x0000000000000000000000000000000000000001,
