@@ -96,30 +96,24 @@ contract DeployScript is Script {
             });
 
         vm.startBroadcast();
-        
-        staking = new Staking(admin, goldenFisher);
-        evvm = new Evvm(
-            admin,
-            address(staking),
-            inputMetadata
-        );
+
+        staking = new Staking(addressData.admin, addressData.goldenFisher);
+        evvm = new Evvm(addressData.admin, address(staking), inputMetadata);
         estimator = new Estimator(
-            activator,
+            addressData.activator,
             address(evvm),
             address(staking),
-            admin
+            addressData.admin
         );
-        nameService = new NameService(address(evvm), admin);
+        nameService = new NameService(address(evvm), addressData.admin);
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         evvm._setupNameServiceAddress(address(nameService));
-        
+
         vm.stopBroadcast();
 
-        
         console2.log("Staking deployed at:", address(staking));
         console2.log("Evvm deployed at:", address(evvm));
         console2.log("Estimator deployed at:", address(estimator));
-        
     }
 }
