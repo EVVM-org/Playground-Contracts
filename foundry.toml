@@ -12,6 +12,7 @@ remappings = [
     '@uniswap/v3-periphery/contracts/=lib/v3-periphery/contracts/',
     '@uniswap/v3-core/contracts/=lib/v3-core/contracts/',
     '@EVVM/playground/=src/',
+    '@solady/=lib/solady/src/',
 ]
 optimizer-runs = 400
 via_ir = true
@@ -21,7 +22,6 @@ fs_permissions = [{ access = "read", path = "./input" }]
 runs = 100
 seed = '0xdeadbeef'
 max_test_rejects = 1000
-
 
 
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
