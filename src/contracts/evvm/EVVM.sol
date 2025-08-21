@@ -555,56 +555,7 @@ contract EVVM is EvvmStorage {
         }
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////
-    /// fisher bridge functions ///////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////
-
-    function fisherWithdrawal(
-        address user,
-        address addressToReceive,
-        address token,
-        uint256 priorityFee,
-        uint256 amount,
-        bytes memory signature
-    ) public {
-        if (
-            !SignatureUtils.verifyMessageSignedForFisherBridge(
-                user,
-                addressToReceive,
-                nextFisherWithdrawalNonce[user],
-                token,
-                priorityFee,
-                amount,
-                signature
-            )
-        ) {
-            revert ErrorsLib.InvalidSignature();
-        }
-
-        if (
-            token == evvmMetadata.principalTokenAddress ||
-            balances[user][token] < amount + priorityFee
-        ) {
-            revert();
-        }
-
-        if (token == ETH_ADDRESS) {
-            if (amount > maxAmountToWithdraw.current) {
-                revert();
-            }
-        }
-
-        balances[user][token] -= (amount + priorityFee);
-
-        balances[msg.sender][token] += priorityFee;
-
-        balances[msg.sender][evvmMetadata.principalTokenAddress] += evvmMetadata
-            .reward;
-
-        nextFisherWithdrawalNonce[user]++;
-
-        nextFisherWithdrawalNonce[user]++;
-    }
+    
 
     //░▒▓█Internal functions████████████████████████████████████████████████████▓▒░
 

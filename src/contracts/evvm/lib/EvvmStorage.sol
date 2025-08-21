@@ -21,14 +21,11 @@ abstract contract EvvmStorage is EvvmStructs {
     address constant ETH_ADDRESS = address(0);
     bytes1 constant FLAG_IS_STAKER = 0x01;
 
-    address gasServiceAddress;
-    address routerCCIP;
-
-    address mailboxHyperlane;
-
     address nameServiceAddress;
 
     address stakingContractAddress;
+
+    address treasuryAddress;
 
     address whitelistTokenToBeAdded_address;
     address whitelistTokenToBeAdded_pool;
@@ -47,8 +44,6 @@ abstract contract EvvmStorage is EvvmStructs {
             eraTokens: 2033333333000000000000000000 / 2,
             reward: 5000000000000000000
         });
-
-    TreasuryMetadata treasuryMetadata;
 
     AddressTypeProposal admin;
 

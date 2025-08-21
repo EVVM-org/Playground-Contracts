@@ -25,6 +25,7 @@ import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/playground/lib/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/contracts/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/contracts/evvm/lib/EvvmStorage.sol";
+import {Treasury} from "@EVVM/playground/contracts/treasury/Treasury.sol";
 
 contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
     Test,
@@ -34,6 +35,7 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
     Evvm evvm;
     Estimator estimator;
     NameService nameService;
+    Treasury treasury;
 
     function setUp() public {
         staking = new Staking(ADMIN.Address, GOLDEN_STAKER.Address);
@@ -60,7 +62,8 @@ contract unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay is
         nameService = new NameService(address(evvm), ADMIN.Address);
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
-        evvm._setupNameServiceAddress(address(nameService));
+        treasury = new Treasury(address(evvm));
+        evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
 

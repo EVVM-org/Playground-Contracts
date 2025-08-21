@@ -30,12 +30,14 @@ import {Erc191TestBuilder} from "@EVVM/playground/lib/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/contracts/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/contracts/evvm/lib/EvvmStorage.sol";
 import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
+import {Treasury} from "@EVVM/playground/contracts/treasury/Treasury.sol";
 
 contract fuzzTest_EVVM_payMateStaking_async is Test, Constants {
     Staking staking;
     Evvm evvm;
     Estimator estimator;
     NameService nameService;
+    Treasury treasury;
 
     AccountData COMMON_USER_STAKER_1 = COMMON_USER_STAKER;
     AccountData COMMON_USER_STAKER_2 = WILDCARD_USER;
@@ -65,7 +67,8 @@ contract fuzzTest_EVVM_payMateStaking_async is Test, Constants {
         nameService = new NameService(address(evvm), ADMIN.Address);
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
-        evvm._setupNameServiceAddress(address(nameService));
+        treasury = new Treasury(address(evvm));
+        evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
 
         evvm._setPointStaker(COMMON_USER_STAKER_1.Address, 0x01);
         evvm._setPointStaker(COMMON_USER_STAKER_2.Address, 0x01);

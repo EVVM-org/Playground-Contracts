@@ -6,6 +6,7 @@ import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
 import {Staking} from "@EVVM/playground/contracts/staking/Staking.sol";
 import {Estimator} from "@EVVM/playground/contracts/staking/Estimator.sol";
 import {NameService} from "@EVVM/playground/contracts/nameService/NameService.sol";
+import {Treasury} from "@EVVM/playground/contracts/treasury/Treasury.sol";
 import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
 
 contract DeployScript is Script {
@@ -13,6 +14,7 @@ contract DeployScript is Script {
     Evvm evvm;
     Estimator estimator;
     NameService nameService;
+    Treasury treasury;
 
     address admin = 0x5cBf2D4Bbf834912Ad0bD59980355b57695e8309;
     address goldenFisher = 0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc;
@@ -105,10 +107,12 @@ contract DeployScript is Script {
             address(staking),
             addressData.admin
         );
+        
         nameService = new NameService(address(evvm), addressData.admin);
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
-        evvm._setupNameServiceAddress(address(nameService));
+        treasury = new Treasury(address(evvm));
+        evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
 
         vm.stopBroadcast();
 

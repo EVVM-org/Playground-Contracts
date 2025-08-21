@@ -27,6 +27,7 @@ import {Estimator} from "@EVVM/playground/contracts/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/contracts/evvm/lib/EvvmStorage.sol";
 import {AdvancedStrings} from "@EVVM/playground/lib/AdvancedStrings.sol";
 import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
+import {Treasury} from "@EVVM/playground/contracts/treasury/Treasury.sol";
 
 contract unitTestCorrect_NameService_flushUsername_AsyncExecutionOnPay is
     Test,
@@ -36,6 +37,7 @@ contract unitTestCorrect_NameService_flushUsername_AsyncExecutionOnPay is
     Evvm evvm;
     Estimator estimator;
     NameService nameService;
+    Treasury treasury;
 
     AccountData COMMON_USER_NO_STAKER_3 = WILDCARD_USER;
 
@@ -64,7 +66,8 @@ contract unitTestCorrect_NameService_flushUsername_AsyncExecutionOnPay is
         nameService = new NameService(address(evvm), ADMIN.Address);
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
-        evvm._setupNameServiceAddress(address(nameService));
+        treasury = new Treasury(address(evvm));
+        evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
 
         evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
 

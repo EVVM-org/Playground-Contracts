@@ -39,17 +39,6 @@ abstract contract EvvmStructs {
         address toAddress;
     }
 
-    struct TreasuryMetadata {
-        string AxelarChain;
-        string AxelarAddress;
-        uint64 CCIPChain;
-        address CCIPAddress;
-        uint32 HyperlaneChain;
-        bytes32 HyperlaneAddress;
-        uint32 LayerZeroChain;
-        bytes32 LayerZeroAddress;
-    }
-
     struct whitheListedTokenMetadata {
         bool isAllowed;
         address uniswapPool;

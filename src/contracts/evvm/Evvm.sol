@@ -49,7 +49,10 @@ contract Evvm is EvvmStorage {
         evvmMetadata = _evvmMetadata;
     }
 
-    function _setupNameServiceAddress(address _nameServiceAddress) external {
+    function _setupNameServiceAndTreasuryAddress(
+        address _nameServiceAddress,
+        address _treasuryAddress
+    ) external {
         if (breakerSetupNameServiceAddress == 0x00) {
             revert();
         }
@@ -58,6 +61,8 @@ contract Evvm is EvvmStorage {
             10000 *
             10 ** 18;
         stakerList[nameServiceAddress] = FLAG_IS_STAKER;
+
+        treasuryAddress = _treasuryAddress;
     }
 
     fallback() external {
@@ -117,104 +122,6 @@ contract Evvm is EvvmStorage {
 
     function _addMateToTotalSupply(uint256 amount) external {
         evvmMetadata.totalSupply += amount;
-    }
-
-    //░▒▓█Withdrawal functions██████████████████████████████████████████████████▓▒░
-
-    function withdrawalSync(
-        address user,
-        address addressToReceive,
-        address token,
-        uint256 amount,
-        uint256 priorityFee,
-        bytes memory signature,
-        uint8 _solutionId,
-        bytes calldata _options
-    ) public payable {
-        if (
-            !SignatureUtils.verifyMessageSignedForWithdrawal(
-                user,
-                addressToReceive,
-                token,
-                amount,
-                priorityFee,
-                nextSyncUsedNonce[user],
-                false,
-                signature
-            )
-        ) {
-            revert ErrorsLib.InvalidSignature();
-        }
-
-        if (
-            token == evvmMetadata.principalTokenAddress ||
-            balances[user][token] < amount
-        ) {
-            revert();
-        }
-
-        if (token == ETH_ADDRESS) {
-            if (amount > 100000000000000000) {
-                revert();
-            }
-        }
-
-        balances[user][token] -= amount;
-
-        /// @dev unused variable just for avoiding the warning
-        _solutionId;
-        _options;
-
-        nextSyncUsedNonce[user]++;
-    }
-
-    function withdrawalAsync(
-        address user,
-        address addressToReceive,
-        address token,
-        uint256 amount,
-        uint256 priorityFee,
-        uint256 nonce,
-        bytes memory signature,
-        uint8 _solutionId,
-        bytes calldata _options
-    ) public payable {
-        if (
-            !SignatureUtils.verifyMessageSignedForWithdrawal(
-                user,
-                addressToReceive,
-                token,
-                amount,
-                priorityFee,
-                nonce,
-                true,
-                signature
-            )
-        ) {
-            revert ErrorsLib.InvalidSignature();
-        }
-
-        if (
-            token == evvmMetadata.principalTokenAddress ||
-            asyncUsedNonce[user][nonce] ||
-            balances[user][token] < amount
-        ) {
-            revert();
-        }
-
-        if (token == ETH_ADDRESS) {
-            if (amount > 100000000000000000) {
-                revert();
-            }
-        }
-
-        balances[user][token] -= amount;
-
-        /// @dev unused variable just for avoiding the warning
-        _solutionId;
-        _options;
-
-        asyncUsedNonce[user][nonce] = true;
     }
 
     //░▒▓█Pay functions█████████████████████████████████████████████████████████▓▒░
@@ -712,51 +619,28 @@ contract Evvm is EvvmStorage {
         }
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////
-    /// fisher bridge functions ///////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////
+    //░▒▓█Treasury excluisve functions██████████████████████████████████████████▓▒░
 
-    function fisherWithdrawal(
+    function addAmountToUser(
         address user,
-        address addressToReceive,
         address token,
-        uint256 priorityFee,
-        uint256 amount,
-        bytes memory signature
-    ) public {
-        if (
-            !SignatureUtils.verifyMessageSignedForFisherBridge(
-                user,
-                addressToReceive,
-                nextFisherWithdrawalNonce[user],
-                token,
-                priorityFee,
-                amount,
-                signature
-            )
-        ) revert ErrorsLib.InvalidSignature();
+        uint256 amount
+    ) external {
+        if (msg.sender != treasuryAddress)
+            revert ErrorsLib.SenderIsNotTreasury();
 
-        if (
-            token == evvmMetadata.principalTokenAddress ||
-            balances[user][token] < amount + priorityFee
-        ) revert ErrorsLib.InsufficientBalance();
+        balances[user][token] += amount;
+    }
 
-        if (token == ETH_ADDRESS) {
-            if (amount > maxAmountToWithdraw.current)
-                revert ErrorsLib.InvalidAmount(
-                    amount,
-                    maxAmountToWithdraw.current
-                );
-        }
+    function removeAmountFromUser(
+        address user,
+        address token,
+        uint256 amount
+    ) external {
+        if (msg.sender != treasuryAddress)
+            revert ErrorsLib.SenderIsNotTreasury();
 
-        balances[user][token] -= (amount + priorityFee);
-
-        balances[msg.sender][token] += priorityFee;
-
-        balances[msg.sender][evvmMetadata.principalTokenAddress] += evvmMetadata
-            .reward;
-
-        nextFisherWithdrawalNonce[user]++;
+        balances[user][token] -= amount;
     }
 
     //░▒▓█Internal functions████████████████████████████████████████████████████▓▒░

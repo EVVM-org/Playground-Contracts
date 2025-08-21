@@ -30,6 +30,7 @@ import {Erc191TestBuilder} from "@EVVM/playground/lib/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/contracts/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/contracts/evvm/lib/EvvmStorage.sol";
 import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
+import {Treasury} from "@EVVM/playground/contracts/treasury/Treasury.sol";
 
 contract fuzzTest_EVVM_pay is Test, Constants, EvvmStructs {
     Staking staking;
