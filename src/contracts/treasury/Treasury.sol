@@ -24,15 +24,17 @@ contract Treasury {
     constructor(address _evvmAddress) {
         evvmAddress = _evvmAddress;
     }
-
+    
     function deposit(address token, uint256 amount) external payable {
-        if (msg.value > 0) { /// user is sending host native coin
+        if (msg.value > 0) {
+            /// user is sending host native coin
             Evvm(evvmAddress).addAmountToUser(
                 msg.sender,
                 address(0),
                 msg.value
             );
-        } else { /// user is sending ERC20 tokens
+        } else {
+            /// user is sending ERC20 tokens
             IERC20(token).transferFrom(msg.sender, address(this), amount);
             Evvm(evvmAddress).addAmountToUser(msg.sender, token, amount);
         }
@@ -45,7 +47,8 @@ contract Treasury {
         if (token == Evvm(evvmAddress).getEvvmMetadata().principalTokenAddress)
             revert ErrorsLib.PrincipalTokenIsNotWithdrawable();
 
-        if (token == address(0)) { /// user is trying to withdraw native coin
+        if (token == address(0)) {
+            /// user is trying to withdraw native coin
 
             Evvm(evvmAddress).removeAmountFromUser(
                 msg.sender,
@@ -53,12 +56,11 @@ contract Treasury {
                 amount
             );
             SafeTransferLib.safeTransferETH(msg.sender, amount);
-
-        } else { /// user is trying to withdraw ERC20 tokens
+        } else {
+            /// user is trying to withdraw ERC20 tokens
 
             Evvm(evvmAddress).removeAmountFromUser(msg.sender, token, amount);
             IERC20(token).transfer(msg.sender, amount);
-
         }
     }
 }
