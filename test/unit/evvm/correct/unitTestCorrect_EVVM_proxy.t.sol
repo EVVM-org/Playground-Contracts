@@ -39,10 +39,10 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
      *  - Options are added at the end, separated by underscores
      *
      * Example:
-     * test__init__payNoMateStaking_sync__PF_nEX
+     * test__init__payNoStaker_sync__PF_nEX
      *
      * Example explanation:
-     * Function to test: payNoMateStaking_sync
+     * Function to test: payNoStaker_sync
      * PF: Includes priority fee
      * nEX: Does not include executor execution
      *
@@ -152,7 +152,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
             s
         );
 
-        evvm.payNoMateStaking_sync(
+        evvm.payNoStaker_sync(
             userToInteract.Address,
             addressTo,
             "",

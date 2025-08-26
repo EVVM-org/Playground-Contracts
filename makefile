@@ -93,21 +93,21 @@ unitTestCorrectEvvm:
 	@echo "Running all EVVM unit correct tests"
 	@forge test --match-contract unitTestCorrect_EVVM --summary --detailed --gas-report -vvv --show-progress 
 
-unitTestCorrectEvvmPayNoMateStaking_async:
+unitTestCorrectEvvmPayNoStaker_async:
 	@echo "Running NoMateStaking_async unit correct tests"
-	@forge test --match-path test/unit/evvm/correct/unitTestCorrect_EVVM_payNoMateStaking_async.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/evvm/correct/unitTestCorrect_EVVM_payNoStaker_async.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectEvvmPayNoMateStaking_sync:
+unitTestCorrectEvvmPayNoStaker_sync:
 	@echo "Running NoMateStaking_sync unit correct tests"
-	@forge test --match-path test/unit/evvm/correct/unitTestCorrect_EVVM_payNoMateStaking_sync.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/evvm/correct/unitTestCorrect_EVVM_payNoStaker_sync.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectEvvmPayMateStaking_async:
-	@echo "Running PayMateStaking_async unit correct tests"
-	@forge test --match-path test/unit/evvm/correct/unitTestCorrect_EVVM_payMateStaking_async.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestCorrectEvvmPayStaker_async:
+	@echo "Running PayStaker_async unit correct tests"
+	@forge test --match-path test/unit/evvm/correct/unitTestCorrect_EVVM_payStaker_async.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectEvvmPayMateStaking_sync:
-	@echo "Running PayMateStaking_sync unit correct tests"
-	@forge test --match-path test/unit/evvm/correct/unitTestCorrect_EVVM_payMateStaking_sync.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestCorrectEvvmPayStaker_sync:
+	@echo "Running PayStaker_sync unit correct tests"
+	@forge test --match-path test/unit/evvm/correct/unitTestCorrect_EVVM_payStaker_sync.t.sol --summary --detailed --gas-report -vvv --show-progress
 	
 unitTestCorrectEvvmPayMultiple:
 	@echo "Running PayMultiple unit correct tests"
@@ -143,17 +143,17 @@ unitTestRevertEvvm:
 	@echo "Running all EVVM unit revert tests"
 	@forge test --match-contract unitTestRevert_EVVM --summary --detailed --gas-report -vvv --show-progress
 
-unitTestRevertEvvmPayNoMateStaking_sync:
+unitTestRevertEvvmPayNoStaker_sync:
 	@echo "Running NoMateStaking_sync unit revert tests"
-	@forge test --match-path test/unit/evvm/revert/unitTestRevert_EVVM_payNoMateStaking_sync.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/evvm/revert/unitTestRevert_EVVM_payNoStaker_sync.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestRevertEvvmPayNoMateStaking_async:
+unitTestRevertEvvmPayNoStaker_async:
 	@echo "Running NoMateStaking_async unit revert tests"
-	@forge test --match-path test/unit/evvm/revert/unitTestRevert_EVVM_payNoMateStaking_async.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/evvm/revert/unitTestRevert_EVVM_payNoStaker_async.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestRevertEvvmPayMateStaking_sync:
-	@echo "Running PayMateStaking_sync unit revert tests"
-	@forge test --match-path test/unit/evvm/revert/unitTestRevert_EVVM_payMateStaking_sync.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestRevertEvvmPayStaker_sync:
+	@echo "Running PayStaker_sync unit revert tests"
+	@forge test --match-path test/unit/evvm/revert/unitTestRevert_EVVM_payStaker_sync.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 unitTestRevertEvvmPayMultiple_syncExecution:
 	@echo "Running PayMultiple (sync execution) unit revert tests"
@@ -197,21 +197,21 @@ fuzzTestEvvmPay:
 	@echo "Running NoMateStaking_sync unit fuzz tests"
 	@forge test --match-path test/fuzz/evvm/fuzzTest_EVVM_pay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-fuzzTestEvvmPayNoMateStaking_sync:
+fuzzTestEvvmPayNoStaker_sync:
 	@echo "Running NoMateStaking_sync unit fuzz tests"
-	@forge test --match-path test/fuzz/evvm/fuzzTest_EVVM_payNoMateStaking_sync.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/fuzz/evvm/fuzzTest_EVVM_payNoStaker_sync.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-fuzzTestEvvmPayNoMateStaking_async:
+fuzzTestEvvmPayNoStaker_async:
 	@echo "Running NoMateStaking_async unit fuzz tests"
-	@forge test --match-path test/fuzz/evvm/fuzzTest_EVVM_payNoMateStaking_async.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/fuzz/evvm/fuzzTest_EVVM_payNoStaker_async.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-fuzzTestEvvmPayMateStaking_sync:
-	@echo "Running PayMateStaking_sync unit fuzz tests"
-	@forge test --match-path test/fuzz/evvm/fuzzTest_EVVM_payMateStaking_sync.t.sol --summary --detailed --gas-report -vvv --show-progress
+fuzzTestEvvmPayStaker_sync:
+	@echo "Running PayStaker_sync unit fuzz tests"
+	@forge test --match-path test/fuzz/evvm/fuzzTest_EVVM_payStaker_sync.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-fuzzTestEvvmPayMateStaking_async:
-	@echo "Running PayMateStaking_async unit fuzz tests"
-	@forge test --match-path test/fuzz/evvm/fuzzTest_EVVM_payMateStaking_async.t.sol --summary --detailed --gas-report -vvv --show-progress
+fuzzTestEvvmPayStaker_async:
+	@echo "Running PayStaker_async unit fuzz tests"
+	@forge test --match-path test/fuzz/evvm/fuzzTest_EVVM_payStaker_async.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 fuzzTestEvvmPayMultiple:
 	@echo "Running PayMultiple unit fuzz tests"
@@ -623,10 +623,10 @@ help:
 	@echo ""
 	@echo "  # Unit Correct Tests - Verify Expected Behavior"
 	@echo "  make unitTestCorrectEvvm ------------------------- Run all EVVM unit tests for correct functionality"
-	@echo "  make unitTestCorrectEvvmPayNoMateStaking_async --- Test async payments without mate staking requirements"
-	@echo "  make unitTestCorrectEvvmPayNoMateStaking_sync ---- Test sync payments without mate staking requirements"
-	@echo "  make unitTestCorrectEvvmPayMateStaking_async ----- Test async payments with mate staking integration"
-	@echo "  make unitTestCorrectEvvmPayMateStaking_sync ------ Test sync payments with mate staking integration"
+	@echo "  make unitTestCorrectEvvmPayNoStaker_async --- Test async payments without mate staking requirements"
+	@echo "  make unitTestCorrectEvvmPayNoStaker_sync ---- Test sync payments without mate staking requirements"
+	@echo "  make unitTestCorrectEvvmPayStaker_async ----- Test async payments with mate staking integration"
+	@echo "  make unitTestCorrectEvvmPayStaker_sync ------ Test sync payments with mate staking integration"
 	@echo "  make unitTestCorrectEvvmPayMultiple -------------- Test batch payment functionality to multiple recipients"
 	@echo "  make unitTestCorrectEvvmDispersePaySync ---------- Test synchronous payment dispersion mechanisms"
 	@echo "  make unitTestCorrectEvvmDispersePayAsync --------- Test asynchronous payment dispersion mechanisms"
@@ -637,9 +637,9 @@ help:
 	@echo ""
 	@echo "  # Unit Revert Tests - Verify Error Conditions"
 	@echo "  make unitTestRevertEvvm -------------------------- Run all EVVM revert tests for error handling"
-	@echo "  make unitTestRevertEvvmPayNoMateStaking_sync ----- Test revert conditions for sync payments without staking"
-	@echo "  make unitTestRevertEvvmPayNoMateStaking_async ---- Test revert conditions for async payments without staking"
-	@echo "  make unitTestRevertEvvmPayMateStaking_sync ------- Test revert conditions for sync payments with staking"
+	@echo "  make unitTestRevertEvvmPayNoStaker_sync ----- Test revert conditions for sync payments without staking"
+	@echo "  make unitTestRevertEvvmPayNoStaker_async ---- Test revert conditions for async payments without staking"
+	@echo "  make unitTestRevertEvvmPayStaker_sync ------- Test revert conditions for sync payments with staking"
 	@echo "  make unitTestRevertEvvmPayMultiple_syncExecution - Test revert conditions for sync batch payments"
 	@echo "  make unitTestRevertEvvmPayMultiple_asyncExecution  Test revert conditions for async batch payments"
 	@echo "  make unitTestRevertEvvmDispersePay_syncExecution - Test revert conditions for sync payment dispersion"
@@ -651,10 +651,10 @@ help:
 	@echo ""
 	@echo "  # Fuzz Tests - Property-Based Testing with Random Inputs"
 	@echo "  make unitTestFuzzEvvm ---------------------------- Run all EVVM fuzz tests with random input generation"
-	@echo "  make fuzzTestEvvmPayNoMateStaking_sync ----------- Fuzz test sync payments without staking with random values"
-	@echo "  make fuzzTestEvvmPayNoMateStaking_async ---------- Fuzz test async payments without staking with random values"
-	@echo "  make fuzzTestEvvmPayMateStaking_sync ------------- Fuzz test sync payments with staking using random parameters"
-	@echo "  make fuzzTestEvvmPayMateStaking_async ------------ Fuzz test async payments with staking using random parameters"
+	@echo "  make fuzzTestEvvmPayNoStaker_sync ----------- Fuzz test sync payments without staking with random values"
+	@echo "  make fuzzTestEvvmPayNoStaker_async ---------- Fuzz test async payments without staking with random values"
+	@echo "  make fuzzTestEvvmPayStaker_sync ------------- Fuzz test sync payments with staking using random parameters"
+	@echo "  make fuzzTestEvvmPayStaker_async ------------ Fuzz test async payments with staking using random parameters"
 	@echo "  make fuzzTestEvvmPayMultiple --------------------- Fuzz test batch payments with random recipient arrays"
 	@echo "  make fuzzTestEvvmDispersePay --------------------- Fuzz test payment dispersion with random distribution patterns"
 	@echo "  make fuzzTestEvvmCaPay --------------------------- Fuzz test CA payments with random contract interactions"
@@ -783,10 +783,10 @@ help:
 	@echo "-----------------------=Fuzz test commands=----------------------"
 	@echo ""
 	@echo "  EVVM Fuzz tests"
-	@echo "    make fuzzTestEvvmPayNoMateStaking_sync"
-	@echo "    make fuzzTestEvvmPayNoMateStaking_async"
-	@echo "    make fuzzTestEvvmPayMateStaking_sync"
-	@echo "    make fuzzTestEvvmPayMateStaking_async"
+	@echo "    make fuzzTestEvvmPayNoStaker_sync"
+	@echo "    make fuzzTestEvvmPayNoStaker_async"
+	@echo "    make fuzzTestEvvmPayStaker_sync"
+	@echo "    make fuzzTestEvvmPayStaker_async"
 	@echo "    make fuzzTestEvvmPayMultiple"
 	@echo "    make fuzzTestEvvmDispersePay"
 	@echo "    make fuzzTestEvvmCaPay"

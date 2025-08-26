@@ -136,7 +136,7 @@ contract Evvm is EvvmStorage {
      *  @param priorityFee priorityFee to send to the staking holder
      *  @param signature signature of the user who wants to send the message
      */
-    function payNoMateStaking_sync(
+    function payNoStaker_sync(
         address from,
         address to_address,
         string memory to_identity,
@@ -189,7 +189,7 @@ contract Evvm is EvvmStorage {
      *  @param nonce nonce of the transaction
      *  @param signature signature of the user who wants to send the message
      */
-    function payNoMateStaking_async(
+    function payNoStaker_async(
         address from,
         address to_address,
         string memory to_identity,
@@ -244,7 +244,7 @@ contract Evvm is EvvmStorage {
      *  @param priorityFee priorityFee to send to the staking holder
      *  @param signature signature of the user who wants to send the message
      */
-    function payMateStaking_sync(
+    function payStaker_sync(
         address from,
         address to_address,
         string memory to_identity,
@@ -305,7 +305,7 @@ contract Evvm is EvvmStorage {
      *  @param nonce nonce of the transaction
      *  @param signature signature of the user who wants to send the message
      */
-    function payMateStaking_async(
+    function payStaker_async(
         address from,
         address to_address,
         string memory to_identity,

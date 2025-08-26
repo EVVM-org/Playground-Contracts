@@ -32,7 +32,7 @@ import {EvvmStorage} from "@EVVM/playground/contracts/evvm/lib/EvvmStorage.sol";
 import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
 import {Treasury} from "@EVVM/playground/contracts/treasury/Treasury.sol";
 
-contract fuzzTest_EVVM_payNoMateStaking_sync is Test, Constants {
+contract fuzzTest_EVVM_payNoStaker_sync is Test, Constants {
     Staking staking;
     Evvm evvm;
     Estimator estimator;
@@ -95,7 +95,7 @@ contract fuzzTest_EVVM_payNoMateStaking_sync is Test, Constants {
     }
 
     /**
-     * Function to test: payNoMateStaking_sync
+     * Function to test: payNoStaker_sync
      * PF: Includes priority fee
      * nPF: No priority fee
      * EX: Includes executor execution
@@ -104,7 +104,7 @@ contract fuzzTest_EVVM_payNoMateStaking_sync is Test, Constants {
      * AD: Uses an address
      */
 
-    struct PayNoMateStakingSyncFuzzTestInput_nPF {
+    struct PayNoStakerSyncFuzzTestInput_nPF {
         bool useToAddress;
         bool useExecutor;
         bool useNoStaker3;
@@ -112,7 +112,7 @@ contract fuzzTest_EVVM_payNoMateStaking_sync is Test, Constants {
         uint16 amount;
     }
 
-    struct PayNoMateStakingSyncFuzzTestInput_PF {
+    struct PayNoStakerSyncFuzzTestInput_PF {
         bool useToAddress;
         bool useExecutor;
         bool useNoStaker3;
@@ -121,8 +121,8 @@ contract fuzzTest_EVVM_payNoMateStaking_sync is Test, Constants {
         uint16 priorityFee;
     }
 
-    function test__fuzz__payNoMateStaking_sync__nPF(
-        PayNoMateStakingSyncFuzzTestInput_nPF memory input
+    function test__fuzz__payNoStaker_sync__nPF(
+        PayNoStakerSyncFuzzTestInput_nPF memory input
     ) external {
         vm.assume(input.amount > 0);
 
@@ -159,7 +159,7 @@ contract fuzzTest_EVVM_payNoMateStaking_sync is Test, Constants {
 
         vm.startPrank(selectedExecuter.Address);
 
-        evvm.payNoMateStaking_sync(
+        evvm.payNoStaker_sync(
             COMMON_USER_NO_STAKER_1.Address,
             input.useToAddress ? COMMON_USER_NO_STAKER_2.Address : address(0),
             input.useToAddress ? "" : "dummy",
@@ -183,8 +183,8 @@ contract fuzzTest_EVVM_payNoMateStaking_sync is Test, Constants {
         );
     }
 
-    function test__fuzz__payNoMateStaking_sync__PF(
-        PayNoMateStakingSyncFuzzTestInput_PF memory input
+    function test__fuzz__payNoStaker_sync__PF(
+        PayNoStakerSyncFuzzTestInput_PF memory input
     ) external {
         vm.assume(input.amount > 0);
 
@@ -221,7 +221,7 @@ contract fuzzTest_EVVM_payNoMateStaking_sync is Test, Constants {
 
         vm.startPrank(selectedExecuter.Address);
 
-        evvm.payNoMateStaking_sync(
+        evvm.payNoStaker_sync(
             COMMON_USER_NO_STAKER_1.Address,
             input.useToAddress ? COMMON_USER_NO_STAKER_2.Address : address(0),
             input.useToAddress ? "" : "dummy",

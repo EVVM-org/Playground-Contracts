@@ -28,7 +28,7 @@ import {EvvmStorage} from "@EVVM/playground/contracts/evvm/lib/EvvmStorage.sol";
 import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
 import {Treasury} from "@EVVM/playground/contracts/treasury/Treasury.sol";
 
-contract unitTestCorrect_EVVM_payNoMateStaking_async is Test, Constants {
+contract unitTestCorrect_EVVM_payNoStaker_async is Test, Constants {
     Staking staking;
     Evvm evvm;
     Estimator estimator;
@@ -65,7 +65,7 @@ contract unitTestCorrect_EVVM_payNoMateStaking_async is Test, Constants {
     }
 
     /**
-     * Function to test: payNoMateStaking_sync
+     * Function to test: payNoStaker_sync
      * PF: Includes priority fee
      * nPF: No priority fee
      * EX: Includes executor execution
@@ -74,7 +74,7 @@ contract unitTestCorrect_EVVM_payNoMateStaking_async is Test, Constants {
      * AD: Uses an address
      */
 
-    function test__unit_correct__payNoMateStaking_async__nPF_nEX_AD() external {
+    function test__unit_correct__payNoStaker_async__nPF_nEX_AD() external {
         evvm._addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             ETHER_ADDRESS,
@@ -99,7 +99,7 @@ contract unitTestCorrect_EVVM_payNoMateStaking_async is Test, Constants {
             s
         );
 
-        evvm.payNoMateStaking_async(
+        evvm.payNoStaker_async(
             COMMON_USER_NO_STAKER_1.Address,
             COMMON_USER_NO_STAKER_2.Address,
             "",
@@ -122,7 +122,7 @@ contract unitTestCorrect_EVVM_payNoMateStaking_async is Test, Constants {
         );
     }
 
-    function test__unit_correct__payNoMateStaking_async__PF_nEX_AD() external {
+    function test__unit_correct__payNoStaker_async__PF_nEX_AD() external {
         evvm._addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             ETHER_ADDRESS,
@@ -147,7 +147,7 @@ contract unitTestCorrect_EVVM_payNoMateStaking_async is Test, Constants {
             s
         );
 
-        evvm.payNoMateStaking_async(
+        evvm.payNoStaker_async(
             COMMON_USER_NO_STAKER_1.Address,
             COMMON_USER_NO_STAKER_2.Address,
             "",
@@ -170,7 +170,7 @@ contract unitTestCorrect_EVVM_payNoMateStaking_async is Test, Constants {
         );
     }
 
-    function test__unit_correct__payNoMateStaking_async__nPF_EX_AD() external {
+    function test__unit_correct__payNoStaker_async__nPF_EX_AD() external {
         evvm._addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             ETHER_ADDRESS,
@@ -197,7 +197,7 @@ contract unitTestCorrect_EVVM_payNoMateStaking_async is Test, Constants {
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
 
-        evvm.payNoMateStaking_async(
+        evvm.payNoStaker_async(
             COMMON_USER_NO_STAKER_1.Address,
             COMMON_USER_NO_STAKER_2.Address,
             "",
@@ -222,7 +222,7 @@ contract unitTestCorrect_EVVM_payNoMateStaking_async is Test, Constants {
         );
     }
 
-    function test__unit_correct__payNoMateStaking_async__PF_EX_AD() external {
+    function test__unit_correct__payNoStaker_async__PF_EX_AD() external {
         evvm._addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             ETHER_ADDRESS,
@@ -249,7 +249,7 @@ contract unitTestCorrect_EVVM_payNoMateStaking_async is Test, Constants {
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
 
-        evvm.payNoMateStaking_async(
+        evvm.payNoStaker_async(
             COMMON_USER_NO_STAKER_1.Address,
             COMMON_USER_NO_STAKER_2.Address,
             "",
@@ -274,7 +274,7 @@ contract unitTestCorrect_EVVM_payNoMateStaking_async is Test, Constants {
         );
     }
 
-    function test__unit_correct__payNoMateStaking_async__nPF_nEX_ID() external {
+    function test__unit_correct__payNoStaker_async__nPF_nEX_ID() external {
         nameService._setIdentityBaseMetadata(
             "dummy",
             NameService.IdentityBaseMetadata({
@@ -309,7 +309,7 @@ contract unitTestCorrect_EVVM_payNoMateStaking_async is Test, Constants {
             s
         );
 
-        evvm.payNoMateStaking_async(
+        evvm.payNoStaker_async(
             COMMON_USER_NO_STAKER_1.Address,
             address(0),
             "dummy",
@@ -332,7 +332,7 @@ contract unitTestCorrect_EVVM_payNoMateStaking_async is Test, Constants {
         );
     }
 
-    function test__unit_correct__payNoMateStaking_async__PF_nEX_ID() external {
+    function test__unit_correct__payNoStaker_async__PF_nEX_ID() external {
         nameService._setIdentityBaseMetadata(
             "dummy",
             NameService.IdentityBaseMetadata({
@@ -367,7 +367,7 @@ contract unitTestCorrect_EVVM_payNoMateStaking_async is Test, Constants {
             s
         );
 
-        evvm.payNoMateStaking_async(
+        evvm.payNoStaker_async(
             COMMON_USER_NO_STAKER_1.Address,
             address(0),
             "dummy",
@@ -390,7 +390,7 @@ contract unitTestCorrect_EVVM_payNoMateStaking_async is Test, Constants {
         );
     }
 
-    function test__unit_correct__payNoMateStaking_async__nPF_EX_ID() external {
+    function test__unit_correct__payNoStaker_async__nPF_EX_ID() external {
         nameService._setIdentityBaseMetadata(
             "dummy",
             NameService.IdentityBaseMetadata({
@@ -427,7 +427,7 @@ contract unitTestCorrect_EVVM_payNoMateStaking_async is Test, Constants {
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
 
-        evvm.payNoMateStaking_async(
+        evvm.payNoStaker_async(
             COMMON_USER_NO_STAKER_1.Address,
             address(0),
             "dummy",
@@ -452,7 +452,7 @@ contract unitTestCorrect_EVVM_payNoMateStaking_async is Test, Constants {
         );
     }
 
-    function test__unit_correct__payNoMateStaking_async__PF_EX_ID() external {
+    function test__unit_correct__payNoStaker_async__PF_EX_ID() external {
         nameService._setIdentityBaseMetadata(
             "dummy",
             NameService.IdentityBaseMetadata({
@@ -489,7 +489,7 @@ contract unitTestCorrect_EVVM_payNoMateStaking_async is Test, Constants {
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
 
-        evvm.payNoMateStaking_async(
+        evvm.payNoStaker_async(
             COMMON_USER_NO_STAKER_1.Address,
             address(0),
             "dummy",

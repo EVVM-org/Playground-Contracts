@@ -39,10 +39,10 @@ contract unitTestRevert_EVVM_proxy is Test, Constants {
      *  - Options are added at the end, separated by underscores
      *
      * Example:
-     * test__init__payNoMateStaking_sync__nonceAlreadyUsed
+     * test__init__payNoStaker_sync__nonceAlreadyUsed
      *
      * Example explanation:
-     * Function to test: payNoMateStaking_sync
+     * Function to test: payNoStaker_sync
      * PF: Includes priority fee
      * nEX: Does not include executor execution
      *

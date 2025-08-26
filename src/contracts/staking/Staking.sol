@@ -575,7 +575,7 @@ contract Staking {
         bytes memory signature
     ) internal {
         if (priorityFlag) {
-            Evvm(EVVM_ADDRESS).payMateStaking_async(
+            Evvm(EVVM_ADDRESS).payStaker_async(
                 user,
                 address(this),
                 "",
@@ -587,7 +587,7 @@ contract Staking {
                 signature
             );
         } else {
-            Evvm(EVVM_ADDRESS).payMateStaking_sync(
+            Evvm(EVVM_ADDRESS).payStaker_sync(
                 user,
                 address(this),
                 "",

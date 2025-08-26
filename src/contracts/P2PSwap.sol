@@ -561,7 +561,7 @@ contract P2PSwap {
         bytes memory _signature_Evvm
     ) internal {
         if (_priority_Evvm) {
-            Evvm(evvmAddress).payMateStaking_async(
+            Evvm(evvmAddress).payStaker_async(
                 _user_Evvm,
                 address(this),
                 "",
@@ -573,7 +573,7 @@ contract P2PSwap {
                 _signature_Evvm
             );
         } else {
-            Evvm(evvmAddress).payMateStaking_sync(
+            Evvm(evvmAddress).payStaker_sync(
                 _user_Evvm,
                 address(this),
                 "",

@@ -77,7 +77,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
     }
 
     /**
-     * Function to test: payNoMateStaking_sync
+     * Function to test: payNoStaker_sync
      * PF: Includes priority fee
      * nPF: No priority fee
      * EX: Includes executor execution

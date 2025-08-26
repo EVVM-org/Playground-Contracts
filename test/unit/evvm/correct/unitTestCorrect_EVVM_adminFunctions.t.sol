@@ -65,7 +65,7 @@ contract unitTestCorrect_EVVM_adminFunctions is Test, Constants {
     }
 
     /**
-     * Function to test: payNoMateStaking_sync
+     * Function to test: payNoStaker_sync
      * PF: Includes priority fee
      * nPF: No priority fee
      * EX: Includes executor execution

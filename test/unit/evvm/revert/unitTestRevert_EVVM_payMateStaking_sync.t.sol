@@ -28,7 +28,7 @@ import {EvvmStorage} from "@EVVM/playground/contracts/evvm/lib/EvvmStorage.sol";
 import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
 import {Treasury} from "@EVVM/playground/contracts/treasury/Treasury.sol";
 
-contract unitTestRevert_EVVM_payMateStaking_sync is Test, Constants {
+contract unitTestRevert_EVVM_payStaker_sync is Test, Constants {
     Staking staking;
     Evvm evvm;
     Estimator estimator;
@@ -84,7 +84,7 @@ contract unitTestRevert_EVVM_payMateStaking_sync is Test, Constants {
      * some denominations on test can be explicit expleined
      */
 
-    function test__unit_revert__payMateStaking_sync__bSigAtFrom() external {
+    function test__unit_revert__payStaker_sync__bSigAtFrom() external {
         addBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS, 0.11 ether);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -108,7 +108,7 @@ contract unitTestRevert_EVVM_payMateStaking_sync is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER_1.Address);
 
         vm.expectRevert();
-        evvm.payMateStaking_sync(
+        evvm.payStaker_sync(
             COMMON_USER_NO_STAKER_2.Address,
             COMMON_USER_STAKER_1.Address,
             "",
@@ -127,7 +127,7 @@ contract unitTestRevert_EVVM_payMateStaking_sync is Test, Constants {
         );
     }
 
-    function test__unit_revert__payMateStaking_sync__bSigAtToAddress()
+    function test__unit_revert__payStaker_sync__bSigAtToAddress()
         external
     {
         addBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS, 0.11 ether);
@@ -153,7 +153,7 @@ contract unitTestRevert_EVVM_payMateStaking_sync is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER_1.Address);
 
         vm.expectRevert();
-        evvm.payMateStaking_sync(
+        evvm.payStaker_sync(
             COMMON_USER_NO_STAKER_1.Address,
             COMMON_USER_STAKER_1.Address,
             "",
@@ -172,7 +172,7 @@ contract unitTestRevert_EVVM_payMateStaking_sync is Test, Constants {
         );
     }
 
-    function test__unit_revert__payMateStaking_sync__bSigAtToIdentity()
+    function test__unit_revert__payStaker_sync__bSigAtToIdentity()
         external
     {
         nameService._setIdentityBaseMetadata(
@@ -209,7 +209,7 @@ contract unitTestRevert_EVVM_payMateStaking_sync is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER_1.Address);
 
         vm.expectRevert();
-        evvm.payMateStaking_sync(
+        evvm.payStaker_sync(
             COMMON_USER_NO_STAKER_1.Address,
             address(0),
             "fake",
@@ -228,7 +228,7 @@ contract unitTestRevert_EVVM_payMateStaking_sync is Test, Constants {
         );
     }
 
-    function test__unit_revert__payMateStaking_sync__bSigAtToken() external {
+    function test__unit_revert__payStaker_sync__bSigAtToken() external {
         addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             MATE_TOKEN_ADDRESS,
@@ -257,7 +257,7 @@ contract unitTestRevert_EVVM_payMateStaking_sync is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER_1.Address);
 
         vm.expectRevert();
-        evvm.payMateStaking_sync(
+        evvm.payStaker_sync(
             COMMON_USER_NO_STAKER_1.Address,
             COMMON_USER_NO_STAKER_2.Address,
             "",
@@ -279,7 +279,7 @@ contract unitTestRevert_EVVM_payMateStaking_sync is Test, Constants {
         );
     }
 
-    function test__unit_revert__payMateStaking_sync__bSigAtAmount() external {
+    function test__unit_revert__payStaker_sync__bSigAtAmount() external {
         addBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS, 1.11 ether);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -303,7 +303,7 @@ contract unitTestRevert_EVVM_payMateStaking_sync is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER_1.Address);
 
         vm.expectRevert();
-        evvm.payMateStaking_sync(
+        evvm.payStaker_sync(
             COMMON_USER_NO_STAKER_1.Address,
             COMMON_USER_NO_STAKER_2.Address,
             "",
@@ -322,7 +322,7 @@ contract unitTestRevert_EVVM_payMateStaking_sync is Test, Constants {
         );
     }
 
-    function test__unit_revert__payMateStaking_sync__bSigAtPriorityFee()
+    function test__unit_revert__payStaker_sync__bSigAtPriorityFee()
         external
     {
         addBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS, 1.11 ether);
@@ -349,7 +349,7 @@ contract unitTestRevert_EVVM_payMateStaking_sync is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER_1.Address);
 
         vm.expectRevert();
-        evvm.payMateStaking_sync(
+        evvm.payStaker_sync(
             COMMON_USER_NO_STAKER_1.Address,
             COMMON_USER_NO_STAKER_2.Address,
             "",
@@ -368,7 +368,7 @@ contract unitTestRevert_EVVM_payMateStaking_sync is Test, Constants {
         );
     }
 
-    function test__unit_revert__payMateStaking_sync__bSigAtNonceNumber()
+    function test__unit_revert__payStaker_sync__bSigAtNonceNumber()
         external
     {
         addBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS, 0.11 ether);
@@ -395,7 +395,7 @@ contract unitTestRevert_EVVM_payMateStaking_sync is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER_1.Address);
 
         vm.expectRevert();
-        evvm.payMateStaking_sync(
+        evvm.payStaker_sync(
             COMMON_USER_NO_STAKER_1.Address,
             COMMON_USER_NO_STAKER_2.Address,
             "",
@@ -414,7 +414,7 @@ contract unitTestRevert_EVVM_payMateStaking_sync is Test, Constants {
         );
     }
 
-    function test__unit_revert__payMateStaking_sync__bSigAtPriorityFlag()
+    function test__unit_revert__payStaker_sync__bSigAtPriorityFlag()
         external
     {
         addBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS, 0.11 ether);
@@ -441,7 +441,7 @@ contract unitTestRevert_EVVM_payMateStaking_sync is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER_1.Address);
 
         vm.expectRevert();
-        evvm.payMateStaking_sync(
+        evvm.payStaker_sync(
             COMMON_USER_NO_STAKER_1.Address,
             COMMON_USER_NO_STAKER_2.Address,
             "",
@@ -460,7 +460,7 @@ contract unitTestRevert_EVVM_payMateStaking_sync is Test, Constants {
         );
     }
 
-    function test__unit_revert__payMateStaking_sync__bSigAtToExecutor()
+    function test__unit_revert__payStaker_sync__bSigAtToExecutor()
         external
     {
         addBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS, 0.11 ether);
@@ -487,7 +487,7 @@ contract unitTestRevert_EVVM_payMateStaking_sync is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER_2.Address);
 
         vm.expectRevert();
-        evvm.payMateStaking_sync(
+        evvm.payStaker_sync(
             COMMON_USER_NO_STAKER_1.Address,
             COMMON_USER_NO_STAKER_2.Address,
             "",
@@ -506,7 +506,7 @@ contract unitTestRevert_EVVM_payMateStaking_sync is Test, Constants {
         );
     }
 
-    function test__unit_revert__payMateStaking_sync_wValAtExecutor() external {
+    function test__unit_revert__payStaker_sync_wValAtExecutor() external {
         addBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS, 0.11 ether);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
@@ -531,7 +531,7 @@ contract unitTestRevert_EVVM_payMateStaking_sync is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER_2.Address);
 
         vm.expectRevert();
-        evvm.payMateStaking_sync(
+        evvm.payStaker_sync(
             COMMON_USER_NO_STAKER_1.Address,
             COMMON_USER_NO_STAKER_2.Address,
             "",
@@ -550,7 +550,7 @@ contract unitTestRevert_EVVM_payMateStaking_sync is Test, Constants {
         );
     }
 
-    function test__unit_revert__payMateStaking_sync__userFromHasLessThanAmountPlusFee()
+    function test__unit_revert__payStaker_sync__userFromHasLessThanAmountPlusFee()
         external
     {
         addBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS, 0.11 ether);
@@ -577,7 +577,7 @@ contract unitTestRevert_EVVM_payMateStaking_sync is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER_1.Address);
 
         vm.expectRevert();
-        evvm.payMateStaking_sync(
+        evvm.payStaker_sync(
             COMMON_USER_NO_STAKER_1.Address,
             COMMON_USER_NO_STAKER_2.Address,
             "",
@@ -596,7 +596,7 @@ contract unitTestRevert_EVVM_payMateStaking_sync is Test, Constants {
         );
     }
 
-    function test__unit_revert__payMateStaking_sync__wValAtNonce() external {
+    function test__unit_revert__payStaker_sync__wValAtNonce() external {
         addBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS, 0.11 ether);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
@@ -621,7 +621,7 @@ contract unitTestRevert_EVVM_payMateStaking_sync is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER_1.Address);
 
         vm.expectRevert();
-        evvm.payMateStaking_sync(
+        evvm.payStaker_sync(
             COMMON_USER_NO_STAKER_1.Address,
             COMMON_USER_NO_STAKER_2.Address,
             "",
@@ -635,7 +635,7 @@ contract unitTestRevert_EVVM_payMateStaking_sync is Test, Constants {
         vm.stopPrank();
     }
 
-    function test__unit_revert__payMateStaking_sync__fisherIsNotStaker()
+    function test__unit_revert__payStaker_sync__fisherIsNotStaker()
         external
     {
         addBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS, 0.11 ether);
@@ -662,7 +662,7 @@ contract unitTestRevert_EVVM_payMateStaking_sync is Test, Constants {
         vm.startPrank(COMMON_USER_NO_STAKER_1.Address);
 
         vm.expectRevert();
-        evvm.payMateStaking_sync(
+        evvm.payStaker_sync(
             COMMON_USER_NO_STAKER_1.Address,
             COMMON_USER_NO_STAKER_2.Address,
             "",

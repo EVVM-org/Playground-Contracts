@@ -258,10 +258,10 @@ contract fuzzTest_NameService_addCustomMetadata is Test, Constants {
      *     AD: Uses an address
      *
      * Example:
-     * test__payNoMateStaking_sync__PF_nEX
+     * test__payNoStaker_sync__PF_nEX
      *
      * Example explanation:
-     * Function to test: payNoMateStaking_sync
+     * Function to test: payNoStaker_sync
      * PF: Includes priority fee
      * nEX: Does not include executor execution
      *
