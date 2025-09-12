@@ -103,7 +103,7 @@ contract unitTestRevert_EVVM_proxy is Test, Constants {
 
         vm.stopPrank();
 
-        evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
+        evvm.setPointStaker(COMMON_USER_STAKER.Address, 0x01);
     }
 
     function test__init__revert__proposeImplementation__notAdmin() public {

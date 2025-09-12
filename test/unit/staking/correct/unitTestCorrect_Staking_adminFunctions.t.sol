@@ -66,7 +66,7 @@ contract unitTestCorrect_Staking_adminFunctions is
         evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
         
 
-        evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
+        evvm.setPointStaker(COMMON_USER_STAKER.Address, 0x01);
 
     }
 

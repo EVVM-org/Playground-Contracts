@@ -69,7 +69,7 @@ contract fuzzTest_EVVM_payNoStaker_async is Test, Constants {
         treasury = new Treasury(address(evvm));
         evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
 
-        evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
+        evvm.setPointStaker(COMMON_USER_STAKER.Address, 0x01);
         nameService._setIdentityBaseMetadata(
             "dummy",
             NameService.IdentityBaseMetadata({
@@ -88,7 +88,7 @@ contract fuzzTest_EVVM_payNoStaker_async is Test, Constants {
         uint256 amount,
         uint256 priorityFee
     ) private returns (uint256 totalAmount, uint256 totalPriorityFee) {
-        evvm._addBalance(user.Address, tokenAddress, amount + priorityFee);
+        evvm.addBalance(user.Address, tokenAddress, amount + priorityFee);
 
         totalAmount = amount;
         totalPriorityFee = priorityFee;

@@ -69,7 +69,7 @@ contract fuzzTest_Staking_presaleStaking is Test, Constants {
         treasury = new Treasury(address(evvm));
         evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
 
-        evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
+        evvm.setPointStaker(COMMON_USER_STAKER.Address, 0x01);
 
         vm.startPrank(ADMIN.Address);
 
@@ -104,7 +104,7 @@ contract fuzzTest_Staking_presaleStaking is Test, Constants {
         bool isStaking,
         uint256 priorityFee
     ) private returns (uint256 totalOfMate, uint256 totalOfPriorityFee) {
-        evvm._addBalance(
+        evvm.addBalance(
             user.Address,
             MATE_TOKEN_ADDRESS,
             (isStaking ? (staking.priceOfStaking() * 1) : 0) + priorityFee

@@ -66,7 +66,7 @@ contract unitTestCorrect_NameService_adminFunctions is Test, Constants {
         treasury = new Treasury(address(evvm));
         evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
 
-        evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
+        evvm.setPointStaker(COMMON_USER_STAKER.Address, 0x01);
     }
 
     function test__unit_correct__proposeAdmin() external {

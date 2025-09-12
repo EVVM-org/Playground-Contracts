@@ -66,12 +66,12 @@ contract unitTestRevert_EVVM_payStaker_async is Test, Constants {
         evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
         
 
-        evvm._setPointStaker(COMMON_USER_STAKER_1.Address, 0x01);
-        evvm._setPointStaker(COMMON_USER_STAKER_2.Address, 0x01);
+        evvm.setPointStaker(COMMON_USER_STAKER_1.Address, 0x01);
+        evvm.setPointStaker(COMMON_USER_STAKER_2.Address, 0x01);
     }
 
     function addBalance(address user, address token, uint256 amount) private {
-        evvm._addBalance(user, token, amount);
+        evvm.addBalance(user, token, amount);
     }
 
     /**

@@ -69,7 +69,7 @@ contract unitTestCorrect_NameService_removeCustomMetadata_AsyncExecutionOnPay is
         treasury = new Treasury(address(evvm));
         evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
 
-        evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
+        evvm.setPointStaker(COMMON_USER_STAKER.Address, 0x01);
 
         makeRegistrationUsername(
             COMMON_USER_NO_STAKER_1,
@@ -84,7 +84,7 @@ contract unitTestCorrect_NameService_removeCustomMetadata_AsyncExecutionOnPay is
         AccountData memory user,
         uint256 priorityFeeAmount
     ) private returns (uint256 totalPriorityFeeAmount) {
-        evvm._addBalance(
+        evvm.addBalance(
             user.Address,
             MATE_TOKEN_ADDRESS,
             nameService.getPriceToRemoveCustomMetadata() + priorityFeeAmount
@@ -99,7 +99,7 @@ contract unitTestCorrect_NameService_removeCustomMetadata_AsyncExecutionOnPay is
         uint256 nonceNameServicePre,
         uint256 nonceNameService
     ) private {
-        evvm._addBalance(
+        evvm.addBalance(
             user.Address,
             MATE_TOKEN_ADDRESS,
             nameService.getPricePerRegistration()
@@ -184,7 +184,7 @@ contract unitTestCorrect_NameService_removeCustomMetadata_AsyncExecutionOnPay is
         bytes32 r;
         bytes32 s;
 
-        evvm._addBalance(
+        evvm.addBalance(
             user.Address,
             MATE_TOKEN_ADDRESS,
             nameService.getPriceToAddCustomMetadata()

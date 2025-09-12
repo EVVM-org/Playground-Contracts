@@ -70,7 +70,7 @@ contract unitTestCorrect_EVVM_caPay is Test, Constants {
         uint256 amount,
         uint256 priorityFee
     ) private {
-        evvm._addBalance(user, token, amount + priorityFee);
+        evvm.addBalance(user, token, amount + priorityFee);
     }
 
     /**
@@ -95,7 +95,7 @@ contract unitTestCorrect_EVVM_caPay is Test, Constants {
 
     function test__unit_correct__caPay__S() external {
         addBalance(address(this), ETHER_ADDRESS, 0.001 ether, 0);
-        evvm._setPointStaker(address(this), 0x01);
+        evvm.setPointStaker(address(this), 0x01);
 
         evvm.caPay(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS, 0.001 ether);
 

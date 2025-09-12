@@ -19,15 +19,30 @@ import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
 import {ErrorsLib} from "@EVVM/playground/contracts/treasury/lib/ErrorsLib.sol";
 
 contract Treasury {
+    /// @notice Address of the EVVM core contract
     address public evvmAddress;
 
+    /// @notice Nonces for Fisher Bridge withdrawals
+    mapping(address user => uint256 nonce) nextFisherWithdrawalNonce;
+
+    /**
+     * @notice Initialize Treasury with EVVM contract address
+     * @param _evvmAddress Address of the EVVM core contract
+     */
     constructor(address _evvmAddress) {
         evvmAddress = _evvmAddress;
     }
-    
+
+    /**
+     * @notice Deposit ETH or ERC20 tokens
+     * @param token ERC20 token address (ignored for ETH deposits)
+     * @param amount Token amount (ignored for ETH deposits)
+     */
     function deposit(address token, uint256 amount) external payable {
         if (msg.value > 0) {
             /// user is sending host native coin
+            if (amount != msg.value) revert ErrorsLib.InvalidDepositAmount();
+
             Evvm(evvmAddress).addAmountToUser(
                 msg.sender,
                 address(0),
@@ -35,11 +50,19 @@ contract Treasury {
             );
         } else {
             /// user is sending ERC20 tokens
+            
+            if (msg.value != 0) revert ErrorsLib.InvalidDepositAmount();
+
             IERC20(token).transferFrom(msg.sender, address(this), amount);
             Evvm(evvmAddress).addAmountToUser(msg.sender, token, amount);
         }
     }
 
+    /**
+     * @notice Withdraw ETH or ERC20 tokens
+     * @param token Token address (address(0) for ETH)
+     * @param amount Amount to withdraw
+     */
     function withdraw(address token, uint256 amount) external {
         if (Evvm(evvmAddress).getBalance(msg.sender, token) < amount)
             revert ErrorsLib.InsufficientBalance();
@@ -64,3 +87,4 @@ contract Treasury {
         }
     }
 }
+

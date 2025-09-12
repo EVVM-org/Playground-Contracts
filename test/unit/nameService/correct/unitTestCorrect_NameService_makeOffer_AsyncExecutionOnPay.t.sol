@@ -69,7 +69,7 @@ contract unitTestCorrect_NameService_makeOffer_AsyncExecutionOnPay is
         treasury = new Treasury(address(evvm));
         evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
 
-        evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
+        evvm.setPointStaker(COMMON_USER_STAKER.Address, 0x01);
     }
 
     /**
@@ -88,7 +88,7 @@ contract unitTestCorrect_NameService_makeOffer_AsyncExecutionOnPay is
         private
         returns (uint256 totalOfferAmount, uint256 totalPriorityFeeAmount)
     {
-        evvm._addBalance(
+        evvm.addBalance(
             user.Address,
             MATE_TOKEN_ADDRESS,
             offerAmount + priorityFeeAmount
@@ -113,7 +113,7 @@ contract unitTestCorrect_NameService_makeOffer_AsyncExecutionOnPay is
         uint256 nonceNameServicePre,
         uint256 nonceNameService
     ) private {
-        evvm._addBalance(
+        evvm.addBalance(
             user.Address,
             MATE_TOKEN_ADDRESS,
             nameService.getPricePerRegistration()

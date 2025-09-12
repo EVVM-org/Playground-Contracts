@@ -63,7 +63,7 @@ contract unitTestRevert_Staking_adminFunctions is Test, Constants {
         evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
         
 
-        evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
+        evvm.setPointStaker(COMMON_USER_STAKER.Address, 0x01);
     }
 
     function test__unitRevert__addPresaleStaker__nonOwner() external {

@@ -67,7 +67,7 @@ contract unitTestCorrect_NameService_preRegistrationUsername_SyncExecutionOnPay 
         treasury = new Treasury(address(evvm));
         evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
 
-        evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
+        evvm.setPointStaker(COMMON_USER_STAKER.Address, 0x01);
     }
 
     /**
@@ -83,7 +83,7 @@ contract unitTestCorrect_NameService_preRegistrationUsername_SyncExecutionOnPay 
         address token,
         uint256 priorityFeeAmount
     ) private returns (uint256 totalPriorityFeeAmount) {
-        evvm._addBalance(user, token, priorityFeeAmount);
+        evvm.addBalance(user, token, priorityFeeAmount);
 
         totalPriorityFeeAmount = priorityFeeAmount;
     }

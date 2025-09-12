@@ -66,7 +66,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
         treasury = new Treasury(address(evvm));
         evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
 
-        evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
+        evvm.setPointStaker(COMMON_USER_STAKER.Address, 0x01);
 
         makeRegistrationUsername(
             COMMON_USER_NO_STAKER_1,
@@ -90,7 +90,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
         AccountData memory user,
         uint256 priorityFeeAmount
     ) private returns (uint256 totalPriorityFeeAmount) {
-        evvm._addBalance(user.Address, MATE_TOKEN_ADDRESS, priorityFeeAmount);
+        evvm.addBalance(user.Address, MATE_TOKEN_ADDRESS, priorityFeeAmount);
 
         totalPriorityFeeAmount = priorityFeeAmount;
     }
@@ -102,7 +102,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
         uint256 nonceNameServicePre,
         uint256 nonceNameService
     ) private {
-        evvm._addBalance(
+        evvm.addBalance(
             user.Address,
             MATE_TOKEN_ADDRESS,
             nameService.getPricePerRegistration()
@@ -190,7 +190,7 @@ contract unitTestRevert_NameService_withdrawOffer is Test, Constants {
         bytes memory signatureNameService;
         bytes memory signatureEVVM;
 
-        evvm._addBalance(user.Address, MATE_TOKEN_ADDRESS, amountToOffer);
+        evvm.addBalance(user.Address, MATE_TOKEN_ADDRESS, amountToOffer);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,

@@ -66,7 +66,7 @@ contract fuzzTest_EVVM_disperseCaPay is Test, Constants {
     }
 
     function addBalance(address user, address token, uint256 amount) private {
-        evvm._addBalance(user, token, amount);
+        evvm.addBalance(user, token, amount);
     }
 
     struct caPayFuzzTestInput {
@@ -83,7 +83,7 @@ contract fuzzTest_EVVM_disperseCaPay is Test, Constants {
         vm.assume(input.amountA > 0 && input.amountB > 0);
         HelperCa c = new HelperCa{salt: input.salt}(address(evvm));
         if (input.isCaStaker) {
-            evvm._setPointStaker(address(c), 0x01);
+            evvm.setPointStaker(address(c), 0x01);
         }
 
         uint256 amountTotal = uint256(input.amountA) + uint256(input.amountB);

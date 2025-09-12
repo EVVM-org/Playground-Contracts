@@ -73,7 +73,7 @@ contract fuzzTest_NameService_preRegistrationUsername is Test, Constants {
         treasury = new Treasury(address(evvm));
         evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
 
-        evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
+        evvm.setPointStaker(COMMON_USER_STAKER.Address, 0x01);
     }
 
     function addBalance(
@@ -81,7 +81,7 @@ contract fuzzTest_NameService_preRegistrationUsername is Test, Constants {
         address token,
         uint256 priorityFeeAmount
     ) private returns (uint256 totalPriorityFeeAmount) {
-        evvm._addBalance(user, token, priorityFeeAmount);
+        evvm.addBalance(user, token, priorityFeeAmount);
 
         totalPriorityFeeAmount = priorityFeeAmount;
     }

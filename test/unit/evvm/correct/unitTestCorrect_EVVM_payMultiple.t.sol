@@ -64,7 +64,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
         treasury = new Treasury(address(evvm));
         evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
 
-        evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
+        evvm.setPointStaker(COMMON_USER_STAKER.Address, 0x01);
     }
 
     function addBalance(
@@ -73,7 +73,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
         uint256 amount,
         uint256 priorityFee
     ) private {
-        evvm._addBalance(user, token, amount + priorityFee);
+        evvm.addBalance(user, token, amount + priorityFee);
     }
 
     /**

@@ -69,7 +69,7 @@ contract unitTestCorrect_NameService_renewUsername_AsyncExecutionOnPay is
         evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
         
 
-        evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
+        evvm.setPointStaker(COMMON_USER_STAKER.Address, 0x01);
 
         makeRegistrationUsername(
             COMMON_USER_NO_STAKER_1,
@@ -85,7 +85,7 @@ contract unitTestCorrect_NameService_renewUsername_AsyncExecutionOnPay is
         string memory username,
         uint256 priorityFeeAmount
     ) private returns (uint256 totalPriorityFeeAmount) {
-        evvm._addBalance(
+        evvm.addBalance(
             user.Address,
             MATE_TOKEN_ADDRESS,
             nameService.seePriceToRenew(username) + priorityFeeAmount
@@ -100,7 +100,7 @@ contract unitTestCorrect_NameService_renewUsername_AsyncExecutionOnPay is
         uint256 nonceNameServicePre,
         uint256 nonceNameService
     ) private {
-        evvm._addBalance(
+        evvm.addBalance(
             user.Address,
             MATE_TOKEN_ADDRESS,
             nameService.getPricePerRegistration()
@@ -191,7 +191,7 @@ contract unitTestCorrect_NameService_renewUsername_AsyncExecutionOnPay is
         bytes memory signatureNameService;
         bytes memory signatureEVVM;
 
-        evvm._addBalance(user.Address, MATE_TOKEN_ADDRESS, amountToOffer);
+        evvm.addBalance(user.Address, MATE_TOKEN_ADDRESS, amountToOffer);
 
         (v, r, s) = vm.sign(
             user.PrivateKey,

@@ -63,13 +63,16 @@ contract unitTestRevert_EVVM_adminFunctions is Test, Constants {
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         treasury = new Treasury(address(evvm));
-        evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
+        evvm._setupNameServiceAndTreasuryAddress(
+            address(nameService),
+            address(treasury)
+        );
 
-        evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
+        evvm.setPointStaker(COMMON_USER_STAKER.Address, 0x01);
     }
 
     function addBalance(address user, address token, uint256 amount) private {
-        evvm._addBalance(user, token, amount);
+        evvm.addBalance(user, token, amount);
     }
 
     /**
@@ -145,186 +148,6 @@ contract unitTestRevert_EVVM_adminFunctions is Test, Constants {
 
         vm.expectRevert();
         evvm.rejectProposalAdmin();
-
-        vm.stopPrank();
-    }
-
-    function test__unit_revert__prepareTokenToBeWhitelisted__nAdm() external {
-        vm.startPrank(COMMON_USER.Address);
-
-        vm.expectRevert();
-        evvm.prepareTokenToBeWhitelisted(
-            0xdAC17F958D2ee523a2206206994597C13D831ec7,
-            0x6C3e4cb2E96B01F4b866965A91ed4437839A121a
-        );
-
-        vm.stopPrank();
-    }
-
-    function test__unit_revert__addTokenToWhitelist__nAdm() external {
-        vm.startPrank(ADMIN.Address);
-
-        evvm.prepareTokenToBeWhitelisted(
-            0xdAC17F958D2ee523a2206206994597C13D831ec7,
-            0x6C3e4cb2E96B01F4b866965A91ed4437839A121a
-        );
-        vm.stopPrank();
-
-        vm.warp(block.timestamp + 1 days);
-
-        vm.startPrank(COMMON_USER.Address);
-
-        vm.expectRevert();
-        evvm.addTokenToWhitelist();
-
-        vm.stopPrank();
-    }
-
-    function test__unit_revert__addTokenToWhitelist__notInTime() external {
-        vm.startPrank(ADMIN.Address);
-
-        evvm.prepareTokenToBeWhitelisted(
-            0xdAC17F958D2ee523a2206206994597C13D831ec7,
-            0x6C3e4cb2E96B01F4b866965A91ed4437839A121a
-        );
-
-        vm.warp(block.timestamp + 10 hours);
-
-        vm.expectRevert();
-        evvm.addTokenToWhitelist();
-
-        vm.stopPrank();
-    }
-
-    function test__unit_revert__cancelPrepareTokenToBeWhitelisted__nAdm()
-        external
-    {
-        vm.startPrank(ADMIN.Address);
-
-        evvm.prepareTokenToBeWhitelisted(
-            0xdAC17F958D2ee523a2206206994597C13D831ec7,
-            0x6C3e4cb2E96B01F4b866965A91ed4437839A121a
-        );
-
-        vm.stopPrank();
-
-        vm.warp(block.timestamp + 10 hours);
-
-        vm.startPrank(COMMON_USER.Address);
-
-        vm.expectRevert();
-        evvm.cancelPrepareTokenToBeWhitelisted();
-
-        vm.stopPrank();
-    }
-
-    function test__unit_revert__changePool__nAdm() external {
-        vm.startPrank(ADMIN.Address);
-
-        evvm.prepareTokenToBeWhitelisted(
-            0xdAC17F958D2ee523a2206206994597C13D831ec7,
-            address(0)
-        );
-
-        vm.warp(block.timestamp + 1 days);
-
-        evvm.addTokenToWhitelist();
-
-        vm.stopPrank();
-
-        vm.startPrank(COMMON_USER.Address);
-
-        vm.expectRevert();
-        evvm.changePool(
-            0xdAC17F958D2ee523a2206206994597C13D831ec7,
-            0x6C3e4cb2E96B01F4b866965A91ed4437839A121a
-        );
-
-        vm.stopPrank();
-    }
-
-    modifier setTestAddress() {
-        vm.startPrank(ADMIN.Address);
-
-        evvm.prepareTokenToBeWhitelisted(
-            0xdAC17F958D2ee523a2206206994597C13D831ec7,
-            0x6C3e4cb2E96B01F4b866965A91ed4437839A121a
-        );
-
-        vm.warp(block.timestamp + 1 days);
-
-        evvm.addTokenToWhitelist();
-
-        vm.stopPrank();
-        _;
-    }
-
-    function test__unit_revert__removeTokenWhitelist__nAdm()
-        external
-        setTestAddress
-    {
-        vm.startPrank(COMMON_USER.Address);
-
-        vm.expectRevert();
-        evvm.removeTokenWhitelist(0xdAC17F958D2ee523a2206206994597C13D831ec7);
-
-        vm.stopPrank();
-    }
-
-    function test__unit_revert__prepareMaxAmountToWithdraw__nAdm() external {
-        vm.startPrank(COMMON_USER.Address);
-
-        vm.expectRevert();
-        evvm.prepareMaxAmountToWithdraw(1 ether);
-
-        vm.stopPrank();
-    }
-
-    function test__unit_revert__cancelPrepareMaxAmountToWithdraw__nAdm()
-        external
-    {
-        vm.startPrank(ADMIN.Address);
-
-        evvm.prepareMaxAmountToWithdraw(1 ether);
-
-        vm.stopPrank();
-
-        vm.warp(block.timestamp + 10 hours);
-
-        vm.startPrank(COMMON_USER.Address);
-
-        vm.expectRevert();
-        evvm.cancelPrepareMaxAmountToWithdraw();
-
-        vm.stopPrank();
-    }
-
-    function test__unit_revert__getMaxAmountToWithdraw__nAdm() external {
-        vm.startPrank(ADMIN.Address);
-
-        evvm.prepareMaxAmountToWithdraw(1 ether);
-
-        vm.stopPrank();
-
-        vm.warp(block.timestamp + 1 days);
-
-        vm.startPrank(COMMON_USER.Address);
-
-        vm.expectRevert();
-        evvm.setMaxAmountToWithdraw();
-
-        vm.stopPrank();
-    }
-
-    function test__unit_revert__getMaxAmountToWithdraw__notInTime() external {
-        vm.startPrank(ADMIN.Address);
-
-        evvm.prepareMaxAmountToWithdraw(1 ether);
-
-        vm.warp(block.timestamp + 10 hours);
-
-        vm.expectRevert();
-        evvm.setMaxAmountToWithdraw();
 
         vm.stopPrank();
     }

@@ -71,7 +71,7 @@ contract fuzzTest_Staking_goldenStaking is Test, Constants {
         treasury = new Treasury(address(evvm));
         evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
 
-        evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
+        evvm.setPointStaker(COMMON_USER_STAKER.Address, 0x01);
 
         uint256 totalAmount = giveMateToExecute(GOLDEN_STAKER.Address, 10);
 
@@ -88,7 +88,7 @@ contract fuzzTest_Staking_goldenStaking is Test, Constants {
         address user,
         uint256 stakingAmount
     ) private returns (uint256 totalAmount) {
-        evvm._addBalance(
+        evvm.addBalance(
             user,
             MATE_TOKEN_ADDRESS,
             staking.priceOfStaking() * stakingAmount

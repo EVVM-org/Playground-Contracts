@@ -67,7 +67,7 @@ contract unitTestCorrect_Staking_publicServiceStaking_SyncExecutionOnPay is
         evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
         
 
-        evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
+        evvm.setPointStaker(COMMON_USER_STAKER.Address, 0x01);
 
         vm.startPrank(ADMIN.Address);
 
@@ -85,7 +85,7 @@ contract unitTestCorrect_Staking_publicServiceStaking_SyncExecutionOnPay is
         uint256 stakingAmount,
         uint256 priorityFee
     ) private returns (uint256 totalOfMate, uint256 totalOfPriorityFee) {
-        evvm._addBalance(
+        evvm.addBalance(
             user,
             MATE_TOKEN_ADDRESS,
             (staking.priceOfStaking() * stakingAmount) + priorityFee

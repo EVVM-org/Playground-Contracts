@@ -65,7 +65,7 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         treasury = new Treasury(address(evvm));
         evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
 
-        evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
+        evvm.setPointStaker(COMMON_USER_STAKER.Address, 0x01);
 
         makeRegistrationUsername(
             COMMON_USER_NO_STAKER_1,
@@ -109,7 +109,7 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         private
         returns (uint256 totalAmountFlush, uint256 totalPriorityFeeAmount)
     {
-        evvm._addBalance(
+        evvm.addBalance(
             user.Address,
             MATE_TOKEN_ADDRESS,
             nameService.getPriceToFlushCustomMetadata(
@@ -130,7 +130,7 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         uint256 nonceNameServicePre,
         uint256 nonceNameService
     ) private {
-        evvm._addBalance(
+        evvm.addBalance(
             user.Address,
             MATE_TOKEN_ADDRESS,
             nameService.getPricePerRegistration()
@@ -215,7 +215,7 @@ contract unitTestRevert_NameService_flushCustomMetadata is Test, Constants {
         bytes32 r;
         bytes32 s;
 
-        evvm._addBalance(
+        evvm.addBalance(
             user.Address,
             MATE_TOKEN_ADDRESS,
             nameService.getPriceToAddCustomMetadata()

@@ -33,17 +33,7 @@ abstract contract EvvmStorage is EvvmStructs {
 
     bytes1 breakerSetupNameServiceAddress;
 
-    EvvmMetadata evvmMetadata =
-        EvvmMetadata({
-            EvvmName: "EVVM",
-            EvvmID: 777,
-            principalTokenName: "MATE Token",
-            principalTokenSymbol: "MATE",
-            principalTokenAddress: 0x0000000000000000000000000000000000000001,
-            totalSupply: 2033333333000000000000000000,
-            eraTokens: 2033333333000000000000000000 / 2,
-            reward: 5000000000000000000
-        });
+    EvvmMetadata evvmMetadata;
 
     AddressTypeProposal admin;
 
@@ -56,8 +46,6 @@ abstract contract EvvmStorage is EvvmStructs {
     address proposalImplementation;
     uint256 timeToAcceptImplementation;
 
-    UintTypeProposal maxAmountToWithdraw;
-
     mapping(address => bytes1) stakerList;
 
     mapping(address user => mapping(address token => uint256 quantity)) balances;
@@ -68,7 +56,4 @@ abstract contract EvvmStorage is EvvmStructs {
 
     mapping(address user => uint256 nonce) nextFisherDepositNonce;
 
-    mapping(address user => uint256 nonce) nextFisherWithdrawalNonce;
-
-    mapping(address token => whitheListedTokenMetadata) whitelistedTokens;
 }

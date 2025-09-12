@@ -65,7 +65,7 @@ contract unitTestRevert_EVVM_dispersePay_syncExecution is Test, Constants {
         evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
         
 
-        evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
+        evvm.setPointStaker(COMMON_USER_STAKER.Address, 0x01);
 
         nameService._setIdentityBaseMetadata(
             "dummy",
@@ -85,7 +85,7 @@ contract unitTestRevert_EVVM_dispersePay_syncExecution is Test, Constants {
         uint256 amount,
         uint256 priorityFee
     ) private {
-        evvm._addBalance(user, token, amount + priorityFee);
+        evvm.addBalance(user, token, amount + priorityFee);
     }
 
     /**

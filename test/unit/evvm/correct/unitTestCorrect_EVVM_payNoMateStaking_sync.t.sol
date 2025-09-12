@@ -75,7 +75,7 @@ contract unitTestCorrect_EVVM_payNoStaker_sync is Test, Constants {
      */
 
     function test__unit_correct__payNoStaker_sync__nPF_nEX_AD() external {
-        evvm._addBalance(
+        evvm.addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             ETHER_ADDRESS,
             0.003 ether
@@ -122,7 +122,7 @@ contract unitTestCorrect_EVVM_payNoStaker_sync is Test, Constants {
     }
 
     function test__unit_correct__payNoStaker_sync__PF_nEX_AD() external {
-        evvm._addBalance(
+        evvm.addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             ETHER_ADDRESS,
             0.00300001 ether
@@ -169,7 +169,7 @@ contract unitTestCorrect_EVVM_payNoStaker_sync is Test, Constants {
     }
 
     function test__unit_correct__payNoStaker_sync__nPF_EX_AD() external {
-        evvm._addBalance(
+        evvm.addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             ETHER_ADDRESS,
             0.003 ether
@@ -215,7 +215,7 @@ contract unitTestCorrect_EVVM_payNoStaker_sync is Test, Constants {
     }
 
     function test__unit_correct__payNoStaker_sync__PF_EX_AD() external {
-        evvm._addBalance(
+        evvm.addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             ETHER_ADDRESS,
             0.00300001 ether
@@ -276,7 +276,7 @@ contract unitTestCorrect_EVVM_payNoStaker_sync is Test, Constants {
                 flagNotAUsername: 0x00
             })
         );
-        evvm._addBalance(
+        evvm.addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             ETHER_ADDRESS,
             0.003 ether
@@ -333,7 +333,7 @@ contract unitTestCorrect_EVVM_payNoStaker_sync is Test, Constants {
                 flagNotAUsername: 0x00
             })
         );
-        evvm._addBalance(
+        evvm.addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             ETHER_ADDRESS,
             0.00300001 ether
@@ -390,7 +390,7 @@ contract unitTestCorrect_EVVM_payNoStaker_sync is Test, Constants {
                 flagNotAUsername: 0x00
             })
         );
-        evvm._addBalance(
+        evvm.addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             ETHER_ADDRESS,
             0.003 ether
@@ -451,7 +451,7 @@ contract unitTestCorrect_EVVM_payNoStaker_sync is Test, Constants {
                 flagNotAUsername: 0x00
             })
         );
-        evvm._addBalance(
+        evvm.addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             ETHER_ADDRESS,
             0.00300001 ether

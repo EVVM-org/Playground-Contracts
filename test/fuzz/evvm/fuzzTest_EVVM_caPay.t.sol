@@ -63,11 +63,11 @@ contract fuzzTest_EVVM_caPay is Test, Constants {
         treasury = new Treasury(address(evvm));
         evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
 
-        evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
+        evvm.setPointStaker(COMMON_USER_STAKER.Address, 0x01);
     }
 
     function addBalance(address user, address token, uint256 amount) private {
-        evvm._addBalance(user, token, amount);
+        evvm.addBalance(user, token, amount);
     }
 
     struct caPayFuzzTestInput {
@@ -81,7 +81,7 @@ contract fuzzTest_EVVM_caPay is Test, Constants {
         vm.assume(input.amount > 0);
         HelperCa c = new HelperCa{salt: input.salt}(address(evvm));
         if (input.isCaStaker) {
-            evvm._setPointStaker(address(c), 0x01);
+            evvm.setPointStaker(address(c), 0x01);
         }
 
         addBalance(address(c), input.token, input.amount);

@@ -65,11 +65,11 @@ contract unitTestRevert_EVVM_caPay is Test, Constants {
         treasury = new Treasury(address(evvm));
         evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
 
-        evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
+        evvm.setPointStaker(COMMON_USER_STAKER.Address, 0x01);
     }
 
     function addBalance(address user, address token, uint256 amount) private {
-        evvm._addBalance(user, token, amount);
+        evvm.addBalance(user, token, amount);
     }
 
     /**

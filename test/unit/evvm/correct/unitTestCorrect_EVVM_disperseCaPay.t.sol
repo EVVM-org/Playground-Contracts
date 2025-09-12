@@ -66,7 +66,7 @@ contract unitTestCorrect_EVVM_disperseCaPay is Test, Constants {
     }
 
     function addBalance(address user, address token, uint256 amount) private {
-        evvm._addBalance(user, token, amount);
+        evvm.addBalance(user, token, amount);
     }
 
     /**
@@ -108,7 +108,7 @@ contract unitTestCorrect_EVVM_disperseCaPay is Test, Constants {
 
     function test__unit_correct__disperseCaPay__S() external {
         addBalance(address(this), ETHER_ADDRESS, 0.001 ether);
-        evvm._setPointStaker(address(this), 0x01);
+        evvm.setPointStaker(address(this), 0x01);
 
         EvvmStructs.DisperseCaPayMetadata[]
             memory toData = new EvvmStructs.DisperseCaPayMetadata[](2);

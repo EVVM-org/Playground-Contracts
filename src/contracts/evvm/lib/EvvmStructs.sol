@@ -38,12 +38,7 @@ abstract contract EvvmStructs {
         uint256 amount;
         address toAddress;
     }
-
-    struct whitheListedTokenMetadata {
-        bool isAllowed;
-        address uniswapPool;
-    }
-
+    
     struct EvvmMetadata {
         string EvvmName;
         uint256 EvvmID;

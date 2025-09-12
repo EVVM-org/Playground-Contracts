@@ -127,7 +127,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
         uint256 priorityFee
     ) internal {
         if (giveTokensForPayment) {
-            evvm._addBalance(
+            evvm.addBalance(
                 userToInteract.Address,
                 tokenAddress,
                 amount + priorityFee

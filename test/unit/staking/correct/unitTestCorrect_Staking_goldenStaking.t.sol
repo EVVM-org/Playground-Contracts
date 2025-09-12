@@ -65,7 +65,7 @@ contract unitTestCorrect_Staking_goldenStaking is Test, Constants {
         evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
         
 
-        evvm._setPointStaker(COMMON_USER_STAKER.Address, 0x01);
+        evvm.setPointStaker(COMMON_USER_STAKER.Address, 0x01);
     }
 
     function giveMateToExecute(
@@ -73,7 +73,7 @@ contract unitTestCorrect_Staking_goldenStaking is Test, Constants {
         uint256 stakingAmount,
         uint256 priorityFee
     ) private returns (uint256 totalOfMate) {
-        evvm._addBalance(
+        evvm.addBalance(
             user,
             MATE_TOKEN_ADDRESS,
             (staking.priceOfStaking() * stakingAmount) + priorityFee
