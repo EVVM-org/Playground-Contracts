@@ -65,7 +65,15 @@ fullTest:
 	@sleep 3
 	@echo "Running all NameService unit fuzz tests"
 	@forge test --match-contract fuzzTest_NameService --summary --detailed --gas-report -vvv --show-progress
-
+	@sleep 5
+	@echo "Running all Treasury unit correct tests"
+	@forge test --match-contract unitTestCorrect_Treasury --summary --detailed --gas-report -vvv --show-progress
+	@sleep 3
+	@echo "Running all Treasury unit revert tests"
+	@forge test --match-contract unitTestRevert_Treasury --summary --detailed --gas-report -vvv --show-progress
+	@sleep 3
+	@echo "Running all Treasury unit fuzz tests"
+	@forge test --match-contract fuzzTest_Treasury --summary --detailed --gas-report -vvv --show-progress
 ## EVVM
 
 testEvvm:
@@ -609,6 +617,19 @@ unitTestRevertTreasuryDeposit:
 unitTestRevertTreasuryWithdraw:
 	@echo "Running Treasury withdraw unit revert tests"
 	@forge test --match-path test/unit/treasury/revert/unitTestRevert_Treasury_withdraw.t.sol --summary --detailed --gas-report -vvv --show-progress
+
+#### Fuzz Tests
+fuzzTestTreasury:
+	@echo "Running Treasury unit fuzz tests"
+	@forge test --match-contract fuzzTest_Treasury --summary --detailed --gas-report -vvv --show-progress
+
+fuzzTestTreasuryDeposit:
+	@echo "Running Treasury deposit unit fuzz tests"
+	@forge test --match-path test/fuzz/treasury/fuzzTest_Treasury_deposit.t.sol --summary --detailed --gas-report -vvv --show-progress
+
+fuzzTestTreasuryWithdraw:
+	@echo "Running Treasury withdraw unit fuzz tests"
+	@forge test --match-path test/fuzz/treasury/fuzzTest_Treasury_withdraw.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 ######################################################################################################
 
