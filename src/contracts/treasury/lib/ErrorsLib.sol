@@ -7,4 +7,5 @@ library ErrorsLib {
     error InsufficientBalance();
     error PrincipalTokenIsNotWithdrawable();
     error InvalidDepositAmount();
+    error DepositAmountMustBeGreaterThanZero();
 }

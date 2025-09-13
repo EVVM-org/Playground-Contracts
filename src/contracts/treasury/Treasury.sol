@@ -36,10 +36,11 @@ contract Treasury {
      * @param amount Token amount (ignored for ETH deposits)
      */
     function deposit(address token, uint256 amount) external payable {
-        if (msg.value > 0) {
+        if (address(0) == token) {
             /// user is sending host native coin
+            if (msg.value == 0) revert ErrorsLib.DepositAmountMustBeGreaterThanZero();
             if (amount != msg.value) revert ErrorsLib.InvalidDepositAmount();
-
+            
             Evvm(evvmAddress).addAmountToUser(
                 msg.sender,
                 address(0),
@@ -49,6 +50,7 @@ contract Treasury {
             /// user is sending ERC20 tokens
             
             if (msg.value != 0) revert ErrorsLib.InvalidDepositAmount();
+            if (amount == 0) revert ErrorsLib.DepositAmountMustBeGreaterThanZero();
 
             IERC20(token).transferFrom(msg.sender, address(this), amount);
             Evvm(evvmAddress).addAmountToUser(msg.sender, token, amount);
