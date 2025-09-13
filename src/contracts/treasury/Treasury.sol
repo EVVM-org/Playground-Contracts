@@ -22,9 +22,6 @@ contract Treasury {
     /// @notice Address of the EVVM core contract
     address public evvmAddress;
 
-    /// @notice Nonces for Fisher Bridge withdrawals
-    mapping(address user => uint256 nonce) nextFisherWithdrawalNonce;
-
     /**
      * @notice Initialize Treasury with EVVM contract address
      * @param _evvmAddress Address of the EVVM core contract

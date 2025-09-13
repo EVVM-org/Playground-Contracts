@@ -568,6 +568,34 @@ fuzzTestNameServiceFlushUsername:
 	@echo "Running NameService fuzz tests for flushUsername"
 	@forge test --match-path test/fuzz/nameService/fuzzTest_NameService_flushUsername.t.sol --summary --detailed --gas-report -vvv --show-progress
 
+## Treasury
+
+testTreasury:
+	@echo "Running all Treasury unit correct tests"
+	@forge test --match-contract unitTestCorrect_Treasury --summary --detailed --gas-report -vvv --show-progress
+	@sleep 3
+	@echo "Running all Treasury unit revert tests"
+	@forge test --match-contract unitTestRevert_Treasury --summary --detailed --gas-report -vvv --show-progress
+	@sleep 3
+	@echo "Running all Treasury unit fuzz tests"
+	@forge test --match-contract fuzzTest_Treasury --summary --detailed --gas-report -vvv --show-progress
+
+### Unit tests
+
+#### Correct Tests
+
+unitTestCorrectTreasury:
+	@echo "Running all Treasury unit correct tests"
+	@forge test --match-contract unitTestCorrect_Treasury --summary --detailed --gas-report -vvv --show-progress
+
+unitTestCorrectTreasuryDeposit:
+	@echo "Running Treasury deposit unit correct tests"
+	@forge test --match-path test/unit/treasury/correct/unitTestCorrect_Treasury_deposit.t.sol --summary --detailed --gas-report -vvv --show-progress
+
+unitTestCorrectTreasuryWithdraw:
+	@echo "Running Treasury withdraw unit correct tests"
+	@forge test --match-path test/unit/treasury/correct/unitTestCorrect_Treasury_withdraw.t.sol --summary --detailed --gas-report -vvv --show-progress
+
 ######################################################################################################
 
 # Other commands

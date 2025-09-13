@@ -88,7 +88,7 @@ contract unitTestCorrect_Staking_goldenStaking is Test, Constants {
         return (evvm.getRewardAmount() * 2) * numberOfTx;
     }
 
-    function test__unit_correct__unit_correct__goldenStaking__staking() external {
+    function test__unit_correct__goldenStaking__staking() external {
         uint256 totalOfMate = giveMateToExecute(GOLDEN_STAKER.Address, 10, 0);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
