@@ -257,7 +257,7 @@ contract fuzzTest_NameService_makeOffer is Test, Constants {
         bool electionTwo;
     }
 
-    function test__unit_correct__makeOffer__nPF(
+    function test__fuzz__makeOffer__nPF(
         MakeOfferFuzzTestInput_nPF memory input
     ) external {
         vm.assume(input.offerAmount > 0 && input.daysForExpire > 0);
@@ -325,7 +325,7 @@ contract fuzzTest_NameService_makeOffer is Test, Constants {
         );
     }
 
-    function test__unit_correct__makeOffer__PF(
+    function test__fuzz__makeOffer__PF(
         MakeOfferFuzzTestInput_PF memory input
     ) external {
         vm.assume(input.offerAmount > 0 && input.daysForExpire > 0);

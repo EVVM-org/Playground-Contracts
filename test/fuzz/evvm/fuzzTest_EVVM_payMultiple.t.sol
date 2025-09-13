@@ -143,7 +143,7 @@ contract fuzzTest_EVVM_payMultiple is Test, Constants, EvvmStructs {
         bool[2] priorityFlag;
     }
 
-    function test__unit_correct__payMultiple__nonStaker(
+    function test__fuzz__payMultiple__nonStaker(
         PayMultipleFuzzTestInput memory input
     ) external {
         vm.assume(

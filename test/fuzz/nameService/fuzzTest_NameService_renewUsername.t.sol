@@ -322,7 +322,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         bool priorityFlagEVVM;
     }
 
-    function test__unit_correct__renewUsername__nS_nPF_nOf(
+    function test__fuzz__renewUsername__nS_nPF_nOf(
         RenewUsernameFuzzTestInput_nPF_nOf memory input
     ) external {
         vm.assume(input.nonceNameService > 1);
@@ -387,7 +387,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         );
     }
 
-    function test__unit_correct__renewUsername__nS_nPF_Of(
+    function test__fuzz__renewUsername__nS_nPF_Of(
         RenewUsernameFuzzTestInput_nPF_Of memory input
     ) external {
         vm.assume(input.nonceNameService > 1 && input.amountToOffer > 0);
@@ -475,7 +475,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         );
     }
 
-    function test__unit_correct__renewUsername__nS_nPF_Ex(
+    function test__fuzz__renewUsername__nS_nPF_Ex(
         RenewUsernameFuzzTestInput_nPF_Ex memory input
     ) external {
         vm.assume(
@@ -547,7 +547,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         );
     }
 
-    function test__unit_correct__renewUsername__nS_PF_nOf(
+    function test__fuzz__renewUsername__nS_PF_nOf(
         RenewUsernameFuzzTestInput_PF_nOf memory input
     ) external {
         vm.assume(
@@ -614,7 +614,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         );
     }
 
-    function test__unit_correct__renewUsername__nS_PF_Of(
+    function test__fuzz__renewUsername__nS_PF_Of(
         RenewUsernameFuzzTestInput_PF_Of memory input
     ) external {
         vm.assume(
@@ -706,7 +706,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         );
     }
 
-    function test__unit_correct__renewUsername__nS_PF_Ex(
+    function test__fuzz__renewUsername__nS_PF_Ex(
         RenewUsernameFuzzTestInput_PF_Ex memory input
     ) external {
         vm.assume(
@@ -778,7 +778,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         );
     }
 
-    function test__unit_correct__renewUsername__S_nPF_nOf(
+    function test__fuzz__renewUsername__S_nPF_nOf(
         RenewUsernameFuzzTestInput_nPF_nOf memory input
     ) external {
         vm.assume(input.nonceNameService > 1);
@@ -848,7 +848,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         );
     }
 
-    function test__unit_correct__renewUsername__S_nPF_Of(
+    function test__fuzz__renewUsername__S_nPF_Of(
         RenewUsernameFuzzTestInput_nPF_Of memory input
     ) external {
         vm.assume(input.nonceNameService > 1 && input.amountToOffer > 0);
@@ -941,7 +941,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         );
     }
 
-    function test__unit_correct__renewUsername__S_nPF_Ex(
+    function test__fuzz__renewUsername__S_nPF_Ex(
         RenewUsernameFuzzTestInput_nPF_Ex memory input
     ) external {
         vm.assume(
@@ -1018,7 +1018,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         );
     }
 
-    function test__unit_correct__renewUsername__S_PF_nOf(
+    function test__fuzz__renewUsername__S_PF_nOf(
         RenewUsernameFuzzTestInput_PF_nOf memory input
     ) external {
         vm.assume(
@@ -1090,7 +1090,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         );
     }
 
-    function test__unit_correct__renewUsername__S_PF_Of(
+    function test__fuzz__renewUsername__S_PF_Of(
         RenewUsernameFuzzTestInput_PF_Of memory input
     ) external {
         vm.assume(
@@ -1187,7 +1187,7 @@ contract fuzzTest_NameService_renewUsername is Test, Constants {
         );
     }
 
-    function test__unit_correct__renewUsername__S_PF_Ex(
+    function test__fuzz__renewUsername__S_PF_Ex(
         RenewUsernameFuzzTestInput_PF_Ex memory input
     ) external {
         vm.assume(
