@@ -104,10 +104,15 @@ contract unitTestCorrect_Treasury_withdraw is Test, Constants {
         treasury.withdraw(address(0), 0.01 ether);
 
         vm.stopPrank();
+
         assertEq(
             evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, address(0)),
             0
         );
+
+        assertEq(COMMON_USER_NO_STAKER_1.Address.balance, 0.01 ether);
+
+        assertEq(address(treasury).balance, 0);
     }
 
     function test__unit_correct__withdraw__token() external {
@@ -126,5 +131,11 @@ contract unitTestCorrect_Treasury_withdraw is Test, Constants {
             ),
             0
         );
+
+        assertEq(
+            testToken.balanceOf(COMMON_USER_NO_STAKER_1.Address),
+            10 ether
+        );
+        assertEq(testToken.balanceOf(address(treasury)), 0);
     }
 }

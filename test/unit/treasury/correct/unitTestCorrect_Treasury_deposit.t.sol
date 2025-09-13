@@ -79,14 +79,17 @@ contract unitTestCorrect_Treasury_deposit is Test, Constants {
         treasury.deposit{value: 0.01 ether}(address(0), 0.01 ether);
 
         vm.stopPrank();
+
         assertEq(
             evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, address(0)),
             0.01 ether
         );
+        assertEq(address(treasury).balance, 0.01 ether);
+        assertEq(COMMON_USER_NO_STAKER_1.Address.balance, 0 ether);
     }
 
     function test__unit_correct__deposit__token() external {
-        testToken.mint(COMMON_USER_NO_STAKER_1.Address, 10.2 ether);
+        testToken.mint(COMMON_USER_NO_STAKER_1.Address, 10 ether);
 
         vm.startPrank(COMMON_USER_NO_STAKER_1.Address);
 
@@ -100,5 +103,7 @@ contract unitTestCorrect_Treasury_deposit is Test, Constants {
             evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, address(testToken)),
             10 ether
         );
+        assertEq(testToken.balanceOf(address(treasury)), 10 ether);
+        assertEq(testToken.balanceOf(COMMON_USER_NO_STAKER_1.Address), 0);
     }
 }
