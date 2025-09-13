@@ -606,6 +606,10 @@ unitTestRevertTreasuryDeposit:
 	@echo "Running Treasury deposit unit revert tests"
 	@forge test --match-path test/unit/treasury/revert/unitTestRevert_Treasury_deposit.t.sol --summary --detailed --gas-report -vvv --show-progress
 
+unitTestRevertTreasuryWithdraw:
+	@echo "Running Treasury withdraw unit revert tests"
+	@forge test --match-path test/unit/treasury/revert/unitTestRevert_Treasury_withdraw.t.sol --summary --detailed --gas-report -vvv --show-progress
+
 ######################################################################################################
 
 # Other commands
