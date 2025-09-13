@@ -596,6 +596,16 @@ unitTestCorrectTreasuryWithdraw:
 	@echo "Running Treasury withdraw unit correct tests"
 	@forge test --match-path test/unit/treasury/correct/unitTestCorrect_Treasury_withdraw.t.sol --summary --detailed --gas-report -vvv --show-progress
 
+#### Revert Tests
+
+unitTestRevertTreasury:
+	@echo "Running all Treasury unit revert tests"
+	@forge test --match-contract unitTestRevert_Treasury --summary --detailed --gas-report -vvv --show-progress
+
+unitTestRevertTreasuryDeposit:
+	@echo "Running Treasury deposit unit revert tests"
+	@forge test --match-path test/unit/treasury/revert/unitTestRevert_Treasury_deposit.t.sol --summary --detailed --gas-report -vvv --show-progress
+
 ######################################################################################################
 
 # Other commands
