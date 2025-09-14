@@ -1063,7 +1063,7 @@ contract NameService {
         });
     }
 
-    function proposeWithdrawMateTokens(uint256 _amount) public onlyAdmin {
+    function proposeWithdrawPrincipalTokens(uint256 _amount) public onlyAdmin {
         if (
             Evvm(evvmAddress.current).getBalance(
                 address(this),
@@ -1082,12 +1082,12 @@ contract NameService {
         amountToWithdrawTokens.timeToAccept = block.timestamp + 1 days;
     }
 
-    function cancelWithdrawMateTokens() public onlyAdmin {
+    function cancelWithdrawPrincipalTokens() public onlyAdmin {
         amountToWithdrawTokens.proposal = 0;
         amountToWithdrawTokens.timeToAccept = 0;
     }
 
-    function claimWithdrawMateTokens() public onlyAdmin {
+    function claimWithdrawPrincipalTokens() public onlyAdmin {
         if (block.timestamp < amountToWithdrawTokens.timeToAccept) {
             revert();
         }

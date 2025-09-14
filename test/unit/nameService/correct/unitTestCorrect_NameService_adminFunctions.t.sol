@@ -115,7 +115,7 @@ contract unitTestCorrect_NameService_adminFunctions is Test, Constants {
         assertEq(timeToAccept, 0);
     }
 
-    function test__unit_correct__proposeWithdrawMateTokens() external {
+    function test__unit_correct__proposeWithdrawPrincipalTokens() external {
         uint256 totalInEvvm = evvm.getBalance(
             address(nameService),
             MATE_TOKEN_ADDRESS
@@ -123,7 +123,7 @@ contract unitTestCorrect_NameService_adminFunctions is Test, Constants {
         uint256 removeAmount = totalInEvvm / 10;
 
         vm.startPrank(ADMIN.Address);
-        nameService.proposeWithdrawMateTokens(removeAmount);
+        nameService.proposeWithdrawPrincipalTokens(removeAmount);
         vm.stopPrank();
 
         (uint256 amount, uint256 time) = nameService
@@ -133,7 +133,7 @@ contract unitTestCorrect_NameService_adminFunctions is Test, Constants {
         assertEq(time, block.timestamp + 1 days);
     }
 
-    function test__unit_correct__cancelWithdrawMateTokenss() external {
+    function test__unit_correct__cancelWithdrawPrincipalTokenss() external {
         uint256 totalInEvvm = evvm.getBalance(
             address(nameService),
             MATE_TOKEN_ADDRESS
@@ -141,8 +141,8 @@ contract unitTestCorrect_NameService_adminFunctions is Test, Constants {
         uint256 removeAmount = totalInEvvm / 10;
 
         vm.startPrank(ADMIN.Address);
-        nameService.proposeWithdrawMateTokens(removeAmount);
-        nameService.cancelWithdrawMateTokens();
+        nameService.proposeWithdrawPrincipalTokens(removeAmount);
+        nameService.cancelWithdrawPrincipalTokens();
         vm.stopPrank();
 
         (uint256 amount, uint256 time) = nameService
@@ -152,7 +152,7 @@ contract unitTestCorrect_NameService_adminFunctions is Test, Constants {
         assertEq(time, 0);
     }
 
-    function test__unit_correct__claimWithdrawMateTokens() external {
+    function test__unit_correct__claimWithdrawPrincipalTokens() external {
         uint256 totalInEvvm = evvm.getBalance(
             address(nameService),
             MATE_TOKEN_ADDRESS
@@ -160,9 +160,9 @@ contract unitTestCorrect_NameService_adminFunctions is Test, Constants {
         uint256 removeAmount = totalInEvvm / 10;
 
         vm.startPrank(ADMIN.Address);
-        nameService.proposeWithdrawMateTokens(removeAmount);
+        nameService.proposeWithdrawPrincipalTokens(removeAmount);
         skip(1 days);
-        nameService.claimWithdrawMateTokens();
+        nameService.claimWithdrawPrincipalTokens();
         vm.stopPrank();
 
         assertEq(

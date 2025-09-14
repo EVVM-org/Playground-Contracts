@@ -193,7 +193,7 @@ contract unitTestRevert_NameService_adminFunctions is Test, Constants {
         assertEq(timeToAcceptBefore, timeToAcceptAfter);
     }
 
-    function test__unit_revert__proposeWithdrawMateTokens__userNotAdmin()
+    function test__unit_revert__proposeWithdrawPrincipalTokens__userNotAdmin()
         external
     {
         uint256 totalInEvvm = evvm.getBalance(
@@ -204,7 +204,7 @@ contract unitTestRevert_NameService_adminFunctions is Test, Constants {
 
         vm.startPrank(WILDCARD_USER.Address);
         vm.expectRevert();
-        nameService.proposeWithdrawMateTokens(removeAmount);
+        nameService.proposeWithdrawPrincipalTokens(removeAmount);
         vm.stopPrank();
 
         (uint256 amount, uint256 time) = nameService
@@ -214,7 +214,7 @@ contract unitTestRevert_NameService_adminFunctions is Test, Constants {
         assertEq(time, 0);
     }
 
-    function test__unit_revert__proposeWithdrawMateTokens__adminTriesToClaimMoreThanPermitted()
+    function test__unit_revert__proposeWithdrawPrincipalTokens__adminTriesToClaimMoreThanPermitted()
         external
     {
         uint256 total = evvm.getBalance(
@@ -224,7 +224,7 @@ contract unitTestRevert_NameService_adminFunctions is Test, Constants {
 
         vm.startPrank(ADMIN.Address);
         vm.expectRevert();
-        nameService.proposeWithdrawMateTokens(total);
+        nameService.proposeWithdrawPrincipalTokens(total);
         vm.stopPrank();
 
         (uint256 amount, uint256 time) = nameService
@@ -234,12 +234,12 @@ contract unitTestRevert_NameService_adminFunctions is Test, Constants {
         assertEq(time, 0);
     }
 
-    function test__unit_revert__proposeWithdrawMateTokens__adminClaimZero()
+    function test__unit_revert__proposeWithdrawPrincipalTokens__adminClaimZero()
         external
     {
         vm.startPrank(ADMIN.Address);
         vm.expectRevert();
-        nameService.proposeWithdrawMateTokens(0);
+        nameService.proposeWithdrawPrincipalTokens(0);
         vm.stopPrank();
 
         (uint256 amount, uint256 time) = nameService
@@ -249,7 +249,7 @@ contract unitTestRevert_NameService_adminFunctions is Test, Constants {
         assertEq(time, 0);
     }
 
-    function test__unit_revert__cancelWithdrawMateTokens__userNotAdmin()
+    function test__unit_revert__cancelWithdrawPrincipalTokens__userNotAdmin()
         external
     {
         uint256 totalInEvvm = evvm.getBalance(
@@ -259,12 +259,12 @@ contract unitTestRevert_NameService_adminFunctions is Test, Constants {
         uint256 removeAmount = totalInEvvm / 10;
 
         vm.startPrank(ADMIN.Address);
-        nameService.proposeWithdrawMateTokens(removeAmount);
+        nameService.proposeWithdrawPrincipalTokens(removeAmount);
         vm.stopPrank();
 
         vm.startPrank(WILDCARD_USER.Address);
         vm.expectRevert();
-        nameService.cancelWithdrawMateTokens();
+        nameService.cancelWithdrawPrincipalTokens();
         vm.stopPrank();
 
         (uint256 amount, uint256 time) = nameService
@@ -274,7 +274,7 @@ contract unitTestRevert_NameService_adminFunctions is Test, Constants {
         assertEq(time, block.timestamp + 1 days);
     }
 
-    function test__unit_revert__claimWithdrawMateTokens__notAdmin() external {
+    function test__unit_revert__claimWithdrawPrincipalTokens__notAdmin() external {
         uint256 totalInEvvm = evvm.getBalance(
             address(nameService),
             MATE_TOKEN_ADDRESS
@@ -282,7 +282,7 @@ contract unitTestRevert_NameService_adminFunctions is Test, Constants {
         uint256 removeAmount = totalInEvvm / 10;
 
         vm.startPrank(ADMIN.Address);
-        nameService.proposeWithdrawMateTokens(removeAmount);
+        nameService.proposeWithdrawPrincipalTokens(removeAmount);
         vm.stopPrank();
 
         (uint256 amountAfter, uint256 timeAfter) = nameService
@@ -292,7 +292,7 @@ contract unitTestRevert_NameService_adminFunctions is Test, Constants {
 
         vm.startPrank(WILDCARD_USER.Address);
         vm.expectRevert();
-        nameService.claimWithdrawMateTokens();
+        nameService.claimWithdrawPrincipalTokens();
         vm.stopPrank();
 
         assertEq(
@@ -307,7 +307,7 @@ contract unitTestRevert_NameService_adminFunctions is Test, Constants {
         assertEq(timeBefore, timeAfter);
     }
 
-    function test__unit_revert__claimWithdrawMateTokens__adminTriesToClaimNotInTime()
+    function test__unit_revert__claimWithdrawPrincipalTokens__adminTriesToClaimNotInTime()
         external
     {
         uint256 totalInEvvm = evvm.getBalance(
@@ -317,7 +317,7 @@ contract unitTestRevert_NameService_adminFunctions is Test, Constants {
         uint256 removeAmount = totalInEvvm / 10;
 
         vm.startPrank(ADMIN.Address);
-        nameService.proposeWithdrawMateTokens(removeAmount);
+        nameService.proposeWithdrawPrincipalTokens(removeAmount);
         vm.stopPrank();
 
         (uint256 amountAfter, uint256 timeAfter) = nameService
@@ -327,7 +327,7 @@ contract unitTestRevert_NameService_adminFunctions is Test, Constants {
 
         vm.startPrank(ADMIN.Address);
         vm.expectRevert();
-        nameService.claimWithdrawMateTokens();
+        nameService.claimWithdrawPrincipalTokens();
         vm.stopPrank();
 
         assertEq(
