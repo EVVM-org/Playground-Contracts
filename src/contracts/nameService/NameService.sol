@@ -691,11 +691,11 @@ contract NameService {
      *  @custom:important
      *      if the owner of the username wants to renew the
      *      username one year before the expiration date, the
-     *      price is 0 MATE only for a limited time, after that
+     *      price is 0 Principal Token only for a limited time, after that
      *      the price is consultable in the seePriceToRenew function
      *      but if the owner of the username wants to renew more than
      *      one year before the expiration date, the price is 500,000
-     *      MATE and can be renewed up to 100 years
+     *      Principal Token and can be renewed up to 100 years
      *
      *  @param user the address of the user who owns the username
      *  @param username the username to renew
@@ -1513,7 +1513,7 @@ contract NameService {
                     }
                 }
             }
-            //Tiene un costo variable pero mínimo de 500 MATE,
+            //Tiene un costo variable pero mínimo de 500 Principal Token,
             if (price == 0) {
                 price = 500 * 10 ** 18;
             } else {

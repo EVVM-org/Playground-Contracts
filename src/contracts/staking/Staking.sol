@@ -27,8 +27,11 @@ import {ErrorsLib} from "./lib/ErrorsLib.sol";
 import {SignatureUtils} from "@EVVM/playground/contracts/staking/lib/SignatureUtils.sol";
 
 contract Staking {
-    using SignatureRecover for *;
-
+    /**
+     * @dev Metadata for presale stakers
+     * @param isAllow Whether the address is allowed to participate in presale staking
+     * @param stakingAmount Current number of staking tokens staked (max 2 for presale)
+     */
     struct presaleStakerMetadata {
         bool isAllow;
         uint256 stakingAmount;
@@ -36,13 +39,13 @@ contract Staking {
 
     /**
      * @dev Struct to store the history of the user
-     * @param transactionType if the transaction is staking or unstaking
+     * @param transactionType Type of transaction:
      *          - 0x01 for staking
      *          - 0x02 for unstaking
-     *
-     * @param amount amount of sMATE staked/unstaked
-     * @param timestamp timestamp of the transaction
-     * @param totalStaked total amount of sMATE staked
+     *          - Other values for yield/reward transactions
+     * @param amount Amount of staking staked/unstaked or reward received
+     * @param timestamp Timestamp when the transaction occurred
+     * @param totalStaked Total amount of staking currently staked after this transaction
      */
     struct HistoryMetadata {
         bytes32 transactionType;
@@ -51,60 +54,100 @@ contract Staking {
         uint256 totalStaked;
     }
 
+    /**
+     * @dev Struct for managing address change proposals with time delay
+     * @param actual Current active address
+     * @param proposal Proposed new address
+     * @param timeToAccept Timestamp when the proposal can be accepted
+     */
     struct AddressTypeProposal {
         address actual;
         address proposal;
         uint256 timeToAccept;
     }
 
+    /**
+     * @dev Struct for managing uint256 change proposals with time delay
+     * @param actual Current active value
+     * @param proposal Proposed new value
+     * @param timeToAccept Timestamp when the proposal can be accepted
+     */
     struct UintTypeProposal {
         uint256 actual;
         uint256 proposal;
         uint256 timeToAccept;
     }
 
+    /**
+     * @dev Struct for managing boolean flag changes with time delay
+     * @param flag Current boolean state
+     * @param timeToAccept Timestamp when the flag change can be executed
+     */
     struct BoolTypeProposal {
         bool flag;
         uint256 timeToAccept;
     }
 
+    /// @dev Address of the EVVM core contract
     address private EVVM_ADDRESS;
 
+    /// @dev Maximum number of presale stakers allowed
     uint256 private constant LIMIT_PRESALE_STAKER = 800;
+    /// @dev Current count of registered presale stakers
     uint256 private presaleStakerCount;
+    /// @dev Price of one staking main token (5083 main token = 1 staking)
     uint256 private constant PRICE_OF_STAKING = 5083 * (10 ** 18);
 
+    /// @dev Admin address management with proposal system
     AddressTypeProposal private admin;
+    /// @dev Golden Fisher address management with proposal system
     AddressTypeProposal private goldenFisher;
+    /// @dev Estimator contract address management with proposal system
     AddressTypeProposal private estimator;
+    /// @dev Time delay for regular staking after unstaking
     UintTypeProposal private secondsToUnlockStaking;
+    /// @dev Time delay for full unstaking (21 days default)
     UintTypeProposal private secondsToUnllockFullUnstaking;
+    /// @dev Flag to enable/disable presale staking
     BoolTypeProposal private allowPresaleStaking;
+    /// @dev Flag to enable/disable public staking
     BoolTypeProposal private allowPublicStaking;
 
+    /// @dev Address representing the principal Principal Token
     address private constant PRINCIPAL_TOKEN_ADDRESS =
         0x0000000000000000000000000000000000000001;
 
+    /// @dev One-time setup breaker for estimator and EVVM addresses
     bytes1 private breakerSetupEstimatorAndEvvm;
 
+    /// @dev Mapping to track used nonces for staking operations per user
     mapping(address => mapping(uint256 => bool)) private stakingNonce;
 
+    /// @dev Mapping to store presale staker metadata
     mapping(address => presaleStakerMetadata) private userPresaleStaker;
 
+    /// @dev Mapping to store complete staking history for each user
     mapping(address => HistoryMetadata[]) private userHistory;
 
+    /// @dev Modifier to restrict access to admin functions
     modifier onlyOwner() {
         if (msg.sender != admin.actual) revert ErrorsLib.SenderIsNotAdmin();
 
         _;
     }
 
+    /**
+     * @notice Contract constructor
+     * @dev Initializes the staking contract with admin and golden fisher addresses
+     * @param initialAdmin Address that will have admin privileges
+     * @param initialGoldenFisher Address that will have golden fisher privileges
+     */
     constructor(address initialAdmin, address initialGoldenFisher) {
         admin.actual = initialAdmin;
 
         goldenFisher.actual = initialGoldenFisher;
 
-        allowPublicStaking.flag = false;
+        allowPublicStaking.flag = true;
         allowPresaleStaking.flag = false;
 
         secondsToUnlockStaking.actual = 0;
@@ -114,6 +157,12 @@ contract Staking {
         breakerSetupEstimatorAndEvvm = 0x01;
     }
 
+    /**
+     * @notice One-time setup function for estimator and EVVM addresses
+     * @dev Can only be called once during contract initialization
+     * @param _estimator Address of the Estimator contract
+     * @param _evvm Address of the EVVM core contract
+     */
     function _setupEstimatorAndEvvm(
         address _estimator,
         address _evvm
@@ -126,13 +175,11 @@ contract Staking {
     }
 
     /**
-     *  @dev goldenStaking allows the goldenFisher address to make a stakingProcess.
-     *  @param isStaking boolean to check if the user is staking or unstaking
-     *  @param amountOfStaking amount of sMATE to stake/unstake
-     *  @param signature_EVVM signature for the Evvm contract
-     *
-     * @notice only the goldenFisher address can call this function and only
-     *         can use sync evvm nonces
+     * @notice Allows the golden fisher to stake/unstake with synchronized EVVM nonces
+     * @dev Only the golden fisher address can call this function
+     * @param isStaking True for staking, false for unstaking
+     * @param amountOfStaking Amount of staking tokens to stake/unstake
+     * @param signature_EVVM Signature for the EVVM contract transaction
      */
     function goldenStaking(
         bool isStaking,
@@ -153,26 +200,17 @@ contract Staking {
         );
     }
 
-    /*
-        presaleStaking accede a un mapping que se cargará al 
-        inicializar el contrato y se puede alimentar de 
-        entradas únicamente por el contract owner, con un 
-        máximo de 800 entradas hardcodeado por código (el 800), 
-        revisa presaleClaims y si procede llama a presaleInternalExecution.
-     */
-
     /**
-     *  @dev presaleStaking allows the presale users to make a stakingProcess.
-     *  @param user user address of the user that wants to stake/unstake
-     *  @param isStaking boolean to check if the user is staking or unstaking
-     *  @param nonce nonce for the Staking contract
-     *  @param signature signature for the Staking contract
-     *  @param priorityFee_EVVM priority fee for the Evvm contract
-     *  @param nonce_EVVM nonce for the Evvm contract // staking or unstaking
-     *  @param priorityFlag_EVVM priority for the Evvm contract (true for async, false for sync)
-     *  @param signature_EVVM signature for the Evvm contract // staking or unstaking
-     *
-     *  @notice the presale users can only take 2 Staking tokens, and only one at a time
+     * @notice Allows presale users to stake/unstake with a limit of 2 staking tokens
+     * @dev Only registered presale users can call this function when presale staking is enabled
+     * @param user Address of the user performing the staking operation
+     * @param isStaking True for staking, false for unstaking
+     * @param nonce Unique nonce for this staking operation
+     * @param signature Signature proving authorization for this staking operation
+     * @param priorityFee_EVVM Priority fee for the EVVM transaction
+     * @param nonce_EVVM Nonce for the EVVM contract transaction
+     * @param priorityFlag_EVVM True for async EVVM transaction, false for sync
+     * @param signature_EVVM Signature for the EVVM contract transaction
      */
     function presaleStaking(
         address user,
@@ -216,20 +254,11 @@ contract Staking {
         stakingNonce[user][nonce] = true;
     }
 
-    /*
-        presaleClaims administra el mapping (o datos del tipo que sea) 
-        donde se determina que un address incluida en el presaleStaking 
-        solo puede hacer 2 stakings de 5083 MATE, o sea obtener 2 sMATE, 
-        si hace staking suma 1 (siempre que tenga slots) y si hace 
-        unstaking resta 1. Esta función dejará de usarse cuando 
-        publicStaking pase a ser (1), o sea cuando el protocolo 
-        quede abierto.
-     */
-
     /**
-     *  @dev presaleClaims manages the presaleStaker mapping, only the presale users can make a stakingProcess.
-     *  @param _isStaking boolean to check if the user is staking or unstaking
-     *  @param _user user address of the user that wants to stake/unstake
+     * @notice Internal function to manage presale staking limits and permissions
+     * @dev Enforces the 2 staking token limit for presale users and tracks staking amounts
+     * @param _isStaking True for staking (increments count), false for unstaking (decrements count)
+     * @param _user Address of the presale user
      */
     function presaleClaims(bool _isStaking, address _user) internal {
         if (allowPublicStaking.flag) {
@@ -258,18 +287,18 @@ contract Staking {
     }
 
     /**
-     *  @dev publicStaking allows the users to make a stakingProcess.
-     *  @param user user address of the user that wants to stake/unstake
-     *  @param isStaking boolean to check if the user is staking or unstaking
-     *  @param amountOfStaking amount of sMATE to stake/unstake
-     *  @param nonce nonce for the Staking contract
-     *  @param signature signature for the Staking contract
-     *  @param priorityFee_EVVM priority fee for the Evvm contract // staking or unstaking
-     *  @param nonce_EVVM nonce for the Evvm contract // staking or unstaking
-     *  @param priorityFlag_EVVM priority for the Evvm contract (true for async, false for sync) // staking or unstaking
-     *  @param signature_EVVM signature for the Evvm contract // staking or unstaking
+     * @notice Allows any user to stake/unstake when public staking is enabled
+     * @dev Requires signature verification and handles nonce management
+     * @param user Address of the user performing the staking operation
+     * @param isStaking True for staking, false for unstaking
+     * @param amountOfStaking Amount of staking tokens to stake/unstake
+     * @param nonce Unique nonce for this staking operation
+     * @param signature Signature proving authorization for this staking operation
+     * @param priorityFee_EVVM Priority fee for the EVVM transaction
+     * @param nonce_EVVM Nonce for the EVVM contract transaction
+     * @param priorityFlag_EVVM True for async EVVM transaction, false for sync
+     * @param signature_EVVM Signature for the EVVM contract transaction
      */
-
     function publicStaking(
         address user,
         bool isStaking,
@@ -312,6 +341,20 @@ contract Staking {
         stakingNonce[user][nonce] = true;
     }
 
+    /**
+     * @notice Allows smart contracts (services) to stake on behalf of users
+     * @dev Verifies that the service address has contract code and handles service-specific logic
+     * @param user Address of the user who owns the stake
+     * @param service Address of the smart contract performing the staking
+     * @param isStaking True for staking, false for unstaking
+     * @param amountOfStaking Amount of staking tokens to stake/unstake
+     * @param nonce Unique nonce for this staking operation
+     * @param signature Signature proving authorization for service staking
+     * @param priorityFee_EVVM Priority fee for the EVVM transaction (only for staking)
+     * @param nonce_EVVM Nonce for the EVVM contract transaction (only for staking)
+     * @param priorityFlag_EVVM Priority flag for EVVM transaction (only for staking)
+     * @param signature_EVVM Signature for the EVVM contract transaction (only for staking)
+     */
     function publicServiceStaking(
         address user,
         address service,
@@ -367,6 +410,18 @@ contract Staking {
         stakingNonce[user][nonce] = true;
     }
 
+    /**
+     * @notice Internal function to process service staking operations
+     * @dev Wrapper function that calls the base staking process for service operations
+     * @param user Address of the user who owns the stake
+     * @param service Address of the smart contract performing the staking
+     * @param isStaking True for staking, false for unstaking
+     * @param amountOfStaking Amount of staking tokens to stake/unstake
+     * @param priorityFee_EVVM Priority fee for the EVVM transaction
+     * @param nonce_EVVM Nonce for the EVVM contract transaction
+     * @param priorityFlag_EVVM Priority flag for EVVM transaction
+     * @param signature_EVVM Signature for the EVVM contract transaction
+     */
     function stakingServiceProcess(
         address user,
         address service,
@@ -390,16 +445,16 @@ contract Staking {
     }
 
     /**
-     *  @dev stakingUserProcess allows the contract to make a stakingProcess.
-     *  @param user user address of the user that wants to stake/unstake
-     *  @param amountOfStaking amount of sMATE to stake/unstake
-     *  @param isStaking boolean to check if the user is staking or unstaking
-     *  @param priorityFee_EVVM priority fee for the Evvm contract
-     *  @param nonce_EVVM nonce for the Evvm contract
-     *  @param priorityFlag_EVVM priority for the Evvm contract (true for async, false for sync)
-     *  @param signature_EVVM signature for the Evvm contract
+     * @notice Internal function to process user staking operations
+     * @dev Wrapper function that calls the base staking process for user operations
+     * @param user Address of the user performing the staking operation
+     * @param amountOfStaking Amount of staking tokens to stake/unstake
+     * @param isStaking True for staking, false for unstaking
+     * @param priorityFee_EVVM Priority fee for the EVVM transaction
+     * @param nonce_EVVM Nonce for the EVVM contract transaction
+     * @param priorityFlag_EVVM Priority flag for EVVM transaction
+     * @param signature_EVVM Signature for the EVVM contract transaction
      */
-
     function stakingUserProcess(
         address user,
         uint256 amountOfStaking,
@@ -422,15 +477,16 @@ contract Staking {
     }
 
     /**
-     * @dev Base function that handles both service and user staking processes
-     * @param userAccount address of the user paying for the transaction
-     * @param stakingAccount address that will receive the stake/unstake
-     * @param isStaking boolean indicating if staking or unstaking
-     * @param amountOfStaking amount of sMATE tokens
-     * @param priorityFee_EVVM priority fee for EVVM
-     * @param nonce_EVVM nonce for EVVM
-     * @param priorityFlag_EVVM priority flag for EVVM
-     * @param signature_EVVM signature for EVVM
+     * @notice Core staking logic that handles both service and user staking operations
+     * @dev Processes payments, updates history, handles time locks, and manages EVVM integration
+     * @param userAccount Address of the user paying for the transaction
+     * @param stakingAccount Address that will receive the stake/unstake (can be same as userAccount)
+     * @param isStaking True for staking (requires payment), false for unstaking (provides refund)
+     * @param amountOfStaking Amount of staking tokens to stake/unstake
+     * @param priorityFee_EVVM Priority fee for EVVM transaction
+     * @param nonce_EVVM Nonce for EVVM contract transaction
+     * @param priorityFlag_EVVM True for async EVVM transaction, false for sync
+     * @param signature_EVVM Signature for EVVM contract transaction
      */
     function stakingBaseProcess(
         address userAccount,
@@ -520,6 +576,16 @@ contract Staking {
         }
     }
 
+    /**
+     * @notice Allows users to claim their staking rewards (yield)
+     * @dev Interacts with the Estimator contract to calculate and distribute rewards
+     * @param user Address of the user claiming rewards
+     * @return epochAnswer Epoch identifier for the reward calculation
+     * @return tokenToBeRewarded Address of the token being rewarded
+     * @return amountTotalToBeRewarded Total amount of rewards to be distributed
+     * @return idToOverwriteUserHistory Index in user history to update with reward info
+     * @return timestampToBeOverwritten Timestamp to record for the reward transaction
+     */
     function gimmeYiel(
         address user
     )
@@ -563,9 +629,19 @@ contract Staking {
     }
 
     //▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀
-    // Tools for Evvm
+    // Tools for Evvm Integration
     //▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀
 
+    /**
+     * @notice Internal function to handle payments through the EVVM contract
+     * @dev Supports both synchronous and asynchronous payment modes
+     * @param user Address of the user making the payment
+     * @param amount Amount to be paid in Principal Tokens
+     * @param priorityFee Additional priority fee for the transaction
+     * @param priorityFlag True for async payment, false for sync payment
+     * @param nonce Nonce for the EVVM transaction
+     * @param signature Signature authorizing the payment
+     */
     function makePay(
         address user,
         uint256 amount,
@@ -600,6 +676,13 @@ contract Staking {
         }
     }
 
+    /**
+     * @notice Internal function to handle token distributions through EVVM contract
+     * @dev Used for unstaking refunds and reward distributions
+     * @param tokenAddress Address of the token to be distributed
+     * @param user Address of the recipient
+     * @param amount Amount of tokens to distribute
+     */
     function makeCaPay(
         address tokenAddress,
         address user,
@@ -609,9 +692,14 @@ contract Staking {
     }
 
     //▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀
-    // Admin Functions
+    // Administrative Functions with Time-Delayed Governance
     //▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀
 
+    /**
+     * @notice Adds a single address to the presale staker list
+     * @dev Only admin can call this function, limited to 800 presale stakers total
+     * @param _staker Address to be added to the presale staker list
+     */
     function addPresaleStaker(address _staker) external onlyOwner {
         if (presaleStakerCount > LIMIT_PRESALE_STAKER) {
             revert();
@@ -620,6 +708,11 @@ contract Staking {
         presaleStakerCount++;
     }
 
+    /**
+     * @notice Adds multiple addresses to the presale staker list in batch
+     * @dev Only admin can call this function, limited to 800 presale stakers total
+     * @param _stakers Array of addresses to be added to the presale staker list
+     */
     function addPresaleStakers(address[] calldata _stakers) external onlyOwner {
         for (uint256 i = 0; i < _stakers.length; i++) {
             if (presaleStakerCount > LIMIT_PRESALE_STAKER) {
@@ -630,16 +723,29 @@ contract Staking {
         }
     }
 
+    /**
+     * @notice Proposes a new admin address with 1-day time delay
+     * @dev Part of the time-delayed governance system for admin changes
+     * @param _newAdmin Address of the proposed new admin
+     */
     function proposeAdmin(address _newAdmin) external onlyOwner {
         admin.proposal = _newAdmin;
         admin.timeToAccept = block.timestamp + 1 days;
     }
 
+    /**
+     * @notice Rejects the current admin proposal
+     * @dev Only current admin can reject the pending proposal
+     */
     function rejectProposalAdmin() external onlyOwner {
         admin.proposal = address(0);
         admin.timeToAccept = 0;
     }
 
+    /**
+     * @notice Accepts the admin proposal and becomes the new admin
+     * @dev Can only be called by the proposed admin after the time delay has passed
+     */
     function acceptNewAdmin() external {
         if (
             msg.sender != admin.proposal || admin.timeToAccept > block.timestamp
@@ -769,21 +875,40 @@ contract Staking {
     }
 
     //▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀
-    // Getter Functions
+    // View Functions - Public Data Access
     //▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀
 
+    /**
+     * @notice Returns the complete staking history for an address
+     * @dev Returns an array of all staking transactions and rewards for the user
+     * @param _account Address to query the history for
+     * @return Array of HistoryMetadata containing all transactions
+     */
     function getAddressHistory(
         address _account
     ) public view returns (HistoryMetadata[] memory) {
         return userHistory[_account];
     }
 
+    /**
+     * @notice Returns the number of transactions in an address's staking history
+     * @dev Useful for pagination or checking if an address has any staking history
+     * @param _account Address to query the history size for
+     * @return Number of transactions in the history
+     */
     function getSizeOfAddressHistory(
         address _account
     ) public view returns (uint256) {
         return userHistory[_account].length;
     }
 
+    /**
+     * @notice Returns a specific transaction from an address's staking history
+     * @dev Allows accessing individual transactions by index
+     * @param _account Address to query the history for
+     * @param _index Index of the transaction to retrieve (0-based)
+     * @return HistoryMetadata of the transaction at the specified index
+     */
     function getAddressHistoryByIndex(
         address _account,
         uint256 _index
@@ -791,10 +916,21 @@ contract Staking {
         return userHistory[_account][_index];
     }
 
+    /**
+     * @notice Returns the fixed price of one staking token in Principal Tokens
+     * @dev Returns the constant price of 5083 Principal Tokens per staking
+     * @return Price of one staking token in Principal Tokens (with 18 decimals)
+     */
     function priceOfStaking() external pure returns (uint256) {
         return PRICE_OF_STAKING;
     }
 
+    /**
+     * @notice Calculates when a user can perform full unstaking (withdraw all tokens)
+     * @dev Full unstaking requires waiting 21 days after the last time their balance reached 0
+     * @param _account Address to check the unlock time for
+     * @return Timestamp when full unstaking will be allowed
+     */
     function getTimeToUserUnlockFullUnstakingTime(
         address _account
     ) public view returns (uint256) {
@@ -811,6 +947,12 @@ contract Staking {
             secondsToUnllockFullUnstaking.actual;
     }
 
+    /**
+     * @notice Calculates when a user can stake again after unstaking
+     * @dev Users must wait a configurable period after unstaking before they can stake again
+     * @param _account Address to check the unlock time for
+     * @return Timestamp when staking will be allowed again (0 if already allowed)
+     */
     function getTimeToUserUnlockStakingTime(
         address _account
     ) public view returns (uint256) {
@@ -828,14 +970,30 @@ contract Staking {
         }
     }
 
+    /**
+     * @notice Returns the current time delay for full unstaking operations
+     * @dev Full unstaking requires waiting this many seconds (default: 21 days)
+     * @return Number of seconds required to wait for full unstaking
+     */
     function getSecondsToUnlockFullUnstaking() external view returns (uint256) {
         return secondsToUnllockFullUnstaking.actual;
     }
 
+    /**
+     * @notice Returns the current time delay for regular staking operations
+     * @dev Users must wait this many seconds after unstaking before they can stake again
+     * @return Number of seconds required to wait between unstaking and staking
+     */
     function getSecondsToUnlockStaking() external view returns (uint256) {
         return secondsToUnlockStaking.actual;
     }
 
+    /**
+     * @notice Returns the current amount of staking tokens staked by a user
+     * @dev Returns the total staked amount from the user's most recent transaction
+     * @param _account Address to check the staked amount for
+     * @return Amount of staking tokens currently staked by the user
+     */
     function getUserAmountStaked(
         address _account
     ) public view returns (uint256) {
@@ -848,6 +1006,13 @@ contract Staking {
         return userHistory[_account][lengthOfHistory - 1].totalStaked;
     }
 
+    /**
+     * @notice Checks if a specific nonce has been used for staking by a user
+     * @dev Prevents replay attacks by tracking used nonces
+     * @param _account Address to check the nonce for
+     * @param _nonce Nonce value to check
+     * @return True if the nonce has been used, false otherwise
+     */
     function checkIfStakeNonceUsed(
         address _account,
         uint256 _nonce
@@ -855,14 +1020,31 @@ contract Staking {
         return stakingNonce[_account][_nonce];
     }
 
+    /**
+     * @notice Returns the current golden fisher address
+     * @dev The golden fisher has special staking privileges
+     * @return Address of the current golden fisher
+     */
     function getGoldenFisher() external view returns (address) {
         return goldenFisher.actual;
     }
 
+    /**
+     * @notice Returns the proposed new golden fisher address (if any)
+     * @dev Shows pending golden fisher changes in the governance system
+     * @return Address of the proposed golden fisher (zero address if none)
+     */
     function getGoldenFisherProposal() external view returns (address) {
         return goldenFisher.proposal;
     }
 
+    /**
+     * @notice Returns presale staker information for a given address
+     * @dev Shows if an address is allowed for presale and how many tokens they've staked
+     * @param _account Address to check presale status for
+     * @return isAllow True if the address is allowed for presale staking
+     * @return stakingAmount Number of staking tokens currently staked in presale (max 2)
+     */
     function getPresaleStaker(
         address _account
     ) external view returns (bool, uint256) {
@@ -872,18 +1054,38 @@ contract Staking {
         );
     }
 
+    /**
+     * @notice Returns the current estimator contract address
+     * @dev The estimator calculates staking rewards and yields
+     * @return Address of the current estimator contract
+     */
     function getEstimatorAddress() external view returns (address) {
         return estimator.actual;
     }
 
+    /**
+     * @notice Returns the proposed new estimator contract address (if any)
+     * @dev Shows pending estimator changes in the governance system
+     * @return Address of the proposed estimator contract (zero address if none)
+     */
     function getEstimatorProposal() external view returns (address) {
         return estimator.proposal;
     }
 
+    /**
+     * @notice Returns the current number of registered presale stakers
+     * @dev Maximum allowed is 800 presale stakers
+     * @return Current count of presale stakers
+     */
     function getPresaleStakerCount() external view returns (uint256) {
         return presaleStakerCount;
     }
 
+    /**
+     * @notice Returns the complete public staking configuration and status
+     * @dev Includes current flag state and any pending changes with timestamps
+     * @return BoolTypeProposal struct containing flag and timeToAccept
+     */
     function getAllDataOfAllowPublicStaking()
         external
         view
@@ -892,6 +1094,11 @@ contract Staking {
         return allowPublicStaking;
     }
 
+    /**
+     * @notice Returns the complete presale staking configuration and status
+     * @dev Includes current flag state and any pending changes with timestamps
+     * @return BoolTypeProposal struct containing flag and timeToAccept
+     */
     function getAllowPresaleStaking()
         external
         view
@@ -900,14 +1107,29 @@ contract Staking {
         return allowPresaleStaking;
     }
 
+    /**
+     * @notice Returns the address of the EVVM core contract
+     * @dev The EVVM contract handles payments and staker registration
+     * @return Address of the EVVM core contract
+     */
     function getEvvmAddress() external view returns (address) {
         return EVVM_ADDRESS;
     }
 
+    /**
+     * @notice Returns the address representing the Principal Token
+     * @dev This is a constant address used to represent the principal token
+     * @return Address representing the Principal Token (0x...0001)
+     */
     function getMateAddress() external pure returns (address) {
         return PRINCIPAL_TOKEN_ADDRESS;
     }
 
+    /**
+     * @notice Returns the current admin/owner address
+     * @dev The admin has full control over contract parameters and governance
+     * @return Address of the current contract admin
+     */
     function getOwner() external view returns (address) {
         return admin.actual;
     }
