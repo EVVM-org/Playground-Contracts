@@ -1,0 +1,14 @@
+{
+  "lib/LayerZero-v2": {
+    "rev": "4645b5795185a196713263311f76a497a3267dcc"
+  },
+  "lib/devtools": {
+    "rev": "aa43d67ec0ca5a1668b9174a3f3a032e6ce8693d"
+  },
+  "lib/solady": {
+    "rev": "a5bb996e91aae5b0c068087af7594d92068b12f1"
+  },
+  "lib/solidity-bytes-utils": {
+    "rev": "fc502455bb2a7e26a743378df042612dd50d1eb9"
+  }
+}
