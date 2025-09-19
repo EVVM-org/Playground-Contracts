@@ -14,39 +14,39 @@ library SignatureUtils {
      *       by the users
      */
 
-    
     /**
      *  @notice This function is used to verify the message signed for the fisher bridge
      *  @param signer user who signed the message
      *  @param addressToReceive address of the receiver
-     *  @param _nonce nonce of the transaction
+     *  @param nonce nonce of the transaction
      *  @param tokenAddress address of the token to deposit
-     *  @param _priorityFee priorityFee to send to the white fisher
-     *  @param _amount amount to deposit
+     *  @param priorityFee priorityFee to send to the white fisher
+     *  @param amount amount to deposit
      *  @param signature signature of the user who wants to send the message
      *  @return true if the signature is valid
      */
     function verifyMessageSignedForFisherBridge(
         address signer,
         address addressToReceive,
-        uint256 _nonce,
+        uint256 nonce,
         address tokenAddress,
-        uint256 _priorityFee,
-        uint256 _amount,
+        uint256 priorityFee,
+        uint256 amount,
         bytes memory signature
     ) internal pure returns (bool) {
         return
             SignatureRecover.signatureVerification(
                 string.concat(
+                    "00000000",
                     AdvancedStrings.addressToString(addressToReceive),
                     ",",
-                    Strings.toString(_nonce),
+                    Strings.toString(nonce),
                     ",",
                     AdvancedStrings.addressToString(tokenAddress),
                     ",",
-                    Strings.toString(_priorityFee),
+                    Strings.toString(priorityFee),
                     ",",
-                    Strings.toString(_amount)
+                    Strings.toString(amount)
                 ),
                 signature,
                 signer

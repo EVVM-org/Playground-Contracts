@@ -11,4 +11,5 @@ library ErrorsLib {
     error MailboxNotAuthorized();
     error SenderNotAuthorized();
     error ChainIdNotAuthorized();
+    error InvalidSignature();
 }

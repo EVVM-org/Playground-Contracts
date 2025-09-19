@@ -18,6 +18,8 @@ import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
 import {ErrorsLib} from "@EVVM/playground/contracts/treasuryTwoChains/lib/ErrorsLib.sol";
 import {HostChainStationStructs} from "@EVVM/playground/contracts/treasuryTwoChains/lib/HostChainStationStructs.sol";
 
+import {SignatureUtils} from "@EVVM/playground/contracts/treasuryTwoChains/lib/SignatureUtils.sol";
+
 import {IMailbox} from "@hyperlane-xyz/core/contracts/interfaces/IMailbox.sol";
 
 import {OApp, Origin, MessagingFee} from "@layerzerolabs/oapp-evm/contracts/oapp/OApp.sol";
@@ -41,7 +43,7 @@ contract TreasuryHostChainStation is
 
     AddressTypeProposal admin;
 
-    AddressTypeProposal treasuryExternalChainStationAddress;
+    AddressTypeProposal fisherExecutor;
 
     HyperlaneConfig hyperlane;
 
@@ -49,12 +51,37 @@ contract TreasuryHostChainStation is
 
     AxelarConfig axelar;
 
+    mapping(address => uint256) nextFisherExecutionNonce;
+
     bytes _options =
         OptionsBuilder.addExecutorLzReceiveOption(
             OptionsBuilder.newOptions(),
             50000,
             0
         );
+
+    event FisherBridgeSend(
+        address indexed from,
+        address indexed addressToReceive,
+        address indexed tokenAddress,
+        uint256 priorityFee,
+        uint256 amount,
+        uint256 nonce
+    );
+
+    modifier onlyAdmin() {
+        if (msg.sender != admin.current) {
+            revert();
+        }
+        _;
+    }
+
+    modifier onlyFisherExecutor() {
+        if (msg.sender != fisherExecutor.current) {
+            revert();
+        }
+        _;
+    }
 
     /**
      * @notice Initialize Treasury with EVVM contract address
@@ -79,7 +106,10 @@ contract TreasuryHostChainStation is
         });
         hyperlane = _hyperlaneConfig;
         layerZero = _layerZeroConfig;
-        _setPeer(_layerZeroConfig.externalChainStationEid, _layerZeroConfig.externalChainStationAddress);
+        _setPeer(
+            _layerZeroConfig.externalChainStationEid,
+            _layerZeroConfig.externalChainStationAddress
+        );
     }
 
     /**
@@ -88,7 +118,6 @@ contract TreasuryHostChainStation is
      * @param amount Amount to withdraw
      */
     function withdraw(
-        address from,
         address toAddress,
         address token,
         uint256 amount,
@@ -100,7 +129,7 @@ contract TreasuryHostChainStation is
         if (Evvm(evvmAddress).getBalance(msg.sender, token) < amount)
             revert ErrorsLib.InsufficientBalance();
 
-        Evvm(evvmAddress).removeAmountFromUser(msg.sender, token, amount);
+        executerEVVM(false, msg.sender, token, amount);
 
         bytes memory payload = encodePayload(token, toAddress, amount);
 
@@ -144,6 +173,79 @@ contract TreasuryHostChainStation is
         }
     }
 
+    function fisherBridgeReceive(
+        address from,
+        address addressToReceive,
+        address tokenAddress,
+        uint256 priorityFee,
+        uint256 amount,
+        bytes memory signature
+    ) external onlyFisherExecutor {
+        if (
+            !SignatureUtils.verifyMessageSignedForFisherBridge(
+                from,
+                addressToReceive,
+                nextFisherExecutionNonce[from],
+                tokenAddress,
+                priorityFee,
+                amount,
+                signature
+            )
+        ) revert ErrorsLib.InvalidSignature();
+
+        nextFisherExecutionNonce[from]++;
+
+        executerEVVM(true, addressToReceive, tokenAddress, amount);
+
+        if (priorityFee > 0)
+            executerEVVM(true, msg.sender, tokenAddress, priorityFee);
+    }
+
+    function fisherBridgeSend(
+        address from,
+        address addressToReceive,
+        address tokenAddress,
+        uint256 priorityFee,
+        uint256 amount,
+        bytes memory signature
+    ) external onlyFisherExecutor {
+        if (
+            tokenAddress ==
+            Evvm(evvmAddress).getEvvmMetadata().principalTokenAddress
+        ) revert ErrorsLib.PrincipalTokenIsNotWithdrawable();
+
+        if (Evvm(evvmAddress).getBalance(from, tokenAddress) < amount)
+            revert ErrorsLib.InsufficientBalance();
+
+        if (
+            !SignatureUtils.verifyMessageSignedForFisherBridge(
+                from,
+                addressToReceive,
+                nextFisherExecutionNonce[from],
+                tokenAddress,
+                priorityFee,
+                amount,
+                signature
+            )
+        ) revert ErrorsLib.InvalidSignature();
+
+        nextFisherExecutionNonce[from]++;
+
+        executerEVVM(false, from, tokenAddress, amount + priorityFee);
+
+        if (priorityFee > 0)
+            executerEVVM(true, msg.sender, tokenAddress, priorityFee);
+
+        emit FisherBridgeSend(
+            from,
+            addressToReceive,
+            tokenAddress,
+            priorityFee,
+            amount,
+            nextFisherExecutionNonce[from] - 1
+        );
+    }
+
     // Hyperlane Specific Functions //
     function getQuoteHyperlane(
         address toAddress,
@@ -172,7 +274,7 @@ contract TreasuryHostChainStation is
         if (_origin != hyperlane.externalChainStationDomainId)
             revert ErrorsLib.ChainIdNotAuthorized();
 
-        executeDeposit(_data);
+        decodeAndDeposit(_data);
     }
 
     // LayerZero Specific Functions //
@@ -205,7 +307,7 @@ contract TreasuryHostChainStation is
         if (_origin.sender != layerZero.externalChainStationAddress)
             revert ErrorsLib.SenderNotAuthorized();
 
-        executeDeposit(message);
+        decodeAndDeposit(message);
     }
 
     // Axelar Specific Functions //
@@ -222,10 +324,126 @@ contract TreasuryHostChainStation is
         if (!Strings.equal(_sourceAddress, axelar.externalChainStationAddress))
             revert ErrorsLib.SenderNotAuthorized();
 
-        executeDeposit(_payload);
+        decodeAndDeposit(_payload);
     }
 
-    // Common Functions //
+    /**
+     * @notice Proposes a new admin address with 1-day time delay
+     * @dev Part of the time-delayed governance system for admin changes
+     * @param _newOwner Address of the proposed new admin
+     */
+    function proposeAdmin(address _newOwner) external onlyAdmin {
+        if (_newOwner == address(0) || _newOwner == admin.current) revert();
+
+        admin.proposal = _newOwner;
+        admin.timeToAccept = block.timestamp + 1 days;
+    }
+
+    /**
+     * @notice Cancels a pending admin change proposal
+     * @dev Allows current admin to reject proposed admin changes
+     */
+    function rejectProposalAdmin() external onlyAdmin {
+        admin.proposal = address(0);
+        admin.timeToAccept = 0;
+    }
+
+    /**
+     * @notice Accepts a pending admin proposal and becomes the new admin
+     * @dev Can only be called by the proposed admin after the time delay
+     */
+    function acceptAdmin() external {
+        if (block.timestamp < admin.timeToAccept) revert();
+
+        if (msg.sender != admin.proposal) revert();
+
+        admin.current = admin.proposal;
+
+        admin.proposal = address(0);
+        admin.timeToAccept = 0;
+    }
+
+    function proposeFisherExecutor(
+        address _newFisherExecutor
+    ) external onlyAdmin {
+        if (
+            _newFisherExecutor == address(0) ||
+            _newFisherExecutor == fisherExecutor.current
+        ) revert();
+
+        fisherExecutor.proposal = _newFisherExecutor;
+        fisherExecutor.timeToAccept = block.timestamp + 1 days;
+    }
+
+    function rejectProposalFisherExecutor() external onlyAdmin {
+        fisherExecutor.proposal = address(0);
+        fisherExecutor.timeToAccept = 0;
+    }
+
+    function acceptFisherExecutor() external {
+        if (block.timestamp < fisherExecutor.timeToAccept) revert();
+
+        if (msg.sender != fisherExecutor.proposal) revert();
+
+        fisherExecutor.current = fisherExecutor.proposal;
+
+        fisherExecutor.proposal = address(0);
+        fisherExecutor.timeToAccept = 0;
+    }
+
+    // Getter functions //
+    function getAdmin() external view returns (AddressTypeProposal memory) {
+        return admin;
+    }
+
+    function getFisherExecutor()
+        external
+        view
+        returns (AddressTypeProposal memory)
+    {
+        return fisherExecutor;
+    }
+
+    function getNextFisherExecutionNonce(
+        address user
+    ) external view returns (uint256) {
+        return nextFisherExecutionNonce[user];
+    }
+
+    function getEvvmAddress() external view returns (address) {
+        return evvmAddress;
+    }
+
+    function getHyperlaneConfig()
+        external
+        view
+        returns (HyperlaneConfig memory)
+    {
+        return hyperlane;
+    }
+
+    function getLayerZeroConfig()
+        external
+        view
+        returns (LayerZeroConfig memory)
+    {
+        return layerZero;
+    }
+
+    function getAxelarConfig() external view returns (AxelarConfig memory) {
+        return axelar;
+    }
+
+    function getOptions() external view returns (bytes memory) {
+        return _options;
+    }
+
+    // Internal Functions //
+
+    function decodeAndDeposit(bytes memory payload) internal {
+        (address token, address from, uint256 amount) = decodePayload(payload);
+        executerEVVM(true, from, token, amount);
+    }
 
     function encodePayload(
         address token,
@@ -244,8 +462,22 @@ contract TreasuryHostChainStation is
         );
     }
 
-    function executeDeposit(bytes memory payload) internal {
-        (address token, address from, uint256 amount) = decodePayload(payload);
-        Evvm(evvmAddress).addAmountToUser(from, token, amount);
+    function executerEVVM(
+        bool typeOfExecution,
+        address userToExecute,
+        address token,
+        uint256 amount
+    ) internal {
+        if (typeOfExecution) {
+            // true = add
+            Evvm(evvmAddress).addAmountToUser(userToExecute, token, amount);
+        } else {
+            // false = remove
+            Evvm(evvmAddress).removeAmountFromUser(
+                userToExecute,
+                token,
+                amount
+            );
+        }
     }
 }
