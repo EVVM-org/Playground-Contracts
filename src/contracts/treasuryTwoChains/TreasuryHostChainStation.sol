@@ -16,7 +16,7 @@ pragma solidity ^0.8.0;
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
 import {ErrorsLib} from "@EVVM/playground/contracts/treasuryTwoChains/lib/ErrorsLib.sol";
-import {TreasuryStructs} from "@EVVM/playground/contracts/treasuryTwoChains/lib/TreasuryStructs.sol";
+import {HostChainStationStructs} from "@EVVM/playground/contracts/treasuryTwoChains/lib/HostChainStationStructs.sol";
 
 import {IMailbox} from "@hyperlane-xyz/core/contracts/interfaces/IMailbox.sol";
 
@@ -31,7 +31,7 @@ import {IInterchainGasEstimation} from "@axelar-network/axelar-gmp-sdk-solidity/
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 
 contract TreasuryHostChainStation is
-    TreasuryStructs,
+    HostChainStationStructs,
     OApp,
     OAppOptionsType3,
     AxelarExecutable
@@ -79,7 +79,7 @@ contract TreasuryHostChainStation is
         });
         hyperlane = _hyperlaneConfig;
         layerZero = _layerZeroConfig;
-        //_setPeer(_layerZeroConfig.eid, _layerZeroConfig.externalChainStationAddress);
+        _setPeer(_layerZeroConfig.externalChainStationEid, _layerZeroConfig.externalChainStationAddress);
     }
 
     /**
@@ -139,7 +139,6 @@ contract TreasuryHostChainStation is
                 axelar.externalChainStationAddress,
                 payload
             );
-
         } else {
             revert();
         }

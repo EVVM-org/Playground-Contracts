@@ -14,7 +14,7 @@ pragma solidity ^0.8.0;
  *         that need to interact with these data structures.
  */
 
-abstract contract TreasuryStructs {
+abstract contract HostChainStationStructs {
     struct AddressTypeProposal {
         address current;
         address proposal;
