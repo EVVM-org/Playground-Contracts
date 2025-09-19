@@ -17,29 +17,44 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
 import {ErrorsLib} from "@EVVM/playground/contracts/treasuryTwoChains/lib/ErrorsLib.sol";
 import {TreasuryStructs} from "@EVVM/playground/contracts/treasuryTwoChains/lib/TreasuryStructs.sol";
+
 import {IMailbox} from "@hyperlane-xyz/core/contracts/interfaces/IMailbox.sol";
 
 import {OApp, Origin, MessagingFee} from "@layerzerolabs/oapp-evm/contracts/oapp/OApp.sol";
 import {OAppOptionsType3} from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OAppOptionsType3.sol";
 import {OptionsBuilder} from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OptionsBuilder.sol";
-import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
-contract TreasuryHostChainStation is TreasuryStructs, OApp, OAppOptionsType3 {
+import {AxelarExecutable} from "@axelar-network/axelar-gmp-sdk-solidity/contracts/executable/AxelarExecutable.sol";
+import {IAxelarGasService} from "@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IAxelarGasService.sol";
+import {IInterchainGasEstimation} from "@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IInterchainGasEstimation.sol";
+import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
+
+contract TreasuryHostChainStation is
+    TreasuryStructs,
+    OApp,
+    OAppOptionsType3,
+    AxelarExecutable
+{
     /// @notice Address of the EVVM core contract
     address evvmAddress;
 
     AddressTypeProposal admin;
 
-    AddressTypeProposal mailboxAddress;
+    AddressTypeProposal treasuryExternalChainStationAddress;
 
     HyperlaneConfig hyperlane;
 
     LayerZeroConfig layerZero;
 
-    bytes _options = OptionsBuilder.addExecutorLzReceiveOption(OptionsBuilder.newOptions(), 50000, 0);
-    
-    mapping(uint256 externalChainId => ExternalChainConfig)
-        public externalChainConfig;
+    AxelarConfig axelar;
+
+    bytes _options =
+        OptionsBuilder.addExecutorLzReceiveOption(
+            OptionsBuilder.newOptions(),
+            50000,
+            0
+        );
 
     /**
      * @notice Initialize Treasury with EVVM contract address
@@ -48,15 +63,23 @@ contract TreasuryHostChainStation is TreasuryStructs, OApp, OAppOptionsType3 {
     constructor(
         address _evvmAddress,
         address _admin,
-        address _endpoint
-    )  OApp(_endpoint, _admin) Ownable(_admin) {
+        HyperlaneConfig memory _hyperlaneConfig,
+        LayerZeroConfig memory _layerZeroConfig,
+        AxelarConfig memory _axelarConfig
+    )
+        OApp(_layerZeroConfig.endpointAddress, _admin)
+        Ownable(_admin)
+        AxelarExecutable(_axelarConfig.gatewayAddress)
+    {
         evvmAddress = _evvmAddress;
         admin = AddressTypeProposal({
             current: _admin,
             proposal: address(0),
             timeToAccept: 0
         });
-        //_setPeer()
+        hyperlane = _hyperlaneConfig;
+        layerZero = _layerZeroConfig;
+        //_setPeer(_layerZeroConfig.eid, _layerZeroConfig.externalChainStationAddress);
     }
 
     /**
@@ -84,29 +107,41 @@ contract TreasuryHostChainStation is TreasuryStructs, OApp, OAppOptionsType3 {
         if (protocolToExecute == 0x01) {
             // 0x01 = Hyperlane
             uint256 quote = getQuoteHyperlane(toAddress, token, amount);
-            /*messageId = */ IMailbox(mailboxAddress.current).dispatch{
+            /*messageId = */ IMailbox(hyperlane.mailboxAddress).dispatch{
                 value: quote
             }(
-                hyperlane.domainId,
+                hyperlane.externalChainStationDomainId,
                 hyperlane.externalChainStationAddress,
                 payload
             );
         } else if (protocolToExecute == 0x02) {
             // 0x02 = LayerZero
-            uint256 fee = quoteLayerZero(
-                toAddress,
-                token,
-                amount
-            );
+            uint256 fee = quoteLayerZero(toAddress, token, amount);
             _lzSend(
-                layerZero.eid,
+                layerZero.externalChainStationEid,
                 payload,
                 _options,
                 MessagingFee(fee, 0),
                 msg.sender // Refund any excess fees to the sender.
             );
+        } else if (protocolToExecute == 0x03) {
+            // 0x03 = Axelar
+            IAxelarGasService(axelar.gasServiceAddress)
+                .payNativeGasForContractCall{value: msg.value}(
+                address(this),
+                axelar.externalChainStationChainName,
+                axelar.externalChainStationAddress,
+                payload,
+                msg.sender
+            );
+            gateway().callContract(
+                axelar.externalChainStationChainName,
+                axelar.externalChainStationAddress,
+                payload
+            );
+
         } else {
-            revert ();
+            revert();
         }
     }
 
@@ -117,8 +152,8 @@ contract TreasuryHostChainStation is TreasuryStructs, OApp, OAppOptionsType3 {
         uint256 amount
     ) public view returns (uint256) {
         return
-            IMailbox(mailboxAddress.current).quoteDispatch(
-                hyperlane.domainId,
+            IMailbox(hyperlane.mailboxAddress).quoteDispatch(
+                hyperlane.externalChainStationDomainId,
                 hyperlane.externalChainStationAddress,
                 encodePayload(token, toAddress, amount)
             );
@@ -135,15 +170,10 @@ contract TreasuryHostChainStation is TreasuryStructs, OApp, OAppOptionsType3 {
         if (_sender != hyperlane.externalChainStationAddress)
             revert ErrorsLib.SenderNotAuthorized();
 
-        if (_origin != hyperlane.domainId)
+        if (_origin != hyperlane.externalChainStationDomainId)
             revert ErrorsLib.ChainIdNotAuthorized();
-        //bytes memory payload = abi.encode(token, toAddress, amount);
 
-        (address token, address toAddress, uint256 amount) = abi.decode(
-            _data,
-            (address, address, uint256)
-        );
-        Evvm(evvmAddress).addAmountToUser(toAddress, token, amount);
+        executeDeposit(_data);
     }
 
     // LayerZero Specific Functions //
@@ -154,7 +184,7 @@ contract TreasuryHostChainStation is TreasuryStructs, OApp, OAppOptionsType3 {
         uint256 amount
     ) public view returns (uint256) {
         MessagingFee memory fee = _quote(
-            layerZero.eid,
+            layerZero.externalChainStationEid,
             encodePayload(token, toAddress, amount),
             _options,
             false
@@ -170,20 +200,33 @@ contract TreasuryHostChainStation is TreasuryStructs, OApp, OAppOptionsType3 {
         bytes calldata /*_extraData*/ // Any extra data or options to trigger on receipt.
     ) internal override {
         // Decode the payload to get the message
-        
-
-        if (_origin.srcEid != layerZero.eid)
+        if (_origin.srcEid != layerZero.externalChainStationEid)
             revert ErrorsLib.ChainIdNotAuthorized();
 
         if (_origin.sender != layerZero.externalChainStationAddress)
             revert ErrorsLib.SenderNotAuthorized();
 
-        (address token, address toAddress, uint256 amount) = abi.decode(
-            message,
-            (address, address, uint256)
-        );
-        Evvm(evvmAddress).addAmountToUser(toAddress, token, amount);
+        executeDeposit(message);
     }
+
+    // Axelar Specific Functions //
+
+    function _execute(
+        bytes32 /*commandId*/,
+        string calldata _sourceChain,
+        string calldata _sourceAddress,
+        bytes calldata _payload
+    ) internal override {
+        if (!Strings.equal(_sourceChain, axelar.externalChainStationChainName))
+            revert ErrorsLib.ChainIdNotAuthorized();
+
+        if (!Strings.equal(_sourceAddress, axelar.externalChainStationAddress))
+            revert ErrorsLib.SenderNotAuthorized();
+
+        executeDeposit(_payload);
+    }
+
+    // Common Functions //
 
     function encodePayload(
         address token,
@@ -202,5 +245,8 @@ contract TreasuryHostChainStation is TreasuryStructs, OApp, OAppOptionsType3 {
         );
     }
 
-    
+    function executeDeposit(bytes memory payload) internal {
+        (address token, address from, uint256 amount) = decodePayload(payload);
+        Evvm(evvmAddress).addAmountToUser(from, token, amount);
+    }
 }

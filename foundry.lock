@@ -2,6 +2,12 @@
   "lib/LayerZero-v2": {
     "rev": "4645b5795185a196713263311f76a497a3267dcc"
   },
+  "lib/axelar-gmp-sdk-solidity": {
+    "tag": {
+      "name": "v6.0.6",
+      "rev": "00682b6c3db0cc922ec0c4ea3791852c93d7ae31"
+    }
+  },
   "lib/devtools": {
     "rev": "aa43d67ec0ca5a1668b9174a3f3a032e6ce8693d"
   },

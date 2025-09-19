@@ -21,19 +21,22 @@ abstract contract TreasuryStructs {
         uint256 timeToAccept;
     }
 
-    struct ExternalChainConfig {
-        address treasuryAddress;
-        HyperlaneConfig hyperlaneConfig;
-    }
-
     struct HyperlaneConfig {
-        uint32 domainId;
+        uint32 externalChainStationDomainId;
         bytes32 externalChainStationAddress;
         address mailboxAddress;
     }
 
     struct LayerZeroConfig {
-        uint32 eid;
+        uint32 externalChainStationEid;
         bytes32 externalChainStationAddress;
+        address endpointAddress;
+    }
+
+    struct AxelarConfig {
+        string externalChainStationChainName;
+        string externalChainStationAddress;
+        address gasServiceAddress;
+        address gatewayAddress;
     }
 }
