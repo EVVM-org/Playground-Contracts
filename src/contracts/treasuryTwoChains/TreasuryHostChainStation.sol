@@ -90,13 +90,11 @@ contract TreasuryHostChainStation is
     constructor(
         address _evvmAddress,
         address _admin,
-        HyperlaneConfig memory _hyperlaneConfig,
-        LayerZeroConfig memory _layerZeroConfig,
-        AxelarConfig memory _axelarConfig
+        CrosschainConfig memory _crosschainConfig
     )
-        OApp(_layerZeroConfig.endpointAddress, _admin)
+        OApp(_crosschainConfig.endpointAddress, _admin)
         Ownable(_admin)
-        AxelarExecutable(_axelarConfig.gatewayAddress)
+        AxelarExecutable(_crosschainConfig.gatewayAddress)
     {
         evvmAddress = _evvmAddress;
         admin = AddressTypeProposal({
@@ -104,11 +102,36 @@ contract TreasuryHostChainStation is
             proposal: address(0),
             timeToAccept: 0
         });
-        hyperlane = _hyperlaneConfig;
-        layerZero = _layerZeroConfig;
+        hyperlane = HyperlaneConfig({
+            externalChainStationDomainId: _crosschainConfig
+                .externalChainStationDomainId,
+            externalChainStationAddress: "",
+            mailboxAddress: _crosschainConfig.mailboxAddress
+        });
+        layerZero = LayerZeroConfig({
+            externalChainStationEid: _crosschainConfig.externalChainStationEid,
+            externalChainStationAddress: "",
+            endpointAddress: _crosschainConfig.endpointAddress
+        });
+        axelar = AxelarConfig({
+            externalChainStationChainName: _crosschainConfig
+                .externalChainStationChainName,
+            externalChainStationAddress: "",
+            gasServiceAddress: _crosschainConfig.gasServiceAddress,
+            gatewayAddress: _crosschainConfig.gatewayAddress
+        });
+    }
+
+    function setExternalChainAddress(
+        bytes32 externalChainStationAddressBytes32,
+        string memory externalChainStationAddressString
+    ) external onlyAdmin {
+        hyperlane.externalChainStationAddress = externalChainStationAddressBytes32;
+        layerZero.externalChainStationAddress = externalChainStationAddressBytes32;
+        axelar.externalChainStationAddress = externalChainStationAddressString;
         _setPeer(
-            _layerZeroConfig.externalChainStationEid,
-            _layerZeroConfig.externalChainStationAddress
+            layerZero.externalChainStationEid,
+            layerZero.externalChainStationAddress
         );
     }
 

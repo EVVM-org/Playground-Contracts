@@ -39,4 +39,14 @@ abstract contract HostChainStationStructs {
         address gasServiceAddress;
         address gatewayAddress;
     }
+
+    struct CrosschainConfig {
+        uint32 externalChainStationDomainId;
+        address mailboxAddress;
+        uint32 externalChainStationEid;
+        address endpointAddress;
+        string externalChainStationChainName;
+        address gasServiceAddress;
+        address gatewayAddress;
+    }
 }
