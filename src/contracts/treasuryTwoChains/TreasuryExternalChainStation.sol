@@ -3,7 +3,6 @@
 
 pragma solidity ^0.8.0;
 
-
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {ErrorsLib} from "@EVVM/playground/contracts/treasuryTwoChains/lib/ErrorsLib.sol";
 import {ExternalChainStationStructs} from "@EVVM/playground/contracts/treasuryTwoChains/lib/ExternalChainStationStructs.sol";
@@ -136,14 +135,8 @@ contract TreasuryExternalChainStation is
         uint256 amount,
         bytes1 protocolToExecute
     ) external payable {
-
-        if (IERC20(token).allowance(msg.sender, address(this)) < amount)
-            revert ErrorsLib.InsufficientBalance();
-
-        IERC20(token).transferFrom(msg.sender, address(this), amount);
-
         bytes memory payload = encodePayload(token, toAddress, amount);
-
+        verifyAndDepositERC20(token, amount);
         if (protocolToExecute == 0x01) {
             // 0x01 = Hyperlane
             uint256 quote = getQuoteHyperlane(toAddress, token, amount);
@@ -184,13 +177,11 @@ contract TreasuryExternalChainStation is
         }
     }
 
-
     function depositCoin(
         address toAddress,
         uint256 amount,
         bytes1 protocolToExecute
     ) external payable {
-
         if (msg.value < amount) revert ErrorsLib.InsufficientBalance();
 
         bytes memory payload = encodePayload(address(0), toAddress, amount);
@@ -198,7 +189,8 @@ contract TreasuryExternalChainStation is
         if (protocolToExecute == 0x01) {
             // 0x01 = Hyperlane
             uint256 quote = getQuoteHyperlane(toAddress, address(0), amount);
-            if (msg.value < quote + amount) revert ErrorsLib.InsufficientBalance();
+            if (msg.value < quote + amount)
+                revert ErrorsLib.InsufficientBalance();
             /*messageId = */ IMailbox(hyperlane.mailboxAddress).dispatch{
                 value: quote
             }(
@@ -209,7 +201,8 @@ contract TreasuryExternalChainStation is
         } else if (protocolToExecute == 0x02) {
             // 0x02 = LayerZero
             uint256 fee = quoteLayerZero(toAddress, address(0), amount);
-            if (msg.value < fee + amount) revert ErrorsLib.InsufficientBalance();
+            if (msg.value < fee + amount)
+                revert ErrorsLib.InsufficientBalance();
             _lzSend(
                 layerZero.hostChainStationEid,
                 payload,
@@ -237,8 +230,6 @@ contract TreasuryExternalChainStation is
         }
     }
 
-    
-
     function fisherBridgeReceive(
         address from,
         address addressToReceive,
@@ -260,10 +251,9 @@ contract TreasuryExternalChainStation is
         ) revert ErrorsLib.InvalidSignature();
 
         nextFisherExecutionNonce[from]++;
-
     }
 
-    function fisherBridgeSend(
+    function fisherBridgeSendERC20(
         address from,
         address addressToReceive,
         address tokenAddress,
@@ -271,8 +261,6 @@ contract TreasuryExternalChainStation is
         uint256 amount,
         bytes memory signature
     ) external onlyFisherExecutor {
-    
-
         if (
             !SignatureUtils.verifyMessageSignedForFisherBridge(
                 from,
@@ -285,16 +273,48 @@ contract TreasuryExternalChainStation is
             )
         ) revert ErrorsLib.InvalidSignature();
 
+        verifyAndDepositERC20(tokenAddress, amount);
+
         nextFisherExecutionNonce[from]++;
-
-        
-
-        
 
         emit FisherBridgeSend(
             from,
             addressToReceive,
             tokenAddress,
+            priorityFee,
+            amount,
+            nextFisherExecutionNonce[from] - 1
+        );
+    }
+
+    function fisherBridgeSendCoin(
+        address from,
+        address addressToReceive,
+        uint256 priorityFee,
+        uint256 amount,
+        bytes memory signature
+    ) external payable onlyFisherExecutor {
+        if (
+            !SignatureUtils.verifyMessageSignedForFisherBridge(
+                from,
+                addressToReceive,
+                nextFisherExecutionNonce[from],
+                address(0),
+                priorityFee,
+                amount,
+                signature
+            )
+        ) revert ErrorsLib.InvalidSignature();
+
+        if (msg.value != amount + priorityFee)
+            revert ErrorsLib.InsufficientBalance();
+
+        nextFisherExecutionNonce[from]++;
+
+        emit FisherBridgeSend(
+            from,
+            addressToReceive,
+            address(0),
             priorityFee,
             amount,
             nextFisherExecutionNonce[from] - 1
@@ -329,7 +349,7 @@ contract TreasuryExternalChainStation is
         if (_origin != hyperlane.hostChainStationDomainId)
             revert ErrorsLib.ChainIdNotAuthorized();
 
-        decodeAndDeposit(_data);
+        //decodeAndDeposit(_data);
     }
 
     // LayerZero Specific Functions //
@@ -362,7 +382,7 @@ contract TreasuryExternalChainStation is
         if (_origin.sender != layerZero.hostChainStationAddress)
             revert ErrorsLib.SenderNotAuthorized();
 
-        decodeAndDeposit(message);
+        //decodeAndDeposit(message);
     }
 
     // Axelar Specific Functions //
@@ -379,7 +399,7 @@ contract TreasuryExternalChainStation is
         if (!Strings.equal(_sourceAddress, axelar.hostChainStationAddress))
             revert ErrorsLib.SenderNotAuthorized();
 
-        decodeAndDeposit(_payload);
+        //decodeAndDeposit(_payload);
     }
 
     /**
@@ -495,9 +515,12 @@ contract TreasuryExternalChainStation is
 
     // Internal Functions //
 
-    function decodeAndDeposit(bytes memory payload) internal {
-        (address token, address from, uint256 amount) = decodePayload(payload);
-        
+    function verifyAndDepositERC20(address token, uint256 amount) internal {
+        if (token == address(0)) revert();
+        if (IERC20(token).allowance(msg.sender, address(this)) < amount)
+            revert ErrorsLib.InsufficientBalance();
+
+        IERC20(token).transferFrom(msg.sender, address(this), amount);
     }
 
     function encodePayload(
@@ -516,6 +539,4 @@ contract TreasuryExternalChainStation is
             (address, address, uint256)
         );
     }
-
-    
 }
