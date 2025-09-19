@@ -7,6 +7,8 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {ErrorsLib} from "@EVVM/playground/contracts/treasuryTwoChains/lib/ErrorsLib.sol";
 import {ExternalChainStationStructs} from "@EVVM/playground/contracts/treasuryTwoChains/lib/ExternalChainStationStructs.sol";
 
+import {SafeTransferLib} from "@solady/utils/SafeTransferLib.sol";
+
 import {SignatureUtils} from "@EVVM/playground/contracts/treasuryTwoChains/lib/SignatureUtils.sol";
 
 import {IMailbox} from "@hyperlane-xyz/core/contracts/interfaces/IMailbox.sol";
@@ -349,7 +351,7 @@ contract TreasuryExternalChainStation is
         if (_origin != hyperlane.hostChainStationDomainId)
             revert ErrorsLib.ChainIdNotAuthorized();
 
-        //decodeAndDeposit(_data);
+        decodeAndGive(_data);
     }
 
     // LayerZero Specific Functions //
@@ -382,7 +384,7 @@ contract TreasuryExternalChainStation is
         if (_origin.sender != layerZero.hostChainStationAddress)
             revert ErrorsLib.SenderNotAuthorized();
 
-        //decodeAndDeposit(message);
+        decodeAndGive(message);
     }
 
     // Axelar Specific Functions //
@@ -399,7 +401,7 @@ contract TreasuryExternalChainStation is
         if (!Strings.equal(_sourceAddress, axelar.hostChainStationAddress))
             revert ErrorsLib.SenderNotAuthorized();
 
-        //decodeAndDeposit(_payload);
+        decodeAndGive(_payload);
     }
 
     /**
@@ -514,6 +516,18 @@ contract TreasuryExternalChainStation is
     }
 
     // Internal Functions //
+
+    function decodeAndGive(
+        bytes memory payload
+    ) internal {
+        (address token, address toAddress, uint256 amount) = decodePayload(
+            payload
+        );
+        if (token == address(0)) 
+        SafeTransferLib.safeTransferETH(msg.sender, amount);
+        else
+            IERC20(token).transfer(toAddress, amount);
+    }
 
     function verifyAndDepositERC20(address token, uint256 amount) internal {
         if (token == address(0)) revert();
