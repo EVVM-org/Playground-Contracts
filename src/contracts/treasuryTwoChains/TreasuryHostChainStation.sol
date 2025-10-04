@@ -206,6 +206,7 @@ contract TreasuryHostChainStation is
     ) external onlyFisherExecutor {
         if (
             !SignatureUtils.verifyMessageSignedForFisherBridge(
+                Evvm(evvmAddress).getEvvmID(),
                 from,
                 addressToReceive,
                 nextFisherExecutionNonce[from],
@@ -242,6 +243,7 @@ contract TreasuryHostChainStation is
 
         if (
             !SignatureUtils.verifyMessageSignedForFisherBridge(
+                Evvm(evvmAddress).getEvvmID(),
                 from,
                 addressToReceive,
                 nextFisherExecutionNonce[from],

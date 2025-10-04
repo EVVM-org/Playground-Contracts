@@ -26,6 +26,7 @@ library SignatureUtils {
      *  @return true if the signature is valid
      */
     function verifyMessageSignedForFisherBridge(
+        uint256 evvmID,
         address signer,
         address addressToReceive,
         uint256 nonce,
@@ -36,8 +37,9 @@ library SignatureUtils {
     ) internal pure returns (bool) {
         return
             SignatureRecover.signatureVerification(
+                Strings.toString(evvmID),
+                "00000000",
                 string.concat(
-                    "00000000",
                     AdvancedStrings.addressToString(addressToReceive),
                     ",",
                     Strings.toString(nonce),

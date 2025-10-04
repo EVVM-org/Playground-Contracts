@@ -275,6 +275,7 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
     ) external {
         if (
             !SignatureUtils.verifyMessageSignedForPay(
+                evvmMetadata.EvvmID,
                 from,
                 to_address,
                 to_identity,
@@ -339,6 +340,7 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
     ) external {
         if (
             !SignatureUtils.verifyMessageSignedForPay(
+                evvmMetadata.EvvmID,
                 from,
                 to_address,
                 to_identity,
@@ -407,6 +409,7 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
     ) external {
         if (
             !SignatureUtils.verifyMessageSignedForPay(
+                evvmMetadata.EvvmID,
                 from,
                 to_address,
                 to_identity,
@@ -484,6 +487,7 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
     ) external {
         if (
             !SignatureUtils.verifyMessageSignedForPay(
+                evvmMetadata.EvvmID,
                 from,
                 to_address,
                 to_identity,
@@ -567,6 +571,7 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
         for (uint256 iteration = 0; iteration < payData.length; iteration++) {
             if (
                 !SignatureUtils.verifyMessageSignedForPay(
+                    evvmMetadata.EvvmID,
                     payData[iteration].from,
                     payData[iteration].to_address,
                     payData[iteration].to_identity,
@@ -721,6 +726,7 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
     ) external {
         if (
             !SignatureUtils.verifyMessageSignedForDispersePay(
+                evvmMetadata.EvvmID,
                 from,
                 sha256(abi.encode(toData)),
                 token,
@@ -1249,6 +1255,15 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
      */
     function getEvvmMetadata() external view returns (EvvmMetadata memory) {
         return evvmMetadata;
+    }
+
+    /**
+     * @notice Gets the unique identifier string for this EVVM instance
+     * @dev Returns the EvvmID used for distinguishing different EVVM deployments
+     * @return Unique EvvmID string
+     */
+    function getEvvmID() external view returns (uint256) {
+        return evvmMetadata.EvvmID;
     }
 
     /**

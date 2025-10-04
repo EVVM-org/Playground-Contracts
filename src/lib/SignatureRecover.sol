@@ -6,6 +6,7 @@ pragma solidity ^0.8.0;
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 
 library SignatureRecover {
+    /*
     function signatureVerification(
         string memory message,
         bytes memory signature,
@@ -13,7 +14,22 @@ library SignatureRecover {
     ) internal pure returns (bool) {
         return recoverSigner(message, signature) == expectedSigner;
     }
-    
+    */
+
+    function signatureVerification(
+        string memory evvmID,
+        string memory functionName,
+        string memory inputs,
+        bytes memory signature,
+        address expectedSigner
+    ) internal pure returns (bool) {
+        return
+            recoverSigner(
+                string.concat(evvmID, ",", functionName, ",", inputs),
+                signature
+            ) == expectedSigner;
+    }
+
     function recoverSigner(
         string memory message,
         bytes memory signature

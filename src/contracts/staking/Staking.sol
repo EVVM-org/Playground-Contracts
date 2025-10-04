@@ -224,6 +224,7 @@ contract Staking {
     ) external {
         if (
             !SignatureUtils.verifyMessageSignedForStake(
+                Evvm(EVVM_ADDRESS).getEvvmID(),
                 user,
                 false,
                 isStaking,
@@ -316,6 +317,7 @@ contract Staking {
 
         if (
             !SignatureUtils.verifyMessageSignedForStake(
+                Evvm(EVVM_ADDRESS).getEvvmID(),
                 user,
                 true,
                 isStaking,
@@ -381,6 +383,7 @@ contract Staking {
         if (isStaking) {
             if (
                 !SignatureUtils.verifyMessageSignedForPublicServiceStake(
+                    Evvm(EVVM_ADDRESS).getEvvmID(),
                     user,
                     service,
                     isStaking,

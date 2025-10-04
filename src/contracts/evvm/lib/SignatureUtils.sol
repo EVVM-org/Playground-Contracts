@@ -15,50 +15,6 @@ library SignatureUtils {
      */
 
     /**
-     *  @notice This function is used to verify the message signed for the withdrawal
-     *  @param signer user who signed the message
-     *  @param addressToReceive address of the receiver
-     *  @param _token address of the token to withdraw
-     *  @param _amount amount to withdraw
-     *  @param _priorityFee priorityFee to send to the white fisher
-     *  @param _nonce nonce of the transaction
-     *  @param _priorityFlag if the transaction is priority or not
-     *  @param signature signature of the user who wants to send the message
-     *  @return true if the signature is valid
-     */
-    function verifyMessageSignedForWithdrawal(
-        address signer,
-        address addressToReceive,
-        address _token,
-        uint256 _amount,
-        uint256 _priorityFee,
-        uint256 _nonce,
-        bool _priorityFlag,
-        bytes memory signature
-    ) internal pure returns (bool) {
-        return
-            SignatureRecover.signatureVerification(
-                string.concat(
-                    _priorityFlag ? "920f3d76" : "52896a1f",
-                    ",",
-                    AdvancedStrings.addressToString(addressToReceive),
-                    ",",
-                    AdvancedStrings.addressToString(_token),
-                    ",",
-                    Strings.toString(_amount),
-                    ",",
-                    Strings.toString(_priorityFee),
-                    ",",
-                    Strings.toString(_nonce),
-                    ",",
-                    _priorityFlag ? "true" : "false"
-                ),
-                signature,
-                signer
-            );
-    }
-
-    /**
      *  @notice This function is used to verify the message signed for the payment
      *  @param signer user who signed the message
      *  @param _receiverAddress address of the receiver
@@ -76,6 +32,7 @@ library SignatureUtils {
      *  @return true if the signature is valid
      */
     function verifyMessageSignedForPay(
+        uint256 evvmID,
         address signer,
         address _receiverAddress,
         string memory _receiverIdentity,
@@ -89,9 +46,9 @@ library SignatureUtils {
     ) internal pure returns (bool) {
         return
             SignatureRecover.signatureVerification(
+                Strings.toString(evvmID),
+                _priorityFlag ? "f4e1895b" : "4faa1fa2",
                 string.concat(
-                    _priorityFlag ? "f4e1895b" : "4faa1fa2",
-                    ",",
                     _receiverAddress == address(0)
                         ? _receiverIdentity
                         : AdvancedStrings.addressToString(_receiverAddress),
@@ -128,6 +85,7 @@ library SignatureUtils {
      *  @return true if the signature is valid
      */
     function verifyMessageSignedForDispersePay(
+        uint256 evvmID,
         address signer,
         bytes32 hashList,
         address _token,
@@ -140,9 +98,9 @@ library SignatureUtils {
     ) internal pure returns (bool) {
         return
             SignatureRecover.signatureVerification(
+                Strings.toString(evvmID),
+                "ef83c1d6",
                 string.concat(
-                    "ef83c1d6",
-                    ",",
                     AdvancedStrings.bytes32ToString(hashList),
                     ",",
                     AdvancedStrings.addressToString(_token),
