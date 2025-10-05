@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: EVVM-NONCOMMERCIAL-1.0
-// Full license terms available at: https://www.evvm.org/docs/EVVMNoncommercialLicense
+// Full license terms available at: https://www.evvm.info/docs/EVVMNoncommercialLicense
 
 import {SignatureRecover} from "@EVVM/playground/lib/SignatureRecover.sol";
 import {AdvancedStrings} from "@EVVM/playground/lib/AdvancedStrings.sol";

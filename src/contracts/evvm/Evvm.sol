@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: EVVM-NONCOMMERCIAL-1.0
-// Full license terms available at: https://www.evvm.org/docs/EVVMNoncommercialLicense
+// Full license terms available at: https://www.evvm.info/docs/EVVMNoncommercialLicense
 
 pragma solidity ^0.8.0;
 /*  
@@ -92,7 +92,7 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
 
         balances[_stakingContractAddress][evvmMetadata.principalTokenAddress] =
             getRewardAmount() *
-            2;
+            10;
 
         stakerList[_stakingContractAddress] = FLAG_IS_STAKER;
 
@@ -828,12 +828,12 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
 
         if (size == 0) revert ErrorsLib.NotAnCA();
 
-        if (!_updateBalance(from, to, token, amount))
-            revert ErrorsLib.UpdateBalanceFailed();
-
         if (isAddressStaker(msg.sender)) {
             _giveReward(msg.sender, 1);
         }
+
+        if (!_updateBalance(from, to, token, amount))
+            revert ErrorsLib.UpdateBalanceFailed();
     }
 
     /**
@@ -876,6 +876,10 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
 
         if (size == 0) revert ErrorsLib.NotAnCA();
 
+        if (isAddressStaker(msg.sender)) {
+            _giveReward(msg.sender, 1);
+        }
+
         uint256 acomulatedAmount = 0;
         if (balances[msg.sender][token] < amount)
             revert ErrorsLib.InsufficientBalance();
@@ -892,10 +896,6 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
 
         if (acomulatedAmount != amount)
             revert ErrorsLib.InvalidAmount(acomulatedAmount, amount);
-
-        if (isAddressStaker(msg.sender)) {
-            _giveReward(msg.sender, 1);
-        }
     }
 
     //░▒▓█Treasury exclusive functions██████████████████████████████████████████▓▒░
