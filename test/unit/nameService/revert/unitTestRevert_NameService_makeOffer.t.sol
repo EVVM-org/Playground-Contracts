@@ -114,6 +114,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPreRegistrationUsername(
+                evvm.getEvvmID(),
                 keccak256(abi.encodePacked(username, uint256(clowNumber))),
                 nonceNameServicePre
             )
@@ -135,6 +136,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForRegistrationUsername(
+                evvm.getEvvmID(),
                 username,
                 clowNumber,
                 nonceNameService
@@ -146,6 +148,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -196,6 +199,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForMakeOffer(
+                evvm.getEvvmID(),
                 usernameToMakeOffer,
                 expireDate,
                 amountToOffer,
@@ -207,6 +211,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -245,6 +250,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForMakeOffer(
+                evvm.getEvvmID(),
                 "test",
                 block.timestamp + 30 days,
                 totalOfferAmount,
@@ -256,6 +262,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -382,6 +389,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForMakeOffer(
+                evvm.getEvvmID(),
                 "test",
                 block.timestamp + 30 days,
                 totalOfferAmount,
@@ -393,6 +401,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -458,6 +467,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForMakeOffer(
+                evvm.getEvvmID(),
                 "user",
                 block.timestamp + 30 days,
                 totalOfferAmount,
@@ -469,6 +479,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -534,6 +545,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForMakeOffer(
+                evvm.getEvvmID(),
                 "test",
                 block.timestamp + 1 days,
                 totalOfferAmount,
@@ -545,6 +557,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -610,6 +623,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForMakeOffer(
+                evvm.getEvvmID(),
                 "test",
                 block.timestamp + 30 days,
                 0.0000001 ether,
@@ -621,6 +635,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -686,6 +701,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForMakeOffer(
+                evvm.getEvvmID(),
                 "test",
                 block.timestamp + 30 days,
                 totalOfferAmount,
@@ -697,6 +713,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -762,6 +779,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForMakeOffer(
+                evvm.getEvvmID(),
                 "test",
                 block.timestamp + 30 days,
                 totalOfferAmount,
@@ -773,6 +791,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -838,6 +857,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForMakeOffer(
+                evvm.getEvvmID(),
                 "test",
                 block.timestamp + 30 days,
                 totalOfferAmount,
@@ -849,6 +869,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(evvm),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -914,6 +935,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForMakeOffer(
+                evvm.getEvvmID(),
                 "test",
                 block.timestamp + 30 days,
                 totalOfferAmount,
@@ -925,6 +947,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(0),
                 "nameservice",
                 MATE_TOKEN_ADDRESS,
@@ -990,6 +1013,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForMakeOffer(
+                evvm.getEvvmID(),
                 "test",
                 block.timestamp + 30 days,
                 totalOfferAmount,
@@ -1001,6 +1025,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 ETHER_ADDRESS,
@@ -1066,6 +1091,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForMakeOffer(
+                evvm.getEvvmID(),
                 "test",
                 block.timestamp + 30 days,
                 totalOfferAmount,
@@ -1077,6 +1103,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -1144,6 +1171,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForMakeOffer(
+                evvm.getEvvmID(),
                 "test",
                 block.timestamp + 30 days,
                 totalOfferAmount,
@@ -1155,6 +1183,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -1220,6 +1249,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForMakeOffer(
+                evvm.getEvvmID(),
                 "test",
                 block.timestamp + 30 days,
                 totalOfferAmount,
@@ -1231,6 +1261,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -1296,6 +1327,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForMakeOffer(
+                evvm.getEvvmID(),
                 "test",
                 block.timestamp + 30 days,
                 totalOfferAmount,
@@ -1307,6 +1339,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -1372,6 +1405,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForMakeOffer(
+                evvm.getEvvmID(),
                 "test",
                 block.timestamp + 30 days,
                 totalOfferAmount,
@@ -1383,6 +1417,7 @@ contract unitTestRevert_NameService_makeOffer is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,

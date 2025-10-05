@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: EVVM-NONCOMMERCIAL-1.0
-// Full license terms available at: https://www.evvm.org/docs/EVVMNoncommercialLicense
+// Full license terms available at: https://www.evvm.info/docs/EVVMNoncommercialLicense
 
 /**
 
@@ -105,10 +105,11 @@ contract fuzzTest_EVVM_payMultiple is Test, Constants, EvvmStructs {
         uint256 nonce,
         bool priorityFlag,
         address executor
-    ) private pure returns (bytes memory signatureEVVM) {
+    ) private view returns (bytes memory signatureEVVM) {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 toAddress,
                 toIdentity,
                 tokenAddress,

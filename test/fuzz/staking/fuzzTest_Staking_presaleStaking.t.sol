@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: EVVM-NONCOMMERCIAL-1.0
-// Full license terms available at: https://www.evvm.org/docs/EVVMNoncommercialLicense
+// Full license terms available at: https://www.evvm.info/docs/EVVMNoncommercialLicense
 
 /**
 
@@ -73,10 +73,6 @@ contract fuzzTest_Staking_presaleStaking is Test, Constants {
 
         vm.startPrank(ADMIN.Address);
 
-        staking.prepareChangeAllowPresaleStaking();
-        skip(1 days);
-        staking.confirmChangeAllowPresaleStaking();
-
         staking.addPresaleStaker(COMMON_USER_NO_STAKER_1.Address);
         vm.stopPrank();
 
@@ -133,6 +129,7 @@ contract fuzzTest_Staking_presaleStaking is Test, Constants {
             (v, r, s) = vm.sign(
                 COMMON_USER_NO_STAKER_1.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                     address(staking),
                     "",
                     MATE_TOKEN_ADDRESS,
@@ -147,6 +144,7 @@ contract fuzzTest_Staking_presaleStaking is Test, Constants {
             (v, r, s) = vm.sign(
                 COMMON_USER_NO_STAKER_1.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                     address(staking),
                     "",
                     MATE_TOKEN_ADDRESS,
@@ -164,6 +162,7 @@ contract fuzzTest_Staking_presaleStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPresaleStaking(
+                evvm.getEvvmID(),
                 isStaking,
                 1,
                 nonceSmate

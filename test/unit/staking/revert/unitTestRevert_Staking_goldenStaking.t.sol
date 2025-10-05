@@ -101,6 +101,7 @@ contract unitTestRevert_Staking_goldenStaking is Test, Constants {
             (v, r, s) = vm.sign(
                 COMMON_USER_NO_STAKER_1.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                     address(staking),
                     "",
                     MATE_TOKEN_ADDRESS,
@@ -115,6 +116,7 @@ contract unitTestRevert_Staking_goldenStaking is Test, Constants {
             (v, r, s) = vm.sign(
                 COMMON_USER_NO_STAKER_1.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                     address(staking),
                     "",
                     MATE_TOKEN_ADDRESS,
@@ -132,6 +134,7 @@ contract unitTestRevert_Staking_goldenStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPublicStaking(
+                evvm.getEvvmID(),
                 isStaking,
                 amountOfSmate,
                 nonceSmate
@@ -165,6 +168,7 @@ contract unitTestRevert_Staking_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -209,6 +213,7 @@ contract unitTestRevert_Staking_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             GOLDEN_STAKER.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -244,6 +249,7 @@ contract unitTestRevert_Staking_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             WILDCARD_USER.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -284,6 +290,7 @@ contract unitTestRevert_Staking_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             GOLDEN_STAKER.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(this),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -328,6 +335,7 @@ contract unitTestRevert_Staking_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             GOLDEN_STAKER.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(0),
                 "staking",
                 MATE_TOKEN_ADDRESS,
@@ -368,6 +376,7 @@ contract unitTestRevert_Staking_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             GOLDEN_STAKER.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 ETHER_ADDRESS,
@@ -408,6 +417,7 @@ contract unitTestRevert_Staking_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             GOLDEN_STAKER.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -448,6 +458,7 @@ contract unitTestRevert_Staking_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             GOLDEN_STAKER.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -488,6 +499,7 @@ contract unitTestRevert_Staking_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             GOLDEN_STAKER.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -528,6 +540,7 @@ contract unitTestRevert_Staking_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             GOLDEN_STAKER.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -568,6 +581,7 @@ contract unitTestRevert_Staking_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             GOLDEN_STAKER.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -610,6 +624,7 @@ contract unitTestRevert_Staking_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             GOLDEN_STAKER.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -654,6 +669,7 @@ contract unitTestRevert_Staking_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             GOLDEN_STAKER.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -702,6 +718,7 @@ contract unitTestRevert_Staking_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             GOLDEN_STAKER.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,

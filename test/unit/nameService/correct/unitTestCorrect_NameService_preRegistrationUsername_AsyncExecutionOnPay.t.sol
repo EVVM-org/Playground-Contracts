@@ -101,6 +101,7 @@ contract unitTestCorrect_NameService_preRegistrationUsername_AsyncExecutionOnPay
             (v, r, s) = vm.sign(
                 COMMON_USER_NO_STAKER_1.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPreRegistrationUsername(
+                evvm.getEvvmID(),
                     keccak256(abi.encodePacked(username, uint256(clowNumber))),
                     nonceNameService
                 )
@@ -113,6 +114,7 @@ contract unitTestCorrect_NameService_preRegistrationUsername_AsyncExecutionOnPay
             (v, r, s) = vm.sign(
                 COMMON_USER_NO_STAKER_1.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                     address(nameService),
                     "",
                     MATE_TOKEN_ADDRESS,
@@ -128,6 +130,7 @@ contract unitTestCorrect_NameService_preRegistrationUsername_AsyncExecutionOnPay
             (v, r, s) = vm.sign(
                 COMMON_USER_NO_STAKER_1.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPreRegistrationUsername(
+                evvm.getEvvmID(),
                     keccak256(abi.encodePacked(username, uint256(clowNumber))),
                     nonceNameService
                 )

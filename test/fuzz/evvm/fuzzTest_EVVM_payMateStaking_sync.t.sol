@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: EVVM-NONCOMMERCIAL-1.0
-// Full license terms available at: https://www.evvm.org/docs/EVVMNoncommercialLicense
+// Full license terms available at: https://www.evvm.info/docs/EVVMNoncommercialLicense
 
 /**
 
@@ -142,6 +142,7 @@ contract fuzzTest_EVVM_payStaker_sync is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 input.useToAddress
                     ? COMMON_USER_NO_STAKER_2.Address
                     : address(0),
@@ -220,6 +221,7 @@ contract fuzzTest_EVVM_payStaker_sync is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 input.useToAddress
                     ? COMMON_USER_NO_STAKER_2.Address
                     : address(0),

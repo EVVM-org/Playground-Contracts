@@ -145,6 +145,7 @@ contract unitTestCorrect_NameService_flushUsername_AsyncExecutionOnPay is
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPreRegistrationUsername(
+                evvm.getEvvmID(),
                 keccak256(abi.encodePacked(username, uint256(clowNumber))),
                 nonceNameServicePre
             )
@@ -166,6 +167,7 @@ contract unitTestCorrect_NameService_flushUsername_AsyncExecutionOnPay is
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForRegistrationUsername(
+                evvm.getEvvmID(),
                 username,
                 clowNumber,
                 nonceNameService
@@ -177,6 +179,7 @@ contract unitTestCorrect_NameService_flushUsername_AsyncExecutionOnPay is
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -227,6 +230,7 @@ contract unitTestCorrect_NameService_flushUsername_AsyncExecutionOnPay is
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForAddCustomMetadata(
+                evvm.getEvvmID(),
                 username,
                 customMetadata,
                 nonceNameService
@@ -238,6 +242,7 @@ contract unitTestCorrect_NameService_flushUsername_AsyncExecutionOnPay is
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -286,6 +291,7 @@ contract unitTestCorrect_NameService_flushUsername_AsyncExecutionOnPay is
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForFlushUsername(
+                evvm.getEvvmID(),
                 username,
                 nonceNameService
             )
@@ -295,6 +301,7 @@ contract unitTestCorrect_NameService_flushUsername_AsyncExecutionOnPay is
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,

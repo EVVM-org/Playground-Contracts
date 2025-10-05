@@ -136,6 +136,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             userToInteract.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 addressTo,
                 "",
                 tokenAddress,

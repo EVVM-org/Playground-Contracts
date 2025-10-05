@@ -124,6 +124,7 @@ contract unitTestCorrect_EVVM_dispersePay_sync is Test, Constants, EvvmStructs {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForDispersePay(
+                evvm.getEvvmID(),
                 sha256(abi.encode(toData)),
                 ETHER_ADDRESS,
                 0.002 ether,
@@ -202,6 +203,7 @@ contract unitTestCorrect_EVVM_dispersePay_sync is Test, Constants, EvvmStructs {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForDispersePay(
+                evvm.getEvvmID(),
                 sha256(abi.encode(toData)),
                 ETHER_ADDRESS,
                 0.002 ether,
@@ -276,6 +278,7 @@ contract unitTestCorrect_EVVM_dispersePay_sync is Test, Constants, EvvmStructs {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForDispersePay(
+                evvm.getEvvmID(),
                 sha256(abi.encode(toData)),
                 ETHER_ADDRESS,
                 0.002 ether,
@@ -352,6 +355,7 @@ contract unitTestCorrect_EVVM_dispersePay_sync is Test, Constants, EvvmStructs {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForDispersePay(
+                evvm.getEvvmID(),
                 sha256(abi.encode(toData)),
                 ETHER_ADDRESS,
                 0.002 ether,
@@ -428,6 +432,7 @@ contract unitTestCorrect_EVVM_dispersePay_sync is Test, Constants, EvvmStructs {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForDispersePay(
+                evvm.getEvvmID(),
                 sha256(abi.encode(toData)),
                 ETHER_ADDRESS,
                 0.002 ether,
@@ -509,6 +514,7 @@ contract unitTestCorrect_EVVM_dispersePay_sync is Test, Constants, EvvmStructs {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForDispersePay(
+                evvm.getEvvmID(),
                 sha256(abi.encode(toData)),
                 ETHER_ADDRESS,
                 0.002 ether,
@@ -592,6 +598,7 @@ contract unitTestCorrect_EVVM_dispersePay_sync is Test, Constants, EvvmStructs {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForDispersePay(
+                evvm.getEvvmID(),
                 sha256(abi.encode(toData)),
                 ETHER_ADDRESS,
                 0.002 ether,
@@ -672,6 +679,7 @@ contract unitTestCorrect_EVVM_dispersePay_sync is Test, Constants, EvvmStructs {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForDispersePay(
+                evvm.getEvvmID(),
                 sha256(abi.encode(toData)),
                 ETHER_ADDRESS,
                 0.002 ether,

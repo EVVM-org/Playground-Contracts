@@ -69,10 +69,6 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
 
         vm.startPrank(ADMIN.Address);
 
-        staking.prepareChangeAllowPresaleStaking();
-        skip(1 days);
-        staking.confirmChangeAllowPresaleStaking();
-
         staking.addPresaleStaker(COMMON_USER_NO_STAKER_1.Address);
         vm.stopPrank();
     }
@@ -111,6 +107,7 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
             (v, r, s) = vm.sign(
                 COMMON_USER_NO_STAKER_1.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                     address(staking),
                     "",
                     MATE_TOKEN_ADDRESS,
@@ -125,6 +122,7 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
             (v, r, s) = vm.sign(
                 COMMON_USER_NO_STAKER_1.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                     address(staking),
                     "",
                     MATE_TOKEN_ADDRESS,
@@ -142,6 +140,7 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPresaleStaking(
+                evvm.getEvvmID(),
                 isStaking,
                 1,
                 nonceSmate
@@ -176,6 +175,7 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -195,6 +195,7 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPresaleStaking(
+                evvm.getEvvmID(),
                 true,
                 1,
                 1000001000001
@@ -252,6 +253,7 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -271,6 +273,7 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPresaleStaking(
+                evvm.getEvvmID(),
                 true,
                 1,
                 1000001000001
@@ -726,6 +729,7 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -745,6 +749,7 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPresaleStaking(
+                evvm.getEvvmID(),
                 true,
                 1,
                 1000001000001
@@ -807,6 +812,7 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -826,6 +832,7 @@ contract unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay is
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPresaleStaking(
+                evvm.getEvvmID(),
                 true,
                 1,
                 1000001000001

@@ -116,6 +116,7 @@ contract unitTestCorrect_Staking_publicServiceStaking_SyncExecutionOnPay is
             (v, r, s) = vm.sign(
                 COMMON_USER_NO_STAKER_1.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                     address(staking),
                     "",
                     MATE_TOKEN_ADDRESS,
@@ -130,6 +131,7 @@ contract unitTestCorrect_Staking_publicServiceStaking_SyncExecutionOnPay is
             (v, r, s) = vm.sign(
                 COMMON_USER_NO_STAKER_1.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                     address(staking),
                     "",
                     MATE_TOKEN_ADDRESS,
@@ -147,6 +149,7 @@ contract unitTestCorrect_Staking_publicServiceStaking_SyncExecutionOnPay is
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                evvm.getEvvmID(),
                 serviceAddress,
                 isStaking,
                 amountOfSmate,

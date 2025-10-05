@@ -116,6 +116,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPreRegistrationUsername(
+                evvm.getEvvmID(),
                 keccak256(abi.encodePacked(username, uint256(clowNumber))),
                 nonceNameServicePre
             )
@@ -137,6 +138,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForRegistrationUsername(
+                evvm.getEvvmID(),
                 username,
                 clowNumber,
                 nonceNameService
@@ -148,6 +150,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -197,6 +200,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForAddCustomMetadata(
+                evvm.getEvvmID(),
                 username,
                 customMetadata,
                 nonceNameService
@@ -207,6 +211,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -244,6 +249,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForAddCustomMetadata(
+                evvm.getEvvmID(),
                 "test",
                 "test>1",
                 100010001
@@ -254,6 +260,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -388,6 +395,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForAddCustomMetadata(
+                evvm.getEvvmID(),
                 "test",
                 "test>1",
                 100010001
@@ -398,6 +406,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -466,6 +475,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForAddCustomMetadata(
+                evvm.getEvvmID(),
                 "user",
                 "test>1",
                 100010001
@@ -476,6 +486,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -546,6 +557,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForAddCustomMetadata(
+                evvm.getEvvmID(),
                 "test",
                 "number>777",
                 100010001
@@ -556,6 +568,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -626,6 +639,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForAddCustomMetadata(
+                evvm.getEvvmID(),
                 "test",
                 "test>1",
                 777
@@ -636,6 +650,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -704,6 +719,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForAddCustomMetadata(
+                evvm.getEvvmID(),
                 "test",
                 "test>1",
                 100010001
@@ -714,6 +730,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -784,6 +801,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForAddCustomMetadata(
+                evvm.getEvvmID(),
                 "test",
                 "test>1",
                 100010001
@@ -794,6 +812,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(evvm),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -864,6 +883,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForAddCustomMetadata(
+                evvm.getEvvmID(),
                 "test",
                 "test>1",
                 100010001
@@ -874,6 +894,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(0),
                 "mtenameservices",
                 MATE_TOKEN_ADDRESS,
@@ -944,6 +965,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForAddCustomMetadata(
+                evvm.getEvvmID(),
                 "test",
                 "test>1",
                 100010001
@@ -954,6 +976,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 ETHER_ADDRESS,
@@ -1022,6 +1045,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForAddCustomMetadata(
+                evvm.getEvvmID(),
                 "test",
                 "test>1",
                 100010001
@@ -1032,6 +1056,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -1102,6 +1127,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForAddCustomMetadata(
+                evvm.getEvvmID(),
                 "test",
                 "test>1",
                 100010001
@@ -1112,6 +1138,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -1182,6 +1209,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForAddCustomMetadata(
+                evvm.getEvvmID(),
                 "test",
                 "test>1",
                 100010001
@@ -1192,6 +1220,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -1262,6 +1291,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForAddCustomMetadata(
+                evvm.getEvvmID(),
                 "test",
                 "test>1",
                 100010001
@@ -1272,6 +1302,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -1342,6 +1373,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForAddCustomMetadata(
+                evvm.getEvvmID(),
                 "test",
                 "test>1",
                 100010001
@@ -1352,6 +1384,7 @@ contract unitTestRevert_NameService_addCustomMetadata is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,

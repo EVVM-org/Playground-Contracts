@@ -94,6 +94,7 @@ contract unitTestCorrect_Staking_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             GOLDEN_STAKER.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -140,6 +141,7 @@ contract unitTestCorrect_Staking_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             GOLDEN_STAKER.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -193,6 +195,7 @@ contract unitTestCorrect_Staking_goldenStaking is Test, Constants {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             GOLDEN_STAKER.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,

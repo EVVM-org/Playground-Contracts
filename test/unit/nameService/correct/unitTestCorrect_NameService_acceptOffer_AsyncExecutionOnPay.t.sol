@@ -117,6 +117,7 @@ contract unitTestCorrect_NameService_acceptOffer_AsyncExecutionOnPay is
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPreRegistrationUsername(
+                evvm.getEvvmID(),
                 keccak256(abi.encodePacked(username, uint256(clowNumber))),
                 nonceNameServicePre
             )
@@ -138,6 +139,7 @@ contract unitTestCorrect_NameService_acceptOffer_AsyncExecutionOnPay is
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForRegistrationUsername(
+                evvm.getEvvmID(),
                 username,
                 clowNumber,
                 nonceNameService
@@ -149,6 +151,7 @@ contract unitTestCorrect_NameService_acceptOffer_AsyncExecutionOnPay is
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -198,6 +201,7 @@ contract unitTestCorrect_NameService_acceptOffer_AsyncExecutionOnPay is
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForMakeOffer(
+                evvm.getEvvmID(),
                 usernameToMakeOffer,
                 expireDate,
                 amountToOffer,
@@ -209,6 +213,7 @@ contract unitTestCorrect_NameService_acceptOffer_AsyncExecutionOnPay is
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -257,6 +262,7 @@ contract unitTestCorrect_NameService_acceptOffer_AsyncExecutionOnPay is
             (v, r, s) = vm.sign(
                 user.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForAcceptOffer(
+                evvm.getEvvmID(),
                     usernameToFindOffer,
                     index,
                     nonceNameService
@@ -271,6 +277,7 @@ contract unitTestCorrect_NameService_acceptOffer_AsyncExecutionOnPay is
             (v, r, s) = vm.sign(
                 user.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                     address(nameService),
                     "",
                     MATE_TOKEN_ADDRESS,
@@ -286,6 +293,7 @@ contract unitTestCorrect_NameService_acceptOffer_AsyncExecutionOnPay is
             (v, r, s) = vm.sign(
                 user.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForAcceptOffer(
+                evvm.getEvvmID(),
                     usernameToFindOffer,
                     index,
                     nonceNameService

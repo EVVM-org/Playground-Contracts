@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: EVVM-NONCOMMERCIAL-1.0
-// Full license terms available at: https://www.evvm.org/docs/EVVMNoncommercialLicense
+// Full license terms available at: https://www.evvm.info/docs/EVVMNoncommercialLicense
 
 /**
 
@@ -111,6 +111,7 @@ contract fuzzTest_NameService_withdrawOffer is Test, Constants {
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPreRegistrationUsername(
+                evvm.getEvvmID(),
                 keccak256(abi.encodePacked(username, uint256(clowNumber))),
                 nonceNameServicePre
             )
@@ -132,6 +133,7 @@ contract fuzzTest_NameService_withdrawOffer is Test, Constants {
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForRegistrationUsername(
+                evvm.getEvvmID(),
                 username,
                 clowNumber,
                 nonceNameService
@@ -143,6 +145,7 @@ contract fuzzTest_NameService_withdrawOffer is Test, Constants {
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -192,6 +195,7 @@ contract fuzzTest_NameService_withdrawOffer is Test, Constants {
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForMakeOffer(
+                evvm.getEvvmID(),
                 usernameToMakeOffer,
                 expireDate,
                 amountToOffer,
@@ -203,6 +207,7 @@ contract fuzzTest_NameService_withdrawOffer is Test, Constants {
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -251,6 +256,7 @@ contract fuzzTest_NameService_withdrawOffer is Test, Constants {
             (v, r, s) = vm.sign(
                 user.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForWithdrawOffer(
+                evvm.getEvvmID(),
                     usernameToFindOffer,
                     index,
                     nonceNameService
@@ -265,6 +271,7 @@ contract fuzzTest_NameService_withdrawOffer is Test, Constants {
             (v, r, s) = vm.sign(
                 user.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                     address(nameService),
                     "",
                     MATE_TOKEN_ADDRESS,
@@ -280,6 +287,7 @@ contract fuzzTest_NameService_withdrawOffer is Test, Constants {
             (v, r, s) = vm.sign(
                 user.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForWithdrawOffer(
+                evvm.getEvvmID(),
                     usernameToFindOffer,
                     index,
                     nonceNameService

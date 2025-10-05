@@ -97,10 +97,11 @@ contract fuzzTest_EVVM_dispersePay is Test, Constants, EvvmStructs {
         uint256 nonce,
         bool priorityFlag,
         address executor
-    ) private pure returns (bytes memory signatureEVVM) {
+    ) private view returns (bytes memory signatureEVVM) {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForDispersePay(
+                evvm.getEvvmID(),
                 sha256(abi.encode(toData)),
                 tokenAddress,
                 amount,

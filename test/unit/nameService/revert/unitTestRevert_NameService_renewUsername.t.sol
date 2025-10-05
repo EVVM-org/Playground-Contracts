@@ -114,6 +114,7 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPreRegistrationUsername(
+                evvm.getEvvmID(),
                 keccak256(abi.encodePacked(username, uint256(clowNumber))),
                 nonceNameServicePre
             )
@@ -135,6 +136,7 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForRegistrationUsername(
+                evvm.getEvvmID(),
                 username,
                 clowNumber,
                 nonceNameService
@@ -146,6 +148,7 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -195,6 +198,7 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForMakeOffer(
+                evvm.getEvvmID(),
                 usernameToMakeOffer,
                 expireDate,
                 amountToOffer,
@@ -206,6 +210,7 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -251,6 +256,7 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForRenewUsername(
+                evvm.getEvvmID(),
                 usernameToRenew,
                 nonceNameService
             )
@@ -260,6 +266,7 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -296,6 +303,7 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForRenewUsername(
+                evvm.getEvvmID(),
                 "test",
                 1000001000001
             )
@@ -305,6 +313,7 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -431,6 +440,7 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForRenewUsername(
+                evvm.getEvvmID(),
                 "test",
                 1000001000001
             )
@@ -440,6 +450,7 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -504,6 +515,7 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForRenewUsername(
+                evvm.getEvvmID(),
                 "user",
                 1000001000001
             )
@@ -513,6 +525,7 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -578,13 +591,15 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
-            Erc191TestBuilder.buildMessageSignedForRenewUsername("test", 777)
+            Erc191TestBuilder.buildMessageSignedForRenewUsername(
+                evvm.getEvvmID(),"test", 777)
         );
         signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -649,6 +664,7 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForRenewUsername(
+                evvm.getEvvmID(),
                 "test",
                 1000001000001
             )
@@ -658,6 +674,7 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -722,6 +739,7 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForRenewUsername(
+                evvm.getEvvmID(),
                 "test",
                 1000001000001
             )
@@ -731,6 +749,7 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(evvm),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -795,6 +814,7 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForRenewUsername(
+                evvm.getEvvmID(),
                 "test",
                 1000001000001
             )
@@ -804,6 +824,7 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(0),
                 "nameservice",
                 MATE_TOKEN_ADDRESS,
@@ -870,6 +891,7 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForRenewUsername(
+                evvm.getEvvmID(),
                 "test",
                 1000001000001
             )
@@ -879,6 +901,7 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 ETHER_ADDRESS,
@@ -943,6 +966,7 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForRenewUsername(
+                evvm.getEvvmID(),
                 "test",
                 1000001000001
             )
@@ -952,6 +976,7 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -1016,6 +1041,7 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForRenewUsername(
+                evvm.getEvvmID(),
                 "test",
                 1000001000001
             )
@@ -1025,6 +1051,7 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -1089,6 +1116,7 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForRenewUsername(
+                evvm.getEvvmID(),
                 "test",
                 1000001000001
             )
@@ -1098,6 +1126,7 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -1164,6 +1193,7 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForRenewUsername(
+                evvm.getEvvmID(),
                 "test",
                 1000001000001
             )
@@ -1173,6 +1203,7 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -1237,6 +1268,7 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForRenewUsername(
+                evvm.getEvvmID(),
                 "test",
                 1000001000001
             )
@@ -1246,6 +1278,7 @@ contract unitTestRevert_NameService_renewUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,

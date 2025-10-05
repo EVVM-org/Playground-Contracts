@@ -142,6 +142,7 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPreRegistrationUsername(
+                evvm.getEvvmID(),
                 keccak256(abi.encodePacked(username, uint256(clowNumber))),
                 nonceNameServicePre
             )
@@ -163,6 +164,7 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForRegistrationUsername(
+                evvm.getEvvmID(),
                 username,
                 clowNumber,
                 nonceNameService
@@ -174,6 +176,7 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -224,6 +227,7 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForAddCustomMetadata(
+                evvm.getEvvmID(),
                 username,
                 customMetadata,
                 nonceNameService
@@ -235,6 +239,7 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -283,6 +288,7 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForFlushUsername(
+                evvm.getEvvmID(),
                 username,
                 nonceNameService
             )
@@ -292,6 +298,7 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         (v, r, s) = vm.sign(
             user.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -329,6 +336,7 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForFlushUsername(
+                evvm.getEvvmID(),
                 "test",
                 110010011
             )
@@ -338,6 +346,7 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -466,6 +475,7 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForFlushUsername(
+                evvm.getEvvmID(),
                 "test",
                 110010011
             )
@@ -475,6 +485,7 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -541,6 +552,7 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForFlushUsername(
+                evvm.getEvvmID(),
                 "user",
                 110010011
             )
@@ -550,6 +562,7 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -617,13 +630,15 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
-            Erc191TestBuilder.buildMessageSignedForFlushUsername("test", 777)
+            Erc191TestBuilder.buildMessageSignedForFlushUsername(
+                evvm.getEvvmID(),"test", 777)
         );
         signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -690,6 +705,7 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForFlushUsername(
+                evvm.getEvvmID(),
                 "test",
                 110010011
             )
@@ -699,6 +715,7 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -765,6 +782,7 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForFlushUsername(
+                evvm.getEvvmID(),
                 "test",
                 110010011
             )
@@ -774,6 +792,7 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(evvm),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -840,6 +859,7 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForFlushUsername(
+                evvm.getEvvmID(),
                 "test",
                 110010011
             )
@@ -849,6 +869,7 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(0),
                 "nameservices",
                 MATE_TOKEN_ADDRESS,
@@ -917,6 +938,7 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForFlushUsername(
+                evvm.getEvvmID(),
                 "test",
                 110010011
             )
@@ -926,6 +948,7 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 ETHER_ADDRESS,
@@ -992,6 +1015,7 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForFlushUsername(
+                evvm.getEvvmID(),
                 "test",
                 110010011
             )
@@ -1001,6 +1025,7 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -1069,6 +1094,7 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForFlushUsername(
+                evvm.getEvvmID(),
                 "test",
                 110010011
             )
@@ -1078,6 +1104,7 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -1144,6 +1171,7 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForFlushUsername(
+                evvm.getEvvmID(),
                 "test",
                 110010011
             )
@@ -1153,6 +1181,7 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -1221,6 +1250,7 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForFlushUsername(
+                evvm.getEvvmID(),
                 "test",
                 110010011
             )
@@ -1230,6 +1260,7 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -1296,6 +1327,7 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForFlushUsername(
+                evvm.getEvvmID(),
                 "test",
                 110010011
             )
@@ -1305,6 +1337,7 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,

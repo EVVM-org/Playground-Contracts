@@ -122,6 +122,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
             (v, r, s) = vm.sign(
                 signer.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                     address(staking),
                     "",
                     MATE_TOKEN_ADDRESS,
@@ -136,6 +137,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
             (v, r, s) = vm.sign(
                 signer.PrivateKey,
                 Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                     address(staking),
                     "",
                     MATE_TOKEN_ADDRESS,
@@ -153,6 +155,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             signer.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                evvm.getEvvmID(),
                 serviceAddress,
                 isStaking,
                 amountOfSmate,
@@ -188,6 +191,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -204,6 +208,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                evvm.getEvvmID(),
                 address(mock),
                 true,
                 111,
@@ -256,6 +261,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -272,6 +278,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                evvm.getEvvmID(),
                 address(mock),
                 true,
                 111,
@@ -327,6 +334,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -343,6 +351,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                evvm.getEvvmID(),
                 address(mock),
                 true,
                 111,
@@ -397,6 +406,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(mock),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -413,6 +423,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                evvm.getEvvmID(),
                 address(mock),
                 true,
                 111,
@@ -467,6 +478,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(0),
                 "smate",
                 MATE_TOKEN_ADDRESS,
@@ -483,6 +495,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                evvm.getEvvmID(),
                 address(mock),
                 true,
                 111,
@@ -537,6 +550,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 ETHER_ADDRESS,
@@ -553,6 +567,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                evvm.getEvvmID(),
                 address(mock),
                 true,
                 111,
@@ -607,6 +622,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -623,6 +639,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                evvm.getEvvmID(),
                 address(mock),
                 true,
                 111,
@@ -677,6 +694,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -693,6 +711,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                evvm.getEvvmID(),
                 address(mock),
                 true,
                 111,
@@ -747,6 +766,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -763,6 +783,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                evvm.getEvvmID(),
                 address(mock),
                 true,
                 111,
@@ -817,6 +838,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -833,6 +855,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                evvm.getEvvmID(),
                 address(mock),
                 true,
                 111,
@@ -887,6 +910,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -903,6 +927,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                evvm.getEvvmID(),
                 address(mock),
                 true,
                 111,
@@ -957,6 +982,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -973,6 +999,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                evvm.getEvvmID(),
                 address(mock),
                 true,
                 111,
@@ -1027,6 +1054,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -1043,6 +1071,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                evvm.getEvvmID(),
                 address(this),
                 true,
                 111,
@@ -1097,6 +1126,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -1113,6 +1143,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                evvm.getEvvmID(),
                 address(mock),
                 false,
                 111,
@@ -1167,6 +1198,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -1183,6 +1215,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                evvm.getEvvmID(),
                 address(mock),
                 true,
                 555,
@@ -1237,6 +1270,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -1253,6 +1287,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                evvm.getEvvmID(),
                 address(mock),
                 true,
                 111,
@@ -1307,6 +1342,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -1323,6 +1359,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                evvm.getEvvmID(),
                 address(mock),
                 true,
                 111,
@@ -1350,6 +1387,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -1366,6 +1404,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                evvm.getEvvmID(),
                 address(mock),
                 true,
                 111,
@@ -1420,6 +1459,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -1436,6 +1476,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                evvm.getEvvmID(),
                 WILDCARD_USER.Address,
                 true,
                 111,
@@ -1490,6 +1531,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
                 address(staking),
                 "",
                 MATE_TOKEN_ADDRESS,
@@ -1506,6 +1548,7 @@ contract unitTestRevert_Staking_publicServiceStaking is Test, Constants {
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPublicServiceStake(
+                evvm.getEvvmID(),
                 address(mock),
                 true,
                 111,
