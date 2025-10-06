@@ -100,7 +100,7 @@ contract fuzzTest_Treasury_withdraw is Test, Constants {
     }
 
     function test__fuzz__withdraw(withdrawFuzzTestInput memory input) external {
-        vm.assume(input.user != address(0) && input.user != address(treasury));
+        vm.assume(input.user != address(1) && input.user != address(treasury));
         vm.assume(input.withdrawAmount > 0);
 
         if (input.isHostNative) {

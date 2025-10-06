@@ -38,7 +38,7 @@ library SignatureUtils {
         return
             SignatureRecover.signatureVerification(
                 Strings.toString(evvmID),
-                "00000000",
+                "fisherBridge",
                 string.concat(
                     AdvancedStrings.addressToString(addressToReceive),
                     ",",

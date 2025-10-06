@@ -32,7 +32,7 @@ library Erc191TestBuilder {
         string memory messageToSign = string.concat(
             Strings.toString(evvmID),
             ",",
-            _priority_boolean ? "f4e1895b" : "4faa1fa2",
+            "pay",
             ",",
             _receiverAddress == address(0)
                 ? _receiverIdentity
@@ -68,7 +68,7 @@ library Erc191TestBuilder {
                 string.concat(
                     Strings.toString(evvmID),
                     ",",
-                    "ef83c1d6",
+                    "dispersePay",
                     ",",
                     AdvancedStrings.bytes32ToString(hashList),
                     ",",
@@ -101,7 +101,7 @@ library Erc191TestBuilder {
                 string.concat(
                     Strings.toString(evvmID),
                     ",",
-                    "5d232a55",
+                    "preRegistrationUsername",
                     ",",
                     AdvancedStrings.bytes32ToString(_hashUsername),
                     ",",
@@ -121,7 +121,7 @@ library Erc191TestBuilder {
                 string.concat(
                     Strings.toString(evvmID),
                     ",",
-                    "afabc8db",
+                    "registrationUsername",
                     ",",
                     _username,
                     ",",
@@ -144,7 +144,7 @@ library Erc191TestBuilder {
                 string.concat(
                     Strings.toString(evvmID),
                     ",",
-                    "d82e5d8b",
+                    "makeOffer",
                     ",",
                     _username,
                     ",",
@@ -168,7 +168,7 @@ library Erc191TestBuilder {
                 string.concat(
                     Strings.toString(evvmID),
                     ",",
-                    "5761d8ed",
+                    "withdrawOffer",
                     ",",
                     _username,
                     ",",
@@ -190,7 +190,7 @@ library Erc191TestBuilder {
                 string.concat(
                     Strings.toString(evvmID),
                     ",",
-                    "8e3bde43", //methodIdentifier
+                    "acceptOffer", 
                     ",",
                     _username,
                     ",",
@@ -211,7 +211,7 @@ library Erc191TestBuilder {
                 string.concat(
                     Strings.toString(evvmID),
                     ",",
-                    "35723e23",
+                    "renewUsername",
                     ",",
                     _username,
                     ",",
@@ -231,7 +231,7 @@ library Erc191TestBuilder {
                 string.concat(
                     Strings.toString(evvmID),
                     ",",
-                    "4cfe021f",
+                    "addCustomMetadata",
                     ",",
                     _username,
                     ",",
@@ -253,7 +253,7 @@ library Erc191TestBuilder {
                 string.concat(
                     Strings.toString(evvmID),
                     ",",
-                    "8adf3927",
+                    "removeCustomMetadata",
                     ",",
                     _username,
                     ",",
@@ -274,7 +274,7 @@ library Erc191TestBuilder {
                 string.concat(
                     Strings.toString(evvmID),
                     ",",
-                    "3ca44e54",
+                    "flushCustomMetadata",
                     ",",
                     _username,
                     ",",
@@ -293,7 +293,7 @@ library Erc191TestBuilder {
                 string.concat(
                     Strings.toString(evvmID),
                     ",",
-                    "044695cb",
+                    "flushUsername",
                     ",",
                     _username,
                     ",",
@@ -318,7 +318,7 @@ library Erc191TestBuilder {
                 string.concat(
                     Strings.toString(evvmID),
                     ",",
-                    "e2ccd470",
+                    "publicServiceStaking",
                     ",",
                     AdvancedStrings.addressToString(_serviceAddress),
                     ",",
@@ -342,7 +342,7 @@ library Erc191TestBuilder {
                 string.concat(
                     Strings.toString(evvmID),
                     ",",
-                    "c769095c",
+                    "publicStaking",
                     ",",
                     _isStaking ? "true" : "false",
                     ",",
@@ -364,7 +364,7 @@ library Erc191TestBuilder {
                 string.concat(
                     Strings.toString(evvmID),
                     ",",
-                    "c0f6e7d1",
+                    "presaleStaking",
                     ",",
                     _isStaking ? "true" : "false",
                     ",",

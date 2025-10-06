@@ -24,7 +24,7 @@ library SignatureUtils {
         return
             SignatureRecover.signatureVerification(
                 Strings.toString(evvmID),
-                "5d232a55",
+                "preRegistrationUsername",
                 string.concat(
                     AdvancedStrings.bytes32ToString(_hashUsername),
                     ",",
@@ -46,7 +46,7 @@ library SignatureUtils {
         return
             SignatureRecover.signatureVerification(
                 Strings.toString(evvmID),
-                "afabc8db",
+                "registrationUsername",
                 string.concat(
                     _username,
                     ",",
@@ -71,7 +71,7 @@ library SignatureUtils {
         return
             SignatureRecover.signatureVerification(
                 Strings.toString(evvmID),
-                "d82e5d8b",
+                "makeOffer",
                 string.concat(
                     _username,
                     ",",
@@ -97,7 +97,7 @@ library SignatureUtils {
         return
             SignatureRecover.signatureVerification(
                 Strings.toString(evvmID),
-                "5761d8ed",
+                "withdrawOffer",
                 string.concat(
                     _username,
                     ",",
@@ -121,7 +121,7 @@ library SignatureUtils {
         return
             SignatureRecover.signatureVerification(
                 Strings.toString(evvmID),
-                "8e3bde43",
+                "acceptOffer",
                 string.concat(
                     _username,
                     ",",
@@ -144,7 +144,7 @@ library SignatureUtils {
         return
             SignatureRecover.signatureVerification(
                 Strings.toString(evvmID),
-                "35723e23",
+                "renewUsername",
                 string.concat(
                     _username,
                     ",",
@@ -166,7 +166,7 @@ library SignatureUtils {
         return
             SignatureRecover.signatureVerification(
                 Strings.toString(evvmID),
-                "4cfe021f",
+                "addCustomMetadata",
                 string.concat(
                     _identity,
                     ",",
@@ -190,7 +190,7 @@ library SignatureUtils {
         return
             SignatureRecover.signatureVerification(
                 Strings.toString(evvmID),
-                "8adf3927",
+                "removeCustomMetadata",
                 string.concat(
                     _username,
                     ",",
@@ -213,7 +213,7 @@ library SignatureUtils {
         return
             SignatureRecover.signatureVerification(
                 Strings.toString(evvmID),
-                "3ca44e54",
+                "flushCustomMetadata",
                 string.concat(_identity, ",", Strings.toString(_nonce)),
                 signature,
                 signer
@@ -230,7 +230,7 @@ library SignatureUtils {
         return
             SignatureRecover.signatureVerification(
                 Strings.toString(evvmID),
-                "044695cb",
+                "flushUsername",
                 string.concat(_username, ",", Strings.toString(_nonce)),
                 signature,
                 signer

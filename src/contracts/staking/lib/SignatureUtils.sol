@@ -26,7 +26,7 @@ library SignatureUtils {
         return
             SignatureRecover.signatureVerification(
                 Strings.toString(evvmID),
-                isExternalStaking ? "c769095c" : "c0f6e7d1",
+                isExternalStaking ? "publicStaking" : "presaleStaking",
                 string.concat(
                     _isStaking ? "true" : "false",
                     ",",
@@ -51,7 +51,7 @@ library SignatureUtils {
         return
             SignatureRecover.signatureVerification(
                 Strings.toString(evvmID),
-                "e2ccd470",
+                "publicServiceStaking",
                 string.concat(
                     AdvancedStrings.addressToString(serviceAddress),
                     ",",

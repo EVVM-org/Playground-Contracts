@@ -47,7 +47,7 @@ library SignatureUtils {
         return
             SignatureRecover.signatureVerification(
                 Strings.toString(evvmID),
-                _priorityFlag ? "f4e1895b" : "4faa1fa2",
+                "pay",
                 string.concat(
                     _receiverAddress == address(0)
                         ? _receiverIdentity
@@ -99,7 +99,7 @@ library SignatureUtils {
         return
             SignatureRecover.signatureVerification(
                 Strings.toString(evvmID),
-                "ef83c1d6",
+                "dispersePay",
                 string.concat(
                     AdvancedStrings.bytes32ToString(hashList),
                     ",",
