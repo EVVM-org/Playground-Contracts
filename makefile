@@ -103,19 +103,19 @@ unitTestCorrectEvvm:
 
 unitTestCorrectEvvmPayNoStaker_async:
 	@echo "Running NoMateStaking_async unit correct tests"
-	@forge test --match-path test/unit/evvm/correct/unitTestCorrect_EVVM_payNoStaker_async.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/evvm/correct/unitTestCorrect_EVVM_pay_noStaker_async.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 unitTestCorrectEvvmPayNoStaker_sync:
 	@echo "Running NoMateStaking_sync unit correct tests"
-	@forge test --match-path test/unit/evvm/correct/unitTestCorrect_EVVM_payNoStaker_sync.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/evvm/correct/unitTestCorrect_EVVM_pay_noStaker_sync.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 unitTestCorrectEvvmPayStaker_async:
 	@echo "Running PayStaker_async unit correct tests"
-	@forge test --match-path test/unit/evvm/correct/unitTestCorrect_EVVM_payStaker_async.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/evvm/correct/unitTestCorrect_EVVM_pay_staker_async.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 unitTestCorrectEvvmPayStaker_sync:
 	@echo "Running PayStaker_sync unit correct tests"
-	@forge test --match-path test/unit/evvm/correct/unitTestCorrect_EVVM_payStaker_sync.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/evvm/correct/unitTestCorrect_EVVM_pay_staker_sync.t.sol --summary --detailed --gas-report -vvv --show-progress
 	
 unitTestCorrectEvvmPayMultiple:
 	@echo "Running PayMultiple unit correct tests"
@@ -153,15 +153,15 @@ unitTestRevertEvvm:
 
 unitTestRevertEvvmPayNoStaker_sync:
 	@echo "Running NoMateStaking_sync unit revert tests"
-	@forge test --match-path test/unit/evvm/revert/unitTestRevert_EVVM_payNoStaker_sync.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/evvm/revert/unitTestRevert_EVVM_pay_noStaker_sync.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 unitTestRevertEvvmPayNoStaker_async:
 	@echo "Running NoMateStaking_async unit revert tests"
-	@forge test --match-path test/unit/evvm/revert/unitTestRevert_EVVM_payNoStaker_async.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/evvm/revert/unitTestRevert_EVVM_pay_noStaker_async.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 unitTestRevertEvvmPayStaker_sync:
 	@echo "Running PayStaker_sync unit revert tests"
-	@forge test --match-path test/unit/evvm/revert/unitTestRevert_EVVM_payStaker_sync.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/evvm/revert/unitTestRevert_EVVM_pay_staker_sync.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 unitTestRevertEvvmPayMultiple_syncExecution:
 	@echo "Running PayMultiple (sync execution) unit revert tests"
@@ -207,19 +207,19 @@ fuzzTestEvvmPay:
 
 fuzzTestEvvmPayNoStaker_sync:
 	@echo "Running NoMateStaking_sync unit fuzz tests"
-	@forge test --match-path test/fuzz/evvm/fuzzTest_EVVM_payNoStaker_sync.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/fuzz/evvm/fuzzTest_EVVM_pay_noStaker_sync.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 fuzzTestEvvmPayNoStaker_async:
 	@echo "Running NoMateStaking_async unit fuzz tests"
-	@forge test --match-path test/fuzz/evvm/fuzzTest_EVVM_payNoStaker_async.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/fuzz/evvm/fuzzTest_EVVM_pay_noStaker_async.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 fuzzTestEvvmPayStaker_sync:
 	@echo "Running PayStaker_sync unit fuzz tests"
-	@forge test --match-path test/fuzz/evvm/fuzzTest_EVVM_payStaker_sync.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/fuzz/evvm/fuzzTest_EVVM_pay_staker_sync.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 fuzzTestEvvmPayStaker_async:
 	@echo "Running PayStaker_async unit fuzz tests"
-	@forge test --match-path test/fuzz/evvm/fuzzTest_EVVM_payStaker_async.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/fuzz/evvm/fuzzTest_EVVM_pay_staker_async.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 fuzzTestEvvmPayMultiple:
 	@echo "Running PayMultiple unit fuzz tests"

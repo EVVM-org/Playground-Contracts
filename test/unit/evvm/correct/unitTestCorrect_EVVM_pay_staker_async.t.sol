@@ -28,7 +28,7 @@ import {EvvmStorage} from "@EVVM/playground/contracts/evvm/lib/EvvmStorage.sol";
 import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
 import {Treasury} from "@EVVM/playground/contracts/treasury/Treasury.sol";
 
-contract unitTestCorrect_EVVM_payStaker_async is Test, Constants {
+contract unitTestCorrect_EVVM_pay_staker_async is Test, Constants {
     Staking staking;
     Evvm evvm;
     Estimator estimator;
@@ -61,7 +61,10 @@ contract unitTestCorrect_EVVM_payStaker_async is Test, Constants {
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         treasury = new Treasury(address(evvm));
-        evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
+        evvm._setupNameServiceAndTreasuryAddress(
+            address(nameService),
+            address(treasury)
+        );
 
         evvm.setPointStaker(COMMON_USER_STAKER.Address, 0x01);
     }
@@ -85,7 +88,7 @@ contract unitTestCorrect_EVVM_payStaker_async is Test, Constants {
      * AD: Uses an address
      */
 
-    function test__unit_correct__payStaker_async__nPF_nEX_AD() external {
+    function test__unit_correct__pay_staker_async__nPF_nEX_AD() external {
         addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             ETHER_ADDRESS,
@@ -113,7 +116,7 @@ contract unitTestCorrect_EVVM_payStaker_async is Test, Constants {
         );
 
         vm.startPrank(COMMON_USER_STAKER.Address);
-        evvm.payStaker_async(
+        evvm.pay(
             COMMON_USER_NO_STAKER_1.Address,
             COMMON_USER_NO_STAKER_2.Address,
             "",
@@ -121,6 +124,7 @@ contract unitTestCorrect_EVVM_payStaker_async is Test, Constants {
             0.001 ether,
             0,
             1001001,
+            true,
             address(0),
             signatureEVVM
         );
@@ -142,7 +146,7 @@ contract unitTestCorrect_EVVM_payStaker_async is Test, Constants {
         );
     }
 
-    function test__unit_correct__payStaker_async__PF_nEX_AD() external {
+    function test__unit_correct__pay_staker_async__PF_nEX_AD() external {
         addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             ETHER_ADDRESS,
@@ -170,7 +174,7 @@ contract unitTestCorrect_EVVM_payStaker_async is Test, Constants {
         );
 
         vm.startPrank(COMMON_USER_STAKER.Address);
-        evvm.payStaker_async(
+        evvm.pay(
             COMMON_USER_NO_STAKER_1.Address,
             COMMON_USER_NO_STAKER_2.Address,
             "",
@@ -178,6 +182,7 @@ contract unitTestCorrect_EVVM_payStaker_async is Test, Constants {
             0.001 ether,
             0.00000001 ether,
             1001001,
+                true,
             address(0),
             signatureEVVM
         );
@@ -204,7 +209,7 @@ contract unitTestCorrect_EVVM_payStaker_async is Test, Constants {
         );
     }
 
-    function test__unit_correct__payStaker_async__nPF_EX_AD() external {
+    function test__unit_correct__pay_staker_async__nPF_EX_AD() external {
         addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             ETHER_ADDRESS,
@@ -233,7 +238,7 @@ contract unitTestCorrect_EVVM_payStaker_async is Test, Constants {
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
-        evvm.payStaker_async(
+        evvm.pay(
             COMMON_USER_NO_STAKER_1.Address,
             COMMON_USER_NO_STAKER_2.Address,
             "",
@@ -241,6 +246,7 @@ contract unitTestCorrect_EVVM_payStaker_async is Test, Constants {
             0.001 ether,
             0,
             1001001,
+                true,
             COMMON_USER_STAKER.Address,
             signatureEVVM
         );
@@ -263,7 +269,7 @@ contract unitTestCorrect_EVVM_payStaker_async is Test, Constants {
         );
     }
 
-    function test__unit_correct__payStaker_async__PF_EX_AD() external {
+    function test__unit_correct__pay_staker_async__PF_EX_AD() external {
         addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             ETHER_ADDRESS,
@@ -292,7 +298,7 @@ contract unitTestCorrect_EVVM_payStaker_async is Test, Constants {
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
-        evvm.payStaker_async(
+        evvm.pay(
             COMMON_USER_NO_STAKER_1.Address,
             COMMON_USER_NO_STAKER_2.Address,
             "",
@@ -300,6 +306,7 @@ contract unitTestCorrect_EVVM_payStaker_async is Test, Constants {
             0.001 ether,
             0.00000001 ether,
             1001001,
+                true,
             COMMON_USER_STAKER.Address,
             signatureEVVM
         );
@@ -327,7 +334,7 @@ contract unitTestCorrect_EVVM_payStaker_async is Test, Constants {
         );
     }
 
-    function test__unit_correct__payStaker_async__nPF_nEX_ID() external {
+    function test__unit_correct__pay_staker_async__nPF_nEX_ID() external {
         nameService._setIdentityBaseMetadata(
             "dummy",
             NameService.IdentityBaseMetadata({
@@ -365,7 +372,7 @@ contract unitTestCorrect_EVVM_payStaker_async is Test, Constants {
         );
 
         vm.startPrank(COMMON_USER_STAKER.Address);
-        evvm.payStaker_async(
+        evvm.pay(
             COMMON_USER_NO_STAKER_1.Address,
             address(0),
             "dummy",
@@ -373,6 +380,7 @@ contract unitTestCorrect_EVVM_payStaker_async is Test, Constants {
             0.001 ether,
             0,
             1001001,
+                true,
             address(0),
             signatureEVVM
         );
@@ -394,7 +402,7 @@ contract unitTestCorrect_EVVM_payStaker_async is Test, Constants {
         );
     }
 
-    function test__unit_correct__payStaker_async__PF_nEX_ID() external {
+    function test__unit_correct__pay_staker_async__PF_nEX_ID() external {
         nameService._setIdentityBaseMetadata(
             "dummy",
             NameService.IdentityBaseMetadata({
@@ -432,7 +440,7 @@ contract unitTestCorrect_EVVM_payStaker_async is Test, Constants {
         );
 
         vm.startPrank(COMMON_USER_STAKER.Address);
-        evvm.payStaker_async(
+        evvm.pay(
             COMMON_USER_NO_STAKER_1.Address,
             address(0),
             "dummy",
@@ -440,6 +448,7 @@ contract unitTestCorrect_EVVM_payStaker_async is Test, Constants {
             0.001 ether,
             0.00000001 ether,
             1001001,
+                true,
             address(0),
             signatureEVVM
         );
@@ -466,7 +475,7 @@ contract unitTestCorrect_EVVM_payStaker_async is Test, Constants {
         );
     }
 
-    function test__unit_correct__payStaker_async__nPF_EX_ID() external {
+    function test__unit_correct__pay_staker_async__nPF_EX_ID() external {
         nameService._setIdentityBaseMetadata(
             "dummy",
             NameService.IdentityBaseMetadata({
@@ -505,7 +514,7 @@ contract unitTestCorrect_EVVM_payStaker_async is Test, Constants {
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
-        evvm.payStaker_async(
+        evvm.pay(
             COMMON_USER_NO_STAKER_1.Address,
             address(0),
             "dummy",
@@ -513,6 +522,7 @@ contract unitTestCorrect_EVVM_payStaker_async is Test, Constants {
             0.001 ether,
             0,
             1001001,
+                true,
             COMMON_USER_STAKER.Address,
             signatureEVVM
         );
@@ -535,7 +545,7 @@ contract unitTestCorrect_EVVM_payStaker_async is Test, Constants {
         );
     }
 
-    function test__unit_correct__payStaker_async__PF_EX_ID() external {
+    function test__unit_correct__pay_staker_async__PF_EX_ID() external {
         nameService._setIdentityBaseMetadata(
             "dummy",
             NameService.IdentityBaseMetadata({
@@ -574,7 +584,7 @@ contract unitTestCorrect_EVVM_payStaker_async is Test, Constants {
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
-        evvm.payStaker_async(
+        evvm.pay(
             COMMON_USER_NO_STAKER_1.Address,
             address(0),
             "dummy",
@@ -582,6 +592,7 @@ contract unitTestCorrect_EVVM_payStaker_async is Test, Constants {
             0.001 ether,
             0.00000001 ether,
             1001001,
+                true,
             COMMON_USER_STAKER.Address,
             signatureEVVM
         );

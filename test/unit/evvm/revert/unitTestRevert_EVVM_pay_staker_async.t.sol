@@ -27,14 +27,15 @@ import {Estimator} from "@EVVM/playground/contracts/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/contracts/evvm/lib/EvvmStorage.sol";
 import {Treasury} from "@EVVM/playground/contracts/treasury/Treasury.sol";
 
-contract unitTestRevert_EVVM_payNoStaker_sync is Test, Constants {
+contract unitTestRevert_EVVM_payStaker_async is Test, Constants {
     Staking staking;
     Evvm evvm;
     Estimator estimator;
     NameService nameService;
     Treasury treasury;
 
-    AccountData COMMON_USER_NO_STAKER_3 = WILDCARD_USER;
+    AccountData COMMON_USER_STAKER_1 = COMMON_USER_STAKER;
+    AccountData COMMON_USER_STAKER_2 = WILDCARD_USER;
 
     function setUp() public {
         staking = new Staking(ADMIN.Address, GOLDEN_STAKER.Address);
@@ -64,8 +65,9 @@ contract unitTestRevert_EVVM_payNoStaker_sync is Test, Constants {
         treasury = new Treasury(address(evvm));
         evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
         
-    
-        evvm.setPointStaker(COMMON_USER_STAKER.Address, 0x01);
+
+        evvm.setPointStaker(COMMON_USER_STAKER_1.Address, 0x01);
+        evvm.setPointStaker(COMMON_USER_STAKER_2.Address, 0x01);
     }
 
     function addBalance(address user, address token, uint256 amount) private {
@@ -82,20 +84,20 @@ contract unitTestRevert_EVVM_payNoStaker_sync is Test, Constants {
      * some denominations on test can be explicit expleined
      */
 
-    function test__unit_revert__payNoStaker_sync__bSigAtFrom() external {
+    function test__unit_revert__pay_staker_async__bSigAtFrom() external {
         addBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS, 0.11 ether);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
             Erc191TestBuilder.buildMessageSignedForPay(
                 evvm.getEvvmID(),
-                COMMON_USER_NO_STAKER_3.Address,
+                COMMON_USER_STAKER_1.Address,
                 "",
                 ETHER_ADDRESS,
                 0.1 ether,
                 0.01 ether,
-                0,
-                false,
-                COMMON_USER_NO_STAKER_3.Address
+                1001,
+                true,
+                COMMON_USER_STAKER_1.Address
             )
         );
         bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
@@ -104,17 +106,20 @@ contract unitTestRevert_EVVM_payNoStaker_sync is Test, Constants {
             s
         );
 
-        vm.startPrank(COMMON_USER_NO_STAKER_3.Address);
+        vm.startPrank(COMMON_USER_STAKER_1.Address);
 
         vm.expectRevert();
-        evvm.payNoStaker_sync(
+        evvm.pay(
             COMMON_USER_NO_STAKER_2.Address,
-            COMMON_USER_NO_STAKER_3.Address,
+            COMMON_USER_STAKER_1.Address,
             "",
             ETHER_ADDRESS,
             0.1 ether,
             0.01 ether,
-            COMMON_USER_NO_STAKER_3.Address,
+            1001,
+                true,
+            
+            COMMON_USER_STAKER_1.Address,
             signatureEVVM
         );
 
@@ -126,7 +131,7 @@ contract unitTestRevert_EVVM_payNoStaker_sync is Test, Constants {
         );
     }
 
-    function test__unit_revert__payNoStaker_sync__bSigAtToAddress()
+    function test__unit_revert__pay_staker_async__bSigAtToAddress()
         external
     {
         addBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS, 0.11 ether);
@@ -139,9 +144,9 @@ contract unitTestRevert_EVVM_payNoStaker_sync is Test, Constants {
                 ETHER_ADDRESS,
                 0.1 ether,
                 0.01 ether,
-                0,
-                false,
-                COMMON_USER_NO_STAKER_3.Address
+                1001,
+                true,
+                COMMON_USER_STAKER_1.Address
             )
         );
         bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
@@ -150,17 +155,19 @@ contract unitTestRevert_EVVM_payNoStaker_sync is Test, Constants {
             s
         );
 
-        vm.startPrank(COMMON_USER_NO_STAKER_3.Address);
+        vm.startPrank(COMMON_USER_STAKER_1.Address);
 
         vm.expectRevert();
-        evvm.payNoStaker_sync(
+        evvm.pay(
             COMMON_USER_NO_STAKER_1.Address,
-            COMMON_USER_NO_STAKER_3.Address,
+            COMMON_USER_STAKER_1.Address,
             "",
             ETHER_ADDRESS,
             0.1 ether,
             0.01 ether,
-            COMMON_USER_NO_STAKER_3.Address,
+            1001,
+                true,
+            COMMON_USER_STAKER_1.Address,
             signatureEVVM
         );
 
@@ -172,7 +179,7 @@ contract unitTestRevert_EVVM_payNoStaker_sync is Test, Constants {
         );
     }
 
-    function test__unit_revert__payNoStaker_sync__bSigAtToIdentity()
+    function test__unit_revert__pay_staker_async__bSigAtToIdentity()
         external
     {
         nameService._setIdentityBaseMetadata(
@@ -196,9 +203,9 @@ contract unitTestRevert_EVVM_payNoStaker_sync is Test, Constants {
                 ETHER_ADDRESS,
                 0.1 ether,
                 0.01 ether,
-                0,
-                false,
-                COMMON_USER_NO_STAKER_3.Address
+                1001,
+                true,
+                COMMON_USER_STAKER_1.Address
             )
         );
         bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
@@ -207,17 +214,19 @@ contract unitTestRevert_EVVM_payNoStaker_sync is Test, Constants {
             s
         );
 
-        vm.startPrank(COMMON_USER_NO_STAKER_3.Address);
+        vm.startPrank(COMMON_USER_STAKER_1.Address);
 
         vm.expectRevert();
-        evvm.payNoStaker_sync(
+        evvm.pay(
             COMMON_USER_NO_STAKER_1.Address,
             address(0),
             "fake",
             ETHER_ADDRESS,
             0.1 ether,
             0.01 ether,
-            COMMON_USER_NO_STAKER_3.Address,
+            1001,
+                true,
+            COMMON_USER_STAKER_1.Address,
             signatureEVVM
         );
 
@@ -229,7 +238,7 @@ contract unitTestRevert_EVVM_payNoStaker_sync is Test, Constants {
         );
     }
 
-    function test__unit_revert__payNoStaker_sync__bSigAtToken() external {
+    function test__unit_revert__pay_staker_async__bSigAtToken() external {
         addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             MATE_TOKEN_ADDRESS,
@@ -245,9 +254,9 @@ contract unitTestRevert_EVVM_payNoStaker_sync is Test, Constants {
                 ETHER_ADDRESS,
                 0.1 ether,
                 0.01 ether,
-                0,
-                false,
-                COMMON_USER_NO_STAKER_3.Address
+                1001,
+                true,
+                COMMON_USER_STAKER_1.Address
             )
         );
         bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
@@ -256,17 +265,19 @@ contract unitTestRevert_EVVM_payNoStaker_sync is Test, Constants {
             s
         );
 
-        vm.startPrank(COMMON_USER_NO_STAKER_3.Address);
+        vm.startPrank(COMMON_USER_STAKER_1.Address);
 
         vm.expectRevert();
-        evvm.payNoStaker_sync(
+        evvm.pay(
             COMMON_USER_NO_STAKER_1.Address,
             COMMON_USER_NO_STAKER_2.Address,
             "",
             MATE_TOKEN_ADDRESS,
             0.1 ether,
             0.01 ether,
-            COMMON_USER_NO_STAKER_3.Address,
+            1001,
+                true,
+            COMMON_USER_STAKER_1.Address,
             signatureEVVM
         );
 
@@ -281,7 +292,7 @@ contract unitTestRevert_EVVM_payNoStaker_sync is Test, Constants {
         );
     }
 
-    function test__unit_revert__payNoStaker_sync__bSigAtAmount() external {
+    function test__unit_revert__pay_staker_async__bSigAtAmount() external {
         addBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS, 1.11 ether);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -292,150 +303,9 @@ contract unitTestRevert_EVVM_payNoStaker_sync is Test, Constants {
                 ETHER_ADDRESS,
                 0.1 ether,
                 0.01 ether,
-                0,
-                false,
-                COMMON_USER_NO_STAKER_3.Address
-            )
-        );
-        bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
-
-        vm.startPrank(COMMON_USER_NO_STAKER_3.Address);
-
-        vm.expectRevert();
-        evvm.payNoStaker_sync(
-            COMMON_USER_NO_STAKER_1.Address,
-            COMMON_USER_NO_STAKER_2.Address,
-            "",
-            ETHER_ADDRESS,
-            1 ether,
-            0.01 ether,
-            COMMON_USER_NO_STAKER_3.Address,
-            signatureEVVM
-        );
-
-        vm.stopPrank();
-
-        assertEq(
-            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
-            1.11 ether
-        );
-    }
-
-    function test__unit_revert__payNoStaker_sync__bSigAtPriorityFee()
-        external
-    {
-        addBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS, 1.11 ether);
-
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(
-            COMMON_USER_NO_STAKER_1.PrivateKey,
-            Erc191TestBuilder.buildMessageSignedForPay(
-                evvm.getEvvmID(),
-                COMMON_USER_NO_STAKER_2.Address,
-                "",
-                ETHER_ADDRESS,
-                0.1 ether,
-                0.01 ether,
-                0,
-                false,
-                COMMON_USER_NO_STAKER_3.Address
-            )
-        );
-        bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
-
-        vm.startPrank(COMMON_USER_NO_STAKER_3.Address);
-
-        vm.expectRevert();
-        evvm.payNoStaker_sync(
-            COMMON_USER_NO_STAKER_1.Address,
-            COMMON_USER_NO_STAKER_2.Address,
-            "",
-            ETHER_ADDRESS,
-            0.1 ether,
-            1 ether,
-            COMMON_USER_NO_STAKER_3.Address,
-            signatureEVVM
-        );
-
-        vm.stopPrank();
-
-        assertEq(
-            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
-            1.11 ether
-        );
-    }
-
-    function test__unit_revert__payNoStaker_sync__bSigAtNonceNumber()
-        external
-    {
-        addBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS, 0.11 ether);
-
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(
-            COMMON_USER_NO_STAKER_1.PrivateKey,
-            Erc191TestBuilder.buildMessageSignedForPay(
-                evvm.getEvvmID(),
-                COMMON_USER_NO_STAKER_2.Address,
-                "",
-                ETHER_ADDRESS,
-                0.1 ether,
-                0.01 ether,
-                111,
-                false,
-                COMMON_USER_NO_STAKER_3.Address
-            )
-        );
-        bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
-
-        vm.startPrank(COMMON_USER_NO_STAKER_3.Address);
-
-        vm.expectRevert();
-        evvm.payNoStaker_sync(
-            COMMON_USER_NO_STAKER_1.Address,
-            COMMON_USER_NO_STAKER_2.Address,
-            "",
-            ETHER_ADDRESS,
-            0.1 ether,
-            0.01 ether,
-            COMMON_USER_NO_STAKER_3.Address,
-            signatureEVVM
-        );
-
-        vm.stopPrank();
-
-        assertEq(
-            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
-            0.11 ether
-        );
-    }
-
-    function test__unit_revert__payNoStaker_sync__bSigAtPriorityFlag()
-        external
-    {
-        addBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS, 0.11 ether);
-
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(
-            COMMON_USER_NO_STAKER_1.PrivateKey,
-            Erc191TestBuilder.buildMessageSignedForPay(
-                evvm.getEvvmID(),
-                COMMON_USER_NO_STAKER_2.Address,
-                "",
-                ETHER_ADDRESS,
-                0.1 ether,
-                0.01 ether,
-                0,
+                1001,
                 true,
-                COMMON_USER_NO_STAKER_3.Address
+                COMMON_USER_STAKER_1.Address
             )
         );
         bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
@@ -444,17 +314,19 @@ contract unitTestRevert_EVVM_payNoStaker_sync is Test, Constants {
             s
         );
 
-        vm.startPrank(COMMON_USER_NO_STAKER_3.Address);
+        vm.startPrank(COMMON_USER_STAKER_1.Address);
 
         vm.expectRevert();
-        evvm.payNoStaker_sync(
+        evvm.pay(
             COMMON_USER_NO_STAKER_1.Address,
             COMMON_USER_NO_STAKER_2.Address,
             "",
             ETHER_ADDRESS,
-            0.1 ether,
+            1 ether,
             0.01 ether,
-            COMMON_USER_NO_STAKER_3.Address,
+            1001,
+                true,
+            COMMON_USER_STAKER_1.Address,
             signatureEVVM
         );
 
@@ -462,11 +334,60 @@ contract unitTestRevert_EVVM_payNoStaker_sync is Test, Constants {
 
         assertEq(
             evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
-            0.11 ether
+            1.11 ether
         );
     }
 
-    function test__unit_revert__payNoStaker_sync__bSigAtToExecutor()
+    function test__unit_revert__pay_staker_async__bSigAtPriorityFee()
+        external
+    {
+        addBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS, 1.11 ether);
+
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(
+            COMMON_USER_NO_STAKER_1.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
+                COMMON_USER_NO_STAKER_2.Address,
+                "",
+                ETHER_ADDRESS,
+                0.1 ether,
+                0.01 ether,
+                1001,
+                true,
+                COMMON_USER_STAKER_1.Address
+            )
+        );
+        bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
+            v,
+            r,
+            s
+        );
+
+        vm.startPrank(COMMON_USER_STAKER_1.Address);
+
+        vm.expectRevert();
+        evvm.pay(
+            COMMON_USER_NO_STAKER_1.Address,
+            COMMON_USER_NO_STAKER_2.Address,
+            "",
+            ETHER_ADDRESS,
+            0.1 ether,
+            1 ether,
+            1001,
+                true,
+            COMMON_USER_STAKER_1.Address,
+            signatureEVVM
+        );
+
+        vm.stopPrank();
+
+        assertEq(
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            1.11 ether
+        );
+    }
+
+    function test__unit_revert__pay_staker_async__bSigAtNonceNumber()
         external
     {
         addBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS, 0.11 ether);
@@ -480,9 +401,9 @@ contract unitTestRevert_EVVM_payNoStaker_sync is Test, Constants {
                 ETHER_ADDRESS,
                 0.1 ether,
                 0.01 ether,
-                0,
-                false,
-                COMMON_USER_NO_STAKER_3.Address
+                1001,
+                true,
+                COMMON_USER_STAKER_1.Address
             )
         );
         bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
@@ -491,17 +412,19 @@ contract unitTestRevert_EVVM_payNoStaker_sync is Test, Constants {
             s
         );
 
-        vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
+        vm.startPrank(COMMON_USER_STAKER_1.Address);
 
         vm.expectRevert();
-        evvm.payNoStaker_sync(
+        evvm.pay(
             COMMON_USER_NO_STAKER_1.Address,
             COMMON_USER_NO_STAKER_2.Address,
             "",
             ETHER_ADDRESS,
             0.1 ether,
             0.01 ether,
-            COMMON_USER_NO_STAKER_2.Address,
+            1456,
+            true,
+            COMMON_USER_STAKER_1.Address,
             signatureEVVM
         );
 
@@ -513,7 +436,7 @@ contract unitTestRevert_EVVM_payNoStaker_sync is Test, Constants {
         );
     }
 
-    function test__unit_revert__payNoStaker_sync_wValAtExecutor()
+    function test__unit_revert__pay_staker_async__bSigAtPriorityFlag()
         external
     {
         addBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS, 0.11 ether);
@@ -527,9 +450,9 @@ contract unitTestRevert_EVVM_payNoStaker_sync is Test, Constants {
                 ETHER_ADDRESS,
                 0.1 ether,
                 0.01 ether,
-                0,
+                1001,
                 false,
-                COMMON_USER_NO_STAKER_3.Address
+                COMMON_USER_STAKER_1.Address
             )
         );
         bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
@@ -538,17 +461,19 @@ contract unitTestRevert_EVVM_payNoStaker_sync is Test, Constants {
             s
         );
 
-        vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
+        vm.startPrank(COMMON_USER_STAKER_1.Address);
 
         vm.expectRevert();
-        evvm.payNoStaker_sync(
+        evvm.pay(
             COMMON_USER_NO_STAKER_1.Address,
             COMMON_USER_NO_STAKER_2.Address,
             "",
             ETHER_ADDRESS,
             0.1 ether,
             0.01 ether,
-            COMMON_USER_NO_STAKER_3.Address,
+            1001,
+                true,
+            COMMON_USER_STAKER_1.Address,
             signatureEVVM
         );
 
@@ -560,7 +485,105 @@ contract unitTestRevert_EVVM_payNoStaker_sync is Test, Constants {
         );
     }
 
-    function test__unit_revert__payNoStaker_sync__userFromHasLessThanAmountPlusFee()
+    function test__unit_revert__pay_staker_async__bSigAtToExecutor()
+        external
+    {
+        addBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS, 0.11 ether);
+
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(
+            COMMON_USER_NO_STAKER_1.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
+                COMMON_USER_NO_STAKER_2.Address,
+                "",
+                ETHER_ADDRESS,
+                0.1 ether,
+                0.01 ether,
+                1001,
+                true,
+                COMMON_USER_STAKER_1.Address
+            )
+        );
+        bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
+            v,
+            r,
+            s
+        );
+
+        vm.startPrank(COMMON_USER_STAKER_2.Address);
+
+        vm.expectRevert();
+        evvm.pay(
+            COMMON_USER_NO_STAKER_1.Address,
+            COMMON_USER_NO_STAKER_2.Address,
+            "",
+            ETHER_ADDRESS,
+            0.1 ether,
+            0.01 ether,
+            1001,
+                true,
+            COMMON_USER_STAKER_2.Address,
+            signatureEVVM
+        );
+
+        vm.stopPrank();
+
+        assertEq(
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            0.11 ether
+        );
+    }
+
+    function test__unit_revert__pay_staker_async_wValAtExecutor()
+        external
+    {
+        addBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS, 0.11 ether);
+
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(
+            COMMON_USER_NO_STAKER_1.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
+                COMMON_USER_NO_STAKER_2.Address,
+                "",
+                ETHER_ADDRESS,
+                0.1 ether,
+                0.01 ether,
+                1001,
+                true,
+                COMMON_USER_STAKER_1.Address
+            )
+        );
+        bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
+            v,
+            r,
+            s
+        );
+
+        vm.startPrank(COMMON_USER_STAKER_2.Address);
+
+        vm.expectRevert();
+        evvm.pay(
+            COMMON_USER_NO_STAKER_1.Address,
+            COMMON_USER_NO_STAKER_2.Address,
+            "",
+            ETHER_ADDRESS,
+            0.1 ether,
+            0.01 ether,
+            1001,
+                true,
+            COMMON_USER_STAKER_1.Address,
+            signatureEVVM
+        );
+
+        vm.stopPrank();
+
+        assertEq(
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            0.11 ether
+        );
+    }
+
+    function test__unit_revert__pay_staker_async__userFromHasLessThanAmountPlusFee()
         external
     {
         addBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS, 0.11 ether);
@@ -574,9 +597,9 @@ contract unitTestRevert_EVVM_payNoStaker_sync is Test, Constants {
                 ETHER_ADDRESS,
                 0.8 ether,
                 0.04 ether,
-                0,
-                false,
-                COMMON_USER_NO_STAKER_3.Address
+                1001,
+                true,
+                COMMON_USER_STAKER_1.Address
             )
         );
         bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
@@ -585,17 +608,19 @@ contract unitTestRevert_EVVM_payNoStaker_sync is Test, Constants {
             s
         );
 
-        vm.startPrank(COMMON_USER_NO_STAKER_3.Address);
+        vm.startPrank(COMMON_USER_STAKER_1.Address);
 
         vm.expectRevert();
-        evvm.payNoStaker_sync(
+        evvm.pay(
             COMMON_USER_NO_STAKER_1.Address,
             COMMON_USER_NO_STAKER_2.Address,
             "",
             ETHER_ADDRESS,
             0.8 ether,
             0.04 ether,
-            COMMON_USER_NO_STAKER_3.Address,
+            1001,
+                true,
+            COMMON_USER_STAKER_1.Address,
             signatureEVVM
         );
 
@@ -607,7 +632,7 @@ contract unitTestRevert_EVVM_payNoStaker_sync is Test, Constants {
         );
     }
 
-    function test__unit_revert__payNoStaker_sync__wValAtNonce()
+    function test__unit_revert__pay_staker_async__nonceAlreadyUsed()
         external
     {
         addBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS, 0.11 ether);
@@ -621,9 +646,9 @@ contract unitTestRevert_EVVM_payNoStaker_sync is Test, Constants {
                 ETHER_ADDRESS,
                 0.1 ether,
                 0.01 ether,
-                156,
-                false,
-                COMMON_USER_NO_STAKER_3.Address
+                1001,
+                true,
+                COMMON_USER_STAKER_1.Address
             )
         );
         bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
@@ -632,20 +657,81 @@ contract unitTestRevert_EVVM_payNoStaker_sync is Test, Constants {
             s
         );
 
-        vm.startPrank(COMMON_USER_NO_STAKER_3.Address);
+        vm.startPrank(COMMON_USER_STAKER_1.Address);
 
-        vm.expectRevert();
-        evvm.payNoStaker_sync(
+        evvm.pay(
             COMMON_USER_NO_STAKER_1.Address,
             COMMON_USER_NO_STAKER_2.Address,
             "",
             ETHER_ADDRESS,
             0.1 ether,
             0.01 ether,
-            COMMON_USER_NO_STAKER_3.Address,
+            1001,
+                true,
+            COMMON_USER_STAKER_1.Address,
+            signatureEVVM
+        );
+
+        vm.expectRevert();
+        evvm.pay(
+            COMMON_USER_NO_STAKER_1.Address,
+            COMMON_USER_NO_STAKER_2.Address,
+            "",
+            ETHER_ADDRESS,
+            0.1 ether,
+            0.01 ether,
+            1001,
+                true,
+            COMMON_USER_STAKER_1.Address,
             signatureEVVM
         );
 
         vm.stopPrank();
     }
+
+    /*
+    function test__unit_revert__pay_staker_async__fisherIsNotStaker()
+        external
+    {
+        addBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS, 0.11 ether);
+
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(
+            COMMON_USER_NO_STAKER_1.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
+                COMMON_USER_NO_STAKER_2.Address,
+                "",
+                ETHER_ADDRESS,
+                0.1 ether,
+                0.01 ether,
+                1001,
+                true,
+                address(0)
+            )
+        );
+        bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
+            v,
+            r,
+            s
+        );
+
+        vm.startPrank(COMMON_USER_NO_STAKER_1.Address);
+
+        vm.expectRevert();
+        evvm.pay(
+            COMMON_USER_NO_STAKER_1.Address,
+            COMMON_USER_NO_STAKER_2.Address,
+            "",
+            ETHER_ADDRESS,
+            0.1 ether,
+            0.01 ether,
+            1001,
+                true,
+            address(0),
+            signatureEVVM
+        );
+
+        vm.stopPrank();
+    }
+    */
 }

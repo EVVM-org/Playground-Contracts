@@ -39,7 +39,7 @@ contract unitTestRevert_EVVM_proxy is Test, Constants {
      *  - Options are added at the end, separated by underscores
      *
      * Example:
-     * test__init__payNoStaker_sync__nonceAlreadyUsed
+     * test__init__pay_noStaker_sync__nonceAlreadyUsed
      *
      * Example explanation:
      * Function to test: payNoStaker_sync

@@ -39,7 +39,7 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
      *  - Options are added at the end, separated by underscores
      *
      * Example:
-     * test__init__payNoStaker_sync__PF_nEX
+     * test__init__pay_noStaker_sync__PF_nEX
      *
      * Example explanation:
      * Function to test: payNoStaker_sync
@@ -102,7 +102,10 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         treasury = new Treasury(address(evvm));
-        evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
+        evvm._setupNameServiceAndTreasuryAddress(
+            address(nameService),
+            address(treasury)
+        );
 
         v1 = new TartarusV1();
         addressV1 = address(v1);
@@ -153,13 +156,15 @@ contract unitTestCorrect_EVVM_proxy is Test, Constants {
             s
         );
 
-        evvm.payNoStaker_sync(
+        evvm.pay(
             userToInteract.Address,
             addressTo,
             "",
             tokenAddress,
             amount,
             priorityFee,
+            evvm.getNextCurrentSyncNonce(userToInteract.Address),
+            false,
             address(0),
             signatureEVVM
         );

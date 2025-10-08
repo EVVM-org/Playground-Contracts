@@ -28,12 +28,12 @@ import {EvvmStorage} from "@EVVM/playground/contracts/evvm/lib/EvvmStorage.sol";
 import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
 import {Treasury} from "@EVVM/playground/contracts/treasury/Treasury.sol";
 
-contract unitTestCorrect_EVVM_payNoStaker_sync is Test, Constants {
+contract unitTestCorrect_EVVM_pay_staker_sync is Test, Constants {
     Staking staking;
     Evvm evvm;
     Estimator estimator;
-    NameService nameService;
     Treasury treasury;
+    NameService nameService;
 
     function setUp() public {
         staking = new Staking(ADMIN.Address, GOLDEN_STAKER.Address);
@@ -61,7 +61,21 @@ contract unitTestCorrect_EVVM_payNoStaker_sync is Test, Constants {
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         treasury = new Treasury(address(evvm));
-        evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
+        evvm._setupNameServiceAndTreasuryAddress(
+            address(nameService),
+            address(treasury)
+        );
+
+        evvm.setPointStaker(COMMON_USER_STAKER.Address, 0x01);
+    }
+
+    function addBalance(
+        address user,
+        address token,
+        uint256 amount,
+        uint256 priorityFee
+    ) private {
+        evvm.addBalance(user, token, amount + priorityFee);
     }
 
     /**
@@ -74,11 +88,12 @@ contract unitTestCorrect_EVVM_payNoStaker_sync is Test, Constants {
      * AD: Uses an address
      */
 
-    function test__unit_correct__payNoStaker_sync__nPF_nEX_AD() external {
-        evvm.addBalance(
+    function test__unit_correct__pay_staker_sync__nPF_nEX_AD() external {
+        addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             ETHER_ADDRESS,
-            0.003 ether
+            0.003 ether,
+            0
         );
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -100,33 +115,43 @@ contract unitTestCorrect_EVVM_payNoStaker_sync is Test, Constants {
             s
         );
 
-        evvm.payNoStaker_sync(
+        vm.startPrank(COMMON_USER_STAKER.Address);
+        evvm.pay(
             COMMON_USER_NO_STAKER_1.Address,
             COMMON_USER_NO_STAKER_2.Address,
             "",
             ETHER_ADDRESS,
             0.001 ether,
             0,
+            0,
+            false,
             address(0),
             signatureEVVM
         );
-
-        assertEq(
-            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
-            0.001 ether
-        );
+        vm.stopPrank();
 
         assertEq(
             evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.002 ether
         );
+
+        assertEq(
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
+            0.001 ether
+        );
+
+        assertEq(
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount()
+        );
     }
 
-    function test__unit_correct__payNoStaker_sync__PF_nEX_AD() external {
-        evvm.addBalance(
+    function test__unit_correct__pay_staker_sync__PF_nEX_AD() external {
+        addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             ETHER_ADDRESS,
-            0.00300001 ether
+            0.003 ether,
+            0.00000001 ether
         );
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -148,186 +173,168 @@ contract unitTestCorrect_EVVM_payNoStaker_sync is Test, Constants {
             s
         );
 
-        evvm.payNoStaker_sync(
+        vm.startPrank(COMMON_USER_STAKER.Address);
+        evvm.pay(
             COMMON_USER_NO_STAKER_1.Address,
             COMMON_USER_NO_STAKER_2.Address,
             "",
             ETHER_ADDRESS,
             0.001 ether,
             0.00000001 ether,
-            address(0),
-            signatureEVVM
-        );
-
-        assertEq(
-            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
-            0.001 ether
-        );
-
-        assertEq(
-            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
-            0.00200001 ether
-        );
-    }
-
-    function test__unit_correct__payNoStaker_sync__nPF_EX_AD() external {
-        evvm.addBalance(
-            COMMON_USER_NO_STAKER_1.Address,
-            ETHER_ADDRESS,
-            0.003 ether
-        );
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(
-            COMMON_USER_NO_STAKER_1.PrivateKey,
-            Erc191TestBuilder.buildMessageSignedForPay(
-                evvm.getEvvmID(),
-                COMMON_USER_NO_STAKER_2.Address,
-                "",
-                ETHER_ADDRESS,
-                0.001 ether,
-                0,
-                0,
-                false,
-                COMMON_USER_NO_STAKER_2.Address
-            )
-        );
-        bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
-
-        vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
-
-        evvm.payNoStaker_sync(
-            COMMON_USER_NO_STAKER_1.Address,
-            COMMON_USER_NO_STAKER_2.Address,
-            "",
-            ETHER_ADDRESS,
-            0.001 ether,
             0,
-            COMMON_USER_NO_STAKER_2.Address,
-            signatureEVVM
-        );
-
-        vm.stopPrank();
-
-        assertEq(
-            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
-            0.001 ether
-        );
-    }
-
-    function test__unit_correct__payNoStaker_sync__PF_EX_AD() external {
-        evvm.addBalance(
-            COMMON_USER_NO_STAKER_1.Address,
-            ETHER_ADDRESS,
-            0.00300001 ether
-        );
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(
-            COMMON_USER_NO_STAKER_1.PrivateKey,
-            Erc191TestBuilder.buildMessageSignedForPay(
-                evvm.getEvvmID(),
-                COMMON_USER_NO_STAKER_2.Address,
-                "",
-                ETHER_ADDRESS,
-                0.001 ether,
-                0.00000001 ether,
-                0,
-                false,
-                COMMON_USER_NO_STAKER_2.Address
-            )
-        );
-        bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
-
-        vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
-
-        evvm.payNoStaker_sync(
-            COMMON_USER_NO_STAKER_1.Address,
-            COMMON_USER_NO_STAKER_2.Address,
-            "",
-            ETHER_ADDRESS,
-            0.001 ether,
-            0.00000001 ether,
-            COMMON_USER_NO_STAKER_2.Address,
-            signatureEVVM
-        );
-
-        vm.stopPrank();
-
-        assertEq(
-            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
-            0.001 ether
-        );
-
-        assertEq(
-            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
-            0.00200001 ether
-        );
-    }
-
-    function test__unit_correct__payNoStaker_sync__nPF_nEX_ID() external {
-        nameService._setIdentityBaseMetadata(
-            "dummy",
-            NameService.IdentityBaseMetadata({
-                owner: COMMON_USER_NO_STAKER_2.Address,
-                expireDate: block.timestamp + 366 days,
-                customMetadataMaxSlots: 0,
-                offerMaxSlots: 0,
-                flagNotAUsername: 0x00
-            })
-        );
-        evvm.addBalance(
-            COMMON_USER_NO_STAKER_1.Address,
-            ETHER_ADDRESS,
-            0.003 ether
-        );
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(
-            COMMON_USER_NO_STAKER_1.PrivateKey,
-            Erc191TestBuilder.buildMessageSignedForPay(
-                evvm.getEvvmID(),
-                address(0),
-                "dummy",
-                ETHER_ADDRESS,
-                0.001 ether,
-                0,
-                0,
-                false,
-                address(0)
-            )
-        );
-        bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
-
-        evvm.payNoStaker_sync(
-            COMMON_USER_NO_STAKER_1.Address,
-            address(0),
-            "dummy",
-            ETHER_ADDRESS,
-            0.001 ether,
-            0,
+            false,
             address(0),
             signatureEVVM
         );
-
-        assertEq(
-            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
-            0.001 ether
-        );
+        vm.stopPrank();
 
         assertEq(
             evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
             0.002 ether
         );
+
+        assertEq(
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
+            0.001 ether
+        );
+
+        assertEq(
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount()
+        );
+
+        assertEq(
+            evvm.getBalance(COMMON_USER_STAKER.Address, ETHER_ADDRESS),
+            0.00000001 ether
+        );
     }
 
-    function test__unit_correct__payNoStaker_sync__PF_nEX_ID() external {
+    function test__unit_correct__pay_staker_sync__nPF_EX_AD() external {
+        addBalance(
+            COMMON_USER_NO_STAKER_1.Address,
+            ETHER_ADDRESS,
+            0.003 ether,
+            0
+        );
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(
+            COMMON_USER_NO_STAKER_1.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
+                COMMON_USER_NO_STAKER_2.Address,
+                "",
+                ETHER_ADDRESS,
+                0.001 ether,
+                0,
+                0,
+                false,
+                COMMON_USER_STAKER.Address
+            )
+        );
+        bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
+            v,
+            r,
+            s
+        );
+
+        vm.startPrank(COMMON_USER_STAKER.Address);
+
+        evvm.pay(
+            COMMON_USER_NO_STAKER_1.Address,
+            COMMON_USER_NO_STAKER_2.Address,
+            "",
+            ETHER_ADDRESS,
+            0.001 ether,
+            0,
+            0,
+            false,
+            COMMON_USER_STAKER.Address,
+            signatureEVVM
+        );
+
+        vm.stopPrank();
+
+        assertEq(
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            0.002 ether
+        );
+
+        assertEq(
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
+            0.001 ether
+        );
+
+        assertEq(
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount()
+        );
+    }
+
+    function test__unit_correct__pay_staker_sync__PF_EX_AD() external {
+        addBalance(
+            COMMON_USER_NO_STAKER_1.Address,
+            ETHER_ADDRESS,
+            0.003 ether,
+            0.00000001 ether
+        );
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(
+            COMMON_USER_NO_STAKER_1.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
+                COMMON_USER_NO_STAKER_2.Address,
+                "",
+                ETHER_ADDRESS,
+                0.001 ether,
+                0.00000001 ether,
+                0,
+                false,
+                COMMON_USER_STAKER.Address
+            )
+        );
+        bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
+            v,
+            r,
+            s
+        );
+
+        vm.startPrank(COMMON_USER_STAKER.Address);
+
+        evvm.pay(
+            COMMON_USER_NO_STAKER_1.Address,
+            COMMON_USER_NO_STAKER_2.Address,
+            "",
+            ETHER_ADDRESS,
+            0.001 ether,
+            0.00000001 ether,
+            0,
+            false,
+            COMMON_USER_STAKER.Address,
+            signatureEVVM
+        );
+
+        vm.stopPrank();
+
+        assertEq(
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            0.002 ether
+        );
+
+        assertEq(
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
+            0.001 ether
+        );
+
+        assertEq(
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount()
+        );
+
+        assertEq(
+            evvm.getBalance(COMMON_USER_STAKER.Address, ETHER_ADDRESS),
+            0.00000001 ether
+        );
+    }
+
+    function test__unit_correct__pay_staker_sync__nPF_nEX_ID() external {
         nameService._setIdentityBaseMetadata(
             "dummy",
             NameService.IdentityBaseMetadata({
@@ -338,10 +345,79 @@ contract unitTestCorrect_EVVM_payNoStaker_sync is Test, Constants {
                 flagNotAUsername: 0x00
             })
         );
-        evvm.addBalance(
+        addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             ETHER_ADDRESS,
-            0.00300001 ether
+            0.003 ether,
+            0
+        );
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(
+            COMMON_USER_NO_STAKER_1.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
+                address(0),
+                "dummy",
+                ETHER_ADDRESS,
+                0.001 ether,
+                0,
+                0,
+                false,
+                address(0)
+            )
+        );
+        bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
+            v,
+            r,
+            s
+        );
+
+        vm.startPrank(COMMON_USER_STAKER.Address);
+        evvm.pay(
+            COMMON_USER_NO_STAKER_1.Address,
+            address(0),
+            "dummy",
+            ETHER_ADDRESS,
+            0.001 ether,
+            0,
+            0,
+            false,
+            address(0),
+            signatureEVVM
+        );
+        vm.stopPrank();
+
+        assertEq(
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            0.002 ether
+        );
+
+        assertEq(
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
+            0.001 ether
+        );
+
+        assertEq(
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount()
+        );
+    }
+
+    function test__unit_correct__pay_staker_sync__PF_nEX_ID() external {
+        nameService._setIdentityBaseMetadata(
+            "dummy",
+            NameService.IdentityBaseMetadata({
+                owner: COMMON_USER_NO_STAKER_2.Address,
+                expireDate: block.timestamp + 366 days,
+                customMetadataMaxSlots: 0,
+                offerMaxSlots: 0,
+                flagNotAUsername: 0x00
+            })
+        );
+        addBalance(
+            COMMON_USER_NO_STAKER_1.Address,
+            ETHER_ADDRESS,
+            0.003 ether,
+            0.00000001 ether
         );
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -363,15 +439,24 @@ contract unitTestCorrect_EVVM_payNoStaker_sync is Test, Constants {
             s
         );
 
-        evvm.payNoStaker_sync(
+        vm.startPrank(COMMON_USER_STAKER.Address);
+        evvm.pay(
             COMMON_USER_NO_STAKER_1.Address,
             address(0),
             "dummy",
             ETHER_ADDRESS,
             0.001 ether,
             0.00000001 ether,
+            0,
+            false,
             address(0),
             signatureEVVM
+        );
+        vm.stopPrank();
+
+        assertEq(
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            0.002 ether
         );
 
         assertEq(
@@ -380,12 +465,17 @@ contract unitTestCorrect_EVVM_payNoStaker_sync is Test, Constants {
         );
 
         assertEq(
-            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
-            0.00200001 ether
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount()
+        );
+
+        assertEq(
+            evvm.getBalance(COMMON_USER_STAKER.Address, ETHER_ADDRESS),
+            0.00000001 ether
         );
     }
 
-    function test__unit_correct__payNoStaker_sync__nPF_EX_ID() external {
+    function test__unit_correct__pay_staker_sync__nPF_EX_ID() external {
         nameService._setIdentityBaseMetadata(
             "dummy",
             NameService.IdentityBaseMetadata({
@@ -396,10 +486,11 @@ contract unitTestCorrect_EVVM_payNoStaker_sync is Test, Constants {
                 flagNotAUsername: 0x00
             })
         );
-        evvm.addBalance(
+        addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             ETHER_ADDRESS,
-            0.003 ether
+            0.003 ether,
+            0
         );
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -412,7 +503,7 @@ contract unitTestCorrect_EVVM_payNoStaker_sync is Test, Constants {
                 0,
                 0,
                 false,
-                COMMON_USER_NO_STAKER_2.Address
+                COMMON_USER_STAKER.Address
             )
         );
         bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
@@ -421,20 +512,27 @@ contract unitTestCorrect_EVVM_payNoStaker_sync is Test, Constants {
             s
         );
 
-        vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
+        vm.startPrank(COMMON_USER_STAKER.Address);
 
-        evvm.payNoStaker_sync(
+        evvm.pay(
             COMMON_USER_NO_STAKER_1.Address,
             address(0),
             "dummy",
             ETHER_ADDRESS,
             0.001 ether,
             0,
-            COMMON_USER_NO_STAKER_2.Address,
+            0,
+            false,
+            COMMON_USER_STAKER.Address,
             signatureEVVM
         );
 
         vm.stopPrank();
+
+        assertEq(
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            0.002 ether
+        );
 
         assertEq(
             evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
@@ -442,12 +540,12 @@ contract unitTestCorrect_EVVM_payNoStaker_sync is Test, Constants {
         );
 
         assertEq(
-            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
-            0.002 ether
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount()
         );
     }
 
-    function test__unit_correct__payNoStaker_sync__PF_EX_ID() external {
+    function test__unit_correct__pay_staker_sync__PF_EX_ID() external {
         nameService._setIdentityBaseMetadata(
             "dummy",
             NameService.IdentityBaseMetadata({
@@ -458,10 +556,11 @@ contract unitTestCorrect_EVVM_payNoStaker_sync is Test, Constants {
                 flagNotAUsername: 0x00
             })
         );
-        evvm.addBalance(
+        addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             ETHER_ADDRESS,
-            0.00300001 ether
+            0.003 ether,
+            0.00000001 ether
         );
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -474,7 +573,7 @@ contract unitTestCorrect_EVVM_payNoStaker_sync is Test, Constants {
                 0.00000001 ether,
                 0,
                 false,
-                COMMON_USER_NO_STAKER_2.Address
+                COMMON_USER_STAKER.Address
             )
         );
         bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
@@ -483,20 +582,27 @@ contract unitTestCorrect_EVVM_payNoStaker_sync is Test, Constants {
             s
         );
 
-        vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
+        vm.startPrank(COMMON_USER_STAKER.Address);
 
-        evvm.payNoStaker_sync(
+        evvm.pay(
             COMMON_USER_NO_STAKER_1.Address,
             address(0),
             "dummy",
             ETHER_ADDRESS,
             0.001 ether,
             0.00000001 ether,
-            COMMON_USER_NO_STAKER_2.Address,
+            0,
+            false,
+            COMMON_USER_STAKER.Address,
             signatureEVVM
         );
 
         vm.stopPrank();
+
+        assertEq(
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            0.002 ether
+        );
 
         assertEq(
             evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
@@ -504,8 +610,13 @@ contract unitTestCorrect_EVVM_payNoStaker_sync is Test, Constants {
         );
 
         assertEq(
-            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
-            0.00200001 ether
+            evvm.getBalance(COMMON_USER_STAKER.Address, MATE_TOKEN_ADDRESS),
+            evvm.getRewardAmount()
+        );
+
+        assertEq(
+            evvm.getBalance(COMMON_USER_STAKER.Address, ETHER_ADDRESS),
+            0.00000001 ether
         );
     }
 }
