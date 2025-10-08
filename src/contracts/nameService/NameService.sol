@@ -1235,36 +1235,24 @@ contract NameService {
 
     function makePay(
         address user,
-        uint256 ammount,
+        uint256 amount,
         uint256 priorityFee,
         uint256 nonce,
         bool priorityFlag,
         bytes memory signature
     ) internal {
-        if (priorityFlag) {
-            Evvm(evvmAddress.current).payStaker_async(
-                user,
-                address(this),
-                "",
-                PRINCIPAL_TOKEN_ADDRESS,
-                ammount,
-                priorityFee,
-                nonce,
-                address(this),
-                signature
-            );
-        } else {
-            Evvm(evvmAddress.current).payStaker_sync(
-                user,
-                address(this),
-                "",
-                PRINCIPAL_TOKEN_ADDRESS,
-                ammount,
-                priorityFee,
-                address(this),
-                signature
-            );
-        }
+        Evvm(evvmAddress.current).pay(
+            user,
+            address(this),
+            "",
+            PRINCIPAL_TOKEN_ADDRESS,
+            amount,
+            priorityFee,
+            nonce,
+            priorityFlag,
+            address(this),
+            signature
+        );
     }
 
     function makeCaPay(address user, uint256 amount) internal {
