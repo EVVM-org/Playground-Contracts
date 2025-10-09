@@ -151,4 +151,25 @@ contract unitTestRevert_EVVM_adminFunctions is Test, Constants {
 
         vm.stopPrank();
     }
+
+    function test__unit_revert__setEvvmID__nAdm() external {
+        vm.startPrank(COMMON_USER.Address);
+
+        vm.expectRevert();
+        evvm.setEvvmID(888);
+
+        vm.stopPrank();
+    }
+
+    function test__unit_revert__setEvvmID__WindowToChangeEvvmIDExpired() external {
+        vm.startPrank(ADMIN.Address);
+
+        evvm.setEvvmID(888);
+
+        skip(24 hours + 1 seconds);
+        vm.expectRevert();
+        evvm.setEvvmID(777);
+
+        vm.stopPrank();
+    }
 }

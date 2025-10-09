@@ -61,7 +61,10 @@ contract unitTestCorrect_EVVM_adminFunctions is Test, Constants {
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         treasury = new Treasury(address(evvm));
-        evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
+        evvm._setupNameServiceAndTreasuryAddress(
+            address(nameService),
+            address(treasury)
+        );
     }
 
     /**
@@ -116,5 +119,21 @@ contract unitTestCorrect_EVVM_adminFunctions is Test, Constants {
         evvm.recalculateReward();
 
         console2.log(evvm.getEraPrincipalToken());
+    }
+
+    function test__unit_correct__setEvvmID() external {
+        vm.startPrank(ADMIN.Address);
+
+        evvm.setEvvmID(888);
+
+        assertEq(evvm.getEvvmID(), 888);
+
+        skip(23 hours);
+
+        evvm.setEvvmID(777);
+
+        vm.stopPrank();
+
+        assertEq(evvm.getEvvmID(), 777);
     }
 }
