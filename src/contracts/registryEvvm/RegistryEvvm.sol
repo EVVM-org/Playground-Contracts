@@ -21,7 +21,7 @@ import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/U
 contract RegistryEvvm is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     error InvalidUser();
     error InvalidInput();
-    error AlreadyRegistered(uint256 chainId, address evvmAddress);
+    error AlreadyRegistered();
     error ChainIdNotRegistered();
     error EvvmIdAlreadyRegistered();
     
@@ -103,7 +103,7 @@ contract RegistryEvvm is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         if (chainId == 0 || evvmAddress == address(0)) revert InvalidInput();
 
         if (isThisAddressRegistered[chainId][evvmAddress])
-            revert AlreadyRegistered(chainId, evvmAddress);
+            revert AlreadyRegistered();
 
         if (!isThisChainIdRegistered[chainId]) revert ChainIdNotRegistered();
 
@@ -146,7 +146,7 @@ contract RegistryEvvm is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         ) revert InvalidInput();
 
         if (isThisAddressRegistered[chainId][evvmAddress])
-            revert AlreadyRegistered(chainId, evvmAddress);
+            revert AlreadyRegistered();
 
         if (
             registry[evvmID].chainId != 0 &&
