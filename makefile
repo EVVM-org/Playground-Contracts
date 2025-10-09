@@ -631,6 +631,16 @@ fuzzTestTreasuryWithdraw:
 	@echo "Running Treasury withdraw unit fuzz tests"
 	@forge test --match-path test/fuzz/treasury/fuzzTest_Treasury_withdraw.t.sol --summary --detailed --gas-report -vvv --show-progress
 
+## RegistryEvvm
+
+### Unit tests
+
+#### Correct Tests
+
+unitTestCorrectRegistryEvvm:
+	@echo "Running all RegistryEvvm unit correct tests"
+	@forge test --match-contract unitTestCorrect_RegistryEvvm --summary --detailed --gas-report -vvv --show-progress
+
 ######################################################################################################
 
 # Other commands
