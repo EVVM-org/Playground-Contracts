@@ -27,7 +27,6 @@ contract DeployScript is Script {
     }
 
     struct BasicMetadata {
-        uint256 EvvmID;
         string EvvmName;
         string principalTokenName;
         string principalTokenSymbol;
@@ -75,7 +74,6 @@ contract DeployScript is Script {
         console2.log("GoldenFisher:", addressData.goldenFisher);
         console2.log("Activator:", addressData.activator);
         console2.log("EvvmName:", basicMetadata.EvvmName);
-        console2.log("EvvmID:", basicMetadata.EvvmID);
         console2.log("PrincipalTokenName:", basicMetadata.principalTokenName);
         console2.log(
             "PrincipalTokenSymbol:",
@@ -88,7 +86,8 @@ contract DeployScript is Script {
         EvvmStructs.EvvmMetadata memory inputMetadata = EvvmStructs
             .EvvmMetadata({
                 EvvmName: basicMetadata.EvvmName,
-                EvvmID: basicMetadata.EvvmID,
+                 // evvmID will be set to 0, and it will be assigned when you register the evvm
+                EvvmID: 0,
                 principalTokenName: basicMetadata.principalTokenName,
                 principalTokenSymbol: basicMetadata.principalTokenSymbol,
                 principalTokenAddress: 0x0000000000000000000000000000000000000001,
