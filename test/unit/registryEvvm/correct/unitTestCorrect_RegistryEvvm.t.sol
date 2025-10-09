@@ -17,7 +17,7 @@ pragma abicoder v2;
 import "forge-std/Test.sol";
 import "forge-std/console2.sol";
 
-import {Constants} from "test/Constants.sol";
+import {Constants, RegistryEvvmTestTwo} from "test/Constants.sol";
 
 import {Staking} from "@EVVM/playground/contracts/staking/Staking.sol";
 import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
@@ -25,6 +25,7 @@ import {RegistryEvvm} from "@EVVM/playground/contracts/registryEvvm/RegistryEvvm
 
 contract unitTestCorrect_RegistryEvvm is Test, Constants {
     RegistryEvvm registryEvvm;
+    RegistryEvvmTestTwo registryEvvmTestTwo;
     ERC1967Proxy proxyRegistryEvvm;
 
     AccountData USER = WILDCARD_USER;
@@ -112,9 +113,7 @@ contract unitTestCorrect_RegistryEvvm is Test, Constants {
         assertEq(metadataTwo.evvmAddress, address(23456));
     }
 
-    function test__unit_correct__registerChainId()
-        external
-    {
+    function test__unit_correct__registerChainId() external {
         uint256[] memory chainIds = new uint256[](3);
         chainIds[0] = 111555111;
         chainIds[1] = 222555222;
@@ -142,5 +141,107 @@ contract unitTestCorrect_RegistryEvvm is Test, Constants {
             ),
             true
         );
+    }
+
+    function test__unit_correct__proposeSuperUser() external {
+        vm.startPrank(ADMIN.Address);
+        RegistryEvvm(address(proxyRegistryEvvm)).proposeSuperUser(USER.Address);
+        vm.stopPrank();
+
+        RegistryEvvm.AddressTypeProposal memory superUser = RegistryEvvm(
+            address(proxyRegistryEvvm)
+        ).getSuperUserData();
+
+        assertEq(superUser.current, ADMIN.Address);
+        assertEq(superUser.proposal, USER.Address);
+        assertEq(superUser.timeToAccept, block.timestamp + 7 days);
+    }
+
+    function test__unit_correct__rejectProposalSuperUser() external {
+        vm.startPrank(ADMIN.Address);
+        RegistryEvvm(address(proxyRegistryEvvm)).proposeSuperUser(USER.Address);
+        skip(3 days);
+        RegistryEvvm(address(proxyRegistryEvvm)).rejectProposalSuperUser();
+        vm.stopPrank();
+
+        RegistryEvvm.AddressTypeProposal memory superUser = RegistryEvvm(
+            address(proxyRegistryEvvm)
+        ).getSuperUserData();
+
+        assertEq(superUser.current, ADMIN.Address);
+        assertEq(superUser.proposal, address(0));
+        assertEq(superUser.timeToAccept, 0);
+    }
+
+    function test__unit_correct__acceptSuperUser() external {
+        vm.startPrank(ADMIN.Address);
+        RegistryEvvm(address(proxyRegistryEvvm)).proposeSuperUser(USER.Address);
+        vm.stopPrank();
+        vm.startPrank(USER.Address);
+        skip(8 days);
+        RegistryEvvm(address(proxyRegistryEvvm)).acceptSuperUser();
+        vm.stopPrank();
+        RegistryEvvm.AddressTypeProposal memory superUser = RegistryEvvm(
+            address(proxyRegistryEvvm)
+        ).getSuperUserData();
+        assertEq(superUser.current, USER.Address);
+        assertEq(superUser.proposal, address(0));
+        assertEq(superUser.timeToAccept, 0);
+    }
+
+    function test__unit_correct__proposeUpgrade() external {
+        registryEvvmTestTwo = new RegistryEvvmTestTwo();
+        vm.startPrank(ADMIN.Address);
+        RegistryEvvm(address(proxyRegistryEvvm)).proposeUpgrade(
+            address(registryEvvmTestTwo)
+        );
+        vm.stopPrank();
+
+        RegistryEvvm.AddressTypeProposal memory upgrade = RegistryEvvm(
+            address(proxyRegistryEvvm)
+        ).getUpgradeProposalData();
+
+        assertEq(upgrade.current, address(0));
+        assertEq(upgrade.proposal, address(registryEvvmTestTwo));
+        assertEq(upgrade.timeToAccept, block.timestamp + 7 days);
+    }
+
+    function test__unit_correct__rejectProposalUpgrade() external {
+        registryEvvmTestTwo = new RegistryEvvmTestTwo();
+        vm.startPrank(ADMIN.Address);
+        RegistryEvvm(address(proxyRegistryEvvm)).proposeUpgrade(
+            address(registryEvvmTestTwo)
+        );
+        skip(3 days);
+        RegistryEvvm(address(proxyRegistryEvvm)).rejectProposalUpgrade();
+        vm.stopPrank();
+
+        RegistryEvvm.AddressTypeProposal memory upgrade = RegistryEvvm(
+            address(proxyRegistryEvvm)
+        ).getUpgradeProposalData();
+
+        assertEq(upgrade.current, address(0));
+        assertEq(upgrade.proposal, address(0));
+        assertEq(upgrade.timeToAccept, 0);
+    }
+
+    function test__unit_correct__acceptUpgrade() external {
+        registryEvvmTestTwo = new RegistryEvvmTestTwo();
+        vm.startPrank(ADMIN.Address);
+        RegistryEvvm(address(proxyRegistryEvvm)).proposeUpgrade(
+            address(registryEvvmTestTwo)
+        );
+        vm.stopPrank();
+        vm.startPrank(ADMIN.Address);
+        skip(8 days);
+        RegistryEvvm(address(proxyRegistryEvvm)).acceptProposalUpgrade();
+        vm.stopPrank();
+        RegistryEvvm.AddressTypeProposal memory upgrade = RegistryEvvm(
+            address(proxyRegistryEvvm)
+        ).getUpgradeProposalData();
+        assertEq(upgrade.current, address(0));
+        assertEq(upgrade.proposal, address(0));
+        assertEq(upgrade.timeToAccept, 0);
+        assertEq(RegistryEvvm(address(proxyRegistryEvvm)).getVersion(), 2);
     }
 }
