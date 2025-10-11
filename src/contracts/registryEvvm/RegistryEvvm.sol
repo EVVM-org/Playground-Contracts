@@ -11,21 +11,21 @@ import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/U
  * @title RegistryEvvm
  * @notice Registry contract for EVVM deployments on testnets
  * @dev Upgradeable contract that manages EVVM registration with 7-day time-delayed governance
- * 
+ *
  * This contract allows:
  * - Public registration of EVVM instances with auto-incrementing IDs (1000+)
  * - Privileged registration by superUser for whitelisted IDs (1-999)
  * - Chain ID whitelisting to restrict registration to approved testnets
  * - Time-delayed governance for superUser changes and contract upgrades
  */
-
+contract RegistryEvvm is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     // 🬮🬼🬬🬎🬞🬸🬥🬵🬍🬝🬭🬶🬿🬹🬗🬗🬖🬗🬟🬿 Errors 🬎🬞🬝🬏🬘🬯🬉🬹🬭🬅🬤🬣🬤🬋🬲🬯🬀🬂🬀🬆 //
     error InvalidUser();
     error InvalidInput();
     error AlreadyRegistered();
     error ChainIdNotRegistered();
     error EvvmIdAlreadyRegistered();
-    
+
     // 🬽🬴🬴🬲🬞🬤🬦🬳🬋🬄🬇🬖🬦🬧🬓🬉🬤🬏🬑🬮 Structures 🬶🬸🬙🬀🬐🬣🬢🬮🬘🬴🬂🬬🬼🬅🬒🬲🬁🬣🬉🬀 //
     /**
      * @notice Metadata structure for EVVM registration
@@ -96,11 +96,11 @@ import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/U
      * @param chainId The chain ID of the testnet where the EVVM is deployed
      * @param evvmAddress The contract address of the EVVM instance
      * @return The assigned EVVM ID (auto-incremented from 1000 onwards)
-     * 
+     *
      * Requirements:
      * - chainId must be non-zero and whitelisted
      * - evvmAddress must be non-zero and not already registered for this chainId
-     * 
+     *
      * @custom:security Only works with whitelisted testnet chain IDs to prevent mainnet registration
      */
     function registerEvvm(
@@ -129,14 +129,14 @@ import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/U
      * @param chainId The chain ID of the testnet where the EVVM is deployed
      * @param evvmAddress The contract address of the EVVM instance
      * @return The assigned EVVM ID (same as input evvmID)
-     * 
+     *
      * Requirements:
      * - Only callable by superUser
      * - evvmID must be between 1 and 999 (999)
      * - chainId must be non-zero and whitelisted
      * - evvmAddress must be non-zero and not already registered for this chainId
      * - The specified evvmID must not already be registered
-     * 
+     *
      * @custom:access-control Restricted to superUser only
      * @custom:security Reserved IDs (1-999) for official EVVM deployments
      */
@@ -174,11 +174,11 @@ import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/U
      * @notice Registers multiple chain IDs to the whitelist
      * @dev Only superUser can add chain IDs to prevent mainnet registration
      * @param chainIds Array of chain IDs to whitelist for EVVM registration
-     * 
+     *
      * Requirements:
      * - Only callable by superUser
      * - All chain IDs must be non-zero
-     * 
+     *
      * @custom:access-control Restricted to superUser only
      * @custom:security Prevents registration on non-testnet chains by controlling whitelist
      */
@@ -283,7 +283,7 @@ import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/U
      * @dev View function that returns chain ID and contract address for given EVVM ID
      * @param evvmID The EVVM ID to query
      * @return Metadata struct containing chainId and evvmAddress
-     * 
+     *
      * @custom:usage dApps can use this to verify they're interacting with the correct EVVM
      */
     function getEvvmIdMetadata(
@@ -296,7 +296,7 @@ import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/U
      * @notice Retrieves all active whitelisted EVVM IDs (1-999)
      * @dev View function that returns array of registered EVVM IDs in the reserved range
      * @return Array of active EVVM IDs in the whitelisted range (1-999)
-     * 
+     *
      * @custom:usage Indexer function to discover all official EVVM deployments
      * @custom:gas-warning This function can be gas-intensive for large numbers of registrations
      */
@@ -335,7 +335,7 @@ import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/U
      * @notice Retrieves all active public EVVM IDs (1000+)
      * @dev View function that returns array of registered EVVM IDs in the public range
      * @return Array of active EVVM IDs in the public range (1000+)
-     * 
+     *
      * @custom:usage Indexer function to discover all community EVVM deployments
      * @custom:gas-warning This function can be gas-intensive for large numbers of registrations
      */
@@ -345,7 +345,7 @@ import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/U
         uint256[] memory activeEvvmIds = new uint256[](count);
         uint256 index;
 
-        for (uint256 i = 1000 ; i < publicCounter; i++) {
+        for (uint256 i = 1000; i < publicCounter; i++) {
             if (
                 registry[i].chainId != 0 &&
                 registry[i].evvmAddress != address(0)
@@ -362,7 +362,7 @@ import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/U
      * @notice Internal authorization function for upgrades
      * @dev Required by UUPSUpgradeable, but authorization is handled in acceptProposalUpgrade
      * @param newImplementation Address of the new implementation (unused in this context)
-     * 
+     *
      * @custom:security Authorization is handled through time-delayed governance in acceptProposalUpgrade
      */
     function _authorizeUpgrade(
@@ -376,7 +376,7 @@ import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/U
      * @notice Retrieves complete superUser governance data
      * @dev Returns the full AddressTypeProposal struct with current, proposed, and timing information
      * @return AddressTypeProposal struct containing current superUser, proposed superUser, and acceptance timestamp
-     * 
+     *
      * @custom:usage For governance interfaces to display superUser change status
      */
     function getSuperUserData()
@@ -401,7 +401,7 @@ import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/U
      * @dev View function to verify if registrations are allowed on a specific chain
      * @param chainId The chain ID to check
      * @return bool True if the chain ID is whitelisted, false otherwise
-     * 
+     *
      * @custom:usage dApps can use this to verify if a chain is supported before attempting registration
      */
     function isChainIdRegistered(uint256 chainId) external view returns (bool) {
@@ -414,7 +414,7 @@ import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/U
      * @param chainId The chain ID to check
      * @param evvmAddress The EVVM address to check
      * @return bool True if the address is already registered on this chain, false otherwise
-     * 
+     *
      * @custom:usage Prevents duplicate registrations and verifies existing registrations
      */
     function isAddressRegistered(
@@ -428,7 +428,7 @@ import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/U
      * @notice Retrieves complete upgrade proposal governance data
      * @dev Returns the full AddressTypeProposal struct with current, proposed, and timing information for upgrades
      * @return AddressTypeProposal struct containing current implementation, proposed implementation, and acceptance timestamp
-     * 
+     *
      * @custom:usage For governance interfaces to display upgrade proposal status
      */
     function getUpgradeProposalData()
@@ -443,7 +443,7 @@ import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/U
      * @notice Returns the contract version
      * @dev Simple version identifier for tracking contract updates
      * @return uint256 Current version number of the contract
-     * 
+     *
      * @custom:usage For compatibility checks and version tracking
      */
     function getVersion() external pure returns (uint256) {
