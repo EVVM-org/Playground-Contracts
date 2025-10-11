@@ -18,13 +18,15 @@ import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/U
  * - Chain ID whitelisting to restrict registration to approved testnets
  * - Time-delayed governance for superUser changes and contract upgrades
  */
-contract RegistryEvvm is Initializable, OwnableUpgradeable, UUPSUpgradeable {
+
+    // 🬮🬼🬬🬎🬞🬸🬥🬵🬍🬝🬭🬶🬿🬹🬗🬗🬖🬗🬟🬿 Errors 🬎🬞🬝🬏🬘🬯🬉🬹🬭🬅🬤🬣🬤🬋🬲🬯🬀🬂🬀🬆 //
     error InvalidUser();
     error InvalidInput();
     error AlreadyRegistered();
     error ChainIdNotRegistered();
     error EvvmIdAlreadyRegistered();
     
+    // 🬽🬴🬴🬲🬞🬤🬦🬳🬋🬄🬇🬖🬦🬧🬓🬉🬤🬏🬑🬮 Structures 🬶🬸🬙🬀🬐🬣🬢🬮🬘🬴🬂🬬🬼🬅🬒🬲🬁🬣🬉🬀 //
     /**
      * @notice Metadata structure for EVVM registration
      * @param chainId The chain ID where the EVVM is deployed
@@ -47,6 +49,8 @@ contract RegistryEvvm is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         uint256 timeToAccept;
     }
 
+    // 🬂🬒🬆🬣🬐🬑🬞🬮🬌🬚🬅🬍🬟🬿🬠🬉🬾🬁🬛🬸 State Variables 🬕🬅🬿🬈🬿🬋🬥🬂🬹🬦🬿🬋🬳🬏🬟🬇🬐🬹🬱🬻 //
+
     AddressTypeProposal superUser;
     AddressTypeProposal upgradeProposal;
 
@@ -54,7 +58,6 @@ contract RegistryEvvm is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     mapping(uint256 chainId => bool answer) private isThisChainIdRegistered;
     mapping(uint256 chainId => mapping(address evvm => bool answer)) isThisAddressRegistered;
 
-    uint256 constant MAX_WHITE_LISTED_EVMM_ID = 999;
     uint256 publicCounter;
 
     modifier isSuperUser() {
@@ -62,6 +65,8 @@ contract RegistryEvvm is Initializable, OwnableUpgradeable, UUPSUpgradeable {
 
         _;
     }
+
+    // 🬥🬗🬈🬊🬞🬝🬮🬁🬢🬇🬥🬾🬠🬭🬩🬎🬛🬃🬥🬿 Initialization Functions 🬗🬩🬢🬘🬜🬆🬫🬒🬼🬋🬐🬨🬞🬉🬹🬆🬳🬣🬜🬯 //
 
     /**
      * @notice Constructor that disables initializers for the implementation contract
@@ -82,6 +87,8 @@ contract RegistryEvvm is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         __Ownable_init(initialSuperUser);
         __UUPSUpgradeable_init();
     }
+
+    // 🬬🬱🬳🬌🬐🬍🬾🬊🬽🬃🬣🬔🬇🬻🬥🬨🬑🬹🬐🬱 Registration Functions 🬢🬒🬢🬹🬵🬣🬙🬙🬤🬎🬰🬠🬓🬘🬐🬆🬅🬺🬇🬳 //
 
     /**
      * @notice Public registration function for EVVM instances
@@ -125,7 +132,7 @@ contract RegistryEvvm is Initializable, OwnableUpgradeable, UUPSUpgradeable {
      * 
      * Requirements:
      * - Only callable by superUser
-     * - evvmID must be between 1 and 999 (MAX_WHITE_LISTED_EVMM_ID)
+     * - evvmID must be between 1 and 999 (999)
      * - chainId must be non-zero and whitelisted
      * - evvmAddress must be non-zero and not already registered for this chainId
      * - The specified evvmID must not already be registered
@@ -140,7 +147,7 @@ contract RegistryEvvm is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     ) external isSuperUser returns (uint256) {
         if (
             evvmID < 1 ||
-            evvmID > MAX_WHITE_LISTED_EVMM_ID ||
+            evvmID > 999 ||
             chainId == 0 ||
             evvmAddress == address(0)
         ) revert InvalidInput();
@@ -160,6 +167,8 @@ contract RegistryEvvm is Initializable, OwnableUpgradeable, UUPSUpgradeable {
 
         return evvmID;
     }
+
+    // 🬥🬭🬔🬑🬹🬬🬨🬟🬧🬛🬄🬐🬥🬯🬄🬥🬞🬚🬎🬼 SuperUser Functions 🬥🬛🬞🬊🬴🬹🬥🬀🬐🬬🬰🬈🬎🬚🬼🬆🬻🬜🬌🬳 //
 
     /**
      * @notice Registers multiple chain IDs to the whitelist
@@ -267,6 +276,8 @@ contract RegistryEvvm is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         upgradeToAndCall(newImplementation, "");
     }
 
+    // 🬡🬯🬓🬶🬾🬧🬝🬘🬘🬔🬗🬼🬙🬺🬔🬠🬺🬛🬖🬣 Getters 🬝🬡🬦🬋🬂🬺🬿🬳🬈🬘🬍🬁🬗🬸🬉🬷🬞🬢🬩🬑 //
+
     /**
      * @notice Retrieves metadata for a specific EVVM ID
      * @dev View function that returns chain ID and contract address for given EVVM ID
@@ -295,7 +306,7 @@ contract RegistryEvvm is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         returns (uint256[] memory)
     {
         uint256 count;
-        for (uint256 i = 1; i <= MAX_WHITE_LISTED_EVMM_ID; i++) {
+        for (uint256 i = 1; i <= 999; i++) {
             if (
                 registry[i].chainId != 0 &&
                 registry[i].evvmAddress != address(0)
@@ -307,7 +318,7 @@ contract RegistryEvvm is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         uint256[] memory activeEvvmIds = new uint256[](count);
         uint256 index;
 
-        for (uint256 i = 1; i <= MAX_WHITE_LISTED_EVMM_ID; i++) {
+        for (uint256 i = 1; i <= 999; i++) {
             if (
                 registry[i].chainId != 0 &&
                 registry[i].evvmAddress != address(0)
@@ -329,12 +340,12 @@ contract RegistryEvvm is Initializable, OwnableUpgradeable, UUPSUpgradeable {
      * @custom:gas-warning This function can be gas-intensive for large numbers of registrations
      */
     function getPublicEvvmIdActive() external view returns (uint256[] memory) {
-        uint256 count = publicCounter - MAX_WHITE_LISTED_EVMM_ID - 1;
+        uint256 count = publicCounter - 1000;
 
         uint256[] memory activeEvvmIds = new uint256[](count);
         uint256 index;
 
-        for (uint256 i = MAX_WHITE_LISTED_EVMM_ID + 1; i < publicCounter; i++) {
+        for (uint256 i = 1000 ; i < publicCounter; i++) {
             if (
                 registry[i].chainId != 0 &&
                 registry[i].evvmAddress != address(0)
