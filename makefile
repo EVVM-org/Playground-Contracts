@@ -631,40 +631,6 @@ fuzzTestTreasuryWithdraw:
 	@echo "Running Treasury withdraw unit fuzz tests"
 	@forge test --match-path test/fuzz/treasury/fuzzTest_Treasury_withdraw.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-## RegistryEvvm
-
-testRegistryEvvm:
-	@echo "Running all RegistryEvvm unit correct tests"
-	@forge test --match-contract unitTestCorrect_RegistryEvvm --summary --detailed --gas-report -vvv --show-progress
-	@sleep 3
-	@echo "Running all RegistryEvvm unit revert tests"
-	@forge test --match-contract unitTestRevert_RegistryEvvm --summary --detailed --gas-report -vvv --show-progress
-	@sleep 3
-
-### Unit tests
-
-#### Correct Tests
-
-unitTestCorrectRegistryEvvm:
-	@echo "Running all RegistryEvvm unit correct tests"
-	@forge test --match-contract unitTestCorrect_RegistryEvvm --summary --detailed --gas-report -vvv --show-progress
-
-#### Revert Tests
-unitTestRevertRegistryEvvm:
-	@echo "Running all RegistryEvvm unit revert tests"
-	@forge test --match-contract unitTestRevert_RegistryEvvm --summary --detailed --gas-report -vvv --show-progress
-
-unitTestRevertRegistryEvvmRegisterEvvm:
-	@echo "Running RegisterEvvm unit revert tests"
-	@forge test --match-contract unitTestRevert_RegistryEvvm__RegisterEvvm --summary --detailed --gas-report -vvv --show-progress
-
-unitTestRevertRegistryEvvmSudoRegisterEvvm:
-	@echo "Running SudoRegisterEvvm unit revert tests"
-	@forge test --match-contract unitTestRevert_RegistryEvvm__SudoRegisterEvvm --summary --detailed --gas-report -vvv --show-progress
-
-unitTestRevertRegistryEvvmRegisterChainId:
-	@echo "Running RegisterChainId unit revert tests"
-	@forge test --match-contract unitTestRevert_RegistryEvvm__RegisterChainId --summary --detailed --gas-report -vvv --show-progress
 ######################################################################################################
 
 # Other commands
