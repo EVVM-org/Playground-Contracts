@@ -89,6 +89,12 @@ make fuzzTestStakingGoldenStaking
 make staticAnalysis  # Generates reportWake.txt
 ```
 
+
+## ⚠️ Deprecation Notice
+
+**P2PSwap.sol is currently deprecated and has been removed from the repository. It will be re-added once it is updated and reviewed.**
+
+---
 ## Project Structure
 
 - `src/` — Main contract sources (core, staking, NameService, mocks)
