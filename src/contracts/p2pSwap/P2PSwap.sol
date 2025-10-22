@@ -16,6 +16,7 @@ pragma solidity ^0.8.0;
 import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {SignatureRecover} from "@EVVM/playground/lib/SignatureRecover.sol";
+import {SignatureUtils} from "@EVVM/playground/contracts/p2pSwap/lib/SignatureUtils.sol";
 import {AdvancedStrings} from "@EVVM/playground/lib/AdvancedStrings.sol";
 import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
 
@@ -137,16 +138,16 @@ contract P2PSwap {
         bytes memory _signature_Evvm
     ) external returns (uint256 market, uint256 orderId) {
         if (
-            !verifyMessageSignedForMakeOrder(
-                
-                user,
-                metadata.nonce,
-                metadata.tokenA,
-                metadata.tokenB,
-                metadata.amountA,
-                metadata.amountB,
-                signature
-            )
+			SignatureUtils.verifyMessageSignedForMakeOrder(
+                Evvm(evvmAddress).getEvvmID(),
+				user,
+				metadata.nonce,
+				metadata.tokenA,
+				metadata.tokenB,
+				metadata.amountA,
+				metadata.amountB,
+				signature
+			)
         ) {
             revert();
         }
@@ -219,14 +220,15 @@ contract P2PSwap {
         bytes memory _signature_Evvm
     ) external {
         if (
-            !verifyMessageSignedForCancelOrder(
-                user,
-                metadata.nonce,
-                metadata.tokenA,
-                metadata.tokenB,
-                metadata.orderId,
-                metadata.signature
-            )
+			SignatureUtils.verifyMessageSignedForCancelOrder(
+                Evvm(evvmAddress).getEvvmID(),
+				user,
+				metadata.nonce,
+				metadata.tokenA,
+				metadata.tokenB,
+				metadata.orderId,
+				signature
+			)
         ) {
             revert();
         }
@@ -284,14 +286,15 @@ contract P2PSwap {
         bytes memory _signature_Evvm
     ) external {
         if (
-            !verifyMessageSignedForDispatchOrder(
-                user,
-                metadata.nonce,
-                metadata.tokenA,
-                metadata.tokenB,
-                metadata.orderId,
-                metadata.signature
-            )
+			SignatureUtils.verifyMessageSignedForDispatchOrder(
+                Evvm(evvmAddress).getEvvmID(),
+				user,
+				metadata.nonce,
+				metadata.tokenA,
+				metadata.tokenB,
+				metadata.orderId,
+				signature
+			)
         ) {
             revert();
         }
@@ -391,14 +394,15 @@ contract P2PSwap {
         uint256 _amountOut ///@dev for testing purposes
     ) external {
         if (
-            !verifyMessageSignedForDispatchOrder(
-                user,
-                metadata.nonce,
-                metadata.tokenA,
-                metadata.tokenB,
-                metadata.orderId,
-                metadata.signature
-            )
+			SignatureUtils.verifyMessageSignedForDispatchOrder(
+                Evvm(evvmAddress).getEvvmID(),
+				user,
+				metadata.nonce,
+				metadata.tokenA,
+				metadata.tokenB,
+				metadata.orderId,
+				signature
+			)
         ) {
             revert();
         }
@@ -516,6 +520,7 @@ contract P2PSwap {
     ) internal view returns (uint256 fee, uint256 fee10) {
         if (token != ETH_ADDRESS) {
             if (
+                // deprecated?
                 Evvm(evvmAddress).getTokenUniswapPool(token) == address(0)
             ) {
                 fee = calculateFillPropotionalFee(amount);
@@ -601,91 +606,6 @@ contract P2PSwap {
         uint256 amount
     ) internal {
         Evvm(evvmAddress).disperseCaPay(toData, token, amount);
-    }
-
-    //◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢
-    // Signature functions
-    //◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢
-
-    function verifyMessageSignedForMakeOrder(
-        address signer,
-        uint256 _nonce,
-        address _tokenA,
-        address _tokenB,
-        uint256 _amountA,
-        uint256 _amountB,
-        bytes memory signature
-    ) internal pure returns (bool) {
-        return
-            signer ==
-            SignatureRecover.recoverSigner(
-                string.concat(
-                    "63b8896c",
-                    ",",
-                    Strings.toString(_nonce),
-                    ",",
-                    AdvancedStrings.addressToString(_tokenA),
-                    ",",
-                    AdvancedStrings.addressToString(_tokenB),
-                    ",",
-                    Strings.toString(_amountA),
-                    ",",
-                    Strings.toString(_amountB)
-                ),
-                signature
-            );
-    }
-
-    function verifyMessageSignedForCancelOrder(
-        address signer,
-        uint256 _nonce,
-        address _tokenA,
-        address _tokenB,
-        uint256 _orderId,
-        bytes memory signature
-    ) internal pure returns (bool) {
-        return
-            signer ==
-            SignatureRecover.recoverSigner(
-                string.concat(
-                    "215497c1",
-                    ",",
-                    Strings.toString(_nonce),
-                    ",",
-                    AdvancedStrings.addressToString(_tokenA),
-                    ",",
-                    AdvancedStrings.addressToString(_tokenB),
-                    ",",
-                    Strings.toString(_orderId)
-                ),
-                signature
-            );
-    }
-
-    function verifyMessageSignedForDispatchOrder(
-        address signer,
-        uint256 _nonce,
-        address _tokenA,
-        address _tokenB,
-        uint256 _orderId,
-        bytes memory signature
-    ) internal pure returns (bool) {
-        return
-            signer ==
-            SignatureRecover.recoverSigner(
-                string.concat(
-                    "d3584696",
-                    ",",
-                    Strings.toString(_nonce),
-                    ",",
-                    AdvancedStrings.addressToString(_tokenA),
-                    ",",
-                    AdvancedStrings.addressToString(_tokenB),
-                    ",",
-                    Strings.toString(_orderId)
-                ),
-                signature
-            );
     }
 
     //◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢
