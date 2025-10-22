@@ -227,7 +227,7 @@ contract P2PSwap {
                 metadata.tokenA,
                 metadata.tokenB,
                 metadata.orderId,
-                signature
+                metadata.signature
             )
         ) {
             revert();
@@ -293,7 +293,7 @@ contract P2PSwap {
                 metadata.tokenA,
                 metadata.tokenB,
                 metadata.orderId,
-                signature
+                metadata.signature
             )
         ) {
             revert();
@@ -401,7 +401,7 @@ contract P2PSwap {
                 metadata.tokenA,
                 metadata.tokenB,
                 metadata.orderId,
-                signature
+                metadata.signature
             )
         ) {
             revert();
