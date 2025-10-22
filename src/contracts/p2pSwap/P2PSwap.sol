@@ -138,16 +138,16 @@ contract P2PSwap {
         bytes memory _signature_Evvm
     ) external returns (uint256 market, uint256 orderId) {
         if (
-			SignatureUtils.verifyMessageSignedForMakeOrder(
+            SignatureUtils.verifyMessageSignedForMakeOrder(
                 Evvm(evvmAddress).getEvvmID(),
-				user,
-				metadata.nonce,
-				metadata.tokenA,
-				metadata.tokenB,
-				metadata.amountA,
-				metadata.amountB,
-				signature
-			)
+                user,
+                metadata.nonce,
+                metadata.tokenA,
+                metadata.tokenB,
+                metadata.amountA,
+                metadata.amountB,
+                signature
+            )
         ) {
             revert();
         }
@@ -220,15 +220,15 @@ contract P2PSwap {
         bytes memory _signature_Evvm
     ) external {
         if (
-			SignatureUtils.verifyMessageSignedForCancelOrder(
+            SignatureUtils.verifyMessageSignedForCancelOrder(
                 Evvm(evvmAddress).getEvvmID(),
-				user,
-				metadata.nonce,
-				metadata.tokenA,
-				metadata.tokenB,
-				metadata.orderId,
-				signature
-			)
+                user,
+                metadata.nonce,
+                metadata.tokenA,
+                metadata.tokenB,
+                metadata.orderId,
+                signature
+            )
         ) {
             revert();
         }
@@ -286,15 +286,15 @@ contract P2PSwap {
         bytes memory _signature_Evvm
     ) external {
         if (
-			SignatureUtils.verifyMessageSignedForDispatchOrder(
+            SignatureUtils.verifyMessageSignedForDispatchOrder(
                 Evvm(evvmAddress).getEvvmID(),
-				user,
-				metadata.nonce,
-				metadata.tokenA,
-				metadata.tokenB,
-				metadata.orderId,
-				signature
-			)
+                user,
+                metadata.nonce,
+                metadata.tokenA,
+                metadata.tokenB,
+                metadata.orderId,
+                signature
+            )
         ) {
             revert();
         }
@@ -394,15 +394,15 @@ contract P2PSwap {
         uint256 _amountOut ///@dev for testing purposes
     ) external {
         if (
-			SignatureUtils.verifyMessageSignedForDispatchOrder(
+            SignatureUtils.verifyMessageSignedForDispatchOrder(
                 Evvm(evvmAddress).getEvvmID(),
-				user,
-				metadata.nonce,
-				metadata.tokenA,
-				metadata.tokenB,
-				metadata.orderId,
-				signature
-			)
+                user,
+                metadata.nonce,
+                metadata.tokenA,
+                metadata.tokenB,
+                metadata.orderId,
+                signature
+            )
         ) {
             revert();
         }
@@ -518,28 +518,11 @@ contract P2PSwap {
         uint256 amount,
         uint256 _amountOut ///@dev for testing purposes
     ) internal view returns (uint256 fee, uint256 fee10) {
-        if (token != ETH_ADDRESS) {
-            if (
-                // deprecated?
-                Evvm(evvmAddress).getTokenUniswapPool(token) == address(0)
-            ) {
-                fee = calculateFillPropotionalFee(amount);
-            } else {
-                if (calculateFillPropotionalFee(amount) > _amountOut) {
-                    fee = _amountOut;
-                    fee10 = (fee * 1000) / 10_000;
-                } else {
-                    ///@dev if is less than 0.001 ETH use the fill propotional fee
-                    fee = calculateFillPropotionalFee(amount);
-                }
-            }
+        if (calculateFillPropotionalFee(amount) > _amountOut) {
+            fee = _amountOut;
+            fee10 = (fee * 1000) / 10_000;
         } else {
-            if (calculateFillPropotionalFee(amount) > maxLimitFillFixedFee) {
-                fee = maxLimitFillFixedFee;
-                fee10 = (fee * 1000) / 10_000;
-            } else {
-                fee = calculateFillPropotionalFee(amount);
-            }
+            fee = calculateFillPropotionalFee(amount);
         }
     }
 
