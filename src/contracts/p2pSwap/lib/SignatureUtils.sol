@@ -56,7 +56,7 @@ library SignatureUtils {
 		return
 			SignatureRecover.signatureVerification(
 				Strings.toString(evvmID),
-				"cancelOrder"
+				"cancelOrder",
 				string.concat(
 					Strings.toString(_nonce),
 					",",
@@ -68,7 +68,7 @@ library SignatureUtils {
 				),
 				signature,
 				signer
-			)
+			);
     }
 
     function verifyMessageSignedForDispatchOrder(
@@ -95,7 +95,7 @@ library SignatureUtils {
 				),
 				signature,
 				signer
-			)
+			);
     }
 
 
