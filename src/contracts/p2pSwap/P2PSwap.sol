@@ -549,30 +549,18 @@ contract P2PSwap {
         bool _priority_Evvm,
         bytes memory _signature_Evvm
     ) internal {
-        if (_priority_Evvm) {
-            Evvm(evvmAddress).payStaker_async(
-                _user_Evvm,
-                address(this),
-                "",
-                _token_Evvm,
-                _ammount_Evvm,
-                _priorityFee_Evvm,
-                _nonce_Evvm,
-                address(this),
-                _signature_Evvm
-            );
-        } else {
-            Evvm(evvmAddress).payStaker_sync(
-                _user_Evvm,
-                address(this),
-                "",
-                _token_Evvm,
-                _ammount_Evvm,
-                _priorityFee_Evvm,
-                address(this),
-                _signature_Evvm
-            );
-        }
+        Evvm(evvmAddress).pay(
+            _user_Evvm,
+            address(this),
+            "",
+            _token_Evvm,
+            _ammount_Evvm,
+            _priorityFee_Evvm,
+            _nonce_Evvm,
+            _priority_Evvm,
+            address(this),
+            _signature_Evvm
+        );
     }
 
     function makeCaPay(
