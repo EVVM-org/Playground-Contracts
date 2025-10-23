@@ -67,7 +67,6 @@ contract P2PSwap {
         address tokenB;
         uint256 amountA;
         uint256 amountB;
-        bytes signature;
     }
 
     struct MetadataCancelOrder {
@@ -149,11 +148,11 @@ contract P2PSwap {
                 signature
             )
         ) {
-            revert();
+            revert("Invalid signature");
         }
 
         if (nonceP2PSwap[user][metadata.nonce]) {
-            revert();
+            revert("Nonce already used");
         }
 
         makePay(
