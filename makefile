@@ -631,6 +631,17 @@ fuzzTestTreasuryWithdraw:
 	@echo "Running Treasury withdraw unit fuzz tests"
 	@forge test --match-path test/fuzz/treasury/fuzzTest_Treasury_withdraw.t.sol --summary --detailed --gas-report -vvv --show-progress
 
+## P2PSwap
+
+### Unit tests
+
+#### Correct Tests
+
+unitTestCorrectP2PSwapMakeOrder:
+	@echo "Running P2PSwap makeOrder unit correct tests"
+	@forge test --match-path test/unit/p2pSwap/correct/unitTestCorrect_P2PSwap_makeOrder.t.sol --summary --detailed --gas-report -vvv --show-progress
+
+
 ######################################################################################################
 
 # Other commands

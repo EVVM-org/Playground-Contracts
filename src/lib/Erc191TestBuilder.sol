@@ -376,6 +376,37 @@ library Erc191TestBuilder {
     }
 
     //-----------------------------------------------------------------------------------
+    // P2PSwap functions
+    //-----------------------------------------------------------------------------------
+
+    function buildMessageSignedForMakeOrder(
+        uint256 evvmID,
+        uint256 _nonce,
+        address _tokenA,
+        address _tokenB,
+        uint256 _amountA,
+        uint256 _amountB
+    ) internal pure returns (bytes32 messageHash) {
+        return
+            buildHashForSign(
+                string.concat(
+                    Strings.toString(evvmID),
+                    ",",
+                    "makeOrder",
+                    Strings.toString(_nonce),
+                    ",",
+                    AdvancedStrings.addressToString(_tokenA),
+                    ",",
+                    AdvancedStrings.addressToString(_tokenB),
+                    ",",
+                    Strings.toString(_amountA),
+                    ",",
+                    Strings.toString(_amountB)
+                )
+            );
+    }
+
+    //-----------------------------------------------------------------------------------
     // General functions
     //-----------------------------------------------------------------------------------
 
