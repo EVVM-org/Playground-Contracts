@@ -590,19 +590,21 @@ contract NameService {
 
         usernameOffers[username][offerID].offerer = address(0);
 
+        uint256 feeOfOffer = calculateOfferFee(
+            usernameOffers[username][offerID].amount
+        );
+
         makeCaPay(
             msg.sender,
             Evvm(evvmAddress.current).getRewardAmount() +
-                //obtenemos el 0.5% y dividimos entre 4 para obtener el 0.125%
-                //+ ((usernameOffers[_username][_offerID].amount  * 1 / 199)/4)
                 //mas simplificado
-                ((usernameOffers[username][offerID].amount * 1) / 796) +
+                feeOfOffer +
                 priorityFee_EVVM
         );
 
         mateTokenLockedForWithdrawOffers -=
             (usernameOffers[username][offerID].amount) +
-            (((usernameOffers[username][offerID].amount * 1) / 199) / 4);
+            feeOfOffer;
 
         nameServiceNonce[user][nonce] = true;
     }
@@ -639,10 +641,10 @@ contract NameService {
         onlyOwnerOfIdentity(user, username)
         verifyIfNonceIsAvailable(user, nonce)
     {
-        if (
-            usernameOffers[username][offerID].offerer == address(0) ||
-            usernameOffers[username][offerID].expireDate < block.timestamp
-        ) revert ErrorsLib.AcceptOfferVerificationFailed();
+        OfferMetadata memory offer = usernameOffers[username][offerID];
+        
+        if (offer.offerer == address(0) || offer.expireDate < block.timestamp)
+            revert ErrorsLib.AcceptOfferVerificationFailed();
 
         if (
             !SignatureUtils.verifyMessageSignedForAcceptOffer(
@@ -655,7 +657,7 @@ contract NameService {
             )
         ) revert ErrorsLib.InvalidSignatureOnNameService();
 
-        if (priorityFee_EVVM > 0) {
+        if (priorityFee_EVVM > 0)
             makePay(
                 user,
                 0,
@@ -664,28 +666,25 @@ contract NameService {
                 priorityFlag_EVVM,
                 signature_EVVM
             );
-        }
 
-        makeCaPay(user, usernameOffers[username][offerID].amount);
+        makeCaPay(user, offer.amount);
 
-        identityDetails[username].owner = usernameOffers[username][offerID]
-            .offerer;
+        identityDetails[username].owner = offer.offerer;
 
         usernameOffers[username][offerID].offerer = address(0);
+
+        uint256 feeOfOffer = calculateOfferFee(offer.amount);
 
         if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
-                (Evvm(evvmAddress.current).getRewardAmount()) +
-                    (((usernameOffers[username][offerID].amount * 1) / 199) /
-                        4) +
+                Evvm(evvmAddress.current).getRewardAmount() +
+                    feeOfOffer +
                     priorityFee_EVVM
             );
         }
 
-        mateTokenLockedForWithdrawOffers -=
-            (usernameOffers[username][offerID].amount) +
-            (((usernameOffers[username][offerID].amount * 1) / 199) / 4);
+        mateTokenLockedForWithdrawOffers -= offer.amount + feeOfOffer;
 
         nameServiceNonce[user][nonce] = true;
     }
@@ -1778,5 +1777,11 @@ contract NameService {
             stopChangeVerificationsAddress.flag,
             stopChangeVerificationsAddress.timeToAcceptChange
         );
+    }
+
+    function calculateOfferFee(uint256 amount) public pure returns (uint256) {
+        //obtenemos el 0.5% y dividimos entre 4 para obtener el 0.125%
+        //+ ((usernameOffers[_username][_offerID].amount  * 1 / 199)/4)
+        return ((amount * 1) / 199) / 4;
     }
 }
