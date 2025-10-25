@@ -188,14 +188,13 @@ contract NameService {
             flagNotAUsername: 0x01
         });
 
-        nameServiceNonce[user][nonce] = true;
-
-        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
-            makeCaPay(
-                msg.sender,
-                Evvm(evvmAddress.current).getRewardAmount() + priorityFee_EVVM
-            );
-        }
+        updateUserNonceAndRewardFisher(
+            user,
+            nonce,
+            false,
+            msg.sender,
+            Evvm(evvmAddress.current).getRewardAmount() + priorityFee_EVVM
+        );
     }
 
     /**
@@ -242,9 +241,13 @@ contract NameService {
             )
         ) revert ErrorsLib.InvalidSignatureOnNameService();
 
+        uint256 registrationPrice = identityDetails[username].offerMaxSlots > 0
+            ? seePriceToRenew(username)
+            : getPricePerRegistration();
+
         makePay(
             user,
-            getPricePerRegistration(),
+            registrationPrice,
             priorityFee_EVVM,
             nonce_EVVM,
             priorityFlag_EVVM,
@@ -269,15 +272,14 @@ contract NameService {
             flagNotAUsername: 0x00
         });
 
-        nameServiceNonce[user][nonce] = true;
-
-        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
-            makeCaPay(
-                msg.sender,
-                (50 * Evvm(evvmAddress.current).getRewardAmount()) +
-                    priorityFee_EVVM
-            );
-        }
+        updateUserNonceAndRewardFisher(
+            user,
+            nonce,
+            false,
+            msg.sender,
+            (50 * Evvm(evvmAddress.current).getRewardAmount()) +
+                priorityFee_EVVM
+        );
 
         delete identityDetails[_key];
     }
@@ -531,12 +533,16 @@ contract NameService {
             amount: ((amount * 995) / 1000) /// calcula el 99.5% del valor de la oferta
         });
 
-        makeCaPay(
+        updateUserNonceAndRewardFisher(
+            user,
+            nonce,
+            false,
             msg.sender,
             Evvm(evvmAddress.current).getRewardAmount() +
                 ((amount * 125) / 100_000) +
                 priorityFee_EVVM
         );
+
         mateTokenLockedForWithdrawOffers +=
             ((amount * 995) / 1000) +
             (amount / 800);
@@ -546,8 +552,6 @@ contract NameService {
         } else if (identityDetails[username].offerMaxSlots == 0) {
             identityDetails[username].offerMaxSlots++;
         }
-
-        nameServiceNonce[user][nonce] = true;
     }
 
     function withdrawOffer(
@@ -594,10 +598,12 @@ contract NameService {
             usernameOffers[username][offerID].amount
         );
 
-        makeCaPay(
+        updateUserNonceAndRewardFisher(
+            user,
+            nonce,
+            true,
             msg.sender,
             Evvm(evvmAddress.current).getRewardAmount() +
-                //mas simplificado
                 feeOfOffer +
                 priorityFee_EVVM
         );
@@ -605,8 +611,6 @@ contract NameService {
         mateTokenLockedForWithdrawOffers -=
             (usernameOffers[username][offerID].amount) +
             feeOfOffer;
-
-        nameServiceNonce[user][nonce] = true;
     }
 
     /**
@@ -642,7 +646,7 @@ contract NameService {
         verifyIfNonceIsAvailable(user, nonce)
     {
         OfferMetadata memory offer = usernameOffers[username][offerID];
-        
+
         if (offer.offerer == address(0) || offer.expireDate < block.timestamp)
             revert ErrorsLib.AcceptOfferVerificationFailed();
 
@@ -675,18 +679,17 @@ contract NameService {
 
         uint256 feeOfOffer = calculateOfferFee(offer.amount);
 
-        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
-            makeCaPay(
-                msg.sender,
-                Evvm(evvmAddress.current).getRewardAmount() +
-                    feeOfOffer +
-                    priorityFee_EVVM
-            );
-        }
+        updateUserNonceAndRewardFisher(
+            user,
+            nonce,
+            false,
+            msg.sender,
+            Evvm(evvmAddress.current).getRewardAmount() +
+                feeOfOffer +
+                priorityFee_EVVM
+        );
 
         mateTokenLockedForWithdrawOffers -= offer.amount + feeOfOffer;
-
-        nameServiceNonce[user][nonce] = true;
     }
 
     /**
@@ -753,17 +756,17 @@ contract NameService {
             signature_EVVM
         );
 
-        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
-            makeCaPay(
-                msg.sender,
-                Evvm(evvmAddress.current).getRewardAmount() +
-                    ((priceOfRenew * 50) / 100) + //? no estamos siendo muy generosos con el priority fee
-                    priorityFee_EVVM
-            );
-        }
+        updateUserNonceAndRewardFisher(
+            user,
+            nonce,
+            false,
+            msg.sender,
+            Evvm(evvmAddress.current).getRewardAmount() +
+                ((priceOfRenew * 50) / 100) +
+                priorityFee_EVVM
+        );
 
         identityDetails[username].expireDate += 366 days;
-        nameServiceNonce[user][nonce] = true;
     }
 
     /*
@@ -837,21 +840,21 @@ contract NameService {
             signature_EVVM
         );
 
-        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
-            makeCaPay(
-                msg.sender,
-                (5 * Evvm(evvmAddress.current).getRewardAmount()) +
-                    ((getPriceToAddCustomMetadata() * 50) / 100) +
-                    priorityFee_EVVM
-            );
-        }
+        updateUserNonceAndRewardFisher(
+            user,
+            nonce,
+            false,
+            msg.sender,
+            (5 * Evvm(evvmAddress.current).getRewardAmount()) +
+                ((getPriceToAddCustomMetadata() * 50) / 100) +
+                priorityFee_EVVM
+        );
 
         identityCustomMetadata[identity][
             identityDetails[identity].customMetadataMaxSlots
         ] = value;
 
         identityDetails[identity].customMetadataMaxSlots++;
-        nameServiceNonce[user][nonce] = true;
     }
 
     function removeCustomMetadata(
@@ -911,14 +914,14 @@ contract NameService {
             ];
         }
         identityDetails[identity].customMetadataMaxSlots--;
-        nameServiceNonce[user][nonce] = true;
-        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
-            makeCaPay(
-                msg.sender,
-                (5 * Evvm(evvmAddress.current).getRewardAmount()) +
-                    priorityFee_EVVM
-            );
-        }
+
+        updateUserNonceAndRewardFisher(
+            user,
+            nonce,
+            false,
+            msg.sender,
+            (5 * Evvm(evvmAddress.current).getRewardAmount()) + priorityFee_EVVM
+        );
     }
 
     function flushCustomMetadata(
@@ -965,17 +968,17 @@ contract NameService {
             delete identityCustomMetadata[identity][i];
         }
 
-        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
-            makeCaPay(
-                msg.sender,
-                ((5 * Evvm(evvmAddress.current).getRewardAmount()) *
-                    identityDetails[identity].customMetadataMaxSlots) +
-                    priorityFee_EVVM
-            );
-        }
+        updateUserNonceAndRewardFisher(
+            user,
+            nonce,
+            false,
+            msg.sender,
+            ((5 * Evvm(evvmAddress.current).getRewardAmount()) *
+                identityDetails[identity].customMetadataMaxSlots) +
+                priorityFee_EVVM
+        );
 
         identityDetails[identity].customMetadataMaxSlots = 0;
-        nameServiceNonce[user][nonce] = true;
     }
 
     function flushUsername(
@@ -1024,7 +1027,10 @@ contract NameService {
             delete identityCustomMetadata[username][i];
         }
 
-        makeCaPay(
+        updateUserNonceAndRewardFisher(
+            user,
+            nonce,
+            true,
             msg.sender,
             ((5 * Evvm(evvmAddress.current).getRewardAmount()) *
                 identityDetails[username].customMetadataMaxSlots) +
@@ -1038,7 +1044,6 @@ contract NameService {
             offerMaxSlots: identityDetails[username].offerMaxSlots,
             flagNotAUsername: 0x00
         });
-        nameServiceNonce[user][nonce] = true;
     }
 
     //█Tools for admin█████████████████████████████████████████████████████████████████████████████
@@ -1783,5 +1788,24 @@ contract NameService {
         //obtenemos el 0.5% y dividimos entre 4 para obtener el 0.125%
         //+ ((usernameOffers[_username][_offerID].amount  * 1 / 199)/4)
         return ((amount * 1) / 199) / 4;
+    }
+
+    //█Internal Functions██████████████████████████████████████████████████████████████████████████
+
+    function updateUserNonceAndRewardFisher(
+        address user,
+        uint256 nonce,
+        bool skipStakeCheck,
+        address accountToGiveReward,
+        uint256 amountToReward
+    ) internal {
+        nameServiceNonce[user][nonce] = true;
+
+        if (
+            skipStakeCheck ||
+            Evvm(evvmAddress.current).isAddressStaker(accountToGiveReward)
+        ) {
+            makeCaPay(accountToGiveReward, amountToReward);
+        }
     }
 }
