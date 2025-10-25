@@ -69,13 +69,17 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         treasury = new Treasury(address(evvm));
-        evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
+        evvm._setupNameServiceAndTreasuryAddress(
+            address(nameService),
+            address(treasury)
+        );
 
         evvm.setPointStaker(COMMON_USER_STAKER.Address, 0x01);
     }
 
     function addBalance(
         address user,
+        string memory username,
         uint256 priorityFeeAmount
     )
         private
@@ -84,10 +88,10 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
         evvm.addBalance(
             user,
             MATE_TOKEN_ADDRESS,
-            nameService.getPricePerRegistration() + priorityFeeAmount
+            nameService.getPriceOfRegistration(username) + priorityFeeAmount
         );
 
-        registrationPrice = nameService.getPricePerRegistration();
+        registrationPrice = nameService.getPriceOfRegistration(username);
         totalPriorityFeeAmount = priorityFeeAmount;
     }
 
@@ -153,7 +157,7 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
-                nameService.getPricePerRegistration(),
+                nameService.getPriceOfRegistration(username),
                 priorityFeeAmountEVVM,
                 nonceEVVM,
                 priorityFlagEVVM,
@@ -219,7 +223,7 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
             ? input.nonceEVVM
             : evvm.getNextCurrentSyncNonce(selectedUser.Address);
 
-        addBalance(selectedUser.Address, 0);
+        addBalance(selectedUser.Address, username, 0);
         makePreRegistrationUsername(
             selectedUser,
             username,
@@ -285,7 +289,7 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
             ? input.nonceEVVM
             : evvm.getNextCurrentSyncNonce(selectedUser.Address);
 
-        addBalance(selectedUser.Address, input.priorityFeeAmount);
+        addBalance(selectedUser.Address, username, input.priorityFeeAmount);
         makePreRegistrationUsername(
             selectedUser,
             username,
@@ -351,7 +355,7 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
             ? input.nonceEVVM
             : evvm.getNextCurrentSyncNonce(selectedUser.Address);
 
-        addBalance(selectedUser.Address, 0);
+        addBalance(selectedUser.Address, username, 0);
         makePreRegistrationUsername(
             selectedUser,
             username,
@@ -419,7 +423,7 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
             ? input.nonceEVVM
             : evvm.getNextCurrentSyncNonce(selectedUser.Address);
 
-        addBalance(selectedUser.Address, input.priorityFeeAmount);
+        addBalance(selectedUser.Address, username, input.priorityFeeAmount);
         makePreRegistrationUsername(
             selectedUser,
             username,

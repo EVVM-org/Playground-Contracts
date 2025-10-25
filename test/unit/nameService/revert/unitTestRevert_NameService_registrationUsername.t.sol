@@ -69,6 +69,7 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
 
     function addBalance(
         address user,
+        string memory username,
         uint256 priorityFeeAmount
     )
         private
@@ -77,10 +78,10 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         evvm.addBalance(
             user,
             MATE_TOKEN_ADDRESS,
-            nameService.getPricePerRegistration() + priorityFeeAmount
+            nameService.getPriceOfRegistration(username) + priorityFeeAmount
         );
 
-        registrationPrice = nameService.getPricePerRegistration();
+        registrationPrice = nameService.getPriceOfRegistration(username);
         totalPriorityFeeAmount = priorityFeeAmount;
     }
 
@@ -146,7 +147,7 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
-                nameService.getPricePerRegistration(),
+                nameService.getPriceOfRegistration(username),
                 priorityFeeAmountEVVM,
                 nonceEVVM,
                 priorityFlagEVVM,
@@ -174,7 +175,7 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         (
             uint256 registrationPrice,
             uint256 totalPriorityFeeAmount
-        ) = addBalance(COMMON_USER_NO_STAKER_1.Address, 0.001 ether);
+        ) = addBalance(COMMON_USER_NO_STAKER_1.Address,"test", 0.001 ether);
 
         (
             bytes memory signatureNameService,
@@ -239,7 +240,7 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         (
             uint256 registrationPrice,
             uint256 totalPriorityFeeAmount
-        ) = addBalance(COMMON_USER_NO_STAKER_1.Address, 0.001 ether);
+        ) = addBalance(COMMON_USER_NO_STAKER_1.Address,"test", 0.001 ether);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_2.PrivateKey,
@@ -259,7 +260,7 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
-                nameService.getPricePerRegistration(),
+                nameService.getPriceOfRegistration("test"),
                 totalPriorityFeeAmount,
                 10001,
                 true,
@@ -317,7 +318,7 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         (
             uint256 registrationPrice,
             uint256 totalPriorityFeeAmount
-        ) = addBalance(COMMON_USER_NO_STAKER_1.Address, 0.001 ether);
+        ) = addBalance(COMMON_USER_NO_STAKER_1.Address,"test", 0.001 ether);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -337,7 +338,7 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
-                nameService.getPricePerRegistration(),
+                nameService.getPriceOfRegistration("test"),
                 totalPriorityFeeAmount,
                 10001,
                 true,
@@ -395,7 +396,7 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         (
             uint256 registrationPrice,
             uint256 totalPriorityFeeAmount
-        ) = addBalance(COMMON_USER_NO_STAKER_1.Address, 0.001 ether);
+        ) = addBalance(COMMON_USER_NO_STAKER_1.Address,"test", 0.001 ether);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -415,7 +416,7 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
-                nameService.getPricePerRegistration(),
+                nameService.getPriceOfRegistration("test"),
                 totalPriorityFeeAmount,
                 10001,
                 true,
@@ -473,7 +474,7 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         (
             uint256 registrationPrice,
             uint256 totalPriorityFeeAmount
-        ) = addBalance(COMMON_USER_NO_STAKER_1.Address, 0.001 ether);
+        ) = addBalance(COMMON_USER_NO_STAKER_1.Address,"test", 0.001 ether);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -493,7 +494,7 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
-                nameService.getPricePerRegistration(),
+                nameService.getPriceOfRegistration("test"),
                 totalPriorityFeeAmount,
                 10001,
                 true,
@@ -551,7 +552,7 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         (
             uint256 registrationPrice,
             uint256 totalPriorityFeeAmount
-        ) = addBalance(COMMON_USER_NO_STAKER_1.Address, 0.001 ether);
+        ) = addBalance(COMMON_USER_NO_STAKER_1.Address,"test", 0.001 ether);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -571,7 +572,7 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
-                nameService.getPricePerRegistration(),
+                nameService.getPriceOfRegistration("test"),
                 totalPriorityFeeAmount,
                 10001,
                 true,
@@ -629,7 +630,7 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         (
             uint256 registrationPrice,
             uint256 totalPriorityFeeAmount
-        ) = addBalance(COMMON_USER_NO_STAKER_1.Address, 0.001 ether);
+        ) = addBalance(COMMON_USER_NO_STAKER_1.Address,"test", 0.001 ether);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -649,7 +650,7 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
                 address(evvm),
                 "",
                 MATE_TOKEN_ADDRESS,
-                nameService.getPricePerRegistration(),
+                nameService.getPriceOfRegistration("test"),
                 totalPriorityFeeAmount,
                 10001,
                 true,
@@ -707,7 +708,7 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         (
             uint256 registrationPrice,
             uint256 totalPriorityFeeAmount
-        ) = addBalance(COMMON_USER_NO_STAKER_1.Address, 0.001 ether);
+        ) = addBalance(COMMON_USER_NO_STAKER_1.Address,"test", 0.001 ether);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -727,7 +728,7 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
                 address(0),
                 "nameservice",
                 MATE_TOKEN_ADDRESS,
-                nameService.getPricePerRegistration(),
+                nameService.getPriceOfRegistration("test"),
                 totalPriorityFeeAmount,
                 10001,
                 true,
@@ -785,7 +786,7 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         (
             uint256 registrationPrice,
             uint256 totalPriorityFeeAmount
-        ) = addBalance(COMMON_USER_NO_STAKER_1.Address, 0.001 ether);
+        ) = addBalance(COMMON_USER_NO_STAKER_1.Address,"test", 0.001 ether);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -805,7 +806,7 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
                 address(nameService),
                 "",
                 ETHER_ADDRESS,
-                nameService.getPricePerRegistration(),
+                nameService.getPriceOfRegistration("test"),
                 totalPriorityFeeAmount,
                 10001,
                 true,
@@ -863,7 +864,7 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         (
             uint256 registrationPrice,
             uint256 totalPriorityFeeAmount
-        ) = addBalance(COMMON_USER_NO_STAKER_1.Address, 0.001 ether);
+        ) = addBalance(COMMON_USER_NO_STAKER_1.Address,"test", 0.001 ether);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -941,7 +942,7 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         (
             uint256 registrationPrice,
             uint256 totalPriorityFeeAmount
-        ) = addBalance(COMMON_USER_NO_STAKER_1.Address, 0.001 ether);
+        ) = addBalance(COMMON_USER_NO_STAKER_1.Address,"test", 0.001 ether);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -961,7 +962,7 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
-                nameService.getPricePerRegistration(),
+                nameService.getPriceOfRegistration("test"),
                 1,
                 10001,
                 true,
@@ -1019,7 +1020,7 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         (
             uint256 registrationPrice,
             uint256 totalPriorityFeeAmount
-        ) = addBalance(COMMON_USER_NO_STAKER_1.Address, 0.001 ether);
+        ) = addBalance(COMMON_USER_NO_STAKER_1.Address,"test", 0.001 ether);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -1039,7 +1040,7 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
-                nameService.getPricePerRegistration(),
+                nameService.getPriceOfRegistration("test"),
                 totalPriorityFeeAmount,
                 777,
                 true,
@@ -1097,7 +1098,7 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         (
             uint256 registrationPrice,
             uint256 totalPriorityFeeAmount
-        ) = addBalance(COMMON_USER_NO_STAKER_1.Address, 0.001 ether);
+        ) = addBalance(COMMON_USER_NO_STAKER_1.Address,"test", 0.001 ether);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -1117,7 +1118,7 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
-                nameService.getPricePerRegistration(),
+                nameService.getPriceOfRegistration("test"),
                 totalPriorityFeeAmount,
                 10001,
                 false,
@@ -1175,7 +1176,7 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         (
             uint256 registrationPrice,
             uint256 totalPriorityFeeAmount
-        ) = addBalance(COMMON_USER_NO_STAKER_1.Address, 0.001 ether);
+        ) = addBalance(COMMON_USER_NO_STAKER_1.Address,"test", 0.001 ether);
 
         (v, r, s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -1195,7 +1196,7 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
-                nameService.getPricePerRegistration(),
+                nameService.getPriceOfRegistration("test"),
                 totalPriorityFeeAmount,
                 10001,
                 true,
@@ -1243,7 +1244,7 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         (
             uint256 registrationPrice,
             uint256 totalPriorityFeeAmount
-        ) = addBalance(COMMON_USER_NO_STAKER_1.Address, 0.001 ether);
+        ) = addBalance(COMMON_USER_NO_STAKER_1.Address,"test", 0.001 ether);
 
         (
             bytes memory signatureNameService,
@@ -1301,7 +1302,7 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         (
             uint256 registrationPrice,
             uint256 totalPriorityFeeAmount
-        ) = addBalance(COMMON_USER_NO_STAKER_1.Address, 0.001 ether);
+        ) = addBalance(COMMON_USER_NO_STAKER_1.Address,"test", 0.001 ether);
 
         (
             bytes memory signatureNameService,
@@ -1356,7 +1357,7 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
 
         skip(30 minutes);
 
-        uint256 registrationPrice = nameService.getPricePerRegistration() / 2;
+        uint256 registrationPrice = nameService.getPriceOfRegistration("test") / 2;
 
         evvm.addBalance(
             COMMON_USER_NO_STAKER_1.Address,
@@ -1420,7 +1421,7 @@ contract unitTestRevert_NameService_registrationUsername is Test, Constants {
         (
             uint256 registrationPrice,
             uint256 totalPriorityFeeAmount
-        ) = addBalance(COMMON_USER_NO_STAKER_1.Address, 0.001 ether);
+        ) = addBalance(COMMON_USER_NO_STAKER_1.Address,"test", 0.001 ether);
 
         (
             bytes memory signatureNameService,

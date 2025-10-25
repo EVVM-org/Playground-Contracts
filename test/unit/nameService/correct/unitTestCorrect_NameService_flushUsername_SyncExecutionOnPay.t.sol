@@ -136,7 +136,7 @@ contract unitTestCorrect_NameService_flushUsername_SyncExecutionOnPay is
         evvm.addBalance(
             user.Address,
             MATE_TOKEN_ADDRESS,
-            nameService.getPricePerRegistration()
+            nameService.getPriceOfRegistration(username)
         );
 
         uint8 v;
@@ -183,7 +183,7 @@ contract unitTestCorrect_NameService_flushUsername_SyncExecutionOnPay is
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
-                nameService.getPricePerRegistration(),
+                nameService.getPriceOfRegistration(username),
                 0,
                 evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
                 false,

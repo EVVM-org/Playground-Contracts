@@ -101,7 +101,7 @@ contract fuzzTest_NameService_acceptOffer is Test, Constants {
         evvm.addBalance(
             user.Address,
             MATE_TOKEN_ADDRESS,
-            nameService.getPricePerRegistration()
+            nameService.getPriceOfRegistration(username)
         );
 
         uint8 v;
@@ -148,7 +148,7 @@ contract fuzzTest_NameService_acceptOffer is Test, Constants {
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
-                nameService.getPricePerRegistration(),
+                nameService.getPriceOfRegistration(username),
                 0,
                 evvm.getNextCurrentSyncNonce(COMMON_USER_NO_STAKER_1.Address),
                 false,

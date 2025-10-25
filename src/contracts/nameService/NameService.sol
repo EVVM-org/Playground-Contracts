@@ -241,13 +241,9 @@ contract NameService {
             )
         ) revert ErrorsLib.InvalidSignatureOnNameService();
 
-        uint256 registrationPrice = identityDetails[username].offerMaxSlots > 0
-            ? seePriceToRenew(username)
-            : getPricePerRegistration();
-
         makePay(
             user,
-            registrationPrice,
+            getPriceOfRegistration(username),
             priorityFee_EVVM,
             nonce_EVVM,
             priorityFlag_EVVM,
@@ -303,7 +299,7 @@ contract NameService {
         makePay(
             _user,
             _nonce_Evvm,
-            getPricePerRegistration(),
+            getPriceOfRegistration(),
             _priorityFeeForFisher,
             _priority_Evvm,
             _signature_Evvm
@@ -403,7 +399,7 @@ contract NameService {
         makePay(
             _user,
             _nonce_Evvm,
-            getPricePerRegistration(),
+            getPriceOfRegistration(),
             _priorityFeeForFisher,
             _priority_Evvm,
             _signature_Evvm
@@ -1659,8 +1655,13 @@ contract NameService {
         return identityDetails[_identity].expireDate;
     }
 
-    function getPricePerRegistration() public view returns (uint256) {
-        return Evvm(evvmAddress.current).getRewardAmount() * 100;
+    function getPriceOfRegistration(
+        string memory username
+    ) public view returns (uint256) {
+        return
+            identityDetails[username].offerMaxSlots > 0
+                ? seePriceToRenew(username)
+                : Evvm(evvmAddress.current).getRewardAmount() * 100;
     }
 
     function getAdmin() public view returns (address) {

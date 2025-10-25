@@ -72,6 +72,7 @@ contract unitTestCorrect_NameService_registrationUsername_SyncExecutionOnPay is
 
     function addBalance(
         address user,
+        string memory username,
         uint256 priorityFeeAmount
     )
         private
@@ -80,10 +81,10 @@ contract unitTestCorrect_NameService_registrationUsername_SyncExecutionOnPay is
         evvm.addBalance(
             user,
             MATE_TOKEN_ADDRESS,
-            nameService.getPricePerRegistration() + priorityFeeAmount
+            nameService.getPriceOfRegistration(username) + priorityFeeAmount
         );
 
-        registrationPrice = nameService.getPricePerRegistration();
+        registrationPrice = nameService.getPriceOfRegistration(username);
         totalPriorityFeeAmount = priorityFeeAmount;
     }
 
@@ -149,7 +150,7 @@ contract unitTestCorrect_NameService_registrationUsername_SyncExecutionOnPay is
                 address(nameService),
                 "",
                 MATE_TOKEN_ADDRESS,
-                nameService.getPricePerRegistration(),
+                nameService.getPriceOfRegistration(username),
                 priorityFeeAmountEVVM,
                 nonceEVVM,
                 priorityFlagEVVM,
@@ -168,7 +169,7 @@ contract unitTestCorrect_NameService_registrationUsername_SyncExecutionOnPay is
      */
 
     function test__unit_correct__registrationUsername__nS_nPF() external {
-        addBalance(COMMON_USER_NO_STAKER_1.Address, 0);
+        addBalance(COMMON_USER_NO_STAKER_1.Address, "test", 0);
         makePreRegistrationUsername(
             COMMON_USER_NO_STAKER_1,
             "test",
@@ -227,7 +228,7 @@ contract unitTestCorrect_NameService_registrationUsername_SyncExecutionOnPay is
     }
 
     function test__unit_correct__registrationUsername__nS_PF() external {
-        addBalance(COMMON_USER_NO_STAKER_1.Address, 0.001 ether);
+        addBalance(COMMON_USER_NO_STAKER_1.Address, "test", 0.001 ether);
         makePreRegistrationUsername(
             COMMON_USER_NO_STAKER_1,
             "test",
@@ -286,7 +287,7 @@ contract unitTestCorrect_NameService_registrationUsername_SyncExecutionOnPay is
     }
 
     function test__unit_correct__registrationUsername__S_nPF() external {
-        addBalance(COMMON_USER_NO_STAKER_1.Address, 0);
+        addBalance(COMMON_USER_NO_STAKER_1.Address, "test", 0);
         makePreRegistrationUsername(
             COMMON_USER_NO_STAKER_1,
             "test",
@@ -342,7 +343,7 @@ contract unitTestCorrect_NameService_registrationUsername_SyncExecutionOnPay is
     }
 
     function test__unit_correct__registrationUsername__S_PF() external {
-        addBalance(COMMON_USER_NO_STAKER_1.Address, 0.001 ether);
+        addBalance(COMMON_USER_NO_STAKER_1.Address, "test", 0.001 ether);
         makePreRegistrationUsername(
             COMMON_USER_NO_STAKER_1,
             "test",
