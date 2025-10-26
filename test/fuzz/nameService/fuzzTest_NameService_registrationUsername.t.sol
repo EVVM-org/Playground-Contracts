@@ -184,6 +184,187 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
         username = string(usernameBytes);
     }
 
+    function makeMakeOfferSignatures(
+        AccountData memory user,
+        string memory usernameToMakeOffer,
+        uint256 expireDate,
+        uint256 amountToOffer,
+        uint256 nonceNameService,
+        uint256 priorityFeeAmountEVVM,
+        uint256 nonceEVVM,
+        bool priorityFlagEVVM
+    )
+        private
+        view
+        returns (bytes memory signatureNameService, bytes memory signatureEVVM)
+    {
+        uint8 v;
+        bytes32 r;
+        bytes32 s;
+
+        (v, r, s) = vm.sign(
+            user.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForMakeOffer(
+                evvm.getEvvmID(),
+                usernameToMakeOffer,
+                expireDate,
+                amountToOffer,
+                nonceNameService
+            )
+        );
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
+
+        (v, r, s) = vm.sign(
+            user.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
+                address(nameService),
+                "",
+                MATE_TOKEN_ADDRESS,
+                amountToOffer,
+                priorityFeeAmountEVVM,
+                nonceEVVM,
+                priorityFlagEVVM,
+                address(nameService)
+            )
+        );
+        signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
+    }
+
+    function makeFlushUsernameSignatures(
+        AccountData memory user,
+        string memory username,
+        uint256 nonceNameService,
+        uint256 priorityFeeAmountEVVM,
+        uint256 nonceEVVM,
+        bool priorityFlagEVVM
+    )
+        private
+        view
+        returns (bytes memory signatureNameService, bytes memory signatureEVVM)
+    {
+        uint8 v;
+        bytes32 r;
+        bytes32 s;
+
+        (v, r, s) = vm.sign(
+            user.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForFlushUsername(
+                evvm.getEvvmID(),
+                username,
+                nonceNameService
+            )
+        );
+        signatureNameService = Erc191TestBuilder.buildERC191Signature(v, r, s);
+
+        (v, r, s) = vm.sign(
+            user.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
+                address(nameService),
+                "",
+                MATE_TOKEN_ADDRESS,
+                nameService.getPriceToFlushUsername(username),
+                priorityFeeAmountEVVM,
+                nonceEVVM,
+                priorityFlagEVVM,
+                address(nameService)
+            )
+        );
+        signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
+    }
+
+    function preparePostRegistrationAndFlush(
+        AccountData memory selectedUser,
+        string memory username) internal {
+
+        addBalance(selectedUser.Address, username, 0);
+        makePreRegistrationUsername(selectedUser, username, 777, 1);
+
+        skip(30 minutes);
+
+        (
+            bytes memory signatureNameService,
+            bytes memory signatureEVVM
+        ) = makeRegistrationUsernameSignatures(
+                selectedUser,
+                username,
+                777,
+                2,
+                0,
+                2,
+                true
+            );
+
+        nameService.registrationUsername(
+            selectedUser.Address,
+            username,
+            777,
+            2,
+            signatureNameService,
+            0,
+            2,
+            true,
+            signatureEVVM
+        );
+
+        evvm.addBalance(
+            COMMON_USER_NO_STAKER_3.Address,
+            MATE_TOKEN_ADDRESS,
+            1.67 ether
+        );
+
+        (signatureNameService, signatureEVVM) = makeMakeOfferSignatures(
+            COMMON_USER_NO_STAKER_3,
+            username,
+            block.timestamp + 30 days,
+            1.67 ether,
+            3,
+            0,
+            3,
+            true
+        );
+
+        nameService.makeOffer(
+            COMMON_USER_NO_STAKER_3.Address,
+            username,
+            block.timestamp + 30 days,
+            1.67 ether,
+            3,
+            signatureNameService,
+            0,
+            3,
+            true,
+            signatureEVVM
+        );
+
+        evvm.addBalance(
+            selectedUser.Address,
+            MATE_TOKEN_ADDRESS,
+            nameService.getPriceToFlushUsername(username)
+        );
+
+        (signatureNameService, signatureEVVM) = makeFlushUsernameSignatures(
+            selectedUser,
+            username,
+            4,
+            0,
+            4,
+            true
+        );
+
+        nameService.flushUsername(
+            selectedUser.Address,
+            username,
+            4,
+            signatureNameService,
+            0,
+            4,
+            true,
+            signatureEVVM
+        );
+    }
+
     /**
      * Function to test:
      * nS: No staker
@@ -198,6 +379,7 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
         bool priorityFlagEVVM;
         uint16 clowNumber;
         uint16 seed;
+        bool makeOfferAndFlush;
     }
 
     struct RegistrationUsernameFuzzTestInput_PF {
@@ -207,17 +389,22 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
         uint16 priorityFeeAmount;
         uint16 clowNumber;
         uint16 seed;
+        bool makeOfferAndFlush;
     }
 
     function test__fuzz__registrationUsername__nS_nPF(
         RegistrationUsernameFuzzTestInput_nPF memory input
     ) external {
-        vm.assume((input.seed / 2) >= 4 && input.nonceNameService != 10);
+        input.nonceNameService = uint8(bound(input.nonceNameService, 11, 250));
+        input.nonceEVVM = uint8(bound(input.nonceEVVM, 11, 250));
+        vm.assume((input.seed / 2) >= 4);
 
         AccountData memory selectedUser = (input.seed % 2 == 0)
             ? COMMON_USER_NO_STAKER_1
             : COMMON_USER_NO_STAKER_2;
         string memory username = makeUsername(input.seed);
+
+        if (input.makeOfferAndFlush) preparePostRegistrationAndFlush(selectedUser,username);
 
         uint256 nonce = input.priorityFlagEVVM
             ? input.nonceEVVM
@@ -278,12 +465,16 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
     function test__fuzz__registrationUsername__nS_PF(
         RegistrationUsernameFuzzTestInput_PF memory input
     ) external {
-        vm.assume((input.seed / 2) >= 4 && input.nonceNameService != 10);
+        input.nonceNameService = uint8(bound(input.nonceNameService, 11, 250));
+        input.nonceEVVM = uint8(bound(input.nonceEVVM, 11, 250));
+        vm.assume((input.seed / 2) >= 4);
 
         AccountData memory selectedUser = (input.seed % 2 == 0)
             ? COMMON_USER_NO_STAKER_1
             : COMMON_USER_NO_STAKER_2;
         string memory username = makeUsername(input.seed);
+
+        if (input.makeOfferAndFlush) preparePostRegistrationAndFlush(selectedUser,username);
 
         uint256 nonce = input.priorityFlagEVVM
             ? input.nonceEVVM
@@ -344,12 +535,16 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
     function test__fuzz__registrationUsername__S_nPF(
         RegistrationUsernameFuzzTestInput_nPF memory input
     ) external {
-        vm.assume((input.seed / 2) >= 4 && input.nonceNameService != 10);
+        input.nonceNameService = uint8(bound(input.nonceNameService, 11, 250));
+        input.nonceEVVM = uint8(bound(input.nonceEVVM, 11, 250));
+        vm.assume((input.seed / 2) >= 4);
 
         AccountData memory selectedUser = (input.seed % 2 == 0)
             ? COMMON_USER_NO_STAKER_1
             : COMMON_USER_NO_STAKER_2;
         string memory username = makeUsername(input.seed);
+
+        if (input.makeOfferAndFlush) preparePostRegistrationAndFlush(selectedUser,username);
 
         uint256 nonce = input.priorityFlagEVVM
             ? input.nonceEVVM
@@ -412,12 +607,18 @@ contract fuzzTest_NameService_registrationUsername is Test, Constants {
     function test__fuzz__registrationUsername__S_PF(
         RegistrationUsernameFuzzTestInput_PF memory input
     ) external {
-        vm.assume((input.seed / 2) >= 4 && input.nonceNameService != 10);
+        input.nonceNameService = uint8(bound(input.nonceNameService, 11, 250));
+        input.nonceEVVM = uint8(bound(input.nonceEVVM, 11, 250));
+        vm.assume((input.seed / 2) >= 4);
 
         AccountData memory selectedUser = (input.seed % 2 == 0)
             ? COMMON_USER_NO_STAKER_1
             : COMMON_USER_NO_STAKER_2;
         string memory username = makeUsername(input.seed);
+
+
+
+        if (input.makeOfferAndFlush) preparePostRegistrationAndFlush(selectedUser,username);
 
         uint256 nonce = input.priorityFlagEVVM
             ? input.nonceEVVM

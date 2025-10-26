@@ -532,7 +532,7 @@ contract NameService {
         updateUserNonceAndRewardFisher(
             user,
             nonce,
-            false,
+            true,
             msg.sender,
             Evvm(evvmAddress.current).getRewardAmount() +
                 ((amount * 125) / 100_000) +
