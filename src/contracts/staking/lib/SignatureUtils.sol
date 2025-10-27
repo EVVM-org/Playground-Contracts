@@ -38,31 +38,4 @@ library SignatureUtils {
                 user
             );
     }
-
-    function verifyMessageSignedForPublicServiceStake(
-        uint256 evvmID,
-        address user,
-        address serviceAddress,
-        bool _isStaking,
-        uint256 _amountOfStaking,
-        uint256 _nonce,
-        bytes memory signature
-    ) internal pure returns (bool) {
-        return
-            SignatureRecover.signatureVerification(
-                Strings.toString(evvmID),
-                "publicServiceStaking",
-                string.concat(
-                    AdvancedStrings.addressToString(serviceAddress),
-                    ",",
-                    _isStaking ? "true" : "false",
-                    ",",
-                    Strings.toString(_amountOfStaking),
-                    ",",
-                    Strings.toString(_nonce)
-                ),
-                signature,
-                user
-            );
-    }
 }

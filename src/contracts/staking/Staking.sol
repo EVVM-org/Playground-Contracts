@@ -88,6 +88,19 @@ contract Staking {
         uint256 timeToAccept;
     }
 
+    struct ServiceStakingMetadata {
+        address service;
+        uint256 timestamp;
+        uint256 amountOfStaking;
+        uint256 amountServiceBeforeStaking;
+        uint256 amountStakingBeforeStaking;
+    }
+
+    struct AccountMetadata {
+        address Address;
+        bool IsAService;
+    }
+
     /// @dev Address of the EVVM core contract
     address private EVVM_ADDRESS;
 
@@ -112,6 +125,8 @@ contract Staking {
     BoolTypeProposal private allowPresaleStaking;
     /// @dev Flag to enable/disable public staking
     BoolTypeProposal private allowPublicStaking;
+    /// @dev Variable to store service staking metadata
+    ServiceStakingMetadata private serviceStakingData;
 
     /// @dev Address representing the principal Principal Token
     address private constant PRINCIPAL_TOKEN_ADDRESS =
@@ -189,10 +204,10 @@ contract Staking {
         if (msg.sender != goldenFisher.actual)
             revert ErrorsLib.SenderIsNotGoldenFisher();
 
-        stakingUserProcess(
-            goldenFisher.actual,
-            amountOfStaking,
+        stakingBaseProcess(
+            AccountMetadata({Address: goldenFisher.actual, IsAService: false}),
             isStaking,
+            amountOfStaking,
             0,
             Evvm(EVVM_ADDRESS).getNextCurrentSyncNonce(msg.sender),
             false,
@@ -242,10 +257,10 @@ contract Staking {
         if (!allowPresaleStaking.flag)
             revert ErrorsLib.PresaleStakingDisabled();
 
-        stakingUserProcess(
-            user,
-            1,
+        stakingBaseProcess(
+            AccountMetadata({Address: user, IsAService: false}),
             isStaking,
+            1,
             priorityFee_EVVM,
             nonce_EVVM,
             priorityFlag_EVVM,
@@ -330,10 +345,10 @@ contract Staking {
         if (checkIfStakeNonceUsed(user, nonce))
             revert ErrorsLib.StakingNonceAlreadyUsed();
 
-        stakingUserProcess(
-            user,
-            amountOfStaking,
+        stakingBaseProcess(
+            AccountMetadata({Address: user, IsAService: false}),
             isStaking,
+            amountOfStaking,
             priorityFee_EVVM,
             nonce_EVVM,
             priorityFlag_EVVM,
@@ -343,35 +358,10 @@ contract Staking {
         stakingNonce[user][nonce] = true;
     }
 
-    /**
-     * @notice Allows smart contracts (services) to stake on behalf of users
-     * @dev Verifies that the service address has contract code and handles service-specific logic
-     * @param user Address of the user who owns the stake
-     * @param service Address of the smart contract performing the staking
-     * @param isStaking True for staking, false for unstaking
-     * @param amountOfStaking Amount of staking tokens to stake/unstake
-     * @param nonce Unique nonce for this staking operation
-     * @param signature Signature proving authorization for service staking
-     * @param priorityFee_EVVM Priority fee for the EVVM transaction (only for staking)
-     * @param nonce_EVVM Nonce for the EVVM contract transaction (only for staking)
-     * @param priorityFlag_EVVM Priority flag for EVVM transaction (only for staking)
-     * @param signature_EVVM Signature for the EVVM contract transaction (only for staking)
-     */
-    function publicServiceStaking(
-        address user,
-        address service,
-        bool isStaking,
-        uint256 amountOfStaking,
-        uint256 nonce,
-        bytes memory signature,
-        uint256 priorityFee_EVVM,
-        uint256 nonce_EVVM,
-        bool priorityFlag_EVVM,
-        bytes memory signature_EVVM
-    ) external {
+    function prepareServiceStaking(uint256 amountOfStaking) external {
         if (!allowPublicStaking.flag) revert ErrorsLib.PublicStakingDisabled();
-
         uint256 size;
+        address service = msg.sender;
 
         assembly {
             /// @dev check the size of the opcode of the address
@@ -380,110 +370,102 @@ contract Staking {
 
         if (size == 0) revert ErrorsLib.AddressIsNotAService();
 
-        if (isStaking) {
-            if (
-                !SignatureUtils.verifyMessageSignedForPublicServiceStake(
-                    Evvm(EVVM_ADDRESS).getEvvmID(),
-                    user,
-                    service,
-                    isStaking,
-                    amountOfStaking,
-                    nonce,
-                    signature
-                )
-            ) revert ErrorsLib.InvalidSignatureOnStaking();
-        } else {
-            if (service != user) revert ErrorsLib.UserAndServiceMismatch();
+        serviceStakingData = ServiceStakingMetadata({
+            service: service,
+            timestamp: block.timestamp,
+            amountOfStaking: amountOfStaking,
+            amountServiceBeforeStaking: Evvm(EVVM_ADDRESS).getBalance(
+                service,
+                PRINCIPAL_TOKEN_ADDRESS
+            ),
+            amountStakingBeforeStaking: Evvm(EVVM_ADDRESS).getBalance(
+                address(this),
+                PRINCIPAL_TOKEN_ADDRESS
+            )
+        });
+    }
+
+    function confirmServiceStaking() external {
+        uint256 size;
+        address service = msg.sender;
+
+        assembly {
+            /// @dev check the size of the opcode of the address
+            size := extcodesize(service)
         }
 
-        if (checkIfStakeNonceUsed(user, nonce))
-            revert ErrorsLib.StakingNonceAlreadyUsed();
+        if (size == 0) revert ErrorsLib.AddressIsNotAService();
 
-        stakingServiceProcess(
-            user,
+        uint256 totalStakingRequired = PRICE_OF_STAKING *
+            serviceStakingData.amountOfStaking;
+
+        uint256 actualServiceBalance = Evvm(EVVM_ADDRESS).getBalance(
             service,
-            isStaking,
-            amountOfStaking,
-            isStaking ? priorityFee_EVVM : 0,
-            isStaking ? nonce_EVVM : 0,
-            isStaking ? priorityFlag_EVVM : false,
-            isStaking ? signature_EVVM : bytes("")
+            PRINCIPAL_TOKEN_ADDRESS
         );
 
-        stakingNonce[user][nonce] = true;
-    }
+        uint256 actualStakingBalance = Evvm(EVVM_ADDRESS).getBalance(
+            address(this),
+            PRINCIPAL_TOKEN_ADDRESS
+        );
 
-    /**
-     * @notice Internal function to process service staking operations
-     * @dev Wrapper function that calls the base staking process for service operations
-     * @param user Address of the user who owns the stake
-     * @param service Address of the smart contract performing the staking
-     * @param isStaking True for staking, false for unstaking
-     * @param amountOfStaking Amount of staking tokens to stake/unstake
-     * @param priorityFee_EVVM Priority fee for the EVVM transaction
-     * @param nonce_EVVM Nonce for the EVVM contract transaction
-     * @param priorityFlag_EVVM Priority flag for EVVM transaction
-     * @param signature_EVVM Signature for the EVVM contract transaction
-     */
-    function stakingServiceProcess(
-        address user,
-        address service,
-        bool isStaking,
-        uint256 amountOfStaking,
-        uint256 priorityFee_EVVM,
-        uint256 nonce_EVVM,
-        bool priorityFlag_EVVM,
-        bytes memory signature_EVVM
-    ) internal {
+        if (
+            serviceStakingData.amountServiceBeforeStaking -
+                totalStakingRequired !=
+            actualServiceBalance &&
+            serviceStakingData.amountStakingBeforeStaking +
+                totalStakingRequired !=
+            actualStakingBalance
+        )
+            revert ErrorsLib.ServiceDoesNotFulfillCorrectStakingAmount(
+                totalStakingRequired
+            );
+
+        if (serviceStakingData.timestamp != block.timestamp)
+            revert ErrorsLib.ServiceDoesNotStakeInSameTx();
+
+        if (serviceStakingData.service != service)
+            revert ErrorsLib.AddressMismatch();
+
         stakingBaseProcess(
-            user,
-            service,
-            isStaking,
-            amountOfStaking,
-            priorityFee_EVVM,
-            nonce_EVVM,
-            priorityFlag_EVVM,
-            signature_EVVM
+            AccountMetadata({Address: service, IsAService: true}),
+            true,
+            serviceStakingData.amountOfStaking,
+            0,
+            0,
+            false,
+            ""
         );
     }
 
-    /**
-     * @notice Internal function to process user staking operations
-     * @dev Wrapper function that calls the base staking process for user operations
-     * @param user Address of the user performing the staking operation
-     * @param amountOfStaking Amount of staking tokens to stake/unstake
-     * @param isStaking True for staking, false for unstaking
-     * @param priorityFee_EVVM Priority fee for the EVVM transaction
-     * @param nonce_EVVM Nonce for the EVVM contract transaction
-     * @param priorityFlag_EVVM Priority flag for EVVM transaction
-     * @param signature_EVVM Signature for the EVVM contract transaction
-     */
-    function stakingUserProcess(
-        address user,
-        uint256 amountOfStaking,
-        bool isStaking,
-        uint256 priorityFee_EVVM,
-        uint256 nonce_EVVM,
-        bool priorityFlag_EVVM,
-        bytes memory signature_EVVM
-    ) internal {
+    function serviceUnstaking(uint256 amountOfStaking) external {
+        uint256 size;
+        address service = msg.sender;
+
+        assembly {
+            /// @dev check the size of the opcode of the address
+            size := extcodesize(service)
+        }
+
+        if (size == 0) revert ErrorsLib.AddressIsNotAService();
+
         stakingBaseProcess(
-            user,
-            user,
-            isStaking,
+            AccountMetadata({Address: service, IsAService: true}),
+            false,
             amountOfStaking,
-            priorityFee_EVVM,
-            nonce_EVVM,
-            priorityFlag_EVVM,
-            signature_EVVM
+            0,
+            0,
+            false,
+            ""
         );
     }
 
     /**
      * @notice Core staking logic that handles both service and user staking operations
      * @dev Processes payments, updates history, handles time locks, and manages EVVM integration
-     * @param userAccount Address of the user paying for the transaction
-     * @param stakingAccount Address that will receive the stake/unstake (can be same as userAccount)
+     * @param account Metadata of the account performing the staking operation
+     *                - Address: Address of the user/service
+     *                - IsAService: True if the account is a service, false if a user
      * @param isStaking True for staking (requires payment), false for unstaking (provides refund)
      * @param amountOfStaking Amount of staking tokens to stake/unstake
      * @param priorityFee_EVVM Priority fee for EVVM transaction
@@ -492,8 +474,7 @@ contract Staking {
      * @param signature_EVVM Signature for EVVM contract transaction
      */
     function stakingBaseProcess(
-        address userAccount,
-        address stakingAccount,
+        AccountMetadata memory account,
         bool isStaking,
         uint256 amountOfStaking,
         uint256 priorityFee_EVVM,
@@ -505,61 +486,62 @@ contract Staking {
 
         if (isStaking) {
             if (
-                getTimeToUserUnlockStakingTime(stakingAccount) > block.timestamp
-            ) revert ErrorsLib.UserMustWaitToStakeAgain();
+                getTimeToUserUnlockStakingTime(account.Address) >
+                block.timestamp
+            ) revert ErrorsLib.AddressMustWaitToStakeAgain();
 
-            makePay(
-                userAccount,
-                (PRICE_OF_STAKING * amountOfStaking),
-                priorityFee_EVVM,
-                priorityFlag_EVVM,
-                nonce_EVVM,
-                signature_EVVM
-            );
+            if (!account.IsAService)
+                makePay(
+                    account.Address,
+                    (PRICE_OF_STAKING * amountOfStaking),
+                    priorityFee_EVVM,
+                    priorityFlag_EVVM,
+                    nonce_EVVM,
+                    signature_EVVM
+                );
 
-            Evvm(EVVM_ADDRESS).pointStaker(stakingAccount, 0x01);
+            Evvm(EVVM_ADDRESS).pointStaker(account.Address, 0x01);
 
-            auxSMsteBalance = userHistory[stakingAccount].length == 0
+            auxSMsteBalance = userHistory[account.Address].length == 0
                 ? amountOfStaking
-                : userHistory[stakingAccount][
-                    userHistory[stakingAccount].length - 1
+                : userHistory[account.Address][
+                    userHistory[account.Address].length - 1
                 ].totalStaked + amountOfStaking;
         } else {
-            if (amountOfStaking == getUserAmountStaked(stakingAccount)) {
+            if (amountOfStaking == getUserAmountStaked(account.Address)) {
                 if (
-                    getTimeToUserUnlockFullUnstakingTime(stakingAccount) >
+                    getTimeToUserUnlockFullUnstakingTime(account.Address) >
                     block.timestamp
-                ) revert ErrorsLib.UserMustWaitToFullUnstake();
+                ) revert ErrorsLib.AddressMustWaitToFullUnstake();
 
-                Evvm(EVVM_ADDRESS).pointStaker(stakingAccount, 0x00);
+                Evvm(EVVM_ADDRESS).pointStaker(account.Address, 0x00);
             }
 
             // Only for user unstaking, not service
-            if (userAccount == stakingAccount && priorityFee_EVVM != 0) {
+            if (priorityFee_EVVM != 0 && !account.IsAService)
                 makePay(
-                    userAccount,
+                    account.Address,
                     priorityFee_EVVM,
                     0,
                     priorityFlag_EVVM,
                     nonce_EVVM,
                     signature_EVVM
                 );
-            }
 
             auxSMsteBalance =
-                userHistory[stakingAccount][
-                    userHistory[stakingAccount].length - 1
+                userHistory[account.Address][
+                    userHistory[account.Address].length - 1
                 ].totalStaked -
                 amountOfStaking;
 
             makeCaPay(
                 PRINCIPAL_TOKEN_ADDRESS,
-                stakingAccount,
+                account.Address,
                 (PRICE_OF_STAKING * amountOfStaking)
             );
         }
 
-        userHistory[stakingAccount].push(
+        userHistory[account.Address].push(
             HistoryMetadata({
                 transactionType: isStaking
                     ? bytes32(uint256(1))
@@ -570,7 +552,10 @@ contract Staking {
             })
         );
 
-        if (Evvm(EVVM_ADDRESS).isAddressStaker(msg.sender)) {
+        if (
+            Evvm(EVVM_ADDRESS).isAddressStaker(msg.sender) &&
+            !account.IsAService
+        ) {
             makeCaPay(
                 PRINCIPAL_TOKEN_ADDRESS,
                 msg.sender,
