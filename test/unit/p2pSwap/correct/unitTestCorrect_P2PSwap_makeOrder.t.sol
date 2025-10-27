@@ -74,6 +74,7 @@ contract unitTestCorrect_P2PSwap_makeOrder is Test, Constants {
         p2pSwap = new P2PSwap(address(evvm), ADMIN.Address);
 
         evvm.setPointStaker(COMMON_USER_STAKER.Address, 0x01);
+        evvm.setPointStaker(address(p2pSwap), 0x01);
     }
 
     function addBalance(address user, address token, uint256 amount) private {
@@ -185,8 +186,12 @@ contract unitTestCorrect_P2PSwap_makeOrder is Test, Constants {
         uint256 nonceEVVM = 0;
         bool priorityFlag = false;
 
-        // Fund user1 with amountA
-        addBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS, amountA);
+        // Fund user1 with amountA + priorityFee
+        addBalance(
+            COMMON_USER_NO_STAKER_1.Address,
+            ETHER_ADDRESS,
+            amountA + priorityFee
+        );
 
         // Fund p2pswap address for rewarding
         addBalance(address(p2pSwap), MATE_TOKEN_ADDRESS, 50000000000000000000);
@@ -264,10 +269,7 @@ contract unitTestCorrect_P2PSwap_makeOrder is Test, Constants {
             evvm.getBalance(COMMON_USER_STAKER.Address, tokenA),
             priorityFee
         );
-        assertEq(
-            evvm.getBalance(address(p2pSwap), ETHER_ADDRESS),
-            amountA - priorityFee
-        );
+        assertEq(evvm.getBalance(address(p2pSwap), tokenA), amountA);
     }
 
     function test__unit_correct__makeOrder_payAsync_priorityFee() external {
@@ -280,8 +282,12 @@ contract unitTestCorrect_P2PSwap_makeOrder is Test, Constants {
         uint256 nonceEVVM = 432423;
         bool priorityFlag = true;
 
-        // Fund user1 with amountA
-        addBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS, amountA);
+        // Fund user1 with amountA + priorityFee
+        addBalance(
+            COMMON_USER_NO_STAKER_1.Address,
+            ETHER_ADDRESS,
+            amountA + priorityFee
+        );
 
         // Fund p2pswap address for rewarding
         addBalance(address(p2pSwap), MATE_TOKEN_ADDRESS, 50000000000000000000);
@@ -359,10 +365,7 @@ contract unitTestCorrect_P2PSwap_makeOrder is Test, Constants {
             evvm.getBalance(COMMON_USER_STAKER.Address, tokenA),
             priorityFee
         );
-        assertEq(
-            evvm.getBalance(address(p2pSwap), ETHER_ADDRESS),
-            amountA - priorityFee
-        );
+        assertEq(evvm.getBalance(address(p2pSwap), tokenA), amountA);
     }
 
     function test__unit_correct__makeOrder_payAsync_noPriorityFee() external {
