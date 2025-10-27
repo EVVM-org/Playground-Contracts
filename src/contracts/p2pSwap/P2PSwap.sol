@@ -137,7 +137,7 @@ contract P2PSwap {
         bytes memory _signature_Evvm
     ) external returns (uint256 market, uint256 orderId) {
         if (
-            SignatureUtils.verifyMessageSignedForMakeOrder(
+            !SignatureUtils.verifyMessageSignedForMakeOrder(
                 Evvm(evvmAddress).getEvvmID(),
                 user,
                 metadata.nonce,
