@@ -20,7 +20,7 @@ Y8a 8 8 a8P  Y8a     a8P  88    `888'    88   d8'        `8b   88       88
  */
 
 import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
-import {SignatureRecover} from "@EVVM/playground/lib/SignatureRecover.sol";
+import {SignatureRecover} from "@EVVM/playground/library/SignatureRecover.sol";
 import {NameService} from "@EVVM/playground/contracts/nameService/NameService.sol";
 import {Estimator} from "@EVVM/playground/contracts/staking/Estimator.sol";
 import {ErrorsLib} from "./lib/ErrorsLib.sol";

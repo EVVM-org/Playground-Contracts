@@ -15,9 +15,9 @@ pragma solidity ^0.8.0;
 
 import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
-import {SignatureRecover} from "@EVVM/playground/lib/SignatureRecover.sol";
+import {SignatureRecover} from "@EVVM/playground/library/SignatureRecover.sol";
 import {SignatureUtils} from "@EVVM/playground/contracts/p2pSwap/lib/SignatureUtils.sol";
-import {AdvancedStrings} from "@EVVM/playground/lib/AdvancedStrings.sol";
+import {AdvancedStrings} from "@EVVM/playground/library/AdvancedStrings.sol";
 import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
 
 contract P2PSwap {
