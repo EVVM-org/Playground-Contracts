@@ -142,7 +142,7 @@ abstract contract Constants {
         });
 }
 
-contract MockContract {
+contract MockContractToStake {
     Staking staking;
     Evvm evvm;
 
@@ -151,23 +151,23 @@ contract MockContract {
         evvm = Evvm(staking.getEvvmAddress());
     }
 
-    function unstake(
-        uint256 amount,
-        uint256 nonceStaking,
-        address _user
+    function stake (
+        uint256 amountToStake
     ) public {
-        staking.publicServiceStaking(
-            _user,
-            address(this),
-            false,
-            amount,
-            nonceStaking,
-            bytes(""),
-            0,
-            0,
-            false,
-            bytes("")
+        staking.prepareServiceStaking(amountToStake);
+        evvm.caPay(
+            address(staking),
+            0x0000000000000000000000000000000000000001,
+            staking.priceOfStaking()*amountToStake
         );
+        staking.confirmServiceStaking();
+    }
+
+
+    function unstake(
+        uint256 amountToUnstake
+    ) public {
+        staking.serviceUnstaking(amountToUnstake);
     }
 
     function getBackMate(address user) public {
