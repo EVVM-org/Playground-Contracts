@@ -310,10 +310,10 @@ unitTestRevertStakingPublicStaking:
 	@echo "Running PublicStaking unit revert tests"
 	@forge test --match-path test/unit/staking/revert/unitTestRevert_Staking_publicStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestRevertStakingPublicServiceStaking:
-	@echo "Running PublicServiceStaking unit revert tests"
-	@forge test --match-path test/unit/staking/revert/unitTestRevert_Staking_publicServiceStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
-
+unitTestRevertStakingStakingServiceStaking:
+	@echo "Running service staking  unit revert tests"
+	@forge test --match-path test/unit/staking/revert/unitTestRevert_Staking_serviceStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
+	
 unitTestRevertStakingAdminFunctions:
 	@echo "Running AdminFunctions unit revert tests"
 	@forge test --match-path test/unit/staking/revert/unitTestRevert_Staking_adminFunctions.t.sol --summary --detailed --gas-report -vvv --show-progress

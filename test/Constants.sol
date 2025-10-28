@@ -163,6 +163,54 @@ contract MockContractToStake {
         staking.confirmServiceStaking();
     }
 
+    function stakeJustInPartOne (
+        uint256 amountToStake
+    ) public {
+        staking.prepareServiceStaking(amountToStake);
+    }
+
+    function stakeJustInPartTwo (uint256 amountToStake) public {
+        staking.prepareServiceStaking(amountToStake);
+        evvm.caPay(
+            address(staking),
+            0x0000000000000000000000000000000000000001,
+            staking.priceOfStaking()*amountToStake
+        );
+    }
+
+    function stakeJustConfirm () public {
+        staking.confirmServiceStaking();
+    }
+
+
+    function stakeWithTokenAddress (
+        uint256 amountToStake,
+        address tokenAddress
+    ) public {
+        staking.prepareServiceStaking(amountToStake);
+        evvm.caPay(
+            address(staking),
+            tokenAddress,
+            staking.priceOfStaking()*amountToStake
+        );
+        staking.confirmServiceStaking();
+    }
+
+
+    function stakeWithAmountDiscrepancy (
+        uint256 amountToStakeDiscrepancy,
+        uint256 amountToStake
+
+    ) public {
+        staking.prepareServiceStaking(amountToStake);
+        evvm.caPay(
+            address(staking),
+            0x0000000000000000000000000000000000000001,
+            staking.priceOfStaking()*amountToStakeDiscrepancy
+        );
+        staking.confirmServiceStaking();
+    }
+
 
     function unstake(
         uint256 amountToUnstake
