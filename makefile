@@ -336,9 +336,9 @@ fuzzTestStakingPublicStaking:
 	@echo "Running PublicStaking unit fuzz tests"
 	@forge test --match-path test/fuzz/staking/fuzzTest_Staking_publicStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-fuzzTestStakingPublicServiceStaking:
-	@echo "Running PublicServiceStaking unit fuzz tests"
-	@forge test --match-path test/fuzz/staking/fuzzTest_Staking_publicServiceStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
+fuzzTestStakingServiceStaking:
+	@echo "Running service staking  unit fuzz tests"
+	@forge test --match-path test/fuzz/staking/fuzzTest_Staking_serviceStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 ## Estimator
 
