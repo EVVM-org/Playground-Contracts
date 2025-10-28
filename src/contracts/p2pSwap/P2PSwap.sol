@@ -195,9 +195,11 @@ contract P2PSwap {
 
         if (Evvm(evvmAddress).isAddressStaker(msg.sender)) {
             if (_priorityFee_Evvm > 0) {
+                // send the executor the priorityFee
                 makeCaPay(msg.sender, metadata.tokenA, _priorityFee_Evvm);
             }
 
+            // send some mate token reward to the executor (independent of the priorityFee the user attached)
             makeCaPay(
                 msg.sender,
                 MATE_TOKEN_ADDRESS,
@@ -219,7 +221,7 @@ contract P2PSwap {
         bytes memory _signature_Evvm
     ) external {
         if (
-            SignatureUtils.verifyMessageSignedForCancelOrder(
+            !SignatureUtils.verifyMessageSignedForCancelOrder(
                 Evvm(evvmAddress).getEvvmID(),
                 user,
                 metadata.nonce,
@@ -229,7 +231,7 @@ contract P2PSwap {
                 metadata.signature
             )
         ) {
-            revert();
+            revert("Invalid signature");
         }
 
         uint256 market = findMarket(metadata.tokenA, metadata.tokenB);
@@ -239,16 +241,16 @@ contract P2PSwap {
             nonceP2PSwap[user][metadata.nonce] ||
             ordersInsideMarket[market][metadata.orderId].seller != user
         ) {
-            revert();
+            revert("Invalid order");
         }
 
         if (_priorityFee_Evvm > 0) {
             makePay(
                 user,
-                MATE_TOKEN_ADDRESS,
+                metadata.tokenA,
                 _nonce_Evvm,
-                _priorityFee_Evvm,
                 0,
+                _priorityFee_Evvm,
                 _priority_Evvm,
                 _signature_Evvm
             );
@@ -791,6 +793,14 @@ contract P2PSwap {
             }
         }
         return orders;
+    }
+
+    function getOrder(
+        uint256 market,
+        uint256 orderId
+    ) public view returns (Order memory order) {
+        order = ordersInsideMarket[market][orderId];
+        return order;
     }
 
     function getMyOrdersInSpecificMarket(
