@@ -164,7 +164,10 @@ contract unitTestRevert_Staking_serviceStaking is Test, Constants {
         uint256 amountStaking = giveMateToExecute(address(mockContract), 10);
 
         vm.expectRevert(
-            ErrorsLib.ServiceDoesNotFulfillCorrectStakingAmount.selector
+            abi.encodeWithSelector(
+                ErrorsLib.ServiceDoesNotFulfillCorrectStakingAmount.selector,
+                (5 * staking.priceOfStaking())
+            )
         );
         mockContract.stakeWithAmountDiscrepancy(10, 5);
 
@@ -172,12 +175,12 @@ contract unitTestRevert_Staking_serviceStaking is Test, Constants {
 
         assertEq(
             evvm.getBalance(address(mockContract), MATE_TOKEN_ADDRESS),
-            0
+            amountStaking
         );
 
         assertEq(
             evvm.getBalance(address(staking), MATE_TOKEN_ADDRESS),
-            amountStakingBefore + amountStaking
+            amountStakingBefore
         );
 
         assertEq(staking.getSizeOfAddressHistory(address(mockContract)), 0);
@@ -197,17 +200,12 @@ contract unitTestRevert_Staking_serviceStaking is Test, Constants {
 
         skip(1);
 
-        vm.expectRevert(
-            ErrorsLib.ServiceDoesNotStakeInSameTx.selector
-        );
+        vm.expectRevert(ErrorsLib.ServiceDoesNotStakeInSameTx.selector);
         mockContract.stakeJustConfirm();
 
         assert(!evvm.isAddressStaker(address(mockContract)));
 
-        assertEq(
-            evvm.getBalance(address(mockContract), MATE_TOKEN_ADDRESS),
-            0
-        );
+        assertEq(evvm.getBalance(address(mockContract), MATE_TOKEN_ADDRESS), 0);
 
         assertEq(
             evvm.getBalance(address(staking), MATE_TOKEN_ADDRESS),
@@ -216,7 +214,6 @@ contract unitTestRevert_Staking_serviceStaking is Test, Constants {
 
         assertEq(staking.getSizeOfAddressHistory(address(mockContract)), 0);
     }
-
 
     function test__unit_revert__publicServiceStaking__confirmServiceStaking__AddressMismatch()
         external
@@ -228,7 +225,7 @@ contract unitTestRevert_Staking_serviceStaking is Test, Constants {
 
         MockContractToStake auxMockContract = new MockContractToStake(
             address(staking)
-        );        
+        );
 
         uint256 amountStaking = giveMateToExecute(address(mockContract), 10);
 
@@ -236,17 +233,12 @@ contract unitTestRevert_Staking_serviceStaking is Test, Constants {
 
         mockContract.stakeJustInPartTwo(10);
 
-        vm.expectRevert(
-            ErrorsLib.AddressMismatch.selector
-        );
+        vm.expectRevert(ErrorsLib.AddressMismatch.selector);
         auxMockContract.stakeJustConfirm();
 
         assert(!evvm.isAddressStaker(address(mockContract)));
 
-        assertEq(
-            evvm.getBalance(address(mockContract), MATE_TOKEN_ADDRESS),
-            0
-        );
+        assertEq(evvm.getBalance(address(mockContract), MATE_TOKEN_ADDRESS), 0);
 
         assertEq(
             evvm.getBalance(address(staking), MATE_TOKEN_ADDRESS),
@@ -256,7 +248,7 @@ contract unitTestRevert_Staking_serviceStaking is Test, Constants {
         assertEq(staking.getSizeOfAddressHistory(address(mockContract)), 0);
     }
 
-/*
+    /*
     function test__unit_revert__publicServiceStaking__confirmServiceStaking__()
         external
     {
