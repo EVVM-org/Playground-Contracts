@@ -248,6 +248,117 @@ contract unitTestRevert_Staking_serviceStaking is Test, Constants {
         assertEq(staking.getSizeOfAddressHistory(address(mockContract)), 0);
     }
 
+    function test__unit_correct__publicServiceStaking__fullUnstake_AddressMustWaitToFullUnstake()
+        external
+    {
+        uint256 amountStakingBefore = evvm.getBalance(
+            address(staking),
+            MATE_TOKEN_ADDRESS
+        );
+
+        uint256 amountStaking = giveMateToExecute(address(mockContract), 10);
+
+        mockContract.stake(10);
+
+        assert(evvm.isAddressStaker(address(mockContract)));
+
+        skip(staking.getSecondsToUnlockFullUnstaking() - 50);
+
+        vm.expectRevert(ErrorsLib.AddressMustWaitToFullUnstake.selector);
+        mockContract.unstake(10);
+
+        assert(evvm.isAddressStaker(address(mockContract)));
+
+        assertEq(evvm.getBalance(address(mockContract), MATE_TOKEN_ADDRESS), 0);
+
+        assertEq(
+            evvm.getBalance(address(staking), MATE_TOKEN_ADDRESS),
+            amountStakingBefore + amountStaking
+        );
+
+        Staking.HistoryMetadata[]
+            memory history = new Staking.HistoryMetadata[](
+                staking.getSizeOfAddressHistory(address(mockContract))
+            );
+
+        history = staking.getAddressHistory(address(mockContract));
+
+        assertEq(
+            history[0].timestamp,
+            block.timestamp - (staking.getSecondsToUnlockFullUnstaking() - 50)
+        );
+        assert(history[0].transactionType == DEPOSIT_HISTORY_SMATE_IDENTIFIER);
+        assertEq(history[0].amount, 10);
+        assertEq(history[0].totalStaked, 10);
+    }
+
+    function test__unit_correct__publicServiceStaking__stakeAfterFullUnstake_AddressMustWaitToStakeAgain()
+        external
+    {   
+        vm.startPrank(ADMIN.Address);
+        staking.proposeSetSecondsToUnlockStaking(120);
+        skip(1 days);
+        staking.acceptSetSecondsToUnlockStaking();
+        vm.stopPrank();
+
+        uint256 amountStakingBefore = evvm.getBalance(
+            address(staking),
+            MATE_TOKEN_ADDRESS
+        );
+
+        giveMateToExecute(address(mockContract), 10);
+
+        mockContract.stake(10);
+
+        assert(evvm.isAddressStaker(address(mockContract)));
+
+        skip(staking.getSecondsToUnlockFullUnstaking());
+
+        mockContract.unstake(10);
+
+        skip(staking.getSecondsToUnlockStaking() - 10);
+
+        vm.expectRevert(ErrorsLib.AddressMustWaitToStakeAgain.selector);
+        mockContract.stake(10);
+
+        assert(!evvm.isAddressStaker(address(mockContract)));
+
+        assertEq(
+            evvm.getBalance(address(mockContract), MATE_TOKEN_ADDRESS),
+            (staking.priceOfStaking() * 10)
+        );
+
+        assertEq(
+            evvm.getBalance(address(staking), MATE_TOKEN_ADDRESS),
+            amountStakingBefore + evvm.getRewardAmount()
+        );
+
+        Staking.HistoryMetadata[]
+            memory history = new Staking.HistoryMetadata[](
+                staking.getSizeOfAddressHistory(address(mockContract))
+            );
+
+        history = staking.getAddressHistory(address(mockContract));
+
+        assertEq(
+            history[0].timestamp,
+            block.timestamp -
+                (staking.getSecondsToUnlockFullUnstaking() +
+                    (staking.getSecondsToUnlockStaking() - 10))
+        );
+        assert(history[0].transactionType == DEPOSIT_HISTORY_SMATE_IDENTIFIER);
+        assertEq(history[0].amount, 10);
+        assertEq(history[0].totalStaked, 10);
+
+        assertEq(
+            history[1].timestamp,
+            block.timestamp - (staking.getSecondsToUnlockStaking() - 10)
+        );
+        assert(history[1].transactionType == WITHDRAW_HISTORY_SMATE_IDENTIFIER);
+        assertEq(history[1].amount, 10);
+        assertEq(history[1].totalStaked, 0);
+    }
+
     /*
     function test__unit_revert__publicServiceStaking__confirmServiceStaking__()
         external
