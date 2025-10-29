@@ -53,22 +53,22 @@ library SignatureUtils {
         uint256 _orderId,
         bytes memory signature
     ) internal pure returns (bool) {
-		return
-			SignatureRecover.signatureVerification(
-				Strings.toString(evvmID),
-				"cancelOrder",
-				string.concat(
-					Strings.toString(_nonce),
-					",",
-					AdvancedStrings.addressToString(_tokenA),
-					",",
-					AdvancedStrings.addressToString(_tokenB),
-					",",
-					Strings.toString(_orderId)
-				),
-				signature,
-				signer
-			);
+        return
+            SignatureRecover.signatureVerification(
+                Strings.toString(evvmID),
+                "cancelOrder",
+                string.concat(
+                    Strings.toString(_nonce),
+                    ",",
+                    AdvancedStrings.addressToString(_tokenA),
+                    ",",
+                    AdvancedStrings.addressToString(_tokenB),
+                    ",",
+                    Strings.toString(_orderId)
+                ),
+                signature,
+                signer
+            );
     }
 
     function verifyMessageSignedForDispatchOrder(
@@ -80,11 +80,11 @@ library SignatureUtils {
         uint256 _orderId,
         bytes memory signature
     ) internal pure returns (bool) {
-		return 
-			SignatureRecover.signatureVerification(
-				Strings.toString(evvmID),
-				"dispatchOrder",
-				string.concat(
+        return
+            SignatureRecover.signatureVerification(
+                Strings.toString(evvmID),
+                "dispatchOrder",
+                string.concat(
                     Strings.toString(_nonce),
                     ",",
                     AdvancedStrings.addressToString(_tokenA),
@@ -92,11 +92,9 @@ library SignatureUtils {
                     AdvancedStrings.addressToString(_tokenB),
                     ",",
                     Strings.toString(_orderId)
-				),
-				signature,
-				signer
-			);
+                ),
+                signature,
+                signer
+            );
     }
-
-
 }

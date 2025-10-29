@@ -432,6 +432,31 @@ library Erc191TestBuilder {
             );
     }
 
+    function buildMessageSignedForDispatchOrder(
+        uint256 evvmID,
+        uint256 _nonce,
+        address _tokenA,
+        address _tokenB,
+        uint256 _orderId
+    ) internal pure returns (bytes32 messageHash) {
+        return
+            buildHashForSign(
+                string.concat(
+                    Strings.toString(evvmID),
+                    ",",
+                    "dispatchOrder",
+                    ",",
+                    Strings.toString(_nonce),
+                    ",",
+                    AdvancedStrings.addressToString(_tokenA),
+                    ",",
+                    AdvancedStrings.addressToString(_tokenB),
+                    ",",
+                    Strings.toString(_orderId)
+                )
+            );
+    }
+
     //-----------------------------------------------------------------------------------
     // General functions
     //-----------------------------------------------------------------------------------

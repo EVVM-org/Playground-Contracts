@@ -287,7 +287,7 @@ contract P2PSwap {
         bytes memory _signature_Evvm
     ) external {
         if (
-            SignatureUtils.verifyMessageSignedForDispatchOrder(
+            !SignatureUtils.verifyMessageSignedForDispatchOrder(
                 Evvm(evvmAddress).getEvvmID(),
                 user,
                 metadata.nonce,
@@ -297,7 +297,7 @@ contract P2PSwap {
                 metadata.signature
             )
         ) {
-            revert();
+            revert("Invalid signature");
         }
 
         uint256 market = findMarket(metadata.tokenA, metadata.tokenB);
@@ -318,7 +318,7 @@ contract P2PSwap {
             metadata.amountOfTokenBToFill <
             ordersInsideMarket[market][metadata.orderId].amountB + fee
         ) {
-            revert();
+            revert("Insuficient amountOfTokenToFill");
         }
 
         makePay(
@@ -347,22 +347,33 @@ contract P2PSwap {
         EvvmStructs.DisperseCaPayMetadata[]
             memory toData = new EvvmStructs.DisperseCaPayMetadata[](2);
 
+        uint256 sellerAmount = ordersInsideMarket[market][metadata.orderId]
+            .amountB + ((fee * rewardPersentage.seller) / 10_000);
+        uint256 executorAmount = _priorityFee_Evvm +
+            ((fee * rewardPersentage.mateStaker) / 10_000);
+
+        // pay seller
         toData[0] = EvvmStructs.DisperseCaPayMetadata(
-            ordersInsideMarket[market][metadata.orderId].amountB +
-                (fee * (rewardPersentage.seller / 10_000)),
+            sellerAmount,
             ordersInsideMarket[market][metadata.orderId].seller
         );
+        // pay executor
         toData[1] = EvvmStructs.DisperseCaPayMetadata(
-            _priorityFee_Evvm + (fee * (rewardPersentage.mateStaker / 10_000)),
+            executorAmount,
             msg.sender
         );
 
         balancesOfContract[metadata.tokenB] +=
-            fee *
-            (rewardPersentage.service / 10_000);
+            (fee * rewardPersentage.service) /
+            10_000;
 
-        makeDisperseCaPay(toData, metadata.tokenB, fee);
+        makeDisperseCaPay(
+            toData,
+            metadata.tokenB,
+            sellerAmount + executorAmount
+        );
 
+        // pay user with token A
         makeCaPay(
             user,
             metadata.tokenA,
@@ -855,5 +866,9 @@ contract P2PSwap {
         uint256 nonce
     ) public view returns (bool) {
         return nonceP2PSwap[user][nonce];
+    }
+
+    function getBalanceOfContract(address token) external view returns (uint256) {
+        return balancesOfContract[token];
     }
 }
