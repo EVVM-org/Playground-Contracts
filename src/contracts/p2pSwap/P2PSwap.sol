@@ -623,6 +623,7 @@ contract P2PSwap {
             revert();
         }
         owner = owner_proposal;
+        owner_proposal = address(0);
     }
 
     function proposeFillFixedPercentage(
@@ -780,13 +781,21 @@ contract P2PSwap {
             revert();
         }
         makeCaPay(recipientToWithdraw, tokenToWithdraw, amountToWithdraw);
+        balancesOfContract[tokenToWithdraw] -= amountToWithdraw;
+
         tokenToWithdraw = address(0);
         amountToWithdraw = 0;
         recipientToWithdraw = address(0);
         timeToWithdrawal = 0;
-
-        balancesOfContract[tokenToWithdraw] -= amountToWithdraw;
     }
+
+	function addBalance(address _token, uint256 _amount) external {
+        if (msg.sender != owner) {
+			revert();
+		}
+		balancesOfContract[_token] += _amount;
+	}
+
 
     //◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢
     //getters
@@ -876,5 +885,58 @@ contract P2PSwap {
         address token
     ) external view returns (uint256) {
         return balancesOfContract[token];
+    }
+
+    function getOwnerProposal() external view returns (address) {
+        return owner_proposal;
+    }
+
+    function getOwner() external view returns (address) {
+        return owner;
+    }
+
+    function getOwnerTimeToAccept() external view returns (uint256) {
+        return owner_timeToAccept;
+    }
+
+    function getRewardPercentageProposal()
+        external
+        view
+        returns (Percentage memory)
+    {
+        return rewardPersentage_proposal;
+    }
+
+    function getRewardPercentage() external view returns (Percentage memory) {
+        return rewardPersentage;
+    }
+
+    function getProposalPercentageFee() external view returns (uint256) {
+        return percentageFee_proposal;
+    }
+
+    function getPercentageFee() external view returns (uint256) {
+        return percentageFee;
+    }
+
+    function getMaxLimitFillFixedFeeProposal() external view returns (uint256) {
+        return maxLimitFillFixedFee_proposal;
+    }
+
+    function getMaxLimitFillFixedFee() external view returns (uint256) {
+        return maxLimitFillFixedFee;
+    }
+
+    function getProposedWithdrawal()
+        external
+        view
+        returns (
+            address ,
+            uint256 ,
+            address ,
+            uint256 
+        )
+    {
+		return (tokenToWithdraw, amountToWithdraw, recipientToWithdraw, timeToWithdrawal);
     }
 }

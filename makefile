@@ -653,6 +653,10 @@ unitTestCorrectP2PSwapDispatchOrderFillFixedFee:
 	@echo "Running P2PSwap dispatchOrder_fillPropotionalFee unit correct tests"
 	@forge test --match-path test/unit/p2pSwap/correct/unitTestCorrect_P2PSwap_dispatchOrder_fillFixedFee.t.sol --summary --detailed --gas-report -vvv --show-progress
 
+unitTestCorrectP2PSwapAdminTools:
+	@echo "Running P2PSwap adminTools unit correct tests"
+	@forge test --match-path test/unit/p2pSwap/correct/unitTestCorrect_P2PSwap_adminTools.t.sol --summary --detailed --gas-report -vvv --show-progress
+
 
 ######################################################################################################
 
