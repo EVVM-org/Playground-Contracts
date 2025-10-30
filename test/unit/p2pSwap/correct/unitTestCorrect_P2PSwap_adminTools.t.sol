@@ -89,7 +89,7 @@ contract unitTestCorrect_P2PSwap_cancelOrder is Test, Constants {
         assertEq(p2pSwap.getOwnerProposal(), COMMON_USER_NO_STAKER_1.Address);
         assertEq(
             p2pSwap.getOwnerTimeToAccept(),
-            vm.getBlockTimestamp() + 1 days
+            block.timestamp+ 1 days
         );
     }
 
