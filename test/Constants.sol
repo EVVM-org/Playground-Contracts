@@ -18,6 +18,7 @@ pragma solidity ^0.8.0;
 import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
 import {Staking} from "@EVVM/playground/contracts/staking/Staking.sol";
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import {StakingServiceHooks} from "@EVVM/playground/library/StakingServiceHooks.sol";
 
 abstract contract Constants {
     bytes32 constant DEPOSIT_HISTORY_SMATE_IDENTIFIER = bytes32(uint256(1));
@@ -142,33 +143,75 @@ abstract contract Constants {
         });
 }
 
-contract MockContract {
+contract MockContractToStake is StakingServiceHooks {
     Staking staking;
     Evvm evvm;
 
-    constructor(address stakingAddress) {
+    constructor(address stakingAddress) StakingServiceHooks(stakingAddress) {
         staking = Staking(stakingAddress);
         evvm = Evvm(staking.getEvvmAddress());
     }
 
-    function unstake(
-        uint256 amount,
-        uint256 nonceStaking,
-        address _user
+    /*function stake (
+        uint256 amountToStake
     ) public {
-        staking.publicServiceStaking(
-            _user,
-            address(this),
-            false,
-            amount,
-            nonceStaking,
-            bytes(""),
-            0,
-            0,
-            false,
-            bytes("")
+        staking.prepareServiceStaking(amountToStake);
+        evvm.caPay(
+            address(staking),
+            0x0000000000000000000000000000000000000001,
+            staking.priceOfStaking()*amountToStake
+        );
+        staking.confirmServiceStaking();
+    }*/
+
+    function stakeJustInPartOne(uint256 amountToStake) public {
+        staking.prepareServiceStaking(amountToStake);
+    }
+
+    function stakeJustInPartTwo(uint256 amountToStake) public {
+        staking.prepareServiceStaking(amountToStake);
+        evvm.caPay(
+            address(staking),
+            0x0000000000000000000000000000000000000001,
+            staking.priceOfStaking() * amountToStake
         );
     }
+
+    function stakeJustConfirm() public {
+        staking.confirmServiceStaking();
+    }
+
+    function stakeWithTokenAddress(
+        uint256 amountToStake,
+        address tokenAddress
+    ) public {
+        staking.prepareServiceStaking(amountToStake);
+        evvm.caPay(
+            address(staking),
+            tokenAddress,
+            staking.priceOfStaking() * amountToStake
+        );
+        staking.confirmServiceStaking();
+    }
+
+    function stakeWithAmountDiscrepancy(
+        uint256 amountToStakeDiscrepancy,
+        uint256 amountToStake
+    ) public {
+        staking.prepareServiceStaking(amountToStake);
+        evvm.caPay(
+            address(staking),
+            0x0000000000000000000000000000000000000001,
+            staking.priceOfStaking() * amountToStakeDiscrepancy
+        );
+        staking.confirmServiceStaking();
+    }
+
+    /*function unstake(
+        uint256 amountToUnstake
+    ) public {
+        staking.serviceUnstaking(amountToUnstake);
+    }*/
 
     function getBackMate(address user) public {
         evvm.caPay(
@@ -190,19 +233,21 @@ contract TestERC20 is ERC20 {
     }
 }
 
-
-
 import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
-contract RegistryEvvmTestTwo is Initializable, OwnableUpgradeable, UUPSUpgradeable {
+contract RegistryEvvmTestTwo is
+    Initializable,
+    OwnableUpgradeable,
+    UUPSUpgradeable
+{
     error InvalidUser();
     error InvalidInput();
     error AlreadyRegistered(uint256 chainId, address evvmAddress);
     error ChainIdNotRegistered();
     error EvvmIdAlreadyRegistered();
-    
+
     /**
      * @notice Metadata structure for EVVM registration
      * @param chainId The chain ID where the EVVM is deployed
@@ -267,11 +312,11 @@ contract RegistryEvvmTestTwo is Initializable, OwnableUpgradeable, UUPSUpgradeab
      * @param chainId The chain ID of the testnet where the EVVM is deployed
      * @param evvmAddress The contract address of the EVVM instance
      * @return The assigned EVVM ID (auto-incremented from 1000 onwards)
-     * 
+     *
      * Requirements:
      * - chainId must be non-zero and whitelisted
      * - evvmAddress must be non-zero and not already registered for this chainId
-     * 
+     *
      * @custom:security Only works with whitelisted testnet chain IDs to prevent mainnet registration
      */
     function registerEvvm(
@@ -300,14 +345,14 @@ contract RegistryEvvmTestTwo is Initializable, OwnableUpgradeable, UUPSUpgradeab
      * @param chainId The chain ID of the testnet where the EVVM is deployed
      * @param evvmAddress The contract address of the EVVM instance
      * @return The assigned EVVM ID (same as input evvmID)
-     * 
+     *
      * Requirements:
      * - Only callable by superUser
      * - evvmID must be between 1 and 999 (MAX_WHITE_LISTED_EVMM_ID)
      * - chainId must be non-zero and whitelisted
      * - evvmAddress must be non-zero and not already registered for this chainId
      * - The specified evvmID must not already be registered
-     * 
+     *
      * @custom:access-control Restricted to superUser only
      * @custom:security Reserved IDs (1-999) for official EVVM deployments
      */
@@ -343,11 +388,11 @@ contract RegistryEvvmTestTwo is Initializable, OwnableUpgradeable, UUPSUpgradeab
      * @notice Registers multiple chain IDs to the whitelist
      * @dev Only superUser can add chain IDs to prevent mainnet registration
      * @param chainIds Array of chain IDs to whitelist for EVVM registration
-     * 
+     *
      * Requirements:
      * - Only callable by superUser
      * - All chain IDs must be non-zero
-     * 
+     *
      * @custom:access-control Restricted to superUser only
      * @custom:security Prevents registration on non-testnet chains by controlling whitelist
      */
@@ -450,7 +495,7 @@ contract RegistryEvvmTestTwo is Initializable, OwnableUpgradeable, UUPSUpgradeab
      * @dev View function that returns chain ID and contract address for given EVVM ID
      * @param evvmID The EVVM ID to query
      * @return Metadata struct containing chainId and evvmAddress
-     * 
+     *
      * @custom:usage dApps can use this to verify they're interacting with the correct EVVM
      */
     function getEvvmIdMetadata(
@@ -463,7 +508,7 @@ contract RegistryEvvmTestTwo is Initializable, OwnableUpgradeable, UUPSUpgradeab
      * @notice Retrieves all active whitelisted EVVM IDs (1-999)
      * @dev View function that returns array of registered EVVM IDs in the reserved range
      * @return Array of active EVVM IDs in the whitelisted range (1-999)
-     * 
+     *
      * @custom:usage Indexer function to discover all official EVVM deployments
      * @custom:gas-warning This function can be gas-intensive for large numbers of registrations
      */
@@ -502,7 +547,7 @@ contract RegistryEvvmTestTwo is Initializable, OwnableUpgradeable, UUPSUpgradeab
      * @notice Retrieves all active public EVVM IDs (1000+)
      * @dev View function that returns array of registered EVVM IDs in the public range
      * @return Array of active EVVM IDs in the public range (1000+)
-     * 
+     *
      * @custom:usage Indexer function to discover all community EVVM deployments
      * @custom:gas-warning This function can be gas-intensive for large numbers of registrations
      */
@@ -529,7 +574,7 @@ contract RegistryEvvmTestTwo is Initializable, OwnableUpgradeable, UUPSUpgradeab
      * @notice Internal authorization function for upgrades
      * @dev Required by UUPSUpgradeable, but authorization is handled in acceptProposalUpgrade
      * @param newImplementation Address of the new implementation (unused in this context)
-     * 
+     *
      * @custom:security Authorization is handled through time-delayed governance in acceptProposalUpgrade
      */
     function _authorizeUpgrade(
@@ -543,7 +588,7 @@ contract RegistryEvvmTestTwo is Initializable, OwnableUpgradeable, UUPSUpgradeab
      * @notice Retrieves complete superUser governance data
      * @dev Returns the full AddressTypeProposal struct with current, proposed, and timing information
      * @return AddressTypeProposal struct containing current superUser, proposed superUser, and acceptance timestamp
-     * 
+     *
      * @custom:usage For governance interfaces to display superUser change status
      */
     function getSuperUserData()
@@ -568,7 +613,7 @@ contract RegistryEvvmTestTwo is Initializable, OwnableUpgradeable, UUPSUpgradeab
      * @dev View function to verify if registrations are allowed on a specific chain
      * @param chainId The chain ID to check
      * @return bool True if the chain ID is whitelisted, false otherwise
-     * 
+     *
      * @custom:usage dApps can use this to verify if a chain is supported before attempting registration
      */
     function isChainIdRegistered(uint256 chainId) external view returns (bool) {
@@ -581,7 +626,7 @@ contract RegistryEvvmTestTwo is Initializable, OwnableUpgradeable, UUPSUpgradeab
      * @param chainId The chain ID to check
      * @param evvmAddress The EVVM address to check
      * @return bool True if the address is already registered on this chain, false otherwise
-     * 
+     *
      * @custom:usage Prevents duplicate registrations and verifies existing registrations
      */
     function isAddressRegistered(
@@ -595,7 +640,7 @@ contract RegistryEvvmTestTwo is Initializable, OwnableUpgradeable, UUPSUpgradeab
      * @notice Retrieves complete upgrade proposal governance data
      * @dev Returns the full AddressTypeProposal struct with current, proposed, and timing information for upgrades
      * @return AddressTypeProposal struct containing current implementation, proposed implementation, and acceptance timestamp
-     * 
+     *
      * @custom:usage For governance interfaces to display upgrade proposal status
      */
     function getUpgradeProposalData()
@@ -610,7 +655,7 @@ contract RegistryEvvmTestTwo is Initializable, OwnableUpgradeable, UUPSUpgradeab
      * @notice Returns the contract version
      * @dev Simple version identifier for tracking contract updates
      * @return uint256 Current version number of the contract
-     * 
+     *
      * @custom:usage For compatibility checks and version tracking
      */
     function getVersion() external pure returns (uint256) {

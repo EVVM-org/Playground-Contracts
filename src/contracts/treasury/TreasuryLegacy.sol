@@ -15,8 +15,8 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
-import {SignatureRecover} from "@EVVM/playground/lib/SignatureRecover.sol";
-import {AdvancedStrings} from "@EVVM/playground/lib/AdvancedStrings.sol";
+import {SignatureRecover} from "@EVVM/playground/library/SignatureRecover.sol";
+import {AdvancedStrings} from "@EVVM/playground/library/AdvancedStrings.sol";
 
 contract Treasury {
     using SignatureRecover for *;

@@ -266,35 +266,31 @@ unitTestCorrectStaking:
 
 unitTestCorrectStakingGoldenStaking:
 	@echo "Running GoldenStaking unit correct tests"
-	@forge test --match-path test/unit/smate/correct/unitTestCorrect_Staking_goldenStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/staking/correct/unitTestCorrect_Staking_goldenStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 unitTestCorrectStakingPresaleStaking_AsyncExecutionOnPay:
 	@echo "Running PresaleStaking (async execution on pay) unit correct tests"
-	@forge test --match-path test/unit/smate/correct/unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/staking/correct/unitTestCorrect_Staking_presaleStaking_AsyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 unitTestCorrectStakingPresaleStaking_SyncExecutionOnPay:
 	@echo "Running PresaleStaking (sync execution on pay) unit correct tests"
-	@forge test --match-path test/unit/smate/correct/unitTestCorrect_Staking_presaleStaking_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/staking/correct/unitTestCorrect_Staking_presaleStaking_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 unitTestCorrectStakingPublicStaking_AsyncExecutionOnPay:
 	@echo "Running PublicStaking (async execution on pay) unit correct tests"
-	@forge test --match-path test/unit/smate/correct/unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/staking/correct/unitTestCorrect_Staking_publicStaking_AsyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 unitTestCorrectStakingPublicStaking_SyncExecutionOnPay:
 	@echo "Running PublicStaking (sync execution on pay) unit correct tests"
-	@forge test --match-path test/unit/smate/correct/unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/staking/correct/unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestCorrectStakingPublicServiceStaking_AsyncExecutionOnPay:
-	@echo "Running PublicServiceStaking (async execution on pay) unit correct tests"
-	@forge test --match-path test/unit/smate/correct/unitTestCorrect_Staking_publicServiceStaking_AsyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
-
-unitTestCorrectStakingPublicServiceStaking_SyncExecutionOnPay:
-	@echo "Running PublicServiceStaking (sync execution on pay) unit correct tests"
-	@forge test --match-path test/unit/smate/correct/unitTestCorrect_Staking_publicServiceStaking_SyncExecutionOnPay.t.sol --summary --detailed --gas-report -vvv --show-progress
+unitTestCorrectStakingServiceStaking:
+	@echo "Running service staking  unit correct tests"
+	@forge test --match-path test/unit/staking/correct/unitTestCorrect_Staking_serviceStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 unitTestCorrectStakingAdminFunctions:
 	@echo "Running AdminFunctions unit correct tests"
-	@forge test --match-path test/unit/smate/correct/unitTestCorrect_Staking_adminFunctions.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/staking/correct/unitTestCorrect_Staking_adminFunctions.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 #### Revert Tests
 
@@ -304,23 +300,23 @@ unitTestRevertStaking:
 
 unitTestRevertStakingGoldenStaking:
 	@echo "Running GoldenStaking unit revert tests"
-	@forge test --match-path test/unit/smate/revert/unitTestRevert_Staking_goldenStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/staking/revert/unitTestRevert_Staking_goldenStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 unitTestRevertStakingPresaleStaking:
 	@echo "Running PresaleStaking unit revert tests"
-	@forge test --match-path test/unit/smate/revert/unitTestRevert_Staking_presaleStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/staking/revert/unitTestRevert_Staking_presaleStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 unitTestRevertStakingPublicStaking:
 	@echo "Running PublicStaking unit revert tests"
-	@forge test --match-path test/unit/smate/revert/unitTestRevert_Staking_publicStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/staking/revert/unitTestRevert_Staking_publicStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-unitTestRevertStakingPublicServiceStaking:
-	@echo "Running PublicServiceStaking unit revert tests"
-	@forge test --match-path test/unit/smate/revert/unitTestRevert_Staking_publicServiceStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
-
+unitTestRevertStakingStakingServiceStaking:
+	@echo "Running service staking  unit revert tests"
+	@forge test --match-path test/unit/staking/revert/unitTestRevert_Staking_serviceStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
+	
 unitTestRevertStakingAdminFunctions:
 	@echo "Running AdminFunctions unit revert tests"
-	@forge test --match-path test/unit/smate/revert/unitTestRevert_Staking_adminFunctions.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/staking/revert/unitTestRevert_Staking_adminFunctions.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 #### Fuzz Tests
 
@@ -340,9 +336,9 @@ fuzzTestStakingPublicStaking:
 	@echo "Running PublicStaking unit fuzz tests"
 	@forge test --match-path test/fuzz/staking/fuzzTest_Staking_publicStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
 
-fuzzTestStakingPublicServiceStaking:
-	@echo "Running PublicServiceStaking unit fuzz tests"
-	@forge test --match-path test/fuzz/staking/fuzzTest_Staking_publicServiceStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
+fuzzTestStakingServiceStaking:
+	@echo "Running service staking  unit fuzz tests"
+	@forge test --match-path test/fuzz/staking/fuzzTest_Staking_serviceStaking.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 ## Estimator
 
