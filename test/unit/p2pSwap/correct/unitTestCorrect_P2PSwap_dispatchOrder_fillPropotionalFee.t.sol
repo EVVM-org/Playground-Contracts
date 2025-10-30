@@ -74,7 +74,7 @@ contract unitTestCorrect_P2PSwap_dispatchOrder_fillPropotionalFee is
             address(treasury)
         );
 
-        p2pSwap = new P2PSwap(address(evvm), ADMIN.Address);
+        p2pSwap = new P2PSwap(address(evvm), address(staking), ADMIN.Address);
 
         evvm.setPointStaker(COMMON_USER_STAKER.Address, 0x01);
         evvm.setPointStaker(address(p2pSwap), 0x01);

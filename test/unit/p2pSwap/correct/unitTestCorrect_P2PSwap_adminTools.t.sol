@@ -30,7 +30,7 @@ import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
 import {Treasury} from "@EVVM/playground/contracts/treasury/Treasury.sol";
 import {P2PSwap} from "@EVVM/playground/contracts/p2pSwap/P2PSwap.sol";
 
-contract unitTestCorrect_P2PSwap_cancelOrder is Test, Constants {
+contract unitTestCorrect_P2PSwap_adminTools is Test, Constants {
     Staking staking;
     Evvm evvm;
     Estimator estimator;
@@ -71,7 +71,7 @@ contract unitTestCorrect_P2PSwap_cancelOrder is Test, Constants {
             address(treasury)
         );
 
-        p2pSwap = new P2PSwap(address(evvm), ADMIN.Address);
+        p2pSwap = new P2PSwap(address(evvm), address(staking), ADMIN.Address);
 
         evvm.setPointStaker(COMMON_USER_STAKER.Address, 0x01);
         evvm.setPointStaker(address(p2pSwap), 0x01);
