@@ -86,9 +86,9 @@ contract P2PSwap {
         bytes signature;
     }
 
-    Percentage rewardPersentage;
-    Percentage rewardPersentage_proposal;
-    uint256 rewardPersentage_timeToAcceptNewChange;
+    Percentage rewardPercentage;
+    Percentage rewardPercentage_proposal;
+    uint256 rewardPercentage_timeToAcceptNewChange;
 
     uint256 percentageFee;
     uint256 percentageFee_proposal;
@@ -120,7 +120,7 @@ contract P2PSwap {
         owner = _owner;
         maxLimitFillFixedFee = 0.001 ether;
         percentageFee = 500;
-        rewardPersentage = Percentage({
+        rewardPercentage = Percentage({
             seller: 5000,
             service: 4000,
             mateStaker: 1000
@@ -348,9 +348,9 @@ contract P2PSwap {
             memory toData = new EvvmStructs.DisperseCaPayMetadata[](2);
 
         uint256 sellerAmount = ordersInsideMarket[market][metadata.orderId]
-            .amountB + ((fee * rewardPersentage.seller) / 10_000);
+            .amountB + ((fee * rewardPercentage.seller) / 10_000);
         uint256 executorAmount = _priorityFee_Evvm +
-            ((fee * rewardPersentage.mateStaker) / 10_000);
+            ((fee * rewardPercentage.mateStaker) / 10_000);
 
         // pay seller
         toData[0] = EvvmStructs.DisperseCaPayMetadata(
@@ -364,7 +364,7 @@ contract P2PSwap {
         );
 
         balancesOfContract[metadata.tokenB] +=
-            (fee * rewardPersentage.service) /
+            (fee * rewardPercentage.service) /
             10_000;
 
         makeDisperseCaPay(
@@ -480,18 +480,18 @@ contract P2PSwap {
 
         toData[0] = EvvmStructs.DisperseCaPayMetadata(
             ordersInsideMarket[market][metadata.orderId].amountB +
-                ((finalFee * rewardPersentage.seller) / 10_000),
+                ((finalFee * rewardPercentage.seller) / 10_000),
             ordersInsideMarket[market][metadata.orderId].seller
         );
         toData[1] = EvvmStructs.DisperseCaPayMetadata(
             _priorityFee_Evvm +
-                ((finalFee * rewardPersentage.mateStaker) / 10_000),
+                ((finalFee * rewardPercentage.mateStaker) / 10_000),
             msg.sender
         );
 
         balancesOfContract[metadata.tokenB] +=
             finalFee *
-            (rewardPersentage.service / 10_000);
+            (rewardPercentage.service / 10_000);
 
         makeDisperseCaPay(
             toData,
@@ -637,28 +637,28 @@ contract P2PSwap {
         if (_seller + _service + _mateStaker != 10_000) {
             revert();
         }
-        rewardPersentage_proposal = Percentage(_seller, _service, _mateStaker);
-        rewardPersentage_timeToAcceptNewChange = block.timestamp + 1 days;
+        rewardPercentage_proposal = Percentage(_seller, _service, _mateStaker);
+        rewardPercentage_timeToAcceptNewChange = block.timestamp + 1 days;
     }
 
     function rejectProposeFillFixedPercentage() external {
         if (
             msg.sender != owner ||
-            block.timestamp > rewardPersentage_timeToAcceptNewChange
+            block.timestamp > rewardPercentage_timeToAcceptNewChange
         ) {
             revert();
         }
-        rewardPersentage_proposal = Percentage(0, 0, 0);
+        rewardPercentage_proposal = Percentage(0, 0, 0);
     }
 
     function acceptFillFixedPercentage() external {
         if (
             msg.sender != owner ||
-            block.timestamp > rewardPersentage_timeToAcceptNewChange
+            block.timestamp > rewardPercentage_timeToAcceptNewChange
         ) {
             revert();
         }
-        rewardPersentage = rewardPersentage_proposal;
+        rewardPercentage = rewardPercentage_proposal;
     }
 
     function proposeFillPropotionalPercentage(
@@ -669,28 +669,28 @@ contract P2PSwap {
         if (msg.sender != owner && _seller + _service + _mateStaker != 10_000) {
             revert();
         }
-        rewardPersentage_proposal = Percentage(_seller, _service, _mateStaker);
-        rewardPersentage_timeToAcceptNewChange = block.timestamp + 1 days;
+        rewardPercentage_proposal = Percentage(_seller, _service, _mateStaker);
+        rewardPercentage_timeToAcceptNewChange = block.timestamp + 1 days;
     }
 
     function rejectProposeFillPropotionalPercentage() external {
         if (
             msg.sender != owner ||
-            block.timestamp > rewardPersentage_timeToAcceptNewChange
+            block.timestamp > rewardPercentage_timeToAcceptNewChange
         ) {
             revert();
         }
-        rewardPersentage_proposal = Percentage(0, 0, 0);
+        rewardPercentage_proposal = Percentage(0, 0, 0);
     }
 
     function acceptFillPropotionalPercentage() external {
         if (
             msg.sender != owner ||
-            block.timestamp > rewardPersentage_timeToAcceptNewChange
+            block.timestamp > rewardPercentage_timeToAcceptNewChange
         ) {
             revert();
         }
-        rewardPersentage = rewardPersentage_proposal;
+        rewardPercentage = rewardPercentage_proposal;
     }
 
     function proposePercentageFee(uint256 _percentageFee) external {
@@ -789,13 +789,12 @@ contract P2PSwap {
         timeToWithdrawal = 0;
     }
 
-	function addBalance(address _token, uint256 _amount) external {
+    function addBalance(address _token, uint256 _amount) external {
         if (msg.sender != owner) {
-			revert();
-		}
-		balancesOfContract[_token] += _amount;
-	}
-
+            revert();
+        }
+        balancesOfContract[_token] += _amount;
+    }
 
     //◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢
     //getters
@@ -904,11 +903,11 @@ contract P2PSwap {
         view
         returns (Percentage memory)
     {
-        return rewardPersentage_proposal;
+        return rewardPercentage_proposal;
     }
 
     function getRewardPercentage() external view returns (Percentage memory) {
-        return rewardPersentage;
+        return rewardPercentage;
     }
 
     function getProposalPercentageFee() external view returns (uint256) {
@@ -930,13 +929,13 @@ contract P2PSwap {
     function getProposedWithdrawal()
         external
         view
-        returns (
-            address ,
-            uint256 ,
-            address ,
-            uint256 
-        )
+        returns (address, uint256, address, uint256)
     {
-		return (tokenToWithdraw, amountToWithdraw, recipientToWithdraw, timeToWithdrawal);
+        return (
+            tokenToWithdraw,
+            amountToWithdraw,
+            recipientToWithdraw,
+            timeToWithdrawal
+        );
     }
 }
