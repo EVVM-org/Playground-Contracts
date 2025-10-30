@@ -114,7 +114,7 @@ contract unitTestCorrect_Staking_serviceStaking is Test, Constants {
 
         uint256 totalOfMate = giveMateToExecute(address(mockContract), 10);
 
-        mockContract.stake(10);
+        mockContract.makeStakeService(10);
 
         assert(evvm.isAddressStaker(address(mockContract)));
 
@@ -146,11 +146,11 @@ contract unitTestCorrect_Staking_serviceStaking is Test, Constants {
 
         giveMateToExecute(address(mockContract), 10);
 
-        mockContract.stake(10);
+        mockContract.makeStakeService(10);
 
         assert(evvm.isAddressStaker(address(mockContract)));
 
-        mockContract.unstake(5);
+        mockContract.makeUnstakeService(5);
 
         assert(evvm.isAddressStaker(address(mockContract)));
 
@@ -193,13 +193,13 @@ contract unitTestCorrect_Staking_serviceStaking is Test, Constants {
 
         giveMateToExecute(address(mockContract), 10);
 
-        mockContract.stake(10);
+        mockContract.makeStakeService(10);
 
         assert(evvm.isAddressStaker(address(mockContract)));
 
         skip(staking.getSecondsToUnlockFullUnstaking());
 
-        mockContract.unstake(10);
+        mockContract.makeUnstakeService(10);
 
         assert(!evvm.isAddressStaker(address(mockContract)));
 
@@ -247,17 +247,17 @@ contract unitTestCorrect_Staking_serviceStaking is Test, Constants {
 
         giveMateToExecute(address(mockContract), 10);
 
-        mockContract.stake(10);
+        mockContract.makeStakeService(10);
 
         assert(evvm.isAddressStaker(address(mockContract)));
 
         skip(staking.getSecondsToUnlockFullUnstaking());
 
-        mockContract.unstake(10);
+        mockContract.makeUnstakeService(10);
 
         skip(staking.getSecondsToUnlockStaking());
 
-        mockContract.stake(10);
+        mockContract.makeStakeService(10);
 
         assert(evvm.isAddressStaker(address(mockContract)));
 

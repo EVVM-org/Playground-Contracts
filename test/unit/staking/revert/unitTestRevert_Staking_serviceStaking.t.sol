@@ -258,14 +258,14 @@ contract unitTestRevert_Staking_serviceStaking is Test, Constants {
 
         uint256 amountStaking = giveMateToExecute(address(mockContract), 10);
 
-        mockContract.stake(10);
+        mockContract.makeStakeService(10);
 
         assert(evvm.isAddressStaker(address(mockContract)));
 
         skip(staking.getSecondsToUnlockFullUnstaking() - 50);
 
         vm.expectRevert(ErrorsLib.AddressMustWaitToFullUnstake.selector);
-        mockContract.unstake(10);
+        mockContract.makeUnstakeService(10);
 
         assert(evvm.isAddressStaker(address(mockContract)));
 
@@ -308,18 +308,18 @@ contract unitTestRevert_Staking_serviceStaking is Test, Constants {
 
         giveMateToExecute(address(mockContract), 10);
 
-        mockContract.stake(10);
+        mockContract.makeStakeService(10);
 
         assert(evvm.isAddressStaker(address(mockContract)));
 
         skip(staking.getSecondsToUnlockFullUnstaking());
 
-        mockContract.unstake(10);
+        mockContract.makeUnstakeService(10);
 
         skip(staking.getSecondsToUnlockStaking() - 10);
 
         vm.expectRevert(ErrorsLib.AddressMustWaitToStakeAgain.selector);
-        mockContract.stake(10);
+        mockContract.makeStakeService(10);
 
         assert(!evvm.isAddressStaker(address(mockContract)));
 
