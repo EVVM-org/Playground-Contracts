@@ -86,9 +86,9 @@ contract P2PSwap {
         bytes signature;
     }
 
-    Percentage rewardPersentage;
-    Percentage rewardPersentage_proposal;
-    uint256 rewardPersentage_timeToAcceptNewChange;
+    Percentage rewardPercentage;
+    Percentage rewardPercentage_proposal;
+    uint256 rewardPercentage_timeToAcceptNewChange;
 
     uint256 percentageFee;
     uint256 percentageFee_proposal;
@@ -120,7 +120,7 @@ contract P2PSwap {
         owner = _owner;
         maxLimitFillFixedFee = 0.001 ether;
         percentageFee = 500;
-        rewardPersentage = Percentage({
+        rewardPercentage = Percentage({
             seller: 5000,
             service: 4000,
             mateStaker: 1000
@@ -137,7 +137,7 @@ contract P2PSwap {
         bytes memory _signature_Evvm
     ) external returns (uint256 market, uint256 orderId) {
         if (
-            SignatureUtils.verifyMessageSignedForMakeOrder(
+            !SignatureUtils.verifyMessageSignedForMakeOrder(
                 Evvm(evvmAddress).getEvvmID(),
                 user,
                 metadata.nonce,
@@ -195,9 +195,11 @@ contract P2PSwap {
 
         if (Evvm(evvmAddress).isAddressStaker(msg.sender)) {
             if (_priorityFee_Evvm > 0) {
+                // send the executor the priorityFee
                 makeCaPay(msg.sender, metadata.tokenA, _priorityFee_Evvm);
             }
 
+            // send some mate token reward to the executor (independent of the priorityFee the user attached)
             makeCaPay(
                 msg.sender,
                 MATE_TOKEN_ADDRESS,
@@ -219,7 +221,7 @@ contract P2PSwap {
         bytes memory _signature_Evvm
     ) external {
         if (
-            SignatureUtils.verifyMessageSignedForCancelOrder(
+            !SignatureUtils.verifyMessageSignedForCancelOrder(
                 Evvm(evvmAddress).getEvvmID(),
                 user,
                 metadata.nonce,
@@ -229,7 +231,7 @@ contract P2PSwap {
                 metadata.signature
             )
         ) {
-            revert();
+            revert("Invalid signature");
         }
 
         uint256 market = findMarket(metadata.tokenA, metadata.tokenB);
@@ -239,16 +241,16 @@ contract P2PSwap {
             nonceP2PSwap[user][metadata.nonce] ||
             ordersInsideMarket[market][metadata.orderId].seller != user
         ) {
-            revert();
+            revert("Invalid order");
         }
 
         if (_priorityFee_Evvm > 0) {
             makePay(
                 user,
-                MATE_TOKEN_ADDRESS,
+                metadata.tokenA,
                 _nonce_Evvm,
-                _priorityFee_Evvm,
                 0,
+                _priorityFee_Evvm,
                 _priority_Evvm,
                 _signature_Evvm
             );
@@ -285,7 +287,7 @@ contract P2PSwap {
         bytes memory _signature_Evvm
     ) external {
         if (
-            SignatureUtils.verifyMessageSignedForDispatchOrder(
+            !SignatureUtils.verifyMessageSignedForDispatchOrder(
                 Evvm(evvmAddress).getEvvmID(),
                 user,
                 metadata.nonce,
@@ -295,7 +297,7 @@ contract P2PSwap {
                 metadata.signature
             )
         ) {
-            revert();
+            revert("Invalid signature");
         }
 
         uint256 market = findMarket(metadata.tokenA, metadata.tokenB);
@@ -316,7 +318,7 @@ contract P2PSwap {
             metadata.amountOfTokenBToFill <
             ordersInsideMarket[market][metadata.orderId].amountB + fee
         ) {
-            revert();
+            revert("Insuficient amountOfTokenToFill");
         }
 
         makePay(
@@ -345,22 +347,33 @@ contract P2PSwap {
         EvvmStructs.DisperseCaPayMetadata[]
             memory toData = new EvvmStructs.DisperseCaPayMetadata[](2);
 
+        uint256 sellerAmount = ordersInsideMarket[market][metadata.orderId]
+            .amountB + ((fee * rewardPercentage.seller) / 10_000);
+        uint256 executorAmount = _priorityFee_Evvm +
+            ((fee * rewardPercentage.mateStaker) / 10_000);
+
+        // pay seller
         toData[0] = EvvmStructs.DisperseCaPayMetadata(
-            ordersInsideMarket[market][metadata.orderId].amountB +
-                (fee * (rewardPersentage.seller / 10_000)),
+            sellerAmount,
             ordersInsideMarket[market][metadata.orderId].seller
         );
+        // pay executor
         toData[1] = EvvmStructs.DisperseCaPayMetadata(
-            _priorityFee_Evvm + (fee * (rewardPersentage.mateStaker / 10_000)),
+            executorAmount,
             msg.sender
         );
 
         balancesOfContract[metadata.tokenB] +=
-            fee *
-            (rewardPersentage.service / 10_000);
+            (fee * rewardPercentage.service) /
+            10_000;
 
-        makeDisperseCaPay(toData, metadata.tokenB, fee);
+        makeDisperseCaPay(
+            toData,
+            metadata.tokenB,
+            toData[0].amount + toData[1].amount
+        );
 
+        // pay user with token A
         makeCaPay(
             user,
             metadata.tokenA,
@@ -393,7 +406,7 @@ contract P2PSwap {
         uint256 _amountOut ///@dev for testing purposes
     ) external {
         if (
-            SignatureUtils.verifyMessageSignedForDispatchOrder(
+            !SignatureUtils.verifyMessageSignedForDispatchOrder(
                 Evvm(evvmAddress).getEvvmID(),
                 user,
                 metadata.nonce,
@@ -467,20 +480,24 @@ contract P2PSwap {
 
         toData[0] = EvvmStructs.DisperseCaPayMetadata(
             ordersInsideMarket[market][metadata.orderId].amountB +
-                (finalFee * (rewardPersentage.seller / 10_000)),
+                ((finalFee * rewardPercentage.seller) / 10_000),
             ordersInsideMarket[market][metadata.orderId].seller
         );
         toData[1] = EvvmStructs.DisperseCaPayMetadata(
             _priorityFee_Evvm +
-                (finalFee * (rewardPersentage.mateStaker / 10_000)),
+                ((finalFee * rewardPercentage.mateStaker) / 10_000),
             msg.sender
         );
 
         balancesOfContract[metadata.tokenB] +=
             finalFee *
-            (rewardPersentage.service / 10_000);
+            (rewardPercentage.service / 10_000);
 
-        makeDisperseCaPay(toData, metadata.tokenB, fee);
+        makeDisperseCaPay(
+            toData,
+            metadata.tokenB,
+            toData[0].amount + toData[1].amount
+        );
 
         makeCaPay(
             user,
@@ -606,6 +623,7 @@ contract P2PSwap {
             revert();
         }
         owner = owner_proposal;
+        owner_proposal = address(0);
     }
 
     function proposeFillFixedPercentage(
@@ -619,28 +637,28 @@ contract P2PSwap {
         if (_seller + _service + _mateStaker != 10_000) {
             revert();
         }
-        rewardPersentage_proposal = Percentage(_seller, _service, _mateStaker);
-        rewardPersentage_timeToAcceptNewChange = block.timestamp + 1 days;
+        rewardPercentage_proposal = Percentage(_seller, _service, _mateStaker);
+        rewardPercentage_timeToAcceptNewChange = block.timestamp + 1 days;
     }
 
     function rejectProposeFillFixedPercentage() external {
         if (
             msg.sender != owner ||
-            block.timestamp > rewardPersentage_timeToAcceptNewChange
+            block.timestamp > rewardPercentage_timeToAcceptNewChange
         ) {
             revert();
         }
-        rewardPersentage_proposal = Percentage(0, 0, 0);
+        rewardPercentage_proposal = Percentage(0, 0, 0);
     }
 
     function acceptFillFixedPercentage() external {
         if (
             msg.sender != owner ||
-            block.timestamp > rewardPersentage_timeToAcceptNewChange
+            block.timestamp > rewardPercentage_timeToAcceptNewChange
         ) {
             revert();
         }
-        rewardPersentage = rewardPersentage_proposal;
+        rewardPercentage = rewardPercentage_proposal;
     }
 
     function proposeFillPropotionalPercentage(
@@ -651,28 +669,28 @@ contract P2PSwap {
         if (msg.sender != owner && _seller + _service + _mateStaker != 10_000) {
             revert();
         }
-        rewardPersentage_proposal = Percentage(_seller, _service, _mateStaker);
-        rewardPersentage_timeToAcceptNewChange = block.timestamp + 1 days;
+        rewardPercentage_proposal = Percentage(_seller, _service, _mateStaker);
+        rewardPercentage_timeToAcceptNewChange = block.timestamp + 1 days;
     }
 
     function rejectProposeFillPropotionalPercentage() external {
         if (
             msg.sender != owner ||
-            block.timestamp > rewardPersentage_timeToAcceptNewChange
+            block.timestamp > rewardPercentage_timeToAcceptNewChange
         ) {
             revert();
         }
-        rewardPersentage_proposal = Percentage(0, 0, 0);
+        rewardPercentage_proposal = Percentage(0, 0, 0);
     }
 
     function acceptFillPropotionalPercentage() external {
         if (
             msg.sender != owner ||
-            block.timestamp > rewardPersentage_timeToAcceptNewChange
+            block.timestamp > rewardPercentage_timeToAcceptNewChange
         ) {
             revert();
         }
-        rewardPersentage = rewardPersentage_proposal;
+        rewardPercentage = rewardPercentage_proposal;
     }
 
     function proposePercentageFee(uint256 _percentageFee) external {
@@ -763,18 +781,25 @@ contract P2PSwap {
             revert();
         }
         makeCaPay(recipientToWithdraw, tokenToWithdraw, amountToWithdraw);
+        balancesOfContract[tokenToWithdraw] -= amountToWithdraw;
+
         tokenToWithdraw = address(0);
         amountToWithdraw = 0;
         recipientToWithdraw = address(0);
         timeToWithdrawal = 0;
+    }
 
-        balancesOfContract[tokenToWithdraw] -= amountToWithdraw;
+    function addBalance(address _token, uint256 _amount) external {
+        if (msg.sender != owner) {
+            revert();
+        }
+        balancesOfContract[_token] += _amount;
     }
 
     //◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢
     //getters
     //◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢
-    function getAllMartetOrders(
+    function getAllMarketOrders(
         uint256 market
     ) public view returns (OrderForGetter[] memory orders) {
         orders = new OrderForGetter[](marketMetadata[market].maxSlot + 1);
@@ -791,6 +816,14 @@ contract P2PSwap {
             }
         }
         return orders;
+    }
+
+    function getOrder(
+        uint256 market,
+        uint256 orderId
+    ) public view returns (Order memory order) {
+        order = ordersInsideMarket[market][orderId];
+        return order;
     }
 
     function getMyOrdersInSpecificMarket(
@@ -845,5 +878,64 @@ contract P2PSwap {
         uint256 nonce
     ) public view returns (bool) {
         return nonceP2PSwap[user][nonce];
+    }
+
+    function getBalanceOfContract(
+        address token
+    ) external view returns (uint256) {
+        return balancesOfContract[token];
+    }
+
+    function getOwnerProposal() external view returns (address) {
+        return owner_proposal;
+    }
+
+    function getOwner() external view returns (address) {
+        return owner;
+    }
+
+    function getOwnerTimeToAccept() external view returns (uint256) {
+        return owner_timeToAccept;
+    }
+
+    function getRewardPercentageProposal()
+        external
+        view
+        returns (Percentage memory)
+    {
+        return rewardPercentage_proposal;
+    }
+
+    function getRewardPercentage() external view returns (Percentage memory) {
+        return rewardPercentage;
+    }
+
+    function getProposalPercentageFee() external view returns (uint256) {
+        return percentageFee_proposal;
+    }
+
+    function getPercentageFee() external view returns (uint256) {
+        return percentageFee;
+    }
+
+    function getMaxLimitFillFixedFeeProposal() external view returns (uint256) {
+        return maxLimitFillFixedFee_proposal;
+    }
+
+    function getMaxLimitFillFixedFee() external view returns (uint256) {
+        return maxLimitFillFixedFee;
+    }
+
+    function getProposedWithdrawal()
+        external
+        view
+        returns (address, uint256, address, uint256)
+    {
+        return (
+            tokenToWithdraw,
+            amountToWithdraw,
+            recipientToWithdraw,
+            timeToWithdrawal
+        );
     }
 }
