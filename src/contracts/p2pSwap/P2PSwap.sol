@@ -370,7 +370,7 @@ contract P2PSwap {
         makeDisperseCaPay(
             toData,
             metadata.tokenB,
-            sellerAmount + executorAmount
+            toData[0].amount + toData[1].amount
         );
 
         // pay user with token A
@@ -406,7 +406,7 @@ contract P2PSwap {
         uint256 _amountOut ///@dev for testing purposes
     ) external {
         if (
-            SignatureUtils.verifyMessageSignedForDispatchOrder(
+            !SignatureUtils.verifyMessageSignedForDispatchOrder(
                 Evvm(evvmAddress).getEvvmID(),
                 user,
                 metadata.nonce,
@@ -480,12 +480,12 @@ contract P2PSwap {
 
         toData[0] = EvvmStructs.DisperseCaPayMetadata(
             ordersInsideMarket[market][metadata.orderId].amountB +
-                (finalFee * (rewardPersentage.seller / 10_000)),
+                ((finalFee * rewardPersentage.seller) / 10_000),
             ordersInsideMarket[market][metadata.orderId].seller
         );
         toData[1] = EvvmStructs.DisperseCaPayMetadata(
             _priorityFee_Evvm +
-                (finalFee * (rewardPersentage.mateStaker / 10_000)),
+                ((finalFee * rewardPersentage.mateStaker) / 10_000),
             msg.sender
         );
 
@@ -493,7 +493,11 @@ contract P2PSwap {
             finalFee *
             (rewardPersentage.service / 10_000);
 
-        makeDisperseCaPay(toData, metadata.tokenB, fee);
+        makeDisperseCaPay(
+            toData,
+            metadata.tokenB,
+            toData[0].amount + toData[1].amount
+        );
 
         makeCaPay(
             user,
@@ -868,7 +872,9 @@ contract P2PSwap {
         return nonceP2PSwap[user][nonce];
     }
 
-    function getBalanceOfContract(address token) external view returns (uint256) {
+    function getBalanceOfContract(
+        address token
+    ) external view returns (uint256) {
         return balancesOfContract[token];
     }
 }
