@@ -243,9 +243,12 @@ contract P2PSwap is StakingServiceHooks {
 
         uint256 market = findMarket(metadata.tokenA, metadata.tokenB);
 
+		if( nonceP2PSwap[user][metadata.nonce] ) {
+			revert("Invalid nonce");
+		}
+
         if (
             market == 0 ||
-            nonceP2PSwap[user][metadata.nonce] ||
             ordersInsideMarket[market][metadata.orderId].seller != user
         ) {
             revert("Invalid order");

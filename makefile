@@ -658,6 +658,10 @@ unitTestRevertP2PSwapMakeOrder:
 	@echo "Running P2PSwap makeOrder unit revert tests"
 	@forge test --match-path test/unit/p2pSwap/revert/unitTestRevert_P2PSwap_makeOrder.t.sol --summary --detailed --gas-report -vvv --show-progress
 
+unitTestRevertP2PSwapCancelOrder:
+	@echo "Running P2PSwap cancelOrder unit revert tests"
+	@forge test --match-path test/unit/p2pSwap/revert/unitTestRevert_P2PSwap_cancelOrder.t.sol --summary --detailed --gas-report -vvv --show-progress
+
 
 ######################################################################################################
 
