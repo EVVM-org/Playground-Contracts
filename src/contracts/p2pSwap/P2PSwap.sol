@@ -682,7 +682,7 @@ contract P2PSwap is StakingServiceHooks {
         uint256 _service,
         uint256 _mateStaker
     ) external {
-        if (msg.sender != owner && _seller + _service + _mateStaker != 10_000) {
+        if (msg.sender != owner || _seller + _service + _mateStaker != 10_000) {
             revert();
         }
         rewardPercentage_proposal = Percentage(_seller, _service, _mateStaker);

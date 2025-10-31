@@ -670,6 +670,9 @@ unitTestRevertP2PSwapDispatchOrderFillFixedFee:
 	@echo "Running P2PSwap dispatchOrder_fillFixedFee unit revert tests"
 	@forge test --match-path test/unit/p2pSwap/revert/unitTestRevert_P2PSwap_dispatchOrder_fillFixedFee.t.sol --summary --detailed --gas-report -vvv --show-progress
 
+unitTestRevertP2PSwapAdminTools:
+	@echo "Running P2PSwap adminTools unit revert tests"
+	@forge test --match-path test/unit/p2pSwap/revert/unitTestRevert_P2PSwap_adminTools.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 ######################################################################################################
 
