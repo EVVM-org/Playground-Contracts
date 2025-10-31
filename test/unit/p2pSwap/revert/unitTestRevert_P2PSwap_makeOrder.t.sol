@@ -30,7 +30,7 @@ import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
 import {Treasury} from "@EVVM/playground/contracts/treasury/Treasury.sol";
 import {P2PSwap} from "@EVVM/playground/contracts/p2pSwap/P2PSwap.sol";
 
-contract unitTestCorrect_P2PSwap_makeOrder is Test, Constants {
+contract unitTestRevert_P2PSwap_makeOrder is Test, Constants {
     Staking staking;
     Evvm evvm;
     Estimator estimator;
@@ -81,16 +81,7 @@ contract unitTestCorrect_P2PSwap_makeOrder is Test, Constants {
         evvm.addBalance(user, token, amount);
     }
 
-    /**
-     * Function to test:
-     * nS: No staker
-     * S: Staker
-     */
-
-    ///@dev because this script behaves like a smart contract we can use caPay
-    ///     and disperseCaPay without any problem
-
-    function test__unit_correct__makeOrder_paySync_noPriorityFee() external {
+    function test__unit_revert__makeOrder_invalidSignature() external {
         uint256 nonceP2PSwap = 14569;
         address tokenA = ETHER_ADDRESS;
         address tokenB = MATE_TOKEN_ADDRESS;
@@ -110,8 +101,8 @@ contract unitTestCorrect_P2PSwap_makeOrder is Test, Constants {
                 nonceP2PSwap,
                 tokenA,
                 tokenB,
-                amountA,
-                amountB
+                amountB,
+                amountA
             )
         );
 
@@ -150,6 +141,7 @@ contract unitTestCorrect_P2PSwap_makeOrder is Test, Constants {
         );
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
+        vm.expectRevert();
         (uint256 market, uint256 orderId) = p2pSwap.makeOrder(
             COMMON_USER_NO_STAKER_1.Address,
             orderData,
@@ -164,219 +156,27 @@ contract unitTestCorrect_P2PSwap_makeOrder is Test, Constants {
         P2PSwap.MarketInformation memory marketInfo = p2pSwap.getMarketMetadata(
             market
         );
-        assertEq(marketInfo.tokenA, ETHER_ADDRESS);
-        assertEq(marketInfo.tokenB, MATE_TOKEN_ADDRESS);
-        assertEq(marketInfo.maxSlot, 1);
-        assertEq(marketInfo.ordersAvailable, 1);
+        assertEq(marketInfo.tokenA, address(0));
+        assertEq(marketInfo.tokenB, address(0));
+        assertEq(marketInfo.maxSlot, 0);
+        assertEq(marketInfo.ordersAvailable, 0);
 
         assertEq(
             evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
-            0 ether
+            amountA
         );
-        assertEq(evvm.getBalance(address(p2pSwap), ETHER_ADDRESS), 0.001 ether);
+        assertEq(evvm.getBalance(address(p2pSwap), ETHER_ADDRESS), 0);
     }
 
-    function test__unit_correct__makeOrder_paySync_priorityFee() external {
-        uint256 nonceP2PSwap = 14569;
-        address tokenA = ETHER_ADDRESS;
-        address tokenB = MATE_TOKEN_ADDRESS;
-        uint256 amountA = 0.001 ether;
-        uint256 amountB = 0.01 ether;
-        uint256 priorityFee = 0.0001 ether;
-        uint256 nonceEVVM = 0;
-        bool priorityFlag = false;
-
-        // Fund user1 with amountA + priorityFee
-        addBalance(
-            COMMON_USER_NO_STAKER_1.Address,
-            ETHER_ADDRESS,
-            amountA + priorityFee
-        );
-
-        // Fund p2pswap address for rewarding
-        addBalance(address(p2pSwap), MATE_TOKEN_ADDRESS, 50000000000000000000);
-
-        // create signatures
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(
-            COMMON_USER_NO_STAKER_1.PrivateKey,
-            Erc191TestBuilder.buildMessageSignedForMakeOrder(
-                evvm.getEvvmID(),
-                nonceP2PSwap,
-                tokenA,
-                tokenB,
-                amountA,
-                amountB
-            )
-        );
-
-        bytes memory signatureP2P = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
-
-        P2PSwap.MetadataMakeOrder memory orderData = P2PSwap.MetadataMakeOrder({
-            nonce: nonceP2PSwap,
-            tokenA: tokenA,
-            tokenB: tokenB,
-            amountA: amountA,
-            amountB: amountB
-        });
-
-        (v, r, s) = vm.sign(
-            COMMON_USER_NO_STAKER_1.PrivateKey,
-            Erc191TestBuilder.buildMessageSignedForPay(
-                evvm.getEvvmID(),
-                address(p2pSwap),
-                "",
-                tokenA,
-                amountA,
-                priorityFee,
-                nonceEVVM,
-                priorityFlag,
-                address(p2pSwap)
-            )
-        );
-        bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
-
-        // staker because there is going to be some priorityFees attached
-        vm.startPrank(COMMON_USER_STAKER.Address);
-        (uint256 market, uint256 orderId) = p2pSwap.makeOrder(
-            COMMON_USER_NO_STAKER_1.Address,
-            orderData,
-            signatureP2P,
-            priorityFee,
-            nonceEVVM,
-            priorityFlag,
-            signatureEVVM
-        );
-        vm.stopPrank();
-
-        P2PSwap.MarketInformation memory marketInfo = p2pSwap.getMarketMetadata(
-            market
-        );
-
-        assertEq(marketInfo.tokenA, ETHER_ADDRESS);
-        assertEq(marketInfo.tokenB, MATE_TOKEN_ADDRESS);
-        assertEq(marketInfo.maxSlot, 1);
-        assertEq(marketInfo.ordersAvailable, 1);
-        assertEq(evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, tokenA), 0);
-        assertEq(
-            evvm.getBalance(COMMON_USER_STAKER.Address, tokenA),
-            priorityFee
-        );
-        assertEq(evvm.getBalance(address(p2pSwap), tokenA), amountA);
-    }
-
-    function test__unit_correct__makeOrder_payAsync_priorityFee() external {
-        uint256 nonceP2PSwap = 14569;
-        address tokenA = ETHER_ADDRESS;
-        address tokenB = MATE_TOKEN_ADDRESS;
-        uint256 amountA = 0.001 ether;
-        uint256 amountB = 0.01 ether;
-        uint256 priorityFee = 0.0001 ether;
-        uint256 nonceEVVM = 432423;
-        bool priorityFlag = true;
-
-        // Fund user1 with amountA + priorityFee
-        addBalance(
-            COMMON_USER_NO_STAKER_1.Address,
-            ETHER_ADDRESS,
-            amountA + priorityFee
-        );
-
-        // Fund p2pswap address for rewarding
-        addBalance(address(p2pSwap), MATE_TOKEN_ADDRESS, 50000000000000000000);
-
-        // create signatures
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(
-            COMMON_USER_NO_STAKER_1.PrivateKey,
-            Erc191TestBuilder.buildMessageSignedForMakeOrder(
-                evvm.getEvvmID(),
-                nonceP2PSwap,
-                tokenA,
-                tokenB,
-                amountA,
-                amountB
-            )
-        );
-
-        bytes memory signatureP2P = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
-
-        P2PSwap.MetadataMakeOrder memory orderData = P2PSwap.MetadataMakeOrder({
-            nonce: nonceP2PSwap,
-            tokenA: tokenA,
-            tokenB: tokenB,
-            amountA: amountA,
-            amountB: amountB
-        });
-
-        (v, r, s) = vm.sign(
-            COMMON_USER_NO_STAKER_1.PrivateKey,
-            Erc191TestBuilder.buildMessageSignedForPay(
-                evvm.getEvvmID(),
-                address(p2pSwap),
-                "",
-                tokenA,
-                amountA,
-                priorityFee,
-                nonceEVVM,
-                priorityFlag,
-                address(p2pSwap)
-            )
-        );
-        bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
-
-        // staker because there is going to be some priorityFees attached
-        vm.startPrank(COMMON_USER_STAKER.Address);
-        (uint256 market, uint256 orderId) = p2pSwap.makeOrder(
-            COMMON_USER_NO_STAKER_1.Address,
-            orderData,
-            signatureP2P,
-            priorityFee,
-            nonceEVVM,
-            priorityFlag,
-            signatureEVVM
-        );
-        vm.stopPrank();
-
-        P2PSwap.MarketInformation memory marketInfo = p2pSwap.getMarketMetadata(
-            market
-        );
-
-        assertEq(marketInfo.tokenA, ETHER_ADDRESS);
-        assertEq(marketInfo.tokenB, MATE_TOKEN_ADDRESS);
-        assertEq(marketInfo.maxSlot, 1);
-        assertEq(marketInfo.ordersAvailable, 1);
-        assertEq(evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, tokenA), 0);
-        assertEq(
-            evvm.getBalance(COMMON_USER_STAKER.Address, tokenA),
-            priorityFee
-        );
-        assertEq(evvm.getBalance(address(p2pSwap), tokenA), amountA);
-    }
-
-    function test__unit_correct__makeOrder_payAsync_noPriorityFee() external {
+    function test__unit_revert__makeOrder_invalidPay() external {
         uint256 nonceP2PSwap = 14569;
         address tokenA = ETHER_ADDRESS;
         address tokenB = MATE_TOKEN_ADDRESS;
         uint256 amountA = 0.001 ether;
         uint256 amountB = 0.01 ether;
         uint256 priorityFee = 0;
-        uint256 nonceEVVM = 45546564;
-        bool priorityFlag = true;
+        uint256 nonceEVVM = 0;
+        bool priorityFlag = false;
 
         // Fund user1 with amountA
         addBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS, amountA);
@@ -388,8 +188,95 @@ contract unitTestCorrect_P2PSwap_makeOrder is Test, Constants {
                 nonceP2PSwap,
                 tokenA,
                 tokenB,
-                amountA,
-                amountB
+                amountB,
+                amountA
+            )
+        );
+
+        bytes memory signatureP2P = Erc191TestBuilder.buildERC191Signature(
+            v,
+            r,
+            s
+        );
+
+        P2PSwap.MetadataMakeOrder memory orderData = P2PSwap.MetadataMakeOrder({
+            nonce: nonceP2PSwap,
+            tokenA: tokenA,
+            tokenB: tokenB,
+            amountA: amountA,
+            amountB: amountB
+        });
+
+        (v, r, s) = vm.sign(
+            COMMON_USER_NO_STAKER_1.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
+                address(p2pSwap),
+                "",
+                tokenA,
+                amountA + 1 ether, // tampered
+                priorityFee,
+                nonceEVVM,
+                priorityFlag,
+                address(p2pSwap)
+            )
+        );
+        bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
+            v,
+            r,
+            s
+        );
+
+        vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
+        vm.expectRevert();
+        (uint256 market, uint256 orderId) = p2pSwap.makeOrder(
+            COMMON_USER_NO_STAKER_1.Address,
+            orderData,
+            signatureP2P,
+            priorityFee,
+            nonceEVVM,
+            priorityFlag,
+            signatureEVVM
+        );
+        vm.stopPrank();
+
+        P2PSwap.MarketInformation memory marketInfo = p2pSwap.getMarketMetadata(
+            market
+        );
+        assertEq(marketInfo.tokenA, address(0));
+        assertEq(marketInfo.tokenB, address(0));
+        assertEq(marketInfo.maxSlot, 0);
+        assertEq(marketInfo.ordersAvailable, 0);
+
+        assertEq(
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            amountA
+        );
+        assertEq(evvm.getBalance(address(p2pSwap), ETHER_ADDRESS), 0);
+    }
+
+    function test__unit_revert__makeOrder_invalidSyncNonce() external {
+        uint256 nonceP2PSwap = 14569;
+        address tokenA = ETHER_ADDRESS;
+        address tokenB = MATE_TOKEN_ADDRESS;
+        uint256 amountA = 0.001 ether;
+        uint256 amountB = 0.01 ether;
+        uint256 priorityFee = 0;
+        uint256 nonceEVVM = 1; // this will fail
+        bool priorityFlag = false;
+
+        // Fund user1 with amountA
+        addBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS, amountA);
+
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(
+            COMMON_USER_NO_STAKER_1.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForMakeOrder(
+                evvm.getEvvmID(),
+                nonceP2PSwap,
+                tokenA,
+                tokenB,
+                amountB,
+                amountA
             )
         );
 
@@ -428,6 +315,7 @@ contract unitTestCorrect_P2PSwap_makeOrder is Test, Constants {
         );
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
+        vm.expectRevert();
         (uint256 market, uint256 orderId) = p2pSwap.makeOrder(
             COMMON_USER_NO_STAKER_1.Address,
             orderData,
@@ -442,15 +330,141 @@ contract unitTestCorrect_P2PSwap_makeOrder is Test, Constants {
         P2PSwap.MarketInformation memory marketInfo = p2pSwap.getMarketMetadata(
             market
         );
-        assertEq(marketInfo.tokenA, ETHER_ADDRESS);
-        assertEq(marketInfo.tokenB, MATE_TOKEN_ADDRESS);
-        assertEq(marketInfo.maxSlot, 1);
-        assertEq(marketInfo.ordersAvailable, 1);
+        assertEq(marketInfo.tokenA, address(0));
+        assertEq(marketInfo.tokenB, address(0));
+        assertEq(marketInfo.maxSlot, 0);
+        assertEq(marketInfo.ordersAvailable, 0);
 
         assertEq(
             evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
-            0 ether
+            amountA
         );
-        assertEq(evvm.getBalance(address(p2pSwap), ETHER_ADDRESS), 0.001 ether);
+        assertEq(evvm.getBalance(address(p2pSwap), ETHER_ADDRESS), 0);
+    }
+
+    function test__unit_revert__makeOrder_invalidAsyncNonce() external {
+        uint256 nonceP2PSwap = 14569;
+        address tokenA = ETHER_ADDRESS;
+        address tokenB = MATE_TOKEN_ADDRESS;
+        uint256 amountA = 0.001 ether;
+        uint256 amountB = 0.01 ether;
+        uint256 priorityFee = 0;
+        uint256 nonceEVVM = 321;
+        bool priorityFlag = true;
+
+        // Fund user1 with amountA
+        addBalance(
+            COMMON_USER_NO_STAKER_1.Address,
+            ETHER_ADDRESS,
+            amountA + 1 ether
+        );
+
+        // use async nonce
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(
+            COMMON_USER_NO_STAKER_1.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
+                COMMON_USER_NO_STAKER_2.Address,
+                "",
+                ETHER_ADDRESS,
+                1 ether,
+                priorityFee,
+                nonceEVVM,
+                priorityFlag,
+                address(0)
+            )
+        );
+        bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
+            v,
+            r,
+            s
+        );
+        evvm.pay(
+            COMMON_USER_NO_STAKER_1.Address,
+            COMMON_USER_NO_STAKER_2.Address,
+            "",
+            ETHER_ADDRESS,
+            1 ether,
+            priorityFee,
+            nonceEVVM,
+            priorityFlag,
+            address(0),
+            signatureEVVM
+        );
+
+        // nonce used succesfully
+        assertEq(
+            evvm.getBalance(COMMON_USER_NO_STAKER_2.Address, ETHER_ADDRESS),
+            1 ether
+        );
+
+        (v, r, s) = vm.sign(
+            COMMON_USER_NO_STAKER_1.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForMakeOrder(
+                evvm.getEvvmID(),
+                nonceP2PSwap,
+                tokenA,
+                tokenB,
+                amountB,
+                amountA
+            )
+        );
+
+        bytes memory signatureP2P = Erc191TestBuilder.buildERC191Signature(
+            v,
+            r,
+            s
+        );
+
+        P2PSwap.MetadataMakeOrder memory orderData = P2PSwap.MetadataMakeOrder({
+            nonce: nonceP2PSwap,
+            tokenA: tokenA,
+            tokenB: tokenB,
+            amountA: amountA,
+            amountB: amountB
+        });
+
+        (v, r, s) = vm.sign(
+            COMMON_USER_NO_STAKER_1.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
+                address(p2pSwap),
+                "",
+                tokenA,
+                amountA,
+                priorityFee,
+                nonceEVVM, // we try to use the same nonce again, causing a revert
+                priorityFlag,
+                address(p2pSwap)
+            )
+        );
+        signatureEVVM = Erc191TestBuilder.buildERC191Signature(v, r, s);
+
+        vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
+        vm.expectRevert();
+        (uint256 market, uint256 orderId) = p2pSwap.makeOrder(
+            COMMON_USER_NO_STAKER_1.Address,
+            orderData,
+            signatureP2P,
+            priorityFee,
+            nonceEVVM,
+            priorityFlag,
+            signatureEVVM
+        );
+        vm.stopPrank();
+
+        P2PSwap.MarketInformation memory marketInfo = p2pSwap.getMarketMetadata(
+            market
+        );
+        assertEq(marketInfo.tokenA, address(0));
+        assertEq(marketInfo.tokenB, address(0));
+        assertEq(marketInfo.maxSlot, 0);
+        assertEq(marketInfo.ordersAvailable, 0);
+
+        assertEq(
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            amountA
+        );
+        assertEq(evvm.getBalance(address(p2pSwap), ETHER_ADDRESS), 0);
     }
 }

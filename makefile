@@ -653,6 +653,26 @@ unitTestCorrectP2PSwapAdminTools:
 	@echo "Running P2PSwap adminTools unit correct tests"
 	@forge test --match-path test/unit/p2pSwap/correct/unitTestCorrect_P2PSwap_adminTools.t.sol --summary --detailed --gas-report -vvv --show-progress
 
+#### Revert Tests
+unitTestRevertP2PSwapMakeOrder:
+	@echo "Running P2PSwap makeOrder unit revert tests"
+	@forge test --match-path test/unit/p2pSwap/revert/unitTestRevert_P2PSwap_makeOrder.t.sol --summary --detailed --gas-report -vvv --show-progress
+
+unitTestRevertP2PSwapCancelOrder:
+	@echo "Running P2PSwap cancelOrder unit revert tests"
+	@forge test --match-path test/unit/p2pSwap/revert/unitTestRevert_P2PSwap_cancelOrder.t.sol --summary --detailed --gas-report -vvv --show-progress
+
+unitTestRevertP2PSwapDispatchOrderFillPropotionalFee:
+	@echo "Running P2PSwap dispatchOrder_fillPropotionalFee unit revert tests"
+	@forge test --match-path test/unit/p2pSwap/revert/unitTestRevert_P2PSwap_dispatchOrder_fillPropotionalFee.t.sol --summary --detailed --gas-report -vvv --show-progress
+
+unitTestRevertP2PSwapDispatchOrderFillFixedFee:
+	@echo "Running P2PSwap dispatchOrder_fillFixedFee unit revert tests"
+	@forge test --match-path test/unit/p2pSwap/revert/unitTestRevert_P2PSwap_dispatchOrder_fillFixedFee.t.sol --summary --detailed --gas-report -vvv --show-progress
+
+unitTestRevertP2PSwapAdminTools:
+	@echo "Running P2PSwap adminTools unit revert tests"
+	@forge test --match-path test/unit/p2pSwap/revert/unitTestRevert_P2PSwap_adminTools.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 ######################################################################################################
 
