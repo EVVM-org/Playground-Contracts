@@ -19,8 +19,9 @@ import {SignatureRecover} from "@EVVM/playground/library/SignatureRecover.sol";
 import {SignatureUtils} from "@EVVM/playground/contracts/p2pSwap/lib/SignatureUtils.sol";
 import {AdvancedStrings} from "@EVVM/playground/library/AdvancedStrings.sol";
 import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
+import {StakingServiceHooks} from "@EVVM/playground/library/StakingServiceHooks.sol";
 
-contract P2PSwap {
+contract P2PSwap is StakingServiceHooks {
     using SignatureRecover for *;
     using AdvancedStrings for *;
 
@@ -29,6 +30,7 @@ contract P2PSwap {
     uint256 owner_timeToAccept;
 
     address evvmAddress;
+    address stakingAddress;
 
     address constant MATE_TOKEN_ADDRESS =
         0x0000000000000000000000000000000000000001;
@@ -115,7 +117,11 @@ contract P2PSwap {
 
     mapping(address => uint256) balancesOfContract;
 
-    constructor(address _evvmAddress, address _owner) {
+    constructor(
+        address _evvmAddress,
+        address _stakingAddress,
+        address _owner
+    ) StakingServiceHooks(_stakingAddress) {
         evvmAddress = _evvmAddress;
         owner = _owner;
         maxLimitFillFixedFee = 0.001 ether;
@@ -125,6 +131,7 @@ contract P2PSwap {
             service: 4000,
             mateStaker: 1000
         });
+        stakingAddress = _stakingAddress;
     }
 
     function makeOrder(
@@ -236,9 +243,12 @@ contract P2PSwap {
 
         uint256 market = findMarket(metadata.tokenA, metadata.tokenB);
 
+        if (nonceP2PSwap[user][metadata.nonce]) {
+            revert("Invalid nonce");
+        }
+
         if (
             market == 0 ||
-            nonceP2PSwap[user][metadata.nonce] ||
             ordersInsideMarket[market][metadata.orderId].seller != user
         ) {
             revert("Invalid order");
@@ -302,10 +312,13 @@ contract P2PSwap {
 
         uint256 market = findMarket(metadata.tokenA, metadata.tokenB);
 
+        if (nonceP2PSwap[user][metadata.nonce]) {
+            revert("Invalid nonce");
+        }
+
         if (
             market == 0 ||
-            ordersInsideMarket[market][metadata.orderId].seller == address(0) ||
-            nonceP2PSwap[user][metadata.nonce]
+            ordersInsideMarket[market][metadata.orderId].seller == address(0)
         ) {
             revert();
         }
@@ -421,10 +434,13 @@ contract P2PSwap {
 
         uint256 market = findMarket(metadata.tokenA, metadata.tokenB);
 
+        if (nonceP2PSwap[user][metadata.nonce]) {
+            revert();
+        }
+
         if (
             market == 0 ||
-            ordersInsideMarket[market][metadata.orderId].seller == address(0) ||
-            nonceP2PSwap[user][metadata.nonce]
+            ordersInsideMarket[market][metadata.orderId].seller == address(0)
         ) {
             revert();
         }
@@ -666,7 +682,7 @@ contract P2PSwap {
         uint256 _service,
         uint256 _mateStaker
     ) external {
-        if (msg.sender != owner && _seller + _service + _mateStaker != 10_000) {
+        if (msg.sender != owner || _seller + _service + _mateStaker != 10_000) {
             revert();
         }
         rewardPercentage_proposal = Percentage(_seller, _service, _mateStaker);
