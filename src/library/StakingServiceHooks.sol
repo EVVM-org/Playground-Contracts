@@ -12,7 +12,7 @@ abstract contract StakingServiceHooks {
         stakingHookAddress = _stakingAddress;
         evvmHookAddress = Staking(stakingHookAddress).getEvvmAddress();
     }
-    function makeStakeService(uint256 amountToStake) public {
+    function _makeStakeService(uint256 amountToStake) internal {
         Staking(stakingHookAddress).prepareServiceStaking(amountToStake);
         Evvm(evvmHookAddress).caPay(
             address(stakingHookAddress),
@@ -22,7 +22,7 @@ abstract contract StakingServiceHooks {
         Staking(stakingHookAddress).confirmServiceStaking();
     }
 
-    function makeUnstakeService(uint256 amountToUnstake) public {
+    function _makeUnstakeService(uint256 amountToUnstake) internal {
         Staking(stakingHookAddress).serviceUnstaking(amountToUnstake);
     }
 
@@ -31,7 +31,7 @@ abstract contract StakingServiceHooks {
         evvmHookAddress = Staking(stakingHookAddress).getEvvmAddress();
     }
 
-    function changeEvvmHookAddress(address newEvvmAddress) internal {
+    function _changeEvvmHookAddress(address newEvvmAddress) internal {
         evvmHookAddress = newEvvmAddress;
     }
 }

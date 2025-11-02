@@ -80,7 +80,7 @@ contract fuzzTest_Staking_serviceStaking is Test, Constants {
 
         giveMateToExecute(address(mockContract), 10);
 
-        mockContract.makeStakeService(10);
+        mockContract.stake(10);
     }
 
     function giveMateToExecute(
@@ -137,7 +137,7 @@ contract fuzzTest_Staking_serviceStaking is Test, Constants {
                 if (staking.getUserAmountStaked(address(mockContract)) == 0)
                     skip(staking.getSecondsToUnlockStaking());
 
-                mockContract.makeStakeService(input[i].amount);
+                mockContract.stake(input[i].amount);
             } else {
                 if (
                     input[i].amount >
@@ -155,7 +155,7 @@ contract fuzzTest_Staking_serviceStaking is Test, Constants {
                     input[i].amount
                 ) skip(staking.getSecondsToUnlockFullUnstaking());
 
-                mockContract.makeUnstakeService(input[i].amount);
+                mockContract.unstake(input[i].amount);
             }
 
             counterTx++;

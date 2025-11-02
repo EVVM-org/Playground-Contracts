@@ -14,6 +14,7 @@ pragma solidity ^0.8.0;
  */
 
 import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
+import {Staking} from "@EVVM/playground/contracts/staking/Staking.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {SignatureRecover} from "@EVVM/playground/library/SignatureRecover.sol";
 import {SignatureUtils} from "@EVVM/playground/contracts/p2pSwap/lib/SignatureUtils.sol";
@@ -803,6 +804,22 @@ contract P2PSwap is StakingServiceHooks {
         amountToWithdraw = 0;
         recipientToWithdraw = address(0);
         timeToWithdrawal = 0;
+    }
+
+    function stake(uint256 amount) external {
+        if (
+            msg.sender != owner ||
+            amount * Staking(stakingAddress).priceOfStaking() >
+            balancesOfContract[0x0000000000000000000000000000000000000001]
+        ) revert();
+
+        _makeStakeService(amount);
+    }
+
+    function unstake(uint256 amount) external {
+        if (msg.sender != owner) revert();
+
+        _makeUnstakeService(amount);
     }
 
     function addBalance(address _token, uint256 _amount) external {

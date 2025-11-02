@@ -152,17 +152,11 @@ contract MockContractToStake is StakingServiceHooks {
         evvm = Evvm(staking.getEvvmAddress());
     }
 
-    /*function stake (
+    function stake (
         uint256 amountToStake
     ) public {
-        staking.prepareServiceStaking(amountToStake);
-        evvm.caPay(
-            address(staking),
-            0x0000000000000000000000000000000000000001,
-            staking.priceOfStaking()*amountToStake
-        );
-        staking.confirmServiceStaking();
-    }*/
+        _makeStakeService(amountToStake);
+    }
 
     function stakeJustInPartOne(uint256 amountToStake) public {
         staking.prepareServiceStaking(amountToStake);
@@ -207,11 +201,11 @@ contract MockContractToStake is StakingServiceHooks {
         staking.confirmServiceStaking();
     }
 
-    /*function unstake(
+    function unstake(
         uint256 amountToUnstake
     ) public {
-        staking.serviceUnstaking(amountToUnstake);
-    }*/
+        _makeUnstakeService(amountToUnstake);
+    }
 
     function getBackMate(address user) public {
         evvm.caPay(
