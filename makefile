@@ -631,6 +631,13 @@ fuzzTestTreasuryWithdraw:
 
 ### Unit tests
 
+unitTestP2PSwap:
+	@echo "Running all P2PSwap unit correct tests"
+	@forge test --match-contract unitTestCorrect_P2PSwap --summary --detailed --gas-report -vvv --show-progress
+	@sleep 3
+	@echo "Running all P2PSwap unit revert tests"
+	@forge test --match-contract unitTestRevert_P2PSwap --summary --detailed --gas-report -vvv --show-progress
+
 #### Correct Tests
 
 unitTestCorrectP2PSwapMakeOrder:
