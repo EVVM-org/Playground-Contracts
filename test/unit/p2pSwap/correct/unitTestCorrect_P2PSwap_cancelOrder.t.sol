@@ -275,7 +275,12 @@ contract unitTestCorrect_P2PSwap_cancelOrder is Test, Constants {
         addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             tokenA,
-            amountA + priorityFee * 2
+            amountA + priorityFee
+        );
+        addBalance(
+            COMMON_USER_NO_STAKER_1.Address,
+            MATE_TOKEN_ADDRESS,
+            priorityFee
         );
         addBalance(address(p2pSwap), MATE_TOKEN_ADDRESS, 50000000000000000000);
 
@@ -295,11 +300,7 @@ contract unitTestCorrect_P2PSwap_cancelOrder is Test, Constants {
         nonceP2PSwap = 56565;
         nonceEVVM++;
 
-        // there should only remain one priorityFee
-        assertEq(
-            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, tokenA),
-            priorityFee
-        );
+        assertEq(evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, tokenA), 0);
         assertEq(
             evvm.getBalance(COMMON_USER_STAKER.Address, tokenA),
             priorityFee
@@ -331,7 +332,7 @@ contract unitTestCorrect_P2PSwap_cancelOrder is Test, Constants {
                 evvm.getEvvmID(),
                 address(p2pSwap),
                 "",
-                tokenA,
+                MATE_TOKEN_ADDRESS,
                 0,
                 priorityFee,
                 nonceEVVM,
@@ -495,13 +496,18 @@ contract unitTestCorrect_P2PSwap_cancelOrder is Test, Constants {
         uint256 amountA = 0.001 ether;
         uint256 amountB = 0.01 ether;
         uint256 priorityFee = 0.0001 ether;
-        uint256 nonceEVVM = 4333411;
+        uint256 nonceEVVM = 78798;
         bool priorityFlag = true;
 
         addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             tokenA,
-            amountA + priorityFee * 2
+            amountA + priorityFee
+        );
+        addBalance(
+            COMMON_USER_NO_STAKER_1.Address,
+            MATE_TOKEN_ADDRESS,
+            priorityFee
         );
         addBalance(address(p2pSwap), MATE_TOKEN_ADDRESS, 50000000000000000000);
 
@@ -519,13 +525,9 @@ contract unitTestCorrect_P2PSwap_cancelOrder is Test, Constants {
             priorityFlag
         );
         nonceP2PSwap = 56565;
-        nonceEVVM = 699855;
+        nonceEVVM = 78987;
 
-        // there should only remain one priorityFee
-        assertEq(
-            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, tokenA),
-            priorityFee
-        );
+        assertEq(evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, tokenA), 0);
         assertEq(
             evvm.getBalance(COMMON_USER_STAKER.Address, tokenA),
             priorityFee
@@ -557,7 +559,7 @@ contract unitTestCorrect_P2PSwap_cancelOrder is Test, Constants {
                 evvm.getEvvmID(),
                 address(p2pSwap),
                 "",
-                tokenA,
+                MATE_TOKEN_ADDRESS,
                 0,
                 priorityFee,
                 nonceEVVM,

@@ -258,7 +258,7 @@ contract P2PSwap is StakingServiceHooks {
         if (_priorityFee_Evvm > 0) {
             makePay(
                 user,
-                metadata.tokenA,
+                MATE_TOKEN_ADDRESS,
                 _nonce_Evvm,
                 0,
                 _priorityFee_Evvm,
