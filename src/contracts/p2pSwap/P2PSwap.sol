@@ -258,7 +258,7 @@ contract P2PSwap is StakingServiceHooks {
         if (_priorityFee_Evvm > 0) {
             makePay(
                 user,
-                metadata.tokenA,
+                MATE_TOKEN_ADDRESS,
                 _nonce_Evvm,
                 0,
                 _priorityFee_Evvm,
@@ -507,8 +507,8 @@ contract P2PSwap is StakingServiceHooks {
         );
 
         balancesOfContract[metadata.tokenB] +=
-            finalFee *
-            (rewardPercentage.service / 10_000);
+            (finalFee * rewardPercentage.service) /
+            10_000;
 
         makeDisperseCaPay(
             toData,
