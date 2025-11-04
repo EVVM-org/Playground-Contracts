@@ -5,9 +5,12 @@ import {Script, console2} from "forge-std/Script.sol";
 import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
 import {Staking} from "@EVVM/playground/contracts/staking/Staking.sol";
 import {Estimator} from "@EVVM/playground/contracts/staking/Estimator.sol";
-import {NameService} from "@EVVM/playground/contracts/nameService/NameService.sol";
+import {
+    NameService
+} from "@EVVM/playground/contracts/nameService/NameService.sol";
 import {Treasury} from "@EVVM/playground/contracts/treasury/Treasury.sol";
 import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
+import {P2PSwap} from "@EVVM/playground/contracts/p2pSwap/P2PSwap.sol";
 
 contract DeployScript is Script {
     Staking staking;
@@ -15,6 +18,7 @@ contract DeployScript is Script {
     Estimator estimator;
     NameService nameService;
     Treasury treasury;
+    P2PSwap p2pSwap;
 
     address admin = 0x5cBf2D4Bbf834912Ad0bD59980355b57695e8309;
     address goldenFisher = 0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc;
@@ -86,7 +90,7 @@ contract DeployScript is Script {
         EvvmStructs.EvvmMetadata memory inputMetadata = EvvmStructs
             .EvvmMetadata({
                 EvvmName: basicMetadata.EvvmName,
-                 // evvmID will be set to 0, and it will be assigned when you register the evvm
+                // evvmID will be set to 0, and it will be assigned when you register the evvm
                 EvvmID: 0,
                 principalTokenName: basicMetadata.principalTokenName,
                 principalTokenSymbol: basicMetadata.principalTokenSymbol,
@@ -106,17 +110,28 @@ contract DeployScript is Script {
             address(staking),
             addressData.admin
         );
-        
+
         nameService = new NameService(address(evvm), addressData.admin);
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         treasury = new Treasury(address(evvm));
-        evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
+        evvm._setupNameServiceAndTreasuryAddress(
+            address(nameService),
+            address(treasury)
+        );
+        p2pSwap = new P2PSwap(
+            address(evvm),
+            address(staking),
+            addressData.admin
+        );
 
         vm.stopBroadcast();
 
         console2.log("Staking deployed at:", address(staking));
         console2.log("Evvm deployed at:", address(evvm));
         console2.log("Estimator deployed at:", address(estimator));
+        console2.log("NameService deployed at:", address(nameService));
+        console2.log("Treasury deployed at:", address(treasury));
+        console2.log("P2PSwap deployed at:", address(p2pSwap));
     }
 }
