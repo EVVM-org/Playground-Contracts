@@ -638,6 +638,11 @@ fuzzTestP2PSwapCancelOrder:
 	@echo "Running P2PSwap cancelOrder unit fuzz tests"
 	@forge test --match-path test/fuzz/p2pSwap/fuzzTest_P2PSwap_cancelOrder.t.sol --summary --detailed --gas-report -vvv --show-progress
 
+fuzzTestP2PSwapDispatchOrder:
+	@echo "Running P2PSwap dispatchOrder unit fuzz tests"
+	@forge test --match-path test/fuzz/p2pSwap/fuzzTest_P2PSwap_dispatchOrder.t.sol --summary --detailed --gas-report -vvv --show-progress
+
+
 ### Unit tests
 
 unitTestP2PSwap:
