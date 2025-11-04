@@ -507,8 +507,8 @@ contract P2PSwap is StakingServiceHooks {
         );
 
         balancesOfContract[metadata.tokenB] +=
-            finalFee *
-            (rewardPercentage.service / 10_000);
+            (finalFee * rewardPercentage.service) /
+            10_000;
 
         makeDisperseCaPay(
             toData,
