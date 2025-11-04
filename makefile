@@ -634,12 +634,18 @@ fuzzTestP2PSwapMakeOrder:
 	@echo "Running P2PSwap makeOrder unit fuzz tests"
 	@forge test --match-path test/fuzz/p2pSwap/fuzzTest_P2PSwap_makeOrder.t.sol --summary --detailed --gas-report -vvv --show-progress
 
+fuzzTestP2PSwapCancelOrder:
+	@echo "Running P2PSwap cancelOrder unit fuzz tests"
+	@forge test --match-path test/fuzz/p2pSwap/fuzzTest_P2PSwap_cancelOrder.t.sol --summary --detailed --gas-report -vvv --show-progress
+
 ### Unit tests
 
 unitTestP2PSwap:
 	@echo "Running all P2PSwap unit correct tests"
 	@forge test --match-contract unitTestCorrect_P2PSwap --summary --detailed --gas-report -vvv --show-progress
 	@sleep 3
+	@echo "Running all P2PSwap unit revert tests"
+	@forge test --match-contract unitTestRevert_P2PSwap --summary --detailed --gas-report -vvv --show-progress
 	@echo "Running all P2PSwap unit revert tests"
 	@forge test --match-contract unitTestRevert_P2PSwap --summary --detailed --gas-report -vvv --show-progress
 
