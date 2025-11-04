@@ -651,8 +651,6 @@ unitTestP2PSwap:
 	@sleep 3
 	@echo "Running all P2PSwap unit revert tests"
 	@forge test --match-contract unitTestRevert_P2PSwap --summary --detailed --gas-report -vvv --show-progress
-	@echo "Running all P2PSwap unit revert tests"
-	@forge test --match-contract unitTestRevert_P2PSwap --summary --detailed --gas-report -vvv --show-progress
 
 #### Correct Tests
 
