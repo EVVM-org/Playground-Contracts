@@ -445,7 +445,6 @@ contract P2PSwap is StakingServiceHooks {
         }
 
         (uint256 fee, uint256 fee10) = calculateFillFixedFee(
-            metadata.tokenB,
             ordersInsideMarket[market][metadata.orderId].amountB,
             maxFillFixedFee
         );
@@ -545,7 +544,6 @@ contract P2PSwap is StakingServiceHooks {
     }
 
     function calculateFillFixedFee(
-        address token,
         uint256 amount,
         uint256 maxFillFixedFee
     ) internal view returns (uint256 fee, uint256 fee10) {
