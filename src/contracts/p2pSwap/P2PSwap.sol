@@ -15,7 +15,6 @@ pragma solidity ^0.8.0;
 
 import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
 import {Staking} from "@EVVM/playground/contracts/staking/Staking.sol";
-import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {SignatureRecover} from "@EVVM/playground/library/SignatureRecover.sol";
 import {SignatureUtils} from "@EVVM/playground/contracts/p2pSwap/lib/SignatureUtils.sol";
 import {AdvancedStrings} from "@EVVM/playground/library/AdvancedStrings.sol";
@@ -24,7 +23,6 @@ import {StakingServiceHooks} from "@EVVM/playground/library/StakingServiceHooks.
 
 contract P2PSwap is StakingServiceHooks {
     using SignatureRecover for *;
-    using AdvancedStrings for *;
 
     address owner;
     address owner_proposal;
@@ -417,7 +415,7 @@ contract P2PSwap is StakingServiceHooks {
         uint256 _nonce_Evvm,
         bool _priority_Evvm,
         bytes memory _signature_Evvm,
-        uint256 _amountOut ///@dev for testing purposes
+        uint256 maxFillFixedFee ///@dev for testing purposes
     ) external {
         if (
             !SignatureUtils.verifyMessageSignedForDispatchOrder(
@@ -449,7 +447,7 @@ contract P2PSwap is StakingServiceHooks {
         (uint256 fee, uint256 fee10) = calculateFillFixedFee(
             metadata.tokenB,
             ordersInsideMarket[market][metadata.orderId].amountB,
-            _amountOut
+            maxFillFixedFee
         );
 
         if (
@@ -549,10 +547,10 @@ contract P2PSwap is StakingServiceHooks {
     function calculateFillFixedFee(
         address token,
         uint256 amount,
-        uint256 _amountOut ///@dev for testing purposes
+        uint256 maxFillFixedFee
     ) internal view returns (uint256 fee, uint256 fee10) {
-        if (calculateFillPropotionalFee(amount) > _amountOut) {
-            fee = _amountOut;
+        if (calculateFillPropotionalFee(amount) > maxFillFixedFee) {
+            fee = maxFillFixedFee;
             fee10 = (fee * 1000) / 10_000;
         } else {
             fee = calculateFillPropotionalFee(amount);
