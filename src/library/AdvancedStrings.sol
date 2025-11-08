@@ -64,7 +64,7 @@ library AdvancedStrings {
         );
     }
 
-    function bytes32ToString(bytes32 data) public pure returns (string memory) {
+    function bytes32ToString(bytes32 data) internal pure returns (string memory) {
         return
             string(
                 abi.encodePacked(
@@ -73,5 +73,9 @@ library AdvancedStrings {
                     toHex16(bytes16(data << 128))
                 )
             );
+    }
+
+    function equal(string memory a, string memory b) internal pure returns (bool) {
+        return bytes(a).length == bytes(b).length && keccak256(bytes(a)) == keccak256(bytes(b));
     }
 }
