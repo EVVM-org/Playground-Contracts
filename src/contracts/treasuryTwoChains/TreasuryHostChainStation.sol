@@ -22,6 +22,7 @@ import {SignatureUtils} from "@EVVM/playground/contracts/treasuryTwoChains/lib/S
 
 import {IMailbox} from "@hyperlane-xyz/core/contracts/interfaces/IMailbox.sol";
 
+import {MessagingParams, MessagingReceipt} from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
 import {OApp, Origin, MessagingFee} from "@layerzerolabs/oapp-evm/contracts/oapp/OApp.sol";
 import {OAppOptionsType3} from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OAppOptionsType3.sol";
 import {OptionsBuilder} from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OptionsBuilder.sol";
@@ -53,10 +54,10 @@ contract TreasuryHostChainStation is
 
     mapping(address => uint256) nextFisherExecutionNonce;
 
-    bytes _options =
+    bytes options =
         OptionsBuilder.addExecutorLzReceiveOption(
             OptionsBuilder.newOptions(),
-            50000,
+            200_000,
             0
         );
 
@@ -123,11 +124,15 @@ contract TreasuryHostChainStation is
     }
 
     function setExternalChainAddress(
-        bytes32 externalChainStationAddressBytes32,
+        address externalChainStationAddress,
         string memory externalChainStationAddressString
     ) external onlyAdmin {
-        hyperlane.externalChainStationAddress = externalChainStationAddressBytes32;
-        layerZero.externalChainStationAddress = externalChainStationAddressBytes32;
+        hyperlane.externalChainStationAddress = bytes32(
+            uint256(uint160(externalChainStationAddress))
+        );
+        layerZero.externalChainStationAddress = bytes32(
+            uint256(uint160(externalChainStationAddress))
+        );
         axelar.externalChainStationAddress = externalChainStationAddressString;
         _setPeer(
             layerZero.externalChainStationEid,
@@ -168,12 +173,11 @@ contract TreasuryHostChainStation is
             );
         } else if (protocolToExecute == 0x02) {
             // 0x02 = LayerZero
-            uint256 fee = quoteLayerZero(toAddress, token, amount);
             _lzSend(
                 layerZero.externalChainStationEid,
                 payload,
-                _options,
-                MessagingFee(fee, 0),
+                options,
+                MessagingFee(msg.value, 0),
                 msg.sender // Refund any excess fees to the sender.
             );
         } else if (protocolToExecute == 0x03) {
@@ -312,7 +316,7 @@ contract TreasuryHostChainStation is
         MessagingFee memory fee = _quote(
             layerZero.externalChainStationEid,
             encodePayload(token, toAddress, amount),
-            _options,
+            options,
             false
         );
         return fee.nativeFee;
@@ -333,6 +337,31 @@ contract TreasuryHostChainStation is
             revert ErrorsLib.SenderNotAuthorized();
 
         decodeAndDeposit(message);
+    }
+
+    function _lzSend(
+        uint32 _dstEid,
+        bytes memory _message,
+        bytes memory _options,
+        MessagingFee memory _fee,
+        address _refundAddress
+    ) internal override returns (MessagingReceipt memory receipt) {
+        // @dev Push corresponding fees to the endpoint, any excess is sent back to the _refundAddress from the endpoint.
+        uint256 messageValue = _fee.nativeFee;
+        if (_fee.lzTokenFee > 0) _payLzToken(_fee.lzTokenFee);
+
+        return
+            // solhint-disable-next-line check-send-result
+            endpoint.send{value: messageValue}(
+                MessagingParams(
+                    _dstEid,
+                    _getPeerOrRevert(_dstEid),
+                    _message,
+                    _options,
+                    _fee.lzTokenFee > 0
+                ),
+                _refundAddress
+            );
     }
 
     // Axelar Specific Functions //
@@ -460,7 +489,7 @@ contract TreasuryHostChainStation is
     }
 
     function getOptions() external view returns (bytes memory) {
-        return _options;
+        return options;
     }
 
     // Internal Functions //

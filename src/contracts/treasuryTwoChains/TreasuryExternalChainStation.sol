@@ -13,6 +13,7 @@ import {SignatureUtils} from "@EVVM/playground/contracts/treasuryTwoChains/lib/S
 
 import {IMailbox} from "@hyperlane-xyz/core/contracts/interfaces/IMailbox.sol";
 
+import {MessagingParams, MessagingReceipt} from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
 import {OApp, Origin, MessagingFee} from "@layerzerolabs/oapp-evm/contracts/oapp/OApp.sol";
 import {OAppOptionsType3} from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OAppOptionsType3.sol";
 import {OptionsBuilder} from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OptionsBuilder.sol";
@@ -29,9 +30,6 @@ contract TreasuryExternalChainStation is
     OAppOptionsType3,
     AxelarExecutable
 {
-    /// @notice Address of the EVVM core contract
-    address evvmAddress;
-
     AddressTypeProposal admin;
 
     AddressTypeProposal fisherExecutor;
@@ -46,10 +44,10 @@ contract TreasuryExternalChainStation is
 
     mapping(address => uint256) nextFisherExecutionNonce;
 
-    bytes _options =
+    bytes options =
         OptionsBuilder.addExecutorLzReceiveOption(
             OptionsBuilder.newOptions(),
-            50000,
+            200_000,
             0
         );
 
@@ -76,12 +74,7 @@ contract TreasuryExternalChainStation is
         _;
     }
 
-    /**
-     * @notice Initialize Treasury with EVVM contract address
-     * @param _evvmAddress Address of the EVVM core contract
-     */
     constructor(
-        address _evvmAddress,
         address _admin,
         CrosschainConfig memory _crosschainConfig,
         uint256 _evvmId
@@ -90,7 +83,6 @@ contract TreasuryExternalChainStation is
         Ownable(_admin)
         AxelarExecutable(_crosschainConfig.gatewayAddress)
     {
-        evvmAddress = _evvmAddress;
         admin = AddressTypeProposal({
             current: _admin,
             proposal: address(0),
@@ -118,11 +110,15 @@ contract TreasuryExternalChainStation is
     }
 
     function setHostChainAddress(
-        bytes32 hostChainStationAddressBytes32,
+        address hostChainStationAddress,
         string memory hostChainStationAddressString
     ) external onlyAdmin {
-        hyperlane.hostChainStationAddress = hostChainStationAddressBytes32;
-        layerZero.hostChainStationAddress = hostChainStationAddressBytes32;
+        hyperlane.hostChainStationAddress = bytes32(
+            uint256(uint160(hostChainStationAddress))
+        );
+        layerZero.hostChainStationAddress = bytes32(
+            uint256(uint160(hostChainStationAddress))
+        );
         axelar.hostChainStationAddress = hostChainStationAddressString;
         _setPeer(
             layerZero.hostChainStationEid,
@@ -155,12 +151,12 @@ contract TreasuryExternalChainStation is
             );
         } else if (protocolToExecute == 0x02) {
             // 0x02 = LayerZero
-            uint256 fee = quoteLayerZero(toAddress, token, amount);
+            uint256 quote = quoteLayerZero(toAddress, token, amount);
             _lzSend(
                 layerZero.hostChainStationEid,
                 payload,
-                _options,
-                MessagingFee(fee, 0),
+                options,
+                MessagingFee(quote, 0),
                 msg.sender // Refund any excess fees to the sender.
             );
         } else if (protocolToExecute == 0x03) {
@@ -212,7 +208,7 @@ contract TreasuryExternalChainStation is
             _lzSend(
                 layerZero.hostChainStationEid,
                 payload,
-                _options,
+                options,
                 MessagingFee(fee, 0),
                 msg.sender // Refund any excess fees to the sender.
             );
@@ -371,7 +367,7 @@ contract TreasuryExternalChainStation is
         MessagingFee memory fee = _quote(
             layerZero.hostChainStationEid,
             encodePayload(token, toAddress, amount),
-            _options,
+            options,
             false
         );
         return fee.nativeFee;
@@ -392,6 +388,31 @@ contract TreasuryExternalChainStation is
             revert ErrorsLib.SenderNotAuthorized();
 
         decodeAndGive(message);
+    }
+
+    function _lzSend(
+        uint32 _dstEid,
+        bytes memory _message,
+        bytes memory _options,
+        MessagingFee memory _fee,
+        address _refundAddress
+    ) internal override returns (MessagingReceipt memory receipt) {
+        // @dev Push corresponding fees to the endpoint, any excess is sent back to the _refundAddress from the endpoint.
+        uint256 messageValue = _fee.nativeFee;
+        if (_fee.lzTokenFee > 0) _payLzToken(_fee.lzTokenFee);
+
+        return
+            // solhint-disable-next-line check-send-result
+            endpoint.send{value: messageValue}(
+                MessagingParams(
+                    _dstEid,
+                    _getPeerOrRevert(_dstEid),
+                    _message,
+                    _options,
+                    _fee.lzTokenFee > 0
+                ),
+                _refundAddress
+            );
     }
 
     // Axelar Specific Functions //
@@ -494,10 +515,6 @@ contract TreasuryExternalChainStation is
         return nextFisherExecutionNonce[user];
     }
 
-    function getEvvmAddress() external view returns (address) {
-        return evvmAddress;
-    }
-
     function getHyperlaneConfig()
         external
         view
@@ -519,21 +536,18 @@ contract TreasuryExternalChainStation is
     }
 
     function getOptions() external view returns (bytes memory) {
-        return _options;
+        return options;
     }
 
     // Internal Functions //
 
-    function decodeAndGive(
-        bytes memory payload
-    ) internal {
+    function decodeAndGive(bytes memory payload) internal {
         (address token, address toAddress, uint256 amount) = decodePayload(
             payload
         );
-        if (token == address(0)) 
-        SafeTransferLib.safeTransferETH(msg.sender, amount);
-        else
-            IERC20(token).transfer(toAddress, amount);
+        if (token == address(0))
+            SafeTransferLib.safeTransferETH(toAddress, amount);
+        else IERC20(token).transfer(toAddress, amount);
     }
 
     function verifyAndDepositERC20(address token, uint256 amount) internal {
