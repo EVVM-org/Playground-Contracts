@@ -38,4 +38,10 @@ abstract contract ExternalChainStationStructs {
         address gasServiceAddress;
         address gatewayAddress;
     }
+
+    struct ChangeHostChainAddressParams {
+        address porposeAddress_AddressType;
+        string porposeAddress_StringType;
+        uint256 timeToAccept;
+    }
 }

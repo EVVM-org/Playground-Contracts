@@ -19,6 +19,7 @@ import {ErrorsLib} from "@EVVM/playground/contracts/treasuryTwoChains/lib/Errors
 import {HostChainStationStructs} from "@EVVM/playground/contracts/treasuryTwoChains/lib/HostChainStationStructs.sol";
 
 import {SignatureUtils} from "@EVVM/playground/contracts/treasuryTwoChains/lib/SignatureUtils.sol";
+import {PayloadUtils} from "@EVVM/playground/contracts/treasuryTwoChains/lib/PayloadUtils.sol";
 
 import {IMailbox} from "@hyperlane-xyz/core/contracts/interfaces/IMailbox.sol";
 
@@ -52,6 +53,8 @@ contract TreasuryHostChainStation is
 
     AxelarConfig axelar;
 
+    ChangeExternalChainAddressParams externalChainAddressChangeProposal;
+
     mapping(address => uint256) nextFisherExecutionNonce;
 
     bytes options =
@@ -60,6 +63,8 @@ contract TreasuryHostChainStation is
             200_000,
             0
         );
+
+    bytes1 fuseSetExternalChainAddress = 0x01;
 
     event FisherBridgeSend(
         address indexed from,
@@ -123,10 +128,12 @@ contract TreasuryHostChainStation is
         });
     }
 
-    function setExternalChainAddress(
+    function _setExternalChainAddress(
         address externalChainStationAddress,
         string memory externalChainStationAddressString
     ) external onlyAdmin {
+        if (fuseSetExternalChainAddress != 0x01) revert();
+
         hyperlane.externalChainStationAddress = bytes32(
             uint256(uint160(externalChainStationAddress))
         );
@@ -138,6 +145,8 @@ contract TreasuryHostChainStation is
             layerZero.externalChainStationEid,
             layerZero.externalChainStationAddress
         );
+
+        fuseSetExternalChainAddress = 0x00;
     }
 
     /**
@@ -159,7 +168,11 @@ contract TreasuryHostChainStation is
 
         executerEVVM(false, msg.sender, token, amount);
 
-        bytes memory payload = encodePayload(token, toAddress, amount);
+        bytes memory payload = PayloadUtils.encodePayload(
+            token,
+            toAddress,
+            amount
+        );
 
         if (protocolToExecute == 0x01) {
             // 0x01 = Hyperlane
@@ -285,7 +298,7 @@ contract TreasuryHostChainStation is
             IMailbox(hyperlane.mailboxAddress).quoteDispatch(
                 hyperlane.externalChainStationDomainId,
                 hyperlane.externalChainStationAddress,
-                encodePayload(token, toAddress, amount)
+                PayloadUtils.encodePayload(token, toAddress, amount)
             );
     }
 
@@ -315,7 +328,7 @@ contract TreasuryHostChainStation is
     ) public view returns (uint256) {
         MessagingFee memory fee = _quote(
             layerZero.externalChainStationEid,
-            encodePayload(token, toAddress, amount),
+            PayloadUtils.encodePayload(token, toAddress, amount),
             options,
             false
         );
@@ -415,6 +428,8 @@ contract TreasuryHostChainStation is
 
         admin.proposal = address(0);
         admin.timeToAccept = 0;
+
+        _transferOwnership(admin.current);
     }
 
     function proposeFisherExecutor(
@@ -443,6 +458,55 @@ contract TreasuryHostChainStation is
 
         fisherExecutor.proposal = address(0);
         fisherExecutor.timeToAccept = 0;
+    }
+
+    function proposeExternalChainAddress(
+        address externalChainStationAddress,
+        string memory externalChainStationAddressString
+    ) external onlyAdmin {
+        if (fuseSetExternalChainAddress == 0x01) revert();
+
+        externalChainAddressChangeProposal = ChangeExternalChainAddressParams({
+            porposeAddress_AddressType: externalChainStationAddress,
+            porposeAddress_StringType: externalChainStationAddressString,
+            timeToAccept: block.timestamp + 1 days
+        });
+    }
+
+    function rejectProposalExternalChainAddress() external onlyAdmin {
+        externalChainAddressChangeProposal = ChangeExternalChainAddressParams({
+            porposeAddress_AddressType: address(0),
+            porposeAddress_StringType: "",
+            timeToAccept: 0
+        });
+    }
+
+    function acceptExternalChainAddress() external {
+        if (block.timestamp < externalChainAddressChangeProposal.timeToAccept)
+            revert();
+
+        hyperlane.externalChainStationAddress = bytes32(
+            uint256(
+                uint160(
+                    externalChainAddressChangeProposal
+                        .porposeAddress_AddressType
+                )
+            )
+        );
+        layerZero.externalChainStationAddress = bytes32(
+            uint256(
+                uint160(
+                    externalChainAddressChangeProposal
+                        .porposeAddress_AddressType
+                )
+            )
+        );
+        axelar.externalChainStationAddress = externalChainAddressChangeProposal
+            .porposeAddress_StringType;
+        _setPeer(
+            layerZero.externalChainStationEid,
+            layerZero.externalChainStationAddress
+        );
     }
 
     // Getter functions //
@@ -495,25 +559,9 @@ contract TreasuryHostChainStation is
     // Internal Functions //
 
     function decodeAndDeposit(bytes memory payload) internal {
-        (address token, address from, uint256 amount) = decodePayload(payload);
+        (address token, address from, uint256 amount) = PayloadUtils
+            .decodePayload(payload);
         executerEVVM(true, from, token, amount);
-    }
-
-    function encodePayload(
-        address token,
-        address toAddress,
-        uint256 amount
-    ) internal pure returns (bytes memory payload) {
-        payload = abi.encode(token, toAddress, amount);
-    }
-
-    function decodePayload(
-        bytes memory payload
-    ) internal pure returns (address token, address toAddress, uint256 amount) {
-        (token, toAddress, amount) = abi.decode(
-            payload,
-            (address, address, uint256)
-        );
     }
 
     function executerEVVM(
@@ -534,4 +582,10 @@ contract TreasuryHostChainStation is
             );
         }
     }
+
+    function transferOwnership(
+        address newOwner
+    ) public virtual override onlyOwner {}
+
+    function renounceOwnership() public virtual override onlyOwner {}
 }

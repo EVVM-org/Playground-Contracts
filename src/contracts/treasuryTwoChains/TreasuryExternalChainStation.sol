@@ -8,6 +8,7 @@ import {ErrorsLib} from "@EVVM/playground/contracts/treasuryTwoChains/lib/Errors
 import {ExternalChainStationStructs} from "@EVVM/playground/contracts/treasuryTwoChains/lib/ExternalChainStationStructs.sol";
 
 import {SafeTransferLib} from "@solady/utils/SafeTransferLib.sol";
+import {PayloadUtils} from "@EVVM/playground/contracts/treasuryTwoChains/lib/PayloadUtils.sol";
 
 import {SignatureUtils} from "@EVVM/playground/contracts/treasuryTwoChains/lib/SignatureUtils.sol";
 
@@ -40,6 +41,8 @@ contract TreasuryExternalChainStation is
 
     AxelarConfig axelar;
 
+    ChangeHostChainAddressParams hostChainAddressChangeProposal;
+
     uint256 immutable EVVM_ID;
 
     mapping(address => uint256) nextFisherExecutionNonce;
@@ -50,6 +53,8 @@ contract TreasuryExternalChainStation is
             200_000,
             0
         );
+
+    bytes1 fuseSetHostChainAddress = 0x01;
 
     event FisherBridgeSend(
         address indexed from,
@@ -109,10 +114,12 @@ contract TreasuryExternalChainStation is
         EVVM_ID = _evvmId;
     }
 
-    function setHostChainAddress(
+    function _setHostChainAddress(
         address hostChainStationAddress,
         string memory hostChainStationAddressString
     ) external onlyAdmin {
+        if (fuseSetHostChainAddress != 0x01) revert();
+
         hyperlane.hostChainStationAddress = bytes32(
             uint256(uint160(hostChainStationAddress))
         );
@@ -124,6 +131,8 @@ contract TreasuryExternalChainStation is
             layerZero.hostChainStationEid,
             layerZero.hostChainStationAddress
         );
+
+        fuseSetHostChainAddress = 0x00;
     }
 
     /**
@@ -137,7 +146,11 @@ contract TreasuryExternalChainStation is
         uint256 amount,
         bytes1 protocolToExecute
     ) external payable {
-        bytes memory payload = encodePayload(token, toAddress, amount);
+        bytes memory payload = PayloadUtils.encodePayload(
+            token,
+            toAddress,
+            amount
+        );
         verifyAndDepositERC20(token, amount);
         if (protocolToExecute == 0x01) {
             // 0x01 = Hyperlane
@@ -186,7 +199,11 @@ contract TreasuryExternalChainStation is
     ) external payable {
         if (msg.value < amount) revert ErrorsLib.InsufficientBalance();
 
-        bytes memory payload = encodePayload(address(0), toAddress, amount);
+        bytes memory payload = PayloadUtils.encodePayload(
+            address(0),
+            toAddress,
+            amount
+        );
 
         if (protocolToExecute == 0x01) {
             // 0x01 = Hyperlane
@@ -336,7 +353,7 @@ contract TreasuryExternalChainStation is
             IMailbox(hyperlane.mailboxAddress).quoteDispatch(
                 hyperlane.hostChainStationDomainId,
                 hyperlane.hostChainStationAddress,
-                encodePayload(token, toAddress, amount)
+                PayloadUtils.encodePayload(token, toAddress, amount)
             );
     }
 
@@ -366,7 +383,7 @@ contract TreasuryExternalChainStation is
     ) public view returns (uint256) {
         MessagingFee memory fee = _quote(
             layerZero.hostChainStationEid,
-            encodePayload(token, toAddress, amount),
+            PayloadUtils.encodePayload(token, toAddress, amount),
             options,
             false
         );
@@ -466,6 +483,8 @@ contract TreasuryExternalChainStation is
 
         admin.proposal = address(0);
         admin.timeToAccept = 0;
+
+        _transferOwnership(admin.current);
     }
 
     function proposeFisherExecutor(
@@ -494,6 +513,54 @@ contract TreasuryExternalChainStation is
 
         fisherExecutor.proposal = address(0);
         fisherExecutor.timeToAccept = 0;
+    }
+
+    function proposeHostChainAddress(
+        address hostChainStationAddress,
+        string memory hostChainStationAddressString
+    ) external onlyAdmin {
+        if (fuseSetHostChainAddress == 0x01) revert();
+
+        hostChainAddressChangeProposal = ChangeHostChainAddressParams({
+            porposeAddress_AddressType: hostChainStationAddress,
+            porposeAddress_StringType: hostChainStationAddressString,
+            timeToAccept: block.timestamp + 1 days
+        });
+    }
+
+    function rejectProposalHostChainAddress() external onlyAdmin {
+        hostChainAddressChangeProposal = ChangeHostChainAddressParams({
+            porposeAddress_AddressType: address(0),
+            porposeAddress_StringType: "",
+            timeToAccept: 0
+        });
+    }
+
+    function acceptHostChainAddress() external {
+        if (block.timestamp < hostChainAddressChangeProposal.timeToAccept)
+            revert();
+
+        hyperlane.hostChainStationAddress = bytes32(
+            uint256(
+                uint160(
+                    hostChainAddressChangeProposal.porposeAddress_AddressType
+                )
+            )
+        );
+        layerZero.hostChainStationAddress = bytes32(
+            uint256(
+                uint160(
+                    hostChainAddressChangeProposal.porposeAddress_AddressType
+                )
+            )
+        );
+        axelar.hostChainStationAddress = hostChainAddressChangeProposal
+            .porposeAddress_StringType;
+
+        _setPeer(
+            layerZero.hostChainStationEid,
+            layerZero.hostChainStationAddress
+        );
     }
 
     // Getter functions //
@@ -542,9 +609,8 @@ contract TreasuryExternalChainStation is
     // Internal Functions //
 
     function decodeAndGive(bytes memory payload) internal {
-        (address token, address toAddress, uint256 amount) = decodePayload(
-            payload
-        );
+        (address token, address toAddress, uint256 amount) = PayloadUtils
+            .decodePayload(payload);
         if (token == address(0))
             SafeTransferLib.safeTransferETH(toAddress, amount);
         else IERC20(token).transfer(toAddress, amount);
@@ -558,20 +624,9 @@ contract TreasuryExternalChainStation is
         IERC20(token).transferFrom(msg.sender, address(this), amount);
     }
 
-    function encodePayload(
-        address token,
-        address toAddress,
-        uint256 amount
-    ) internal pure returns (bytes memory payload) {
-        payload = abi.encode(token, toAddress, amount);
-    }
+    function transferOwnership(
+        address newOwner
+    ) public virtual override onlyOwner {}
 
-    function decodePayload(
-        bytes memory payload
-    ) internal pure returns (address token, address toAddress, uint256 amount) {
-        (token, toAddress, amount) = abi.decode(
-            payload,
-            (address, address, uint256)
-        );
-    }
+    function renounceOwnership() public virtual override onlyOwner {}
 }
