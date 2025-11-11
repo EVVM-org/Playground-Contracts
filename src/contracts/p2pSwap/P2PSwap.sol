@@ -319,7 +319,7 @@ contract P2PSwap is StakingServiceHooks {
             market == 0 ||
             ordersInsideMarket[market][metadata.orderId].seller == address(0)
         ) {
-            revert();
+            revert("Invalid order");
         }
 
         uint256 fee = calculateFillPropotionalFee(
@@ -428,20 +428,20 @@ contract P2PSwap is StakingServiceHooks {
                 metadata.signature
             )
         ) {
-            revert();
+            revert("Invalid signature");
         }
 
         uint256 market = findMarket(metadata.tokenA, metadata.tokenB);
 
         if (nonceP2PSwap[user][metadata.nonce]) {
-            revert();
+            revert("Invalid nonce");
         }
 
         if (
             market == 0 ||
             ordersInsideMarket[market][metadata.orderId].seller == address(0)
         ) {
-            revert();
+            revert("Invalid order");
         }
 
         (uint256 fee, uint256 fee10) = calculateFillFixedFee(
@@ -453,7 +453,7 @@ contract P2PSwap is StakingServiceHooks {
             metadata.amountOfTokenBToFill <
             ordersInsideMarket[market][metadata.orderId].amountB + fee - fee10
         ) {
-            revert();
+            revert("Insuficient amountOfTokenBToFill");
         }
 
         makePay(
