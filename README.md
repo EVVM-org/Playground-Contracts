@@ -25,8 +25,8 @@ The EVVM aims to provide infraless EVM virtualization, addressing scalability an
 ## Quick Start
 
 ```bash
-git clone https://github.com/EVVM-org/EVVM-Contracts
-cd EVVM-Contracts
+git clone git clone https://github.com/EVVM-org/Playground-Contracts.git
+cd Playground-Contracts
 make install
 ```
 
@@ -55,7 +55,7 @@ make compile
 
 ## Testing
 
-Example test scripts are in the `test` directory. For more, see the [Makefile](https://github.com/EVVM-org/EVVM-Contracts/blob/main/makefile).
+Example test scripts are in the `test` directory. For more, see the [Makefile](https://github.com/EVVM-org/Playground-Contracts/blob/main/makefile).
 
 ### EVVM Contracts
 ```bash

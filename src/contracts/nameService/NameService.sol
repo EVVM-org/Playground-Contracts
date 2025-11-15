@@ -174,7 +174,7 @@ contract NameService {
                 signature_EVVM
             );
         }
-        /// concatenamos @ con el hash del username para evitar que se pueda registrar un username que no sea un hash
+        /// @notice Concatenates "@" with the hash of the username to prevent registering a username that is not a hash
         string memory key = string.concat(
             "@",
             AdvancedStrings.bytes32ToString(hashPreRegisteredUsername)
