@@ -55,7 +55,7 @@ make compile
 
 ## Testing
 
-Example test scripts are in the `test` directory. For more, see the [Makefile](https://github.com/EVVM-org/EVVM-Contracts/blob/main/makefile).
+Example test scripts are in the `test` directory. For more, see the [Makefile](https://github.com/EVVM-org/Playground-Contracts/blob/main/makefile).
 
 ### EVVM Contracts
 ```bash
