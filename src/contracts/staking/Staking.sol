@@ -4,19 +4,42 @@
 pragma solidity ^0.8.0;
 /**
 
-    8 8                                                                              
- ad88888ba    ad88888ba   88b           d88         db    888888888888  88888888888  
-d8" 8 8 "8b  d8"     "8b  888b         d888        d88b        88       88           
-Y8, 8 8      Y8,          88`8b       d8'88       d8'`8b       88       88           
-`Y8a8a8a,    `Y8aaaaa,    88 `8b     d8' 88      d8'  `8b      88       88aaaaa      
-  `"8"8"8b,    `"""""8b,  88  `8b   d8'  88     d8YaaaaY8b     88       88"""""      
-    8 8 `8b          `8b  88   `8b d8'   88    d8""""""""8b    88       88           
-Y8a 8 8 a8P  Y8a     a8P  88    `888'    88   d8'        `8b   88       88           
- "Y88888P"    "Y88888P"   88     `8'     88  d8'          `8b  88       88888888888  
-    8 8                                                                                                                                                      
 
- * @title Staking Mate contract for Roll A Mate Protocol 
- * @author jistro.eth ariutokintumi.eth
+  /$$$$$$  /$$             /$$      /$$                  
+ /$$__  $$| $$            | $$     |__/                  
+| $$  \__/$$$$$$   /$$$$$$| $$   /$$/$$/$$$$$$$  /$$$$$$ 
+|  $$$$$|_  $$_/  |____  $| $$  /$$| $| $$__  $$/$$__  $$
+ \____  $$| $$     /$$$$$$| $$$$$$/| $| $$  \ $| $$  \ $$
+ /$$  \ $$| $$ /$$/$$__  $| $$_  $$| $| $$  | $| $$  | $$
+|  $$$$$$/|  $$$$|  $$$$$$| $$ \  $| $| $$  | $|  $$$$$$$
+ \______/  \___/  \_______|__/  \__|__|__/  |__/\____  $$
+                                                /$$  \ $$
+                                               |  $$$$$$/
+                                                \______/                                                                                       
+
+   ___ _                                             _ 
+  / _ | | __ _ _   _  __ _ _ __ ___  _   _ _ __   __| |
+ / /_)| |/ _` | | | |/ _` | '__/ _ \| | | | '_ \ / _` |
+/ ___/| | (_| | |_| | (_| | | | (_) | |_| | | | | (_| |
+\/    |_|\__,_|\__, |\__, |_|  \___/ \__,_|_| |_|\__,_|
+               |___/ |___/                             
+                                                        
+ * @title Staking Mate contract
+ * @author Mate labs
+ * @notice This contract manages the staking mechanism for the EVVM ecosystem
+ * @dev Handles presale staking, public staking, and service staking with time locks and signature verification
+ *
+ * The contract supports three types of staking:
+ * 1. Golden Staking: Exclusive to the goldenFisher address
+ * 2. Presale Staking: Limited to 800 presale users with 2 staking token limit
+ * 3. Public Staking: Open to all users when enabled
+ * 4. Service Staking: Allows smart contracts to stake on behalf of users
+ *
+ * Key features:
+ * - Time-locked unstaking mechanisms
+ * - Signature-based authorization
+ * - Integration with EVVM core contract for payments and rewards
+ * - Estimator integration for yield calculations
  */
 
 import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
@@ -88,6 +111,14 @@ contract Staking {
         uint256 timeToAccept;
     }
 
+    /**
+     * @dev Struct to store service staking metadata during the staking process
+     * @param service Address of the service or contract account
+     * @param timestamp Timestamp when the prepareServiceStaking was called
+     * @param amountOfStaking Amount of staking tokens to be staked
+     * @param amountServiceBeforeStaking Service's Principal Token balance before staking
+     * @param amountStakingBeforeStaking Staking contract's Principal Token balance before staking
+     */
     struct ServiceStakingMetadata {
         address service;
         uint256 timestamp;
@@ -96,6 +127,11 @@ contract Staking {
         uint256 amountStakingBeforeStaking;
     }
 
+    /**
+     * @dev Struct to encapsulate account metadata for staking operations
+     * @param Address Address of the account
+     * @param IsAService Boolean indicating if the account is a smart contract (service) account
+     */
     struct AccountMetadata {
         address Address;
         bool IsAService;
@@ -110,6 +146,10 @@ contract Staking {
     uint256 private presaleStakerCount;
     /// @dev Price of one staking main token (5083 main token = 1 staking)
     uint256 private constant PRICE_OF_STAKING = 5083 * (10 ** 18);
+
+    /// @dev Address representing the principal Principal Token
+    address private constant PRINCIPAL_TOKEN_ADDRESS =
+        0x0000000000000000000000000000000000000001;
 
     /// @dev Admin address management with proposal system
     AddressTypeProposal private admin;
@@ -128,10 +168,6 @@ contract Staking {
     /// @dev Variable to store service staking metadata
     ServiceStakingMetadata private serviceStakingData;
 
-    /// @dev Address representing the principal Principal Token
-    address private constant PRINCIPAL_TOKEN_ADDRESS =
-        0x0000000000000000000000000000000000000001;
-
     /// @dev One-time setup breaker for estimator and EVVM addresses
     bytes1 private breakerSetupEstimatorAndEvvm;
 
@@ -144,9 +180,24 @@ contract Staking {
     /// @dev Mapping to store complete staking history for each user
     mapping(address => HistoryMetadata[]) private userHistory;
 
-    /// @dev Modifier to restrict access to admin functions
+    /// @dev Modifier to verify access to admin functions
     modifier onlyOwner() {
         if (msg.sender != admin.actual) revert ErrorsLib.SenderIsNotAdmin();
+
+        _;
+    }
+
+    /// @dev Modifier to verify access to a contract or service account
+    modifier onlyCA() {
+        uint256 size;
+        address callerAddress = msg.sender;
+
+        assembly {
+            /// @dev check the size of the opcode of the address
+            size := extcodesize(callerAddress)
+        }
+
+        if (size == 0) revert ErrorsLib.AddressIsNotAService();
 
         _;
     }
@@ -162,12 +213,12 @@ contract Staking {
 
         goldenFisher.actual = initialGoldenFisher;
 
-        allowPublicStaking.flag = false;
-        allowPresaleStaking.flag = true;
+        allowPublicStaking.flag = true;
+        allowPresaleStaking.flag = false;
 
         secondsToUnlockStaking.actual = 0;
 
-        secondsToUnllockFullUnstaking.actual = 21 days;
+        secondsToUnllockFullUnstaking.actual = 30 seconds;
 
         breakerSetupEstimatorAndEvvm = 0x01;
     }
@@ -358,24 +409,29 @@ contract Staking {
         stakingNonce[user][nonce] = true;
     }
 
-    function prepareServiceStaking(uint256 amountOfStaking) external {
-        if (!allowPublicStaking.flag) revert ErrorsLib.PublicStakingDisabled();
-        uint256 size;
-        address service = msg.sender;
-
-        assembly {
-            /// @dev check the size of the opcode of the address
-            size := extcodesize(service)
-        }
-
-        if (size == 0) revert ErrorsLib.AddressIsNotAService();
-
+    /**
+     * @notice Prepares a service/contract account for staking by recording pre-staking state
+     * @dev First step in the service staking process. Must be followed by payment via caPay and confirmServiceStaking in the same transaction
+     * @param amountOfStaking Amount of staking tokens the service intends to stake
+     * 
+     * Service Staking Process:
+     * 1. Call prepareServiceStaking(amount) - Records balances and metadata
+     * 2. Use EVVM.caPay() to transfer the required Principal Tokens to this contract  
+     * 3. Call confirmServiceStaking() - Validates payment and completes staking
+     * 
+     * @dev All three steps MUST occur in the same transaction or the staking will fail
+     * @dev CRITICAL WARNING: If the process is not completed properly (especially if caPay is called
+     *      but confirmServiceStaking is not), the Principal Tokens will remain locked in the staking
+     *      contract with no way to recover them. The service will lose the tokens permanently.
+     * @dev Only callable by contract accounts (services), not EOAs
+     */
+    function prepareServiceStaking(uint256 amountOfStaking) external onlyCA {
         serviceStakingData = ServiceStakingMetadata({
-            service: service,
+            service: msg.sender,
             timestamp: block.timestamp,
             amountOfStaking: amountOfStaking,
             amountServiceBeforeStaking: Evvm(EVVM_ADDRESS).getBalance(
-                service,
+                msg.sender,
                 PRINCIPAL_TOKEN_ADDRESS
             ),
             amountStakingBeforeStaking: Evvm(EVVM_ADDRESS).getBalance(
@@ -385,22 +441,25 @@ contract Staking {
         });
     }
 
-    function confirmServiceStaking() external {
-        uint256 size;
-        address service = msg.sender;
-
-        assembly {
-            /// @dev check the size of the opcode of the address
-            size := extcodesize(service)
-        }
-
-        if (size == 0) revert ErrorsLib.AddressIsNotAService();
-
+    /**
+     * @notice Confirms and completes the service staking operation after payment verification
+     * @dev Final step in service staking. Validates that payment was made correctly and completes the staking process
+     * 
+     * Validation checks:
+     * - Service balance decreased by the exact staking cost
+     * - Staking contract balance increased by the exact staking cost  
+     * - Operation occurs in the same transaction as prepareServiceStaking
+     * - Caller matches the service that initiated the preparation
+     * 
+     * @dev Only callable by the same contract that called prepareServiceStaking
+     * @dev Must be called in the same transaction as prepareServiceStaking
+     */
+    function confirmServiceStaking() external onlyCA {
         uint256 totalStakingRequired = PRICE_OF_STAKING *
             serviceStakingData.amountOfStaking;
 
         uint256 actualServiceBalance = Evvm(EVVM_ADDRESS).getBalance(
-            service,
+            msg.sender,
             PRINCIPAL_TOKEN_ADDRESS
         );
 
@@ -424,11 +483,11 @@ contract Staking {
         if (serviceStakingData.timestamp != block.timestamp)
             revert ErrorsLib.ServiceDoesNotStakeInSameTx();
 
-        if (serviceStakingData.service != service)
+        if (serviceStakingData.service != msg.sender)
             revert ErrorsLib.AddressMismatch();
 
         stakingBaseProcess(
-            AccountMetadata({Address: service, IsAService: true}),
+            AccountMetadata({Address: msg.sender, IsAService: true}),
             true,
             serviceStakingData.amountOfStaking,
             0,
@@ -438,19 +497,18 @@ contract Staking {
         );
     }
 
-    function serviceUnstaking(uint256 amountOfStaking) external {
-        uint256 size;
-        address service = msg.sender;
-
-        assembly {
-            /// @dev check the size of the opcode of the address
-            size := extcodesize(service)
-        }
-
-        if (size == 0) revert ErrorsLib.AddressIsNotAService();
-
+    /**
+     * @notice Allows a service/contract account to unstake their staking tokens
+     * @dev Simplified unstaking process for services - no signature or payment required, just direct unstaking
+     * @param amountOfStaking Amount of staking tokens to unstake
+     * 
+     * @dev The service will receive Principal Tokens equal to: amountOfStaking * PRICE_OF_STAKING
+     * @dev Subject to the same time locks as regular unstaking (21 days for full unstake)
+     * @dev Only callable by contract accounts (services), not EOAs
+     */
+    function serviceUnstaking(uint256 amountOfStaking) external onlyCA {
         stakingBaseProcess(
-            AccountMetadata({Address: service, IsAService: true}),
+            AccountMetadata({Address: msg.sender, IsAService: true}),
             false,
             amountOfStaking,
             0,
@@ -464,8 +522,8 @@ contract Staking {
      * @notice Core staking logic that handles both service and user staking operations
      * @dev Processes payments, updates history, handles time locks, and manages EVVM integration
      * @param account Metadata of the account performing the staking operation
-     *                - Address: Address of the user/service
-     *                - IsAService: True if the account is a service, false if a user
+     *                  - Address: Address of the account
+     *                  - IsAService: Boolean indicating if the account is a smart contract (service) account
      * @param isStaking True for staking (requires payment), false for unstaking (provides refund)
      * @param amountOfStaking Amount of staking tokens to stake/unstake
      * @param priorityFee_EVVM Priority fee for EVVM transaction
@@ -517,7 +575,6 @@ contract Staking {
                 Evvm(EVVM_ADDRESS).pointStaker(account.Address, 0x00);
             }
 
-            // Only for user unstaking, not service
             if (priorityFee_EVVM != 0 && !account.IsAService)
                 makePay(
                     account.Address,
@@ -733,16 +790,29 @@ contract Staking {
         admin.timeToAccept = 0;
     }
 
+    /**
+     * @notice Proposes a new golden fisher address with 1-day time delay
+     * @dev Part of the time-delayed governance system for golden fisher changes
+     * @param _goldenFisher Address of the proposed new golden fisher
+     */
     function proposeGoldenFisher(address _goldenFisher) external onlyOwner {
         goldenFisher.proposal = _goldenFisher;
         goldenFisher.timeToAccept = block.timestamp + 1 days;
     }
 
+    /**
+     * @notice Rejects the current golden fisher proposal
+     * @dev Only current admin can reject the pending golden fisher proposal
+     */
     function rejectProposalGoldenFisher() external onlyOwner {
         goldenFisher.proposal = address(0);
         goldenFisher.timeToAccept = 0;
     }
 
+    /**
+     * @notice Accepts the golden fisher proposal after the time delay has passed
+     * @dev Can only be called by the current admin after the 1-day time delay
+     */
     function acceptNewGoldenFisher() external onlyOwner {
         if (goldenFisher.timeToAccept > block.timestamp) {
             revert();
@@ -752,6 +822,11 @@ contract Staking {
         goldenFisher.timeToAccept = 0;
     }
 
+    /**
+     * @notice Proposes a new time delay for staking after unstaking with 1-day time delay
+     * @dev Part of the time-delayed governance system for staking unlock time changes
+     * @param _secondsToUnlockStaking New number of seconds users must wait after unstaking before staking again
+     */
     function proposeSetSecondsToUnlockStaking(
         uint256 _secondsToUnlockStaking
     ) external onlyOwner {
@@ -759,11 +834,19 @@ contract Staking {
         secondsToUnlockStaking.timeToAccept = block.timestamp + 1 days;
     }
 
+    /**
+     * @notice Rejects the current staking unlock time proposal
+     * @dev Only current admin can reject the pending staking unlock time proposal
+     */
     function rejectProposalSetSecondsToUnlockStaking() external onlyOwner {
         secondsToUnlockStaking.proposal = 0;
         secondsToUnlockStaking.timeToAccept = 0;
     }
 
+    /**
+     * @notice Accepts the staking unlock time proposal after the time delay has passed
+     * @dev Can only be called by the current admin after the 1-day time delay
+     */
     function acceptSetSecondsToUnlockStaking() external onlyOwner {
         if (secondsToUnlockStaking.timeToAccept > block.timestamp) {
             revert();
@@ -773,6 +856,11 @@ contract Staking {
         secondsToUnlockStaking.timeToAccept = 0;
     }
 
+    /**
+     * @notice Proposes a new time delay for full unstaking operations with 1-day time delay
+     * @dev Part of the time-delayed governance system for full unstaking time changes
+     * @param _secondsToUnllockFullUnstaking New number of seconds users must wait for full unstaking (default: 21 days)
+     */
     function prepareSetSecondsToUnllockFullUnstaking(
         uint256 _secondsToUnllockFullUnstaking
     ) external onlyOwner {
@@ -780,11 +868,19 @@ contract Staking {
         secondsToUnllockFullUnstaking.timeToAccept = block.timestamp + 1 days;
     }
 
+    /**
+     * @notice Cancels the current full unstaking time proposal
+     * @dev Only current admin can cancel the pending full unstaking time proposal
+     */
     function cancelSetSecondsToUnllockFullUnstaking() external onlyOwner {
         secondsToUnllockFullUnstaking.proposal = 0;
         secondsToUnllockFullUnstaking.timeToAccept = 0;
     }
 
+    /**
+     * @notice Confirms the full unstaking time proposal after the time delay has passed
+     * @dev Can only be called by the current admin after the 1-day time delay
+     */
     function confirmSetSecondsToUnllockFullUnstaking() external onlyOwner {
         if (secondsToUnllockFullUnstaking.timeToAccept > block.timestamp) {
             revert();
@@ -795,14 +891,26 @@ contract Staking {
         secondsToUnllockFullUnstaking.timeToAccept = 0;
     }
 
+    /**
+     * @notice Prepares to toggle the public staking flag with 1-day time delay
+     * @dev Initiates the time-delayed process to enable/disable public staking
+     */
     function prepareChangeAllowPublicStaking() external onlyOwner {
         allowPublicStaking.timeToAccept = block.timestamp + 1 days;
     }
 
+    /**
+     * @notice Cancels the pending public staking flag change
+     * @dev Only current admin can cancel the pending public staking toggle
+     */
     function cancelChangeAllowPublicStaking() external onlyOwner {
         allowPublicStaking.timeToAccept = 0;
     }
 
+    /**
+     * @notice Confirms and executes the public staking flag toggle after the time delay has passed
+     * @dev Toggles between enabled/disabled state for public staking after 1-day delay
+     */
     function confirmChangeAllowPublicStaking() external onlyOwner {
         if (allowPublicStaking.timeToAccept > block.timestamp) {
             revert();
@@ -813,14 +921,26 @@ contract Staking {
         });
     }
 
+    /**
+     * @notice Prepares to toggle the presale staking flag with 1-day time delay
+     * @dev Initiates the time-delayed process to enable/disable presale staking
+     */
     function prepareChangeAllowPresaleStaking() external onlyOwner {
         allowPresaleStaking.timeToAccept = block.timestamp + 1 days;
     }
 
+    /**
+     * @notice Cancels the pending presale staking flag change
+     * @dev Only current admin can cancel the pending presale staking toggle
+     */
     function cancelChangeAllowPresaleStaking() external onlyOwner {
         allowPresaleStaking.timeToAccept = 0;
     }
 
+    /**
+     * @notice Confirms and executes the presale staking flag toggle after the time delay has passed
+     * @dev Toggles between enabled/disabled state for presale staking after 1-day delay
+     */
     function confirmChangeAllowPresaleStaking() external onlyOwner {
         if (allowPresaleStaking.timeToAccept > block.timestamp) {
             revert();
@@ -831,16 +951,29 @@ contract Staking {
         });
     }
 
+    /**
+     * @notice Proposes a new estimator contract address with 1-day time delay
+     * @dev Part of the time-delayed governance system for estimator contract changes
+     * @param _estimator Address of the proposed new estimator contract
+     */
     function proposeEstimator(address _estimator) external onlyOwner {
         estimator.proposal = _estimator;
         estimator.timeToAccept = block.timestamp + 1 days;
     }
 
+    /**
+     * @notice Rejects the current estimator contract proposal
+     * @dev Only current admin can reject the pending estimator contract proposal
+     */
     function rejectProposalEstimator() external onlyOwner {
         estimator.proposal = address(0);
         estimator.timeToAccept = 0;
     }
 
+    /**
+     * @notice Accepts the estimator contract proposal after the time delay has passed
+     * @dev Can only be called by the current admin after the 1-day time delay
+     */
     function acceptNewEstimator() external onlyOwner {
         if (estimator.timeToAccept > block.timestamp) {
             revert();

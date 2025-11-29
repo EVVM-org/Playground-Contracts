@@ -2,15 +2,32 @@
 // Full license terms available at: https://www.evvm.info/docs/EVVMNoncommercialLicense
 
 pragma solidity ^0.8.0;
-/*  
-888b     d888                   888            .d8888b.                    888                             888    
-8888b   d8888                   888           d88P  Y88b                   888                             888    
-88888b.d88888                   888           888    888                   888                             888    
-888Y88888P888  .d88b.   .d8888b 888  888      888         .d88b.  88888b.  888888 888d888 8888b.   .d8888b 888888 
-888 Y888P 888 d88""88b d88P"    888 .88P      888        d88""88b 888 "88b 888    888P"      "88b d88P"    888    
-888  Y8P  888 888  888 888      888888K       888    888 888  888 888  888 888    888    .d888888 888      888    
-888   "   888 Y88..88P Y88b.    888 "88b      Y88b  d88P Y88..88P 888  888 Y88b.  888    888  888 Y88b.    Y88b.  
-888       888  "Y88P"   "Y8888P 888  888       "Y8888P"   "Y88P"  888  888  "Y888 888    "Y888888  "Y8888P  "Y888                                                                                                          
+/**
+
+░▒▓████████▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓██████████████▓▒░  
+░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░ 
+░▒▓█▓▒░       ░▒▓█▓▒▒▓█▓▒░ ░▒▓█▓▒▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░ 
+░▒▓██████▓▒░  ░▒▓█▓▒▒▓█▓▒░ ░▒▓█▓▒▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░ 
+░▒▓█▓▒░        ░▒▓█▓▓█▓▒░   ░▒▓█▓▓█▓▒░ ░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░ 
+░▒▓█▓▒░        ░▒▓█▓▓█▓▒░   ░▒▓█▓▓█▓▒░ ░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░ 
+░▒▓████████▓▒░  ░▒▓██▓▒░     ░▒▓██▓▒░  ░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░ 
+   ___ _                                             _ 
+  / _ | | __ _ _   _  __ _ _ __ ___  _   _ _ __   __| |
+ / /_)| |/ _` | | | |/ _` | '__/ _ \| | | | '_ \ / _` |
+/ ___/| | (_| | |_| | (_| | | | (_) | |_| | | | | (_| |
+\/    |_|\__,_|\__, |\__, |_|  \___/ \__,_|_| |_|\__,_|
+               |___/ |___/                             
+                                                             
+ * @title EVVM Core Contract
+ * @author Mate labs
+ * @notice Core payment processing and token management system for the EVVM ecosystem
+ * @dev This contract serves as the central hub for:
+ *      - Multi-token payment processing with signature verification
+ *      - Staker reward distribution and incentive mechanisms
+ *      - Cross-chain bridge functionality (Fisher Bridge)
+ *      - Balance management across the EVVM ecosystem
+ *      - Integration with NameService for identity-based payments
+ *      - Treasury integration for privileged balance operations
  */
 
 import {NameService} from "@EVVM/playground/contracts/nameService/NameService.sol";
@@ -55,12 +72,12 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
      * - Configures admin address with full administrative privileges
      * - Sets staking contract address for reward distribution and status management
      * - Stores EVVM metadata including principal token address and reward parameters
-     * - Distributes initial Principal Tokens to staking contract (2x reward amount)
+     * - Distributes initial MATE tokens to staking contract (2x reward amount)
      * - Registers staking contract as privileged staker with full benefits
      * - Activates breaker flag for one-time NameService and Treasury setup
      *
      * Token Distribution:
-     * - Staking contract receives 2x current reward amount in Principal Tokens
+     * - Staking contract receives 2x current reward amount in MATE tokens
      * - Enables immediate reward distribution capabilities
      * - Provides operational liquidity for staking rewards
      *
@@ -92,7 +109,7 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
 
         balances[_stakingContractAddress][evvmMetadata.principalTokenAddress] =
             getRewardAmount() *
-            10;
+            2;
 
         stakerList[_stakingContractAddress] = FLAG_IS_STAKER;
 
@@ -109,7 +126,7 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
      * - Validates the breaker flag is active (prevents multiple calls)
      * - Sets the NameService contract address for identity resolution in payments
      * - Configures the Treasury contract address for privileged balance operations
-     * - Provides initial Principal Token balance (10,000 Principal Token) to NameService for operations
+     * - Provides initial Principal Token balance (10,000 MATE) to NameService for operations
      * - Registers NameService as a privileged staker for enhanced functionality and rewards
      *
      * Security Features:
@@ -118,7 +135,7 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
      * - Must be called during initial system deployment phase
      *
      * Initial Token Distribution:
-     * - NameService receives 10,000 Principal Tokens for operational expenses
+     * - NameService receives 10,000 MATE tokens for operational expenses
      * - NameService gains staker privileges for transaction processing
      * - Enables identity-based payment resolution throughout the ecosystem
      *
@@ -159,7 +176,6 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
 
         windowTimeToChangeEvvmID = block.timestamp + 1 days;
     }
-
 
     /**
      * @notice Fallback function implementing proxy pattern with delegatecall to implementation
@@ -261,8 +277,30 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
     //░▒▓█ Payment Functions ████████████████████████████████████████████████████████▓▒░
 
     /**
-     * @notice Processes a single payment transaction with signature verification and nonce management
-     * @dev Supports both sync and async nonce types, identity resolution, and staker rewards
+     * @notice Processes single payments
+     *
+     * Payment Flow:
+     * - Validates signature authorization for the payment
+     *   (if synchronous nonce, uses nextSyncUsedNonce inside
+     *    the signature verification to verify the correct nonce)
+     * - Checks executor permission if specified
+     * - Validates synchronous nonce matches expected value
+     * - Resolves recipient address (identity or direct address)
+     * - If the fisher (msg.sender) is a staker:
+     *  - Transfers priority fee to the fisher
+     *  - Rewards the fisher with Principal tokens
+     * - Updates balances and increments nonce
+     *
+     * @param from Address of the payment sender
+     * @param to_address Direct recipient address (used if to_identity is empty)
+     * @param to_identity Username/identity of recipient (resolved via NameService)
+     * @param token Address of the token contract to transfer
+     * @param amount Amount of tokens to transfer
+     * @param priorityFee Additional fee for transaction priority (not used in non-staker payments)
+     * @param nonce Transaction nonce
+     * @param priorityFlag Execution type flag (false = sync nonce, true = async nonce)
+     * @param executor Address authorized to execute this transaction (zero address = sender only)
+     * @param signature Cryptographic signature authorizing this payment
      */
     function pay(
         address from,
@@ -496,7 +534,7 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
      *
      * Staker Benefits:
      * - Executor receives priority fee (if staker)
-     * - Principal Token reward based on number of successful distributions
+     * - MATE reward based on number of successful distributions
      *
      * @param from Address of the payment sender
      * @param toData Array of recipient data with addresses/identities and amounts
@@ -623,12 +661,12 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
 
         if (size == 0) revert ErrorsLib.NotAnCA();
 
+        if (!_updateBalance(from, to, token, amount))
+            revert ErrorsLib.UpdateBalanceFailed();
+
         if (isAddressStaker(msg.sender)) {
             _giveReward(msg.sender, 1);
         }
-
-        if (!_updateBalance(from, to, token, amount))
-            revert ErrorsLib.UpdateBalanceFailed();
     }
 
     /**
@@ -671,10 +709,6 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
 
         if (size == 0) revert ErrorsLib.NotAnCA();
 
-        if (isAddressStaker(msg.sender)) {
-            _giveReward(msg.sender, 1);
-        }
-
         uint256 acomulatedAmount = 0;
         if (balances[msg.sender][token] < amount)
             revert ErrorsLib.InsufficientBalance();
@@ -691,6 +725,10 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
 
         if (acomulatedAmount != amount)
             revert ErrorsLib.InvalidAmount(acomulatedAmount, amount);
+
+        if (isAddressStaker(msg.sender)) {
+            _giveReward(msg.sender, 1);
+        }
     }
 
     //░▒▓█Treasury exclusive functions██████████████████████████████████████████▓▒░
@@ -1166,16 +1204,16 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
     /**
      * @notice Gets the current Principal Token reward amount per transaction
      * @dev Returns the base reward distributed to stakers for transaction processing
-     * @return Current reward amount in Principal Tokens
+     * @return Current reward amount in MATE tokens
      */
     function getRewardAmount() public view returns (uint256) {
         return evvmMetadata.reward;
     }
 
     /**
-     * @notice Gets the total supply of the principal token (Principal Token)
+     * @notice Gets the total supply of the principal token (MATE)
      * @dev Returns the current total supply used for era transition calculations
-     * @return Total supply of Principal Tokens
+     * @return Total supply of MATE tokens
      */
     function getPrincipalTokenTotalSupply() public view returns (uint256) {
         return evvmMetadata.totalSupply;

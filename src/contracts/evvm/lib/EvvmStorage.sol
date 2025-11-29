@@ -7,7 +7,7 @@ import {EvvmStructs} from "./EvvmStructs.sol";
 
 /**
  * @title EvvmStorage
- * @author jistro.eth
+ * @author Mate labs
  * @dev Storage layout contract for EVVM proxy pattern implementation.
  *      This contract inherits all structures from EvvmStructs and
  *      defines the storage layout that will be used by the proxy pattern.
@@ -46,8 +46,6 @@ abstract contract EvvmStorage is EvvmStructs {
 
     AddressTypeProposal admin;
 
-    
-
     bytes1 breakerSetupNameServiceAddress;
 
     mapping(address => bytes1) stakerList;
@@ -59,5 +57,4 @@ abstract contract EvvmStorage is EvvmStructs {
     mapping(address user => mapping(uint256 nonce => bool isUsed)) asyncUsedNonce;
 
     mapping(address user => uint256 nonce) nextFisherDepositNonce;
-
 }

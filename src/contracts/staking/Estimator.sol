@@ -11,13 +11,12 @@ MM  MMMMMMMM       88   88   88 88  88  88 88.  .88   88   88.  .88 88
 MM        .M `88888P'   dP   dP dP  dP  dP `88888P8   dP   `88888P' dP       
 MMMMMMMMMMMM                                                                 
                                                                             
- * @title Staking Mate contract for Roll A Mate Protocol 
- * @author jistro.eth ariutokintumi.eth
+ * @title Staking Estimator Contract
+ * @author Mate labs
  */
 
 import {Staking} from "@EVVM/playground/contracts/staking/Staking.sol";
 import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
-import "forge-std/console2.sol";
 
 contract Estimator {
     struct AddressTypeProposal {
@@ -107,17 +106,9 @@ contract Estimator {
             uint256 timestampToOverwrite
         )
     {
-        //! solo lo usamos una vez y los nombres de las variables son muy descriptivos
-        /*tokenAddress
-        uint256 tStart = epoch.tStart;
-        uint256 tFinal = epoch.tFinal;
 
-        uint256 ratio = epoch.totalPool / epoch.totalStaked;
-        */
         uint256 totSmLast;
         uint256 sumSmT;
-        //! solo lo usamos una vez y los nombres de las variables son muy descriptivos
-        //uint256 tTotal = epoch.tFinal - epoch.tStart;
 
         uint256 tLast = epoch.tStart;
         Staking.HistoryMetadata memory h;
@@ -133,17 +124,12 @@ contract Estimator {
 
             if (size == 1) totSmLast = h.totalStaked;
 
-            console2.log("totSmLast", totSmLast);
 
             if (h.timestamp > epoch.tFinal) {
                 if (totSmLast > 0) sumSmT += (epoch.tFinal - tLast) * totSmLast;
 
                 idToOverwrite = i;
-                console2.log("h.timestamp > epoch.tFinal happened");
-                console2.log(h.timestamp, ">", epoch.tFinal);
-                console2.log("i", i);
 
-                console2.log("sumSmT", sumSmT);
                 break;
             }
 
@@ -151,15 +137,12 @@ contract Estimator {
 
             if (totSmLast > 0) sumSmT += (h.timestamp - tLast) * totSmLast;
 
-            console2.log("i", i);
 
-            console2.log("sumSmT", sumSmT);
             tLast = h.timestamp;
             totSmLast = h.totalStaked;
             idToOverwrite = i;
         }
 
-        console2.log("for loop ended ---");
         /**
          * @notice to get averageSm the formula is
          *              __ n
@@ -176,9 +159,6 @@ contract Estimator {
          *          t zero  -- start of epoch
          */
 
-        //! si al fin y al cabo tTotal siempre es mayor a 0 no es necesario hacer la validacion
-        // uint256 averageSm = tTotal > 0 ? (sumSmT * 1e18) / tTotal : 0;
-
         uint256 averageSm = (sumSmT * 1e18) / (epoch.tFinal - epoch.tStart);
 
         amountTotalToBeRewarded =
@@ -187,9 +167,6 @@ contract Estimator {
 
         timestampToOverwrite = epoch.tFinal;
 
-        console2.log("sumSmT", sumSmT);
-        console2.log("Average SM", averageSm);
-        console2.log("Estimation", amountTotalToBeRewarded);
 
         epoch.totalPool -= amountTotalToBeRewarded;
         epoch.totalStaked -= h.totalStaked;
@@ -379,3 +356,4 @@ contract Estimator {
 
 
 }
+

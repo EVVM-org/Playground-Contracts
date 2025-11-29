@@ -2,15 +2,58 @@
 // Full license terms available at: https://www.evvm.info/docs/EVVMNoncommercialLicense
 
 pragma solidity ^0.8.0;
-/*  
-888b     d888                   888            .d8888b.                    888                             888    
-8888b   d8888                   888           d88P  Y88b                   888                             888    
-88888b.d88888                   888           888    888                   888                             888    
-888Y88888P888  .d88b.   .d8888b 888  888      888         .d88b.  88888b.  888888 888d888 8888b.   .d8888b 888888 
-888 Y888P 888 d88""88b d88P"    888 .88P      888        d88""88b 888 "88b 888    888P"      "88b d88P"    888    
-888  Y8P  888 888  888 888      888888K       888    888 888  888 888  888 888    888    .d888888 888      888    
-888   "   888 Y88..88P Y88b.    888 "88b      Y88b  d88P Y88..88P 888  888 Y88b.  888    888  888 Y88b.    Y88b.  
-888       888  "Y88P"   "Y8888P 888  888       "Y8888P"   "Y88P"  888  888  "Y888 888    "Y888888  "Y8888P  "Y888                                                                                                          
+/**
+ _   _                            
+| \ | |                           
+|  \| | __ _ _ __ ___   ___       
+| . ` |/ _` | '_ ` _ \ / _ \      
+| |\  | (_| | | | | | |  __/      
+\_| \_/\__,_|_| |_| |_|\___|      
+                                  
+                                  
+ _____                 _          
+/  ___|               (_)         
+\ `--.  ___ _ ____   ___  ___ ___ 
+ `--. \/ _ | '__\ \ / | |/ __/ _ \
+/\__/ |  __| |   \ V /| | (_|  __/
+\____/ \___|_|    \_/ |_|\___\___|
+                                  
+   ___ _                                             _ 
+  / _ | | __ _ _   _  __ _ _ __ ___  _   _ _ __   __| |
+ / /_)| |/ _` | | | |/ _` | '__/ _ \| | | | '_ \ / _` |
+/ ___/| | (_| | |_| | (_| | | | (_) | |_| | | | | (_| |
+\/    |_|\__,_|\__, |\__, |_|  \___/ \__,_|_| |_|\__,_|
+               |___/ |___/                             
+                                                             
+ *
+ * @title EVVM Name Service Contract
+ * @author Mate labs
+ * @notice This contract manages username registration and domain name services for the EVVM ecosystem
+ * @dev Provides a comprehensive domain name system with features including:
+ *
+ * Core Features:
+ * - Username registration with pre-registration protection against front-running
+ * - Custom metadata management with schema-based data storage
+ * - Username trading system with offers and marketplace functionality
+ * - Renewal system with dynamic pricing based on market demand
+ * - Time-delayed governance for administrative functions
+ *
+ * Registration Process:
+ * 1. Pre-register: Commit to a username hash to prevent front-running
+ * 2. Register: Reveal the username and complete registration within 30 minutes
+ * 3. Manage: Add custom metadata, handle offers, and renew as needed
+ *
+ * Security Features:
+ * - Signature verification for all operations
+ * - Nonce-based replay protection
+ * - Time-locked administrative changes
+ * - Integration with EVVM core for secure payments
+ *
+ * Economic Model:
+ * - Registration costs 100x EVVM reward amount
+ * - Custom metadata operations cost 10x EVVM reward amount
+ * - Renewal pricing varies based on market demand and timing
+ * - Marketplace takes 0.5% fee on username sales
  */
 
 import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
@@ -20,91 +63,6 @@ import {ErrorsLib} from "@EVVM/playground/contracts/nameService/lib/ErrorsLib.so
 import {SignatureUtils} from "@EVVM/playground/contracts/nameService/lib/SignatureUtils.sol";
 
 contract NameService {
-    struct AddressTypeProposal {
-        address current;
-        address proposal;
-        uint256 timeToAccept;
-    }
-
-    struct UintTypeProposal {
-        uint256 current;
-        uint256 proposal;
-        uint256 timeToAccept;
-    }
-
-    struct BoolTypeProposal {
-        bool flag;
-        uint256 timeToAcceptChange;
-    }
-    struct IdentityBaseMetadata {
-        address owner;
-        uint256 expireDate;
-        uint256 customMetadataMaxSlots;
-        uint256 offerMaxSlots;
-        bytes1 flagNotAUsername;
-    }
-
-    mapping(string username => IdentityBaseMetadata basicMetadata)
-        private identityDetails;
-
-    struct OfferMetadata {
-        address offerer;
-        uint256 expireDate;
-        uint256 amount;
-    }
-
-    mapping(string username => mapping(uint256 id => OfferMetadata))
-        private usernameOffers;
-
-    mapping(string username => mapping(uint256 numberKey => string customValue))
-        private identityCustomMetadata;
-
-    mapping(address => mapping(uint256 => bool)) private nameServiceNonce;
-
-    UintTypeProposal amountToWithdrawTokens;
-
-    AddressTypeProposal evvmAddress;
-
-    AddressTypeProposal admin;
-
-    AddressTypeProposal addressPhoneNumberRegistery;
-
-    AddressTypeProposal addressEmailRegistery;
-
-    AddressTypeProposal addressAutority;
-
-    BoolTypeProposal stopChangeVerificationsAddress;
-
-    address private constant PRINCIPAL_TOKEN_ADDRESS =
-        0x0000000000000000000000000000000000000001;
-
-    uint256 private mateTokenLockedForWithdrawOffers;
-
-    modifier onlyAdmin() {
-        if (msg.sender != admin.current) revert ErrorsLib.SenderIsNotAdmin();
-
-        _;
-    }
-
-    modifier onlyOwnerOfIdentity(address _user, string memory _identity) {
-        if (identityDetails[_identity].owner != _user)
-            revert ErrorsLib.UserIsNotOwnerOfIdentity();
-
-        _;
-    }
-
-    modifier verifyIfNonceIsAvailable(address _user, uint256 _nonce) {
-        if (nameServiceNonce[_user][_nonce])
-            revert ErrorsLib.NonceAlreadyUsed();
-
-        _;
-    }
-
-    constructor(address _evvmAddress, address _initialOwner) {
-        evvmAddress.current = _evvmAddress;
-        admin.current = _initialOwner;
-    }
-
     /**
      * @dev _setIdentityBaseMetadata and _setIdentityCustomMetadata are debug functions
      *      DO NOT USE IN PRODUCTION!!!!!!!
@@ -124,25 +82,145 @@ contract NameService {
     ) external {
         identityCustomMetadata[_identity][_numberKey] = _customValue;
     }
+    
+    /**
+     * @dev Struct for managing address change proposals with time delay
+     * @param current Currently active address
+     * @param proposal Proposed new address waiting for approval
+     * @param timeToAccept Timestamp when the proposal can be accepted
+     */
+    struct AddressTypeProposal {
+        address current;
+        address proposal;
+        uint256 timeToAccept;
+    }
 
     /**
-     *  @notice This function is used to pre-register a username to avoid
-     *          front-running attacks.
-     *  @param user the address of the user who wants to pre-register
-     *               the username
-     *  @param hashPreRegisteredUsername the hash of pre-registered username
-     *  @param nonce the nonce of the user
-     *  @param signature the signature of the transaction of the priority fee
-     *  @param priorityFee_EVVM the priority fee for the fisher who will include
-     *                          the transaction
-     *
-     *  @notice if doesn't have a priority fee the next parameters are not necessary
-     *
-     *  @param nonce_EVVM the nonce of the user in the Evvm
-     *  @param priorityFlag_EVVM the priority of the transaction in the
-     *                           Evvm's payMateStaker function
-     *  @param signature_EVVM the signature of the transaction in the
-     *                                payMateStaker function in the Evvm
+     * @dev Struct for managing uint256 value proposals with time delay
+     * @param current Currently active value
+     * @param proposal Proposed new value waiting for approval
+     * @param timeToAccept Timestamp when the proposal can be accepted
+     */
+    struct UintTypeProposal {
+        uint256 current;
+        uint256 proposal;
+        uint256 timeToAccept;
+    }
+
+    /**
+     * @dev Struct for managing boolean flag changes with time delay
+     * @param flag Current boolean state
+     * @param timeToAcceptChange Timestamp when the flag change can be executed
+     */
+    struct BoolTypeProposal {
+        bool flag;
+        uint256 timeToAcceptChange;
+    }
+
+    /**
+     * @dev Core metadata for each registered identity/username
+     * @param owner Address that owns this identity
+     * @param expireDate Timestamp when the registration expires
+     * @param customMetadataMaxSlots Number of custom metadata entries stored
+     * @param offerMaxSlots Maximum number of offers that have been made
+     * @param flagNotAUsername Flag indicating if this is a pre-registration (0x01) or actual username (0x00)
+     */
+    struct IdentityBaseMetadata {
+        address owner;
+        uint256 expireDate;
+        uint256 customMetadataMaxSlots;
+        uint256 offerMaxSlots;
+        bytes1 flagNotAUsername;
+    }
+
+    /// @dev Mapping from username to its core metadata and registration details
+    mapping(string username => IdentityBaseMetadata basicMetadata)
+        private identityDetails;
+
+    /**
+     * @dev Metadata for marketplace offers on usernames
+     * @param offerer Address making the offer
+     * @param expireDate Timestamp when the offer expires
+     * @param amount Amount offered in Principal Tokens (after 0.5% marketplace fee deduction)
+     */
+    struct OfferMetadata {
+        address offerer;
+        uint256 expireDate;
+        uint256 amount;
+    }
+
+    /// @dev Nested mapping: username => offer ID => offer details
+    mapping(string username => mapping(uint256 id => OfferMetadata))
+        private usernameOffers;
+
+    /// @dev Nested mapping: username => metadata key => custom value string
+    mapping(string username => mapping(uint256 numberKey => string customValue))
+        private identityCustomMetadata;
+
+    /// @dev Mapping to track used nonces per address to prevent replay attacks
+    mapping(address => mapping(uint256 => bool)) private nameServiceNonce;
+
+    /// @dev Proposal system for token withdrawal amounts with time delay
+    UintTypeProposal amountToWithdrawTokens;
+
+    /// @dev Proposal system for EVVM contract address changes with time delay
+    AddressTypeProposal evvmAddress;
+
+    /// @dev Proposal system for admin address changes with time delay
+    AddressTypeProposal admin;
+
+    /// @dev Constant address representing the Principal Token in the EVVM ecosystem
+    address private constant PRINCIPAL_TOKEN_ADDRESS =
+        0x0000000000000000000000000000000000000001;
+
+    /// @dev Amount of Principal Tokens locked in pending marketplace offers
+    uint256 private principalTokenTokenLockedForWithdrawOffers;
+
+    /// @dev Restricts function access to the current admin address only
+    modifier onlyAdmin() {
+        if (msg.sender != admin.current) revert ErrorsLib.SenderIsNotAdmin();
+
+        _;
+    }
+
+    /// @dev Verifies that the caller owns the specified identity/username
+    modifier onlyOwnerOfIdentity(address _user, string memory _identity) {
+        if (identityDetails[_identity].owner != _user)
+            revert ErrorsLib.UserIsNotOwnerOfIdentity();
+
+        _;
+    }
+
+    /// @dev Ensures the nonce hasn't been used before to prevent replay attacks
+    modifier verifyIfNonceIsAvailable(address _user, uint256 _nonce) {
+        if (nameServiceNonce[_user][_nonce])
+            revert ErrorsLib.NonceAlreadyUsed();
+
+        _;
+    }
+
+    /**
+     * @notice Initializes the NameService contract
+     * @dev Sets up the EVVM integration and initial admin
+     * @param _evvmAddress Address of the EVVM core contract for payment processing
+     * @param _initialOwner Address that will have admin privileges
+     */
+    constructor(address _evvmAddress, address _initialOwner) {
+        evvmAddress.current = _evvmAddress;
+        admin.current = _initialOwner;
+    }
+
+    /**
+     * @notice Pre-registers a username hash to prevent front-running attacks
+     * @dev Creates a temporary reservation that can be registered 30 minutes later
+     * @param user Address of the user making the pre-registration
+     * @param hashPreRegisteredUsername Keccak256 hash of username + random number
+     * @param nonce Unique nonce to prevent replay attacks
+     * @param signature Signature proving authorization for this operation
+     * @param priorityFee_EVVM Priority fee for faster transaction processing
+     * @param nonce_EVVM Nonce for the EVVM payment transaction
+     * @param priorityFlag_EVVM True for async payment, false for sync payment
+     * @param signature_EVVM Signature for the EVVM payment transaction
      */
     function preRegistrationUsername(
         address user,
@@ -174,7 +252,7 @@ contract NameService {
                 signature_EVVM
             );
         }
-        /// concatenamos @ con el hash del username para evitar que se pueda registrar un username que no sea un hash
+
         string memory key = string.concat(
             "@",
             AdvancedStrings.bytes32ToString(hashPreRegisteredUsername)
@@ -188,30 +266,28 @@ contract NameService {
             flagNotAUsername: 0x01
         });
 
-        updateUserNonceAndRewardFisher(
-            user,
-            nonce,
-            false,
-            msg.sender,
-            Evvm(evvmAddress.current).getRewardAmount() + priorityFee_EVVM
-        );
+        nameServiceNonce[user][nonce] = true;
+
+        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
+            makeCaPay(
+                msg.sender,
+                Evvm(evvmAddress.current).getRewardAmount() + priorityFee_EVVM
+            );
+        }
     }
 
     /**
-     *  @notice This function is used to register a username
-     *  @param user the address of the user who wants to register
-     *  @param username the username to register
-     *  @param clowNumber the random number of the pre-registration
-     *                     hash of the username to verify if the user
-     *                     is the owner of the pre-registration hash
-     *  @param nonce the nonce of the user
-     *  @param signature the signature of the transaction
-     *  @param priorityFee_EVVM the priority fee for the fisher who will include
-     *  @param nonce_EVVM the nonce of the user in the Evvm
-     *  @param priorityFlag_EVVM the priority of the transaction in the
-     *                               Evvm's payMateStaker function
-     *  @param signature_EVVM the signature of the transaction in the
-     *                                payMateStaker function in the Evvm
+     * @notice Completes username registration using a pre-registration commitment
+     * @dev Must be called after the pre-registration period (30 minutes) has reached
+     * @param user Address of the user completing the registration
+     * @param username The actual username being registered (revealed from hash)
+     * @param clowNumber Random number used in the pre-registration hash
+     * @param nonce Unique nonce to prevent replay attacks
+     * @param signature Signature proving authorization for this operation
+     * @param priorityFee_EVVM Priority fee for faster transaction processing
+     * @param nonce_EVVM Nonce for the EVVM payment transaction
+     * @param priorityFlag_EVVM True for async payment, false for sync payment
+     * @param signature_EVVM Signature for the EVVM payment transaction
      */
     function registrationUsername(
         address user,
@@ -268,217 +344,34 @@ contract NameService {
             flagNotAUsername: 0x00
         });
 
-        updateUserNonceAndRewardFisher(
-            user,
-            nonce,
-            false,
-            msg.sender,
-            (50 * Evvm(evvmAddress.current).getRewardAmount()) +
-                priorityFee_EVVM
-        );
+        nameServiceNonce[user][nonce] = true;
+
+        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
+            makeCaPay(
+                msg.sender,
+                (50 * Evvm(evvmAddress.current).getRewardAmount()) +
+                    priorityFee_EVVM
+            );
+        }
 
         delete identityDetails[_key];
     }
 
-    /*
-    function registrationTelephoneNumber(
-        address _user,
-        uint256 _nonce,
-        string memory _phoneNumber,
-        uint256 _timestampUser,
-        bytes memory _signatureUser,
-        uint256 _timestampAuthority,
-        bytes memory _signatureAuthority,
-        uint256 _priorityFeeForFisher,
-        uint256 _nonce_Evvm,
-        bool _priority_Evvm,
-        bytes memory _signature_Evvm
-    ) public verifyIfNonceIsAvailable(_user, _nonce) {
-        isValidPhoneNumberNumber(_phoneNumber);
-
-        makePay(
-            _user,
-            _nonce_Evvm,
-            getPriceOfRegistration(),
-            _priorityFeeForFisher,
-            _priority_Evvm,
-            _signature_Evvm
-        );
-
-        uint256 multiple = IPhoneNumberRegistery(
-            addressPhoneNumberRegistery.current
-        ).register(
-                _user,
-                _phoneNumber,
-                _timestampUser,
-                _signatureUser,
-                _timestampAuthority,
-                _signatureAuthority
-            );
-
-        if (multiple == 50) {
-            identityDetails[_phoneNumber] = IdentityBaseMetadata({
-                owner: _user,
-                expireDate: 0,
-                customMetadataMaxSlots: 0,
-                offerMaxSlots: 0,
-                flagNotAUsername: 0x01
-            });
-        }
-
-        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
-            makeCaPay(
-                msg.sender,
-                (multiple * Evvm(evvmAddress.current).getRewardAmount()) +
-                    _priorityFeeForFisher
-            );
-        }
-
-        nameServiceNonce[_user][_nonce] = true;
-    }
-
-    function reverseTransferTelephoneNumber(
-        address _user,
-        uint256 _nonce,
-        string memory _phoneNumber,
-        uint256 _timestamp,
-        bytes memory _signature
-    ) public verifyIfNonceIsAvailable(_user, _nonce) {
-        if (nameServiceNonce[_user][_nonce]) {
-            revert();
-        }
-
-        uint256 multiple = IPhoneNumberRegistery(
-            addressPhoneNumberRegistery.current
-        ).reverseTransfer(_user, _phoneNumber, _timestamp, _signature);
-
-        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
-            makeCaPay(
-                msg.sender,
-                (multiple * Evvm(evvmAddress.current).getRewardAmount())
-            );
-        }
-
-        nameServiceNonce[_user][_nonce] = true;
-    }
-
-    function claimTransferTelephoneNumber(string memory _phoneNumber) public {
-        uint256 multiple = IPhoneNumberRegistery(
-            addressPhoneNumberRegistery.current
-        ).claimTransfer(_phoneNumber);
-
-        (address newOwner, , , ) = IPhoneNumberRegistery(
-            addressPhoneNumberRegistery.current
-        ).getFullMetadata(_phoneNumber);
-
-        identityDetails[_phoneNumber].owner = newOwner;
-
-        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
-            makeCaPay(
-                msg.sender,
-                (multiple * Evvm(evvmAddress.current).getRewardAmount())
-            );
-        }
-    }
-
-    function registrationEmail(
-        address _user,
-        uint256 _nonce,
-        string memory _email,
-        uint256 _timestampUser,
-        bytes memory _signatureUser,
-        uint256 _timestampAuthority,
-        bytes memory _signatureAuthority,
-        uint256 _priorityFeeForFisher,
-        uint256 _nonce_Evvm,
-        bool _priority_Evvm,
-        bytes memory _signature_Evvm
-    ) public verifyIfNonceIsAvailable(_user, _nonce) {
-        isValidEmail(_email);
-
-        makePay(
-            _user,
-            _nonce_Evvm,
-            getPriceOfRegistration(),
-            _priorityFeeForFisher,
-            _priority_Evvm,
-            _signature_Evvm
-        );
-
-        uint256 multiple = IEmailRegistery(addressEmailRegistery.current)
-            .register(
-                _user,
-                _email,
-                _timestampUser,
-                _signatureUser,
-                _timestampAuthority,
-                _signatureAuthority
-            );
-
-        if (multiple == 50) {
-            identityDetails[_email] = IdentityBaseMetadata({
-                owner: _user,
-                expireDate: 0,
-                customMetadataMaxSlots: 0,
-                offerMaxSlots: 0,
-                flagNotAUsername: 0x01
-            });
-        }
-
-        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
-            makeCaPay(
-                msg.sender,
-                (multiple * Evvm(evvmAddress.current).getRewardAmount()) +
-                    _priorityFeeForFisher
-            );
-        }
-
-        nameServiceNonce[_user][_nonce] = true;
-    }
-
-    function reverseTransferEmail(
-        address _user,
-        uint256 _nonce,
-        string memory _email,
-        uint256 _timestamp,
-        bytes memory _signature
-    ) public verifyIfNonceIsAvailable(_user, _nonce) {
-        if (nameServiceNonce[_user][_nonce]) {
-            revert();
-        }
-
-        uint256 multiple = IEmailRegistery(addressEmailRegistery.current)
-            .reverseTransfer(_user, _email, _timestamp, _signature);
-
-        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
-            makeCaPay(
-                msg.sender,
-                (multiple * Evvm(evvmAddress.current).getRewardAmount())
-            );
-        }
-
-        nameServiceNonce[_user][_nonce] = true;
-    }
-
-    function claimTransferEmail(string memory _email) public {
-        uint256 multiple = IEmailRegistery(addressEmailRegistery.current)
-            .claimTransfer(_email);
-
-        (address newOwner, , , ) = IEmailRegistery(
-            addressEmailRegistery.current
-        ).getFullMetadata(_email);
-
-        identityDetails[_email].owner = newOwner;
-
-        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
-            makeCaPay(
-                msg.sender,
-                (multiple * Evvm(evvmAddress.current).getRewardAmount())
-            );
-        }
-    }
-    */
-
+    /**
+     * @notice Creates a marketplace offer to purchase a username
+     * @dev Locks the offer amount in the contract until withdrawn or accepted
+     * @param user Address making the offer
+     * @param username Target username for the offer
+     * @param expireDate Timestamp when the offer expires
+     * @param amount Amount being offered in Principal Tokens
+     * @param nonce Unique nonce to prevent replay attacks
+     * @param signature Signature proving authorization for this operation
+     * @param priorityFee_EVVM Priority fee for faster transaction processing
+     * @param nonce_EVVM Nonce for the EVVM payment transaction
+     * @param priorityFlag_EVVM True for async payment, false for sync payment
+     * @param signature_EVVM Signature for the EVVM payment transaction
+     * @return offerID Unique identifier for the created offer
+     */
     function makeOffer(
         address user,
         string memory username,
@@ -526,20 +419,16 @@ contract NameService {
         usernameOffers[username][offerID] = OfferMetadata({
             offerer: user,
             expireDate: expireDate,
-            amount: ((amount * 995) / 1000) /// calcula el 99.5% del valor de la oferta
+            amount: ((amount * 995) / 1000)
         });
 
-        updateUserNonceAndRewardFisher(
-            user,
-            nonce,
-            true,
+        makeCaPay(
             msg.sender,
             Evvm(evvmAddress.current).getRewardAmount() +
                 ((amount * 125) / 100_000) +
                 priorityFee_EVVM
         );
-
-        mateTokenLockedForWithdrawOffers +=
+        principalTokenTokenLockedForWithdrawOffers +=
             ((amount * 995) / 1000) +
             (amount / 800);
 
@@ -548,8 +437,23 @@ contract NameService {
         } else if (identityDetails[username].offerMaxSlots == 0) {
             identityDetails[username].offerMaxSlots++;
         }
+
+        nameServiceNonce[user][nonce] = true;
     }
 
+    /**
+     * @notice Withdraws a marketplace offer and refunds the locked tokens
+     * @dev Can only be called by the offer creator before expiration
+     * @param user Address that made the original offer
+     * @param username Username the offer was made for
+     * @param offerID Unique identifier of the offer to withdraw
+     * @param nonce Unique nonce to prevent replay attacks
+     * @param signature Signature proving authorization for this operation
+     * @param priorityFee_EVVM Priority fee for faster transaction processing
+     * @param nonce_EVVM Nonce for the EVVM payment transaction
+     * @param priorityFlag_EVVM True for async payment, false for sync payment
+     * @param signature_EVVM Signature for the EVVM payment transaction
+     */
     function withdrawOffer(
         address user,
         string memory username,
@@ -590,41 +494,32 @@ contract NameService {
 
         usernameOffers[username][offerID].offerer = address(0);
 
-        uint256 feeOfOffer = calculateOfferFee(
-            usernameOffers[username][offerID].amount
-        );
-
-        updateUserNonceAndRewardFisher(
-            user,
-            nonce,
-            true,
+        makeCaPay(
             msg.sender,
             Evvm(evvmAddress.current).getRewardAmount() +
-                feeOfOffer +
+                ((usernameOffers[username][offerID].amount * 1) / 796) +
                 priorityFee_EVVM
         );
 
-        mateTokenLockedForWithdrawOffers -=
+        principalTokenTokenLockedForWithdrawOffers -=
             (usernameOffers[username][offerID].amount) +
-            feeOfOffer;
+            (((usernameOffers[username][offerID].amount * 1) / 199) / 4);
+
+        nameServiceNonce[user][nonce] = true;
     }
 
     /**
-     *  @notice This function is used to accept an offer for a username
-     *  @param user the address of the user who owns the username
-     *  @param username the username to accept the offer
-     *  @param offerID the ID of the offer to accept
-     *  @param nonce the nonce of the user
-     *  @param signature the signature of the transaction
-     *  @param priorityFee_EVVM the priority fee for the fisher who will include the
-     *                       transaction
-     *  @notice if doesn't have a priority fee the next parameters are not necessary
-     *
-     *  @param nonce_EVVM the nonce of the user in the Evvm
-     *  @param priorityFlag_EVVM the priority of the transaction in the
-     *                               Evvm's payMateStaker function
-     *  @param signature_EVVM the signature of the transaction in the
-     *                                payMateStaker function in the Evvm
+     * @notice Accepts a marketplace offer and transfers username ownership
+     * @dev Can only be called by the current username owner before offer expiration
+     * @param user Address of the current username owner
+     * @param username Username being sold
+     * @param offerID Unique identifier of the offer to accept
+     * @param nonce Unique nonce to prevent replay attacks
+     * @param signature Signature proving authorization for this operation
+     * @param priorityFee_EVVM Priority fee for faster transaction processing
+     * @param nonce_EVVM Nonce for the EVVM payment transaction
+     * @param priorityFlag_EVVM True for async payment, false for sync payment
+     * @param signature_EVVM Signature for the EVVM payment transaction
      */
     function acceptOffer(
         address user,
@@ -641,10 +536,10 @@ contract NameService {
         onlyOwnerOfIdentity(user, username)
         verifyIfNonceIsAvailable(user, nonce)
     {
-        OfferMetadata memory offer = usernameOffers[username][offerID];
-
-        if (offer.offerer == address(0) || offer.expireDate < block.timestamp)
-            revert ErrorsLib.AcceptOfferVerificationFailed();
+        if (
+            usernameOffers[username][offerID].offerer == address(0) ||
+            usernameOffers[username][offerID].expireDate < block.timestamp
+        ) revert ErrorsLib.AcceptOfferVerificationFailed();
 
         if (
             !SignatureUtils.verifyMessageSignedForAcceptOffer(
@@ -657,7 +552,7 @@ contract NameService {
             )
         ) revert ErrorsLib.InvalidSignatureOnNameService();
 
-        if (priorityFee_EVVM > 0)
+        if (priorityFee_EVVM > 0) {
             makePay(
                 user,
                 0,
@@ -666,51 +561,50 @@ contract NameService {
                 priorityFlag_EVVM,
                 signature_EVVM
             );
+        }
 
-        makeCaPay(user, offer.amount);
+        makeCaPay(user, usernameOffers[username][offerID].amount);
 
-        identityDetails[username].owner = offer.offerer;
+        identityDetails[username].owner = usernameOffers[username][offerID]
+            .offerer;
 
         usernameOffers[username][offerID].offerer = address(0);
 
-        uint256 feeOfOffer = calculateOfferFee(offer.amount);
+        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
+            makeCaPay(
+                msg.sender,
+                (Evvm(evvmAddress.current).getRewardAmount()) +
+                    (((usernameOffers[username][offerID].amount * 1) / 199) /
+                        4) +
+                    priorityFee_EVVM
+            );
+        }
 
-        updateUserNonceAndRewardFisher(
-            user,
-            nonce,
-            false,
-            msg.sender,
-            Evvm(evvmAddress.current).getRewardAmount() +
-                feeOfOffer +
-                priorityFee_EVVM
-        );
+        principalTokenTokenLockedForWithdrawOffers -=
+            (usernameOffers[username][offerID].amount) +
+            (((usernameOffers[username][offerID].amount * 1) / 199) / 4);
 
-        mateTokenLockedForWithdrawOffers -= offer.amount + feeOfOffer;
+        nameServiceNonce[user][nonce] = true;
     }
 
     /**
-     *  @notice This function is used to renew a username
+     * @notice Renews a username registration for another year
+     * @dev Pricing varies based on timing and market demand for the username
      *
-     *  @custom:important
-     *      if the owner of the username wants to renew the
-     *      username one year before the expiration date, the
-     *      price is 0 Principal Token only for a limited time, after that
-     *      the price is consultable in the seePriceToRenew function
-     *      but if the owner of the username wants to renew more than
-     *      one year before the expiration date, the price is 500,000
-     *      Principal Token and can be renewed up to 100 years
+     * Pricing Rules:
+     * - Free renewal if done within 1 year of expiration (limited time offer)
+     * - Variable cost based on highest active offer (minimum 500 Principal Token)
+     * - Fixed 500,000 Principal Token if renewed more than 1 year before expiration
+     * - Can be renewed up to 100 years in advance
      *
-     *  @param user the address of the user who owns the username
-     *  @param username the username to renew
-     *  @param nonce the nonce of the user
-     *  @param signature the signature of the transaction
-     *  @param priorityFee_EVVM the priority fee for the fisher who will include the
-     *                       transaction
-     *  @param nonce_EVVM the nonce of the user in the Evvm
-     *  @param priorityFlag_EVVM the priority of the transaction in the
-     *                               Evvm's payMateStaker function
-     *  @param signature_EVVM the signature of the transaction in the
-     *                                payMateStaker function in the Evvm
+     * @param user Address of the username owner
+     * @param username Username to renew
+     * @param nonce Unique nonce to prevent replay attacks
+     * @param signature Signature proving authorization for this operation
+     * @param priorityFee_EVVM Priority fee for faster transaction processing
+     * @param nonce_EVVM Nonce for the EVVM payment transaction
+     * @param priorityFlag_EVVM True for async payment, false for sync payment
+     * @param signature_EVVM Signature for the EVVM payment transaction
      */
     function renewUsername(
         address user,
@@ -752,52 +646,45 @@ contract NameService {
             signature_EVVM
         );
 
-        updateUserNonceAndRewardFisher(
-            user,
-            nonce,
-            false,
-            msg.sender,
-            Evvm(evvmAddress.current).getRewardAmount() +
-                ((priceOfRenew * 50) / 100) +
-                priorityFee_EVVM
-        );
+        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
+            makeCaPay(
+                msg.sender,
+                Evvm(evvmAddress.current).getRewardAmount() +
+                    ((priceOfRenew * 50) / 100) +
+                    priorityFee_EVVM
+            );
+        }
 
         identityDetails[username].expireDate += 366 days;
+        nameServiceNonce[user][nonce] = true;
     }
 
-    /*
-     * How to use identityCustomMetadata:
+    /**
+     * @notice Adds custom metadata to a username following a standardized schema format
+     * @dev Metadata follows format: [schema]:[subschema]>[value]
      *
-     * identityCustomMetadata["username"][key] = "value";
+     * Standard Format Examples:
+     * - memberOf:>EVVM
+     * - socialMedia:x>jistro (Twitter/X handle)
+     * - email:dev>jistro[at]evvm.org (development email)
+     * - email:callme>contact[at]jistro.xyz (contact email)
      *
-     * Parameters:
+     * Schema Guidelines:
+     * - Based on https://schema.org/docs/schemas.html
+     * - ':' separates schema from subschema
+     * - '>' separates metadata from value
+     * - Pad with spaces if schema/subschema < 5 characters
+     * - Use "socialMedia" for social networks with network name as subschema
      *
-     * - key (numberKey):
-     *   Should be treated as a nonce (unique number) to avoid overwriting existing values.
-     *   The value 0 is used as a header to check for the absence of a value in case the user
-     *   does not enter one.
-     *
-     * - value (customValue):
-     *   Is a text string that allows storing any type of data.
-     *   The data follows a standard to facilitate reading, although it is not mandatory
-     *   to fully comply with it.
-     *
-     * Standard value format:
-     * [schema]:[subschema]>[value]
-     *
-     * Examples:
-     * memberOf:>EVVM
-     * socialMedia:x     >jistro       // LinkedIn without subschema
-     * email:dev   >jistro@evvm.org    // Email with "dev" subschema
-     * email:callme>contact@jistro.xyz  // Email with "callme" subschema
-     *
-     * Important notes:
-     * - 'schema' is based on https://schema.org/docs/schemas.html
-     * - ':' is the separator between schema and subschema
-     * - '>' is the separator between metadata and value
-     * - If 'schema' or 'subschema' have fewer than 5 characters, they should be padded with spaces:
-     *   Example: vk   :job  >jane-doe
-     * - In case of social networks, the 'schema' should be "socialMedia" and the 'subschema' should be the social network name
+     * @param user Address of the username owner
+     * @param identity Username to add metadata to
+     * @param value Metadata string following the standardized format
+     * @param nonce Unique nonce to prevent replay attacks
+     * @param signature Signature proving authorization for this operation
+     * @param priorityFee_EVVM Priority fee for faster transaction processing
+     * @param nonce_EVVM Nonce for the EVVM payment transaction
+     * @param priorityFlag_EVVM True for async payment, false for sync payment
+     * @param signature_EVVM Signature for the EVVM payment transaction
      */
     function addCustomMetadata(
         address user,
@@ -836,23 +723,36 @@ contract NameService {
             signature_EVVM
         );
 
-        updateUserNonceAndRewardFisher(
-            user,
-            nonce,
-            false,
-            msg.sender,
-            (5 * Evvm(evvmAddress.current).getRewardAmount()) +
-                ((getPriceToAddCustomMetadata() * 50) / 100) +
-                priorityFee_EVVM
-        );
+        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
+            makeCaPay(
+                msg.sender,
+                (5 * Evvm(evvmAddress.current).getRewardAmount()) +
+                    ((getPriceToAddCustomMetadata() * 50) / 100) +
+                    priorityFee_EVVM
+            );
+        }
 
         identityCustomMetadata[identity][
             identityDetails[identity].customMetadataMaxSlots
         ] = value;
 
         identityDetails[identity].customMetadataMaxSlots++;
+        nameServiceNonce[user][nonce] = true;
     }
 
+    /**
+     * @notice Removes a specific custom metadata entry by key and reorders the array
+     * @dev Shifts all subsequent metadata entries to fill the gap after removal
+     * @param user Address of the username owner
+     * @param identity Username to remove metadata from
+     * @param key Index of the metadata entry to remove
+     * @param nonce Unique nonce to prevent replay attacks
+     * @param signature Signature proving authorization for this operation
+     * @param priorityFee_EVVM Priority fee for faster transaction processing
+     * @param nonce_EVVM Nonce for the EVVM payment transaction
+     * @param priorityFlag_EVVM True for async payment, false for sync payment
+     * @param signature_EVVM Signature for the EVVM payment transaction
+     */
     function removeCustomMetadata(
         address user,
         string memory identity,
@@ -879,7 +779,6 @@ contract NameService {
             )
         ) revert ErrorsLib.InvalidSignatureOnNameService();
 
-        //check if the key is greater than the number of custom metadata
         if (identityDetails[identity].customMetadataMaxSlots <= key)
             revert ErrorsLib.InvalidKey();
 
@@ -892,7 +791,6 @@ contract NameService {
             signature_EVVM
         );
 
-        //si es el ultimo elemento
         if (identityDetails[identity].customMetadataMaxSlots == key) {
             delete identityCustomMetadata[identity][key];
         } else {
@@ -910,16 +808,28 @@ contract NameService {
             ];
         }
         identityDetails[identity].customMetadataMaxSlots--;
-
-        updateUserNonceAndRewardFisher(
-            user,
-            nonce,
-            false,
-            msg.sender,
-            (5 * Evvm(evvmAddress.current).getRewardAmount()) + priorityFee_EVVM
-        );
+        nameServiceNonce[user][nonce] = true;
+        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
+            makeCaPay(
+                msg.sender,
+                (5 * Evvm(evvmAddress.current).getRewardAmount()) +
+                    priorityFee_EVVM
+            );
+        }
     }
 
+    /**
+     * @notice Removes all custom metadata entries for a username
+     * @dev More gas-efficient than removing entries individually
+     * @param user Address of the username owner
+     * @param identity Username to flush all metadata from
+     * @param nonce Unique nonce to prevent replay attacks
+     * @param signature Signature proving authorization for this operation
+     * @param priorityFee_EVVM Priority fee for faster transaction processing
+     * @param nonce_EVVM Nonce for the EVVM payment transaction
+     * @param priorityFlag_EVVM True for async payment, false for sync payment
+     * @param signature_EVVM Signature for the EVVM payment transaction
+     */
     function flushCustomMetadata(
         address user,
         string memory identity,
@@ -964,19 +874,31 @@ contract NameService {
             delete identityCustomMetadata[identity][i];
         }
 
-        updateUserNonceAndRewardFisher(
-            user,
-            nonce,
-            false,
-            msg.sender,
-            ((5 * Evvm(evvmAddress.current).getRewardAmount()) *
-                identityDetails[identity].customMetadataMaxSlots) +
-                priorityFee_EVVM
-        );
+        if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
+            makeCaPay(
+                msg.sender,
+                ((5 * Evvm(evvmAddress.current).getRewardAmount()) *
+                    identityDetails[identity].customMetadataMaxSlots) +
+                    priorityFee_EVVM
+            );
+        }
 
         identityDetails[identity].customMetadataMaxSlots = 0;
+        nameServiceNonce[user][nonce] = true;
     }
 
+    /**
+     * @notice Completely removes a username registration and all associated data
+     * @dev Deletes the username, all custom metadata, and makes it available for re-registration
+     * @param user Address of the username owner
+     * @param username Username to completely remove from the system
+     * @param nonce Unique nonce to prevent replay attacks
+     * @param signature Signature proving authorization for this operation
+     * @param priorityFee_EVVM Priority fee for faster transaction processing
+     * @param nonce_EVVM Nonce for the EVVM payment transaction
+     * @param priorityFlag_EVVM True for async payment, false for sync payment
+     * @param signature_EVVM Signature for the EVVM payment transaction
+     */
     function flushUsername(
         address user,
         string memory username,
@@ -1023,10 +945,7 @@ contract NameService {
             delete identityCustomMetadata[username][i];
         }
 
-        updateUserNonceAndRewardFisher(
-            user,
-            nonce,
-            true,
+        makeCaPay(
             msg.sender,
             ((5 * Evvm(evvmAddress.current).getRewardAmount()) *
                 identityDetails[username].customMetadataMaxSlots) +
@@ -1040,10 +959,16 @@ contract NameService {
             offerMaxSlots: identityDetails[username].offerMaxSlots,
             flagNotAUsername: 0x00
         });
+        nameServiceNonce[user][nonce] = true;
     }
 
-    //█Tools for admin█████████████████████████████████████████████████████████████████████████████
+    //█ Administrative Functions with Time-Delayed Governance ████████████████████████████████████
 
+    /**
+     * @notice Proposes a new admin address with 1-day time delay
+     * @dev Part of the time-delayed governance system for admin changes
+     * @param _adminToPropose Address of the proposed new admin
+     */
     function proposeAdmin(address _adminToPropose) public onlyAdmin {
         if (_adminToPropose == address(0) || _adminToPropose == admin.current) {
             revert();
@@ -1053,11 +978,19 @@ contract NameService {
         admin.timeToAccept = block.timestamp + 1 days;
     }
 
+    /**
+     * @notice Cancels the current admin proposal
+     * @dev Only the current admin can cancel pending proposals
+     */
     function cancelProposeAdmin() public onlyAdmin {
         admin.proposal = address(0);
         admin.timeToAccept = 0;
     }
 
+    /**
+     * @notice Accepts the admin proposal and becomes the new admin
+     * @dev Can only be called by the proposed admin after the time delay has passed
+     */
     function acceptProposeAdmin() public {
         if (admin.proposal != msg.sender) {
             revert();
@@ -1073,6 +1006,11 @@ contract NameService {
         });
     }
 
+    /**
+     * @notice Proposes to withdraw Principal Tokens from the contract
+     * @dev Amount must be available after reserving funds for operations and locked offers
+     * @param _amount Amount of Principal Tokens to withdraw
+     */
     function proposeWithdrawPrincipalTokens(uint256 _amount) public onlyAdmin {
         if (
             Evvm(evvmAddress.current).getBalance(
@@ -1081,7 +1019,7 @@ contract NameService {
             ) -
                 (5083 +
                     Evvm(evvmAddress.current).getRewardAmount() +
-                    mateTokenLockedForWithdrawOffers) <
+                    principalTokenTokenLockedForWithdrawOffers) <
             _amount ||
             _amount == 0
         ) {
@@ -1092,11 +1030,19 @@ contract NameService {
         amountToWithdrawTokens.timeToAccept = block.timestamp + 1 days;
     }
 
+    /**
+     * @notice Cancels the pending token withdrawal proposal
+     * @dev Only the current admin can cancel pending proposals
+     */
     function cancelWithdrawPrincipalTokens() public onlyAdmin {
         amountToWithdrawTokens.proposal = 0;
         amountToWithdrawTokens.timeToAccept = 0;
     }
 
+    /**
+     * @notice Executes the approved token withdrawal
+     * @dev Can only be called after the time delay has passed
+     */
     function claimWithdrawPrincipalTokens() public onlyAdmin {
         if (block.timestamp < amountToWithdrawTokens.timeToAccept) {
             revert();
@@ -1108,6 +1054,11 @@ contract NameService {
         amountToWithdrawTokens.timeToAccept = 0;
     }
 
+    /**
+     * @notice Proposes to change the EVVM contract address
+     * @dev Critical function that affects payment processing integration
+     * @param _newEvvmAddress Address of the new EVVM contract
+     */
     function proposeChangeEvvmAddress(
         address _newEvvmAddress
     ) public onlyAdmin {
@@ -1118,11 +1069,19 @@ contract NameService {
         evvmAddress.timeToAccept = block.timestamp + 1 days;
     }
 
+    /**
+     * @notice Cancels the pending EVVM address change proposal
+     * @dev Only the current admin can cancel pending proposals
+     */
     function cancelChangeEvvmAddress() public onlyAdmin {
         evvmAddress.proposal = address(0);
         evvmAddress.timeToAccept = 0;
     }
 
+    /**
+     * @notice Executes the approved EVVM address change
+     * @dev Can only be called after the time delay has passed
+     */
     function acceptChangeEvvmAddress() public onlyAdmin {
         if (block.timestamp < evvmAddress.timeToAccept) {
             revert();
@@ -1134,105 +1093,20 @@ contract NameService {
         });
     }
 
-    function proposeChangePhoneNumberRegistery(
-        address _newAddress
-    ) public onlyAdmin {
-        addressPhoneNumberRegistery.proposal = _newAddress;
-        addressPhoneNumberRegistery.timeToAccept = block.timestamp + 1 days;
-    }
+    //█ Utility Functions ████████████████████████████████████████████████████████████████████████
 
-    function cancelChangePhoneNumberRegistery() public onlyAdmin {
-        addressPhoneNumberRegistery.proposal = address(0);
-        addressPhoneNumberRegistery.timeToAccept = 0;
-    }
+    //█ EVVM Payment Integration ██████████████████████████████████████████████
 
-    function changePhoneNumberRegistery() public onlyAdmin {
-        if (block.timestamp < addressPhoneNumberRegistery.timeToAccept) {
-            revert();
-        }
-        addressPhoneNumberRegistery = AddressTypeProposal({
-            current: addressPhoneNumberRegistery.proposal,
-            proposal: address(0),
-            timeToAccept: 0
-        });
-    }
-
-    function prepareChangeEmailRegistery(address _newAddress) public onlyAdmin {
-        addressEmailRegistery.proposal = _newAddress;
-        addressEmailRegistery.timeToAccept = block.timestamp + 1 days;
-    }
-
-    function cancelChangeEmailRegistery() public onlyAdmin {
-        addressEmailRegistery.proposal = address(0);
-        addressEmailRegistery.timeToAccept = 0;
-    }
-
-    function changeEmailRegistery() public onlyAdmin {
-        if (block.timestamp < addressEmailRegistery.timeToAccept) {
-            revert();
-        }
-        addressEmailRegistery.current = addressEmailRegistery.proposal;
-
-        addressEmailRegistery.proposal = address(0);
-        addressEmailRegistery.timeToAccept = 0;
-    }
-
-    function prepareChangeAutority(address _newAddress) public onlyAdmin {
-        addressAutority.proposal = _newAddress;
-        addressAutority.timeToAccept = block.timestamp + 1 days;
-    }
-
-    function cancelChangeAutority() public onlyAdmin {
-        addressAutority.proposal = address(0);
-        addressAutority.timeToAccept = 0;
-    }
-
-    function changeAutority() public onlyAdmin {
-        if (block.timestamp < addressAutority.timeToAccept) {
-            revert();
-        }
-        addressAutority.current = addressAutority.proposal;
-
-        addressAutority.proposal = address(0);
-        addressAutority.timeToAccept = 0;
-
-        //PhoneNumberRegistery(addressPhoneNumberRegistery.current)
-        //    .changeAutority(addressAutority.current);
-
-        //IEmailRegistery(addressEmailRegistery.current).changeAutority(
-        //    addressAutority.current
-        //);
-    }
-
-    function proposeSetStopChangeVerificationsAddress() public onlyAdmin {
-        if (stopChangeVerificationsAddress.flag) {
-            revert();
-        }
-        stopChangeVerificationsAddress.timeToAcceptChange =
-            block.timestamp +
-            1 days;
-    }
-
-    function cancelSetStopChangeVerificationsAddress() public onlyAdmin {
-        stopChangeVerificationsAddress.timeToAcceptChange = 0;
-    }
-
-    function setStopChangeVerificationsAddress() public onlyAdmin {
-        if (
-            block.timestamp < stopChangeVerificationsAddress.timeToAcceptChange
-        ) {
-            revert();
-        }
-        stopChangeVerificationsAddress = BoolTypeProposal({
-            flag: true,
-            timeToAcceptChange: 0
-        });
-    }
-
-    //█Tools███████████████████████████████████████████████████████████████████████████████████████
-
-    //█Tools for Evvm payment████████████████████
-
+    /**
+     * @notice Internal function to handle payments through the EVVM contract
+     * @dev Supports both synchronous and asynchronous payment modes
+     * @param user Address making the payment
+     * @param amount Amount to pay in Principal Tokens
+     * @param priorityFee Additional priority fee for faster processing
+     * @param nonce Nonce for the EVVM transaction
+     * @param priorityFlag True for async payment, false for sync payment
+     * @param signature Signature authorizing the payment
+     */
     function makePay(
         address user,
         uint256 amount,
@@ -1255,11 +1129,23 @@ contract NameService {
         );
     }
 
+    /**
+     * @notice Internal function to distribute Principal Tokens to users
+     * @dev Calls the EVVM contract's caPay function for token distribution
+     * @param user Address to receive the tokens
+     * @param amount Amount of Principal Tokens to distribute
+     */
     function makeCaPay(address user, uint256 amount) internal {
         Evvm(evvmAddress.current).caPay(user, PRINCIPAL_TOKEN_ADDRESS, amount);
     }
 
-    //█Tools for identity validation███████████████████████████████████████████████████████████████
+    //█ Identity Validation Functions ███████████████████████████████████████████████████████████████
+
+    /**
+     * @notice Validates username format according to system rules
+     * @dev Username must be at least 4 characters, start with a letter, and contain only letters/digits
+     * @param username The username string to validate
+     */
     function isValidUsername(string memory username) internal pure {
         bytes memory usernameBytes = bytes(username);
 
@@ -1279,6 +1165,12 @@ contract NameService {
         }
     }
 
+    /**
+     * @notice Validates phone number format
+     * @dev Phone number must be 6-19 digits only
+     * @param _phoneNumber The phone number string to validate
+     * @return True if valid phone number format
+     */
     function isValidPhoneNumberNumber(
         string memory _phoneNumber
     ) internal pure returns (bool) {
@@ -1297,6 +1189,12 @@ contract NameService {
         return true;
     }
 
+    /**
+     * @notice Validates email address format
+     * @dev Checks for proper email structure: prefix(3+ chars) + @ + domain(3+ chars) + . + TLD(2+ chars)
+     * @param _email The email address string to validate
+     * @return True if valid email format
+     */
     function isValidEmail(string memory _email) internal pure returns (bool) {
         bytes memory _emailBytes = bytes(_email);
         uint256 lengthCount = 0;
@@ -1375,15 +1273,18 @@ contract NameService {
         return true;
     }
 
+    /// @dev Checks if a byte represents a digit (0-9)
     function _isDigit(bytes1 character) private pure returns (bool) {
         return (character >= 0x30 && character <= 0x39); // ASCII range for digits 0-9
     }
 
+    /// @dev Checks if a byte represents a letter (A-Z or a-z)
     function _isLetter(bytes1 character) private pure returns (bool) {
         return ((character >= 0x41 && character <= 0x5A) ||
             (character >= 0x61 && character <= 0x7A)); // ASCII ranges for letters A-Z and a-z
     }
 
+    /// @dev Checks if a byte represents any symbol character
     function _isAnySimbol(bytes1 character) private pure returns (bool) {
         return ((character >= 0x21 && character <= 0x2F) || /// @dev includes characters from "!" to "/"
             (character >= 0x3A && character <= 0x40) || /// @dev includes characters from ":" to "@"
@@ -1391,6 +1292,7 @@ contract NameService {
             (character >= 0x7B && character <= 0x7E)); /// @dev includes characters from "{" to "~"
     }
 
+    /// @dev Checks if a byte is valid for email prefix (letters, digits, and specific symbols)
     function _isOnlyEmailPrefixCharacters(
         bytes1 character
     ) private pure returns (bool) {
@@ -1402,16 +1304,25 @@ contract NameService {
             (character >= 0x7B && character <= 0x7E)); /// @dev includes characters from "{" to "~"
     }
 
+    /// @dev Checks if a byte represents a period/dot character (.)
     function _isAPoint(bytes1 character) private pure returns (bool) {
         return character == 0x2E;
     }
 
+    /// @dev Checks if a byte represents an at symbol (@)
     function _isAAt(bytes1 character) private pure returns (bool) {
         return character == 0x40;
     }
 
-    //█Tools for username hash█████████████████████████████████████████████████████████████████████
+    //█ Username Hashing Functions ███████████████████████████████████████████████████████████████████
 
+    /**
+     * @notice Creates a hash of username and random number for pre-registration
+     * @dev Used in the commit-reveal scheme to prevent front-running attacks
+     * @param _username The username to hash
+     * @param _randomNumber Random number to add entropy
+     * @return Hash of the username and random number
+     */
     function hashUsername(
         string memory _username,
         uint256 _randomNumber
@@ -1419,10 +1330,16 @@ contract NameService {
         return keccak256(abi.encodePacked(_username, _randomNumber));
     }
 
-    //█Getters█████████████████████████████████████████████████████████████████████████████████████
+    //█ View Functions - Public Data Access ██████████████████████████████████████████████████████████
 
-    //█Getters for services██████████████████████████████████████████████████████████████
+    //█ Service Functions ████████████████████████████████████████████████████████████████
 
+    /**
+     * @notice Checks if an identity exists in the system
+     * @dev Handles both pre-registrations and actual username registrations
+     * @param _identity The identity/username to check
+     * @return True if the identity exists and is valid
+     */
     function verifyIfIdentityExists(
         string memory _identity
     ) public view returns (bool) {
@@ -1444,6 +1361,12 @@ contract NameService {
         }
     }
 
+    /**
+     * @notice Strictly verifies if an identity exists and reverts if not found
+     * @dev More strict version that reverts instead of returning false
+     * @param _username The username to verify
+     * @return True if the username exists (will revert if not)
+     */
     function strictVerifyIfIdentityExist(
         string memory _username
     ) public view returns (bool) {
@@ -1465,12 +1388,24 @@ contract NameService {
         }
     }
 
+    /**
+     * @notice Gets the owner address of a registered identity
+     * @dev Returns the current owner address for any valid identity
+     * @param _username The username to query
+     * @return Address of the username owner
+     */
     function getOwnerOfIdentity(
         string memory _username
     ) public view returns (address) {
         return identityDetails[_username].owner;
     }
 
+    /**
+     * @notice Verifies identity exists and returns owner address
+     * @dev Combines strict verification with owner lookup in one call
+     * @param _username The username to verify and get owner for
+     * @return answer Address of the username owner (reverts if username doesn't exist)
+     */
     function verifyStrictAndGetOwnerOfIdentity(
         string memory _username
     ) public view returns (address answer) {
@@ -1480,17 +1415,19 @@ contract NameService {
     }
 
     /**
-     *  @notice This function is used to see the price to renew a username
-     *  @param _identity the username to see the price to renew
-     *  @return price the price to renew the username
+     * @notice Calculates the cost to renew a username registration
+     * @dev Pricing varies based on timing and market demand:
+     *      - Free if renewed before expiration (within grace period)
+     *      - Variable cost based on highest active offer (minimum 500 Principal Token)
+     *      - Fixed 500,000 Principal Token if renewed more than 1 year before expiration
+     * @param _identity The username to calculate renewal price for
+     * @return price The cost in Principal Tokens to renew the username
      */
     function seePriceToRenew(
         string memory _identity
     ) public view returns (uint256 price) {
-        ///verifica si es menor a 366 días
         if (identityDetails[_identity].expireDate >= block.timestamp) {
             if (usernameOffers[_identity][0].expireDate != 0) {
-                ///buscamos el precio mas alto de las ofertas
                 for (
                     uint256 i = 0;
                     i < identityDetails[_identity].offerMaxSlots;
@@ -1507,15 +1444,13 @@ contract NameService {
                     }
                 }
             }
-            //Tiene un costo variable pero mínimo de 500 Principal Token,
             if (price == 0) {
                 price = 500 * 10 ** 18;
             } else {
-                uint256 mateReward = Evvm(evvmAddress.current)
+                uint256 principalTokenReward = Evvm(evvmAddress.current)
                     .getRewardAmount();
-                ///coloca el precio del username en un 0.5% del precio de la oferta más alta, con tope en 500,000 * mateReward
-                price = ((price * 5) / 1000) > (500000 * mateReward)
-                    ? (500000 * mateReward)
+                price = ((price * 5) / 1000) > (500000 * principalTokenReward)
+                    ? (500000 * principalTokenReward)
                     : ((price * 5) / 1000);
             }
         } else {
@@ -1523,10 +1458,20 @@ contract NameService {
         }
     }
 
+    /**
+     * @notice Gets the current price to add custom metadata to a username
+     * @dev Price is dynamic based on current EVVM reward amount
+     * @return price Cost in Principal Tokens (10x current reward amount)
+     */
     function getPriceToAddCustomMetadata() public view returns (uint256 price) {
         price = 10 * Evvm(evvmAddress.current).getRewardAmount();
     }
 
+    /**
+     * @notice Gets the current price to remove a single custom metadata entry
+     * @dev Price is dynamic based on current EVVM reward amount
+     * @return price Cost in Principal Tokens (10x current reward amount)
+     */
     function getPriceToRemoveCustomMetadata()
         public
         view
@@ -1535,6 +1480,12 @@ contract NameService {
         price = 10 * Evvm(evvmAddress.current).getRewardAmount();
     }
 
+    /**
+     * @notice Gets the cost to remove all custom metadata entries from a username
+     * @dev Cost scales with the number of metadata entries to remove
+     * @param _identity The username to calculate flush cost for
+     * @return price Total cost in Principal Tokens (10x reward amount per metadata entry)
+     */
     function getPriceToFlushCustomMetadata(
         string memory _identity
     ) public view returns (uint256 price) {
@@ -1543,6 +1494,12 @@ contract NameService {
             identityDetails[_identity].customMetadataMaxSlots;
     }
 
+    /**
+     * @notice Gets the cost to completely remove a username and all its data
+     * @dev Includes cost for metadata removal plus base username deletion fee
+     * @param _identity The username to calculate deletion cost for
+     * @return price Total cost in Principal Tokens (metadata flush cost + 1x reward amount)
+     */
     function getPriceToFlushUsername(
         string memory _identity
     ) public view returns (uint256 price) {
@@ -1552,8 +1509,15 @@ contract NameService {
             Evvm(evvmAddress.current).getRewardAmount();
     }
 
-    //█User██████████████████████████████████████████████████████████████████████████████
+    //█ User Management Functions ████████████████████████████████████████████████████████████████████
 
+    /**
+     * @notice Checks if a nonce has been used by a specific user
+     * @dev Prevents replay attacks by tracking used nonces per user
+     * @param _user Address of the user to check
+     * @param _nonce Nonce value to verify
+     * @return True if the nonce has been used, false if still available
+     */
     function checkIfNameServiceNonceIsAvailable(
         address _user,
         uint256 _nonce
@@ -1561,7 +1525,14 @@ contract NameService {
         return nameServiceNonce[_user][_nonce];
     }
 
-    //█Identity (general)████████████████████████████████████████████████████████████████
+    //█ Identity Availability Functions ██████████████████████████████████████████████████████████████
+
+    /**
+     * @notice Checks if a username is available for registration
+     * @dev A username is available if it was never registered or has been expired for 60+ days
+     * @param _username The username to check availability for
+     * @return True if the username is available for registration
+     */
     function isUsernameAvailable(
         string memory _username
     ) public view returns (bool) {
@@ -1574,6 +1545,12 @@ contract NameService {
         }
     }
 
+    /**
+     * @notice Gets basic identity information (owner and expiration date)
+     * @dev Returns essential metadata for quick identity verification
+     * @param _username The username to get basic info for
+     * @return Owner address and expiration timestamp
+     */
     function getIdentityBasicMetadata(
         string memory _username
     ) public view returns (address, uint256) {
@@ -1583,12 +1560,24 @@ contract NameService {
         );
     }
 
+    /**
+     * @notice Gets the number of custom metadata entries for a username
+     * @dev Returns the count of metadata slots currently used
+     * @param _username The username to count metadata for
+     * @return Number of custom metadata entries
+     */
     function getAmountOfCustomMetadata(
         string memory _username
     ) public view returns (uint256) {
         return identityDetails[_username].customMetadataMaxSlots;
     }
 
+    /**
+     * @notice Retrieves all custom metadata entries for a username
+     * @dev Returns an array containing all metadata strings in order
+     * @param _username The username to get metadata for
+     * @return Array of all custom metadata strings
+     */
     function getFullCustomMetadataOfIdentity(
         string memory _username
     ) public view returns (string[] memory) {
@@ -1605,6 +1594,13 @@ contract NameService {
         return _customMetadata;
     }
 
+    /**
+     * @notice Gets a specific custom metadata entry by index
+     * @dev Retrieves metadata at a specific slot position
+     * @param _username The username to get metadata from
+     * @param _key The index of the metadata entry to retrieve
+     * @return The metadata string at the specified index
+     */
     function getSingleCustomMetadataOfIdentity(
         string memory _username,
         uint256 _key
@@ -1612,17 +1608,25 @@ contract NameService {
         return identityCustomMetadata[_username][_key];
     }
 
+    /**
+     * @notice Gets the maximum number of metadata slots available for a username
+     * @dev Returns the total capacity for custom metadata entries
+     * @param _username The username to check metadata capacity for
+     * @return Maximum number of metadata slots
+     */
     function getCustomMetadataMaxSlotsOfIdentity(
         string memory _username
     ) public view returns (uint256) {
         return identityDetails[_username].customMetadataMaxSlots;
     }
 
-    //█Usernames█████████████████████████████████████████████████████████████████████████
+    //█ Username Marketplace Functions ███████████████████████████████████████████████████████████████
 
     /**
-     * @dev Returns offres has not been withdrawn (expired or unexpired)
-     * @param _username The username to get the offers
+     * @notice Gets all offers made for a specific username
+     * @dev Returns both active and expired offers that haven't been withdrawn
+     * @param _username The username to get offers for
+     * @return offers Array of all offer metadata structures
      */
     function getOffersOfUsername(
         string memory _username
@@ -1634,6 +1638,13 @@ contract NameService {
         }
     }
 
+    /**
+     * @notice Gets a specific offer for a username by offer ID
+     * @dev Retrieves detailed information about a particular offer
+     * @param _username The username to get the offer from
+     * @param _offerID The ID/index of the specific offer
+     * @return offer The complete offer metadata structure
+     */
     function getSingleOfferOfUsername(
         string memory _username,
         uint256 _offerID
@@ -1641,6 +1652,12 @@ contract NameService {
         return usernameOffers[_username][_offerID];
     }
 
+    /**
+     * @notice Counts the total number of offers made for a username
+     * @dev Iterates through offers to find the actual count of non-empty slots
+     * @param _username The username to count offers for
+     * @return length Total number of offers that have been made
+     */
     function getLengthOfOffersUsername(
         string memory _username
     ) public view returns (uint256 length) {
@@ -1649,12 +1666,26 @@ contract NameService {
         } while (usernameOffers[_username][length].expireDate != 0);
     }
 
+    /**
+     * @notice Gets the expiration date of a username registration
+     * @dev Returns the timestamp when the username registration expires
+     * @param _identity The username to check expiration for
+     * @return The expiration timestamp in seconds since Unix epoch
+     */
     function getExpireDateOfIdentity(
         string memory _identity
     ) public view returns (uint256) {
         return identityDetails[_identity].expireDate;
     }
 
+    /**
+     * @notice Gets price to register an username
+     * @dev Price is fully dynamic based on existing offers and timing
+     *      - If dosnt have offers, price is 100x current EVVM reward amount
+     *      - If has offers, price is calculated via seePriceToRenew function
+     * @param username The username to get registration price for
+     * @return The current registration price in Principal Tokens
+     */
     function getPriceOfRegistration(
         string memory username
     ) public view returns (uint256) {
@@ -1664,10 +1695,24 @@ contract NameService {
                 : Evvm(evvmAddress.current).getRewardAmount() * 100;
     }
 
+    //█ Administrative Getters ███████████████████████████████████████████████████████████████████████
+
+    /**
+     * @notice Gets the current admin address
+     * @dev Returns the address with administrative privileges
+     * @return The current admin address
+     */
     function getAdmin() public view returns (address) {
         return admin.current;
     }
 
+    /**
+     * @notice Gets complete admin information including pending proposals
+     * @dev Returns current admin, proposed admin, and proposal acceptance deadline
+     * @return currentAdmin Current administrative address
+     * @return proposalAdmin Proposed new admin address (if any)
+     * @return timeToAcceptAdmin Timestamp when proposal can be accepted
+     */
     function getAdminFullDetails()
         public
         view
@@ -1680,6 +1725,12 @@ contract NameService {
         return (admin.current, admin.proposal, admin.timeToAccept);
     }
 
+    /**
+     * @notice Gets information about pending token withdrawal proposals
+     * @dev Returns proposed withdrawal amount and acceptance deadline
+     * @return proposalAmountToWithdrawTokens Proposed withdrawal amount in Principal Tokens
+     * @return timeToAcceptAmountToWithdrawTokens Timestamp when proposal can be executed
+     */
     function getProposedWithdrawAmountFullDetails()
         public
         view
@@ -1694,10 +1745,22 @@ contract NameService {
         );
     }
 
+    /**
+     * @notice Gets the current EVVM contract address
+     * @dev Returns the address of the EVVM contract used for payment processing
+     * @return The current EVVM contract address
+     */
     function getEvvmAddress() public view returns (address) {
         return evvmAddress.current;
     }
 
+    /**
+     * @notice Gets complete EVVM address information including pending proposals
+     * @dev Returns current EVVM address, proposed address, and proposal acceptance deadline
+     * @return currentEvvmAddress Current EVVM contract address
+     * @return proposalEvvmAddress Proposed new EVVM address (if any)
+     * @return timeToAcceptEvvmAddress Timestamp when proposal can be accepted
+     */
     function getEvvmAddressFullDetails()
         public
         view
@@ -1712,101 +1775,5 @@ contract NameService {
             evvmAddress.proposal,
             evvmAddress.timeToAccept
         );
-    }
-
-    function getPhoneNumberRegistery() public view returns (address) {
-        return addressPhoneNumberRegistery.current;
-    }
-
-    function getPhoneNumberRegisteryFullDetails()
-        public
-        view
-        returns (
-            address currentPhoneNumberRegistery,
-            address proposalPhoneNumberRegistery,
-            uint256 timeToAcceptPhoneNumberRegistery
-        )
-    {
-        return (
-            addressPhoneNumberRegistery.current,
-            addressPhoneNumberRegistery.proposal,
-            addressPhoneNumberRegistery.timeToAccept
-        );
-    }
-
-    function getEmailRegistery() public view returns (address) {
-        return addressEmailRegistery.current;
-    }
-
-    function getEmailRegisteryFullDetails()
-        public
-        view
-        returns (
-            address currentEmailRegistery,
-            address proposalEmailRegistery,
-            uint256 timeToAcceptEmailRegistery
-        )
-    {
-        return (
-            addressEmailRegistery.current,
-            addressEmailRegistery.proposal,
-            addressEmailRegistery.timeToAccept
-        );
-    }
-
-    function getAutority() public view returns (address) {
-        return addressAutority.current;
-    }
-
-    function getAutorityFullDetails()
-        public
-        view
-        returns (
-            address currentAutority,
-            address proposalAutority,
-            uint256 timeToAcceptAutority
-        )
-    {
-        return (
-            addressAutority.current,
-            addressAutority.proposal,
-            addressAutority.timeToAccept
-        );
-    }
-
-    function getStopChangeVerificationsAddressFullDetails()
-        public
-        view
-        returns (bool flag, uint256 timeToAcceptChange)
-    {
-        return (
-            stopChangeVerificationsAddress.flag,
-            stopChangeVerificationsAddress.timeToAcceptChange
-        );
-    }
-
-    function calculateOfferFee(uint256 amount) public pure returns (uint256) {
-        //obtenemos el 0.5% y dividimos entre 4 para obtener el 0.125%
-        //+ ((usernameOffers[_username][_offerID].amount  * 1 / 199)/4)
-        return ((amount * 1) / 199) / 4;
-    }
-
-    //█Internal Functions██████████████████████████████████████████████████████████████████████████
-
-    function updateUserNonceAndRewardFisher(
-        address user,
-        uint256 nonce,
-        bool skipStakeCheck,
-        address accountToGiveReward,
-        uint256 amountToReward
-    ) internal {
-        nameServiceNonce[user][nonce] = true;
-
-        if (
-            skipStakeCheck ||
-            Evvm(evvmAddress.current).isAddressStaker(accountToGiveReward)
-        ) {
-            makeCaPay(accountToGiveReward, amountToReward);
-        }
     }
 }
