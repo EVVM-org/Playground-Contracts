@@ -908,7 +908,9 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
      */
     function proposeImplementation(address _newImpl) external onlyAdmin {
         proposalImplementation = _newImpl;
-        timeToAcceptImplementation = block.timestamp + 30 days;
+        timeToAcceptImplementation =
+            block.timestamp +
+            TIME_TO_ACCEPT_IMPLEMENTATION;
     }
 
     /**
@@ -957,7 +959,7 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
         }
 
         admin.proposal = _newOwner;
-        admin.timeToAccept = block.timestamp + 1 days;
+        admin.timeToAccept = block.timestamp + TIME_TO_ACCEPT_PROPOSAL;
     }
 
     /**
