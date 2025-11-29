@@ -137,6 +137,8 @@ contract Staking {
         bool IsAService;
     }
 
+    uint256 constant TIME_TO_ACCEPT_PROPOSAL = 1 days;
+
     /// @dev Address of the EVVM core contract
     address private EVVM_ADDRESS;
 
@@ -213,8 +215,8 @@ contract Staking {
 
         goldenFisher.actual = initialGoldenFisher;
 
-        allowPublicStaking.flag = true;
-        allowPresaleStaking.flag = false;
+        allowPublicStaking.flag = false;
+        allowPresaleStaking.flag = true;
 
         secondsToUnlockStaking.actual = 0;
 
@@ -413,12 +415,12 @@ contract Staking {
      * @notice Prepares a service/contract account for staking by recording pre-staking state
      * @dev First step in the service staking process. Must be followed by payment via caPay and confirmServiceStaking in the same transaction
      * @param amountOfStaking Amount of staking tokens the service intends to stake
-     * 
+     *
      * Service Staking Process:
      * 1. Call prepareServiceStaking(amount) - Records balances and metadata
-     * 2. Use EVVM.caPay() to transfer the required Principal Tokens to this contract  
+     * 2. Use EVVM.caPay() to transfer the required Principal Tokens to this contract
      * 3. Call confirmServiceStaking() - Validates payment and completes staking
-     * 
+     *
      * @dev All three steps MUST occur in the same transaction or the staking will fail
      * @dev CRITICAL WARNING: If the process is not completed properly (especially if caPay is called
      *      but confirmServiceStaking is not), the Principal Tokens will remain locked in the staking
@@ -444,13 +446,13 @@ contract Staking {
     /**
      * @notice Confirms and completes the service staking operation after payment verification
      * @dev Final step in service staking. Validates that payment was made correctly and completes the staking process
-     * 
+     *
      * Validation checks:
      * - Service balance decreased by the exact staking cost
-     * - Staking contract balance increased by the exact staking cost  
+     * - Staking contract balance increased by the exact staking cost
      * - Operation occurs in the same transaction as prepareServiceStaking
      * - Caller matches the service that initiated the preparation
-     * 
+     *
      * @dev Only callable by the same contract that called prepareServiceStaking
      * @dev Must be called in the same transaction as prepareServiceStaking
      */
@@ -501,7 +503,7 @@ contract Staking {
      * @notice Allows a service/contract account to unstake their staking tokens
      * @dev Simplified unstaking process for services - no signature or payment required, just direct unstaking
      * @param amountOfStaking Amount of staking tokens to unstake
-     * 
+     *
      * @dev The service will receive Principal Tokens equal to: amountOfStaking * PRICE_OF_STAKING
      * @dev Subject to the same time locks as regular unstaking (21 days for full unstake)
      * @dev Only callable by contract accounts (services), not EOAs
@@ -763,7 +765,7 @@ contract Staking {
      */
     function proposeAdmin(address _newAdmin) external onlyOwner {
         admin.proposal = _newAdmin;
-        admin.timeToAccept = block.timestamp + 1 days;
+        admin.timeToAccept = block.timestamp + TIME_TO_ACCEPT_PROPOSAL;
     }
 
     /**
@@ -797,7 +799,7 @@ contract Staking {
      */
     function proposeGoldenFisher(address _goldenFisher) external onlyOwner {
         goldenFisher.proposal = _goldenFisher;
-        goldenFisher.timeToAccept = block.timestamp + 1 days;
+        goldenFisher.timeToAccept = block.timestamp + TIME_TO_ACCEPT_PROPOSAL;
     }
 
     /**
@@ -831,7 +833,9 @@ contract Staking {
         uint256 _secondsToUnlockStaking
     ) external onlyOwner {
         secondsToUnlockStaking.proposal = _secondsToUnlockStaking;
-        secondsToUnlockStaking.timeToAccept = block.timestamp + 1 days;
+        secondsToUnlockStaking.timeToAccept =
+            block.timestamp +
+            TIME_TO_ACCEPT_PROPOSAL;
     }
 
     /**
@@ -865,7 +869,9 @@ contract Staking {
         uint256 _secondsToUnllockFullUnstaking
     ) external onlyOwner {
         secondsToUnllockFullUnstaking.proposal = _secondsToUnllockFullUnstaking;
-        secondsToUnllockFullUnstaking.timeToAccept = block.timestamp + 1 days;
+        secondsToUnllockFullUnstaking.timeToAccept =
+            block.timestamp +
+            TIME_TO_ACCEPT_PROPOSAL;
     }
 
     /**
@@ -896,7 +902,9 @@ contract Staking {
      * @dev Initiates the time-delayed process to enable/disable public staking
      */
     function prepareChangeAllowPublicStaking() external onlyOwner {
-        allowPublicStaking.timeToAccept = block.timestamp + 1 days;
+        allowPublicStaking.timeToAccept =
+            block.timestamp +
+            TIME_TO_ACCEPT_PROPOSAL;
     }
 
     /**
@@ -926,7 +934,9 @@ contract Staking {
      * @dev Initiates the time-delayed process to enable/disable presale staking
      */
     function prepareChangeAllowPresaleStaking() external onlyOwner {
-        allowPresaleStaking.timeToAccept = block.timestamp + 1 days;
+        allowPresaleStaking.timeToAccept =
+            block.timestamp +
+            TIME_TO_ACCEPT_PROPOSAL;
     }
 
     /**
@@ -958,7 +968,7 @@ contract Staking {
      */
     function proposeEstimator(address _estimator) external onlyOwner {
         estimator.proposal = _estimator;
-        estimator.timeToAccept = block.timestamp + 1 days;
+        estimator.timeToAccept = block.timestamp + TIME_TO_ACCEPT_PROPOSAL;
     }
 
     /**
