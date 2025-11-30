@@ -2,33 +2,33 @@
 // Full license terms available at: https://www.evvm.info/docs/EVVMNoncommercialLicense
 pragma solidity ^0.8.0;
 
-import {Staking} from "@EVVM/playground/contracts/staking/Staking.sol";
-import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
+import {IEvvm} from "@EVVM/playground/interfaces/IEvvm.sol";
+import {IStaking} from "@EVVM/playground/interfaces/IStaking.sol";
 
 abstract contract StakingServiceUtils {
     address stakingHookAddress;
     address evvmHookAddress;
     constructor(address _stakingAddress) {
         stakingHookAddress = _stakingAddress;
-        evvmHookAddress = Staking(stakingHookAddress).getEvvmAddress();
+        evvmHookAddress = IStaking(stakingHookAddress).getEvvmAddress();
     }
     function _makeStakeService(uint256 amountToStake) internal {
-        Staking(stakingHookAddress).prepareServiceStaking(amountToStake);
-        Evvm(evvmHookAddress).caPay(
+        IStaking(stakingHookAddress).prepareServiceStaking(amountToStake);
+        IEvvm(evvmHookAddress).caPay(
             address(stakingHookAddress),
             0x0000000000000000000000000000000000000001,
-            Staking(stakingHookAddress).priceOfStaking() * amountToStake
+            IStaking(stakingHookAddress).priceOfStaking() * amountToStake
         );
-        Staking(stakingHookAddress).confirmServiceStaking();
+        IStaking(stakingHookAddress).confirmServiceStaking();
     }
 
     function _makeUnstakeService(uint256 amountToUnstake) internal {
-        Staking(stakingHookAddress).serviceUnstaking(amountToUnstake);
+        IStaking(stakingHookAddress).serviceUnstaking(amountToUnstake);
     }
 
-    function _changeStakingHookAddress(address newStakingAddress) internal {
+    function _changeStakingAddress(address newStakingAddress) internal {
         stakingHookAddress = newStakingAddress;
-        evvmHookAddress = Staking(stakingHookAddress).getEvvmAddress();
+        evvmHookAddress = IStaking(stakingHookAddress).getEvvmAddress();
     }
 
     function _changeEvvmHookAddress(address newEvvmAddress) internal {
