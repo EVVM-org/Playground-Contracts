@@ -61,7 +61,7 @@ library SignatureUtils {
     ) internal pure returns (bool) {
         return
             SignatureUtil.verifySignature(
-                Strings.toString(evvmID),
+                evvmID,
                 "fisherBridge",
                 string.concat(
                     AdvancedStrings.addressToString(addressToReceive),

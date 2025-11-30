@@ -25,7 +25,7 @@ library SignatureUtils {
     ) internal pure returns (bool) {
         return
             SignatureUtil.verifySignature(
-                Strings.toString(evvmID),
+                evvmID,
                 isExternalStaking ? "publicStaking" : "presaleStaking",
                 string.concat(
                     _isStaking ? "true" : "false",

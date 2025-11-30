@@ -47,7 +47,7 @@ library SignatureUtils {
     ) internal pure returns (bool) {
         return
             SignatureUtil.verifySignature(
-                Strings.toString(evvmID),
+                evvmID,
                 "pay",
                 string.concat(
                     _receiverAddress == address(0)
@@ -99,7 +99,7 @@ library SignatureUtils {
     ) internal pure returns (bool) {
         return
             SignatureUtil.verifySignature(
-                Strings.toString(evvmID),
+                evvmID,
                 "dispersePay",
                 string.concat(
                     AdvancedStrings.bytes32ToString(hashList),

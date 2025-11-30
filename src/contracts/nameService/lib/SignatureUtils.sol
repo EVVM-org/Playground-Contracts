@@ -23,7 +23,7 @@ library SignatureUtils {
     ) internal pure returns (bool) {
         return
             SignatureUtil.verifySignature(
-                Strings.toString(evvmID),
+                evvmID,
                 "preRegistrationUsername",
                 string.concat(
                     AdvancedStrings.bytes32ToString(_hashUsername),
@@ -45,7 +45,7 @@ library SignatureUtils {
     ) internal pure returns (bool) {
         return
             SignatureUtil.verifySignature(
-                Strings.toString(evvmID),
+                evvmID,
                 "registrationUsername",
                 string.concat(
                     _username,
@@ -70,7 +70,7 @@ library SignatureUtils {
     ) internal pure returns (bool) {
         return
             SignatureUtil.verifySignature(
-                Strings.toString(evvmID),
+                evvmID,
                 "makeOffer",
                 string.concat(
                     _username,
@@ -96,7 +96,7 @@ library SignatureUtils {
     ) internal pure returns (bool) {
         return
             SignatureUtil.verifySignature(
-                Strings.toString(evvmID),
+                evvmID,
                 "withdrawOffer",
                 string.concat(
                     _username,
@@ -120,7 +120,7 @@ library SignatureUtils {
     ) internal pure returns (bool) {
         return
             SignatureUtil.verifySignature(
-                Strings.toString(evvmID),
+                evvmID,
                 "acceptOffer",
                 string.concat(
                     _username,
@@ -143,7 +143,7 @@ library SignatureUtils {
     ) internal pure returns (bool) {
         return
             SignatureUtil.verifySignature(
-                Strings.toString(evvmID),
+                evvmID,
                 "renewUsername",
                 string.concat(
                     _username,
@@ -165,7 +165,7 @@ library SignatureUtils {
     ) internal pure returns (bool) {
         return
             SignatureUtil.verifySignature(
-                Strings.toString(evvmID),
+                evvmID,
                 "addCustomMetadata",
                 string.concat(
                     _identity,
@@ -189,7 +189,7 @@ library SignatureUtils {
     ) internal pure returns (bool) {
         return
             SignatureUtil.verifySignature(
-                Strings.toString(evvmID),
+                evvmID,
                 "removeCustomMetadata",
                 string.concat(
                     _username,
@@ -212,7 +212,7 @@ library SignatureUtils {
     ) internal pure returns (bool) {
         return
             SignatureUtil.verifySignature(
-                Strings.toString(evvmID),
+                evvmID,
                 "flushCustomMetadata",
                 string.concat(_identity, ",", Strings.toString(_nonce)),
                 signature,
@@ -229,7 +229,7 @@ library SignatureUtils {
     ) internal pure returns (bool) {
         return
             SignatureUtil.verifySignature(
-                Strings.toString(evvmID),
+                evvmID,
                 "flushUsername",
                 string.concat(_username, ",", Strings.toString(_nonce)),
                 signature,

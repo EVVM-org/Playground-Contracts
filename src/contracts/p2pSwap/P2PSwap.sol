@@ -19,7 +19,7 @@ import {SignatureUtil} from "@EVVM/playground/library/utils/SignatureUtil.sol";
 import {SignatureUtils} from "@EVVM/playground/contracts/p2pSwap/lib/SignatureUtils.sol";
 import {AdvancedStrings} from "@EVVM/playground/library/utils/AdvancedStrings.sol";
 import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
-import {StakingServiceUtils} from "@EVVM/playground/library/utils/StakingServiceUtils.sol";
+import {StakingServiceUtils} from "@EVVM/playground/library/utils/service/StakingServiceUtils.sol";
 
 contract P2PSwap is StakingServiceUtils {
     using SignatureUtil for *;

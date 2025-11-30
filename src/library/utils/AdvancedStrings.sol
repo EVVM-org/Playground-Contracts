@@ -8,87 +8,7 @@ import {Math} from "@EVVM/playground/library/primitives/Math.sol";
 library AdvancedStrings {
     bytes16 private constant HEX_DIGITS = "0123456789abcdef";
 
-    function addressToString(
-        address _address
-    ) internal pure returns (string memory) {
-        bytes32 _bytes = bytes32(uint256(uint160(_address)));
-        bytes memory HEX = "0123456789abcdef";
-        bytes memory _string = new bytes(42);
-        _string[0] = "0";
-        _string[1] = "x";
-        for (uint256 i = 0; i < 20; i++) {
-            _string[2 + i * 2] = HEX[uint8(_bytes[i + 12] >> 4)];
-            _string[3 + i * 2] = HEX[uint8(_bytes[i + 12] & 0x0f)];
-        }
-        return string(_string);
-    }
-
-    function toHex16(bytes16 data) internal pure returns (bytes32 result) {
-        result =
-            (bytes32(data) &
-                0xFFFFFFFFFFFFFFFF000000000000000000000000000000000000000000000000) |
-            ((bytes32(data) &
-                0x0000000000000000FFFFFFFFFFFFFFFF00000000000000000000000000000000) >>
-                64);
-        result =
-            (result &
-                0xFFFFFFFF000000000000000000000000FFFFFFFF000000000000000000000000) |
-            ((result &
-                0x00000000FFFFFFFF000000000000000000000000FFFFFFFF0000000000000000) >>
-                32);
-        result =
-            (result &
-                0xFFFF000000000000FFFF000000000000FFFF000000000000FFFF000000000000) |
-            ((result &
-                0x0000FFFF000000000000FFFF000000000000FFFF000000000000FFFF00000000) >>
-                16);
-        result =
-            (result &
-                0xFF000000FF000000FF000000FF000000FF000000FF000000FF000000FF000000) |
-            ((result &
-                0x00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000) >>
-                8);
-        result =
-            ((result &
-                0xF000F000F000F000F000F000F000F000F000F000F000F000F000F000F000F000) >>
-                4) |
-            ((result &
-                0x0F000F000F000F000F000F000F000F000F000F000F000F000F000F000F000F00) >>
-                8);
-        result = bytes32(
-            0x3030303030303030303030303030303030303030303030303030303030303030 +
-                uint256(result) +
-                (((uint256(result) +
-                    0x0606060606060606060606060606060606060606060606060606060606060606) >>
-                    4) &
-                    0x0F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0F) *
-                7
-        );
-    }
-
-    function bytes32ToString(
-        bytes32 data
-    ) internal pure returns (string memory) {
-        return
-            string(
-                abi.encodePacked(
-                    "0x",
-                    toHex16(bytes16(data)),
-                    toHex16(bytes16(data << 128))
-                )
-            );
-    }
-
-    function equal(
-        string memory a,
-        string memory b
-    ) internal pure returns (bool) {
-        return
-            bytes(a).length == bytes(b).length &&
-            keccak256(bytes(a)) == keccak256(bytes(b));
-    }
-
-    function toString(uint256 value) internal pure returns (string memory) {
+    function uintToString(uint256 value) internal pure returns (string memory) {
         unchecked {
             uint256 length = Math.log10(value) + 1;
             string memory buffer = new string(length);
@@ -108,5 +28,62 @@ library AdvancedStrings {
             }
             return buffer;
         }
+    }
+
+    function addressToString(
+        address _address
+    ) internal pure returns (string memory) {
+        bytes32 _bytes = bytes32(uint256(uint160(_address)));
+        bytes memory _string = new bytes(42);
+        _string[0] = "0";
+        _string[1] = "x";
+        for (uint256 i = 0; i < 20; i++) {
+            _string[2 + i * 2] = HEX_DIGITS[uint8(_bytes[i + 12] >> 4)];
+            _string[3 + i * 2] = HEX_DIGITS[uint8(_bytes[i + 12] & 0x0f)];
+        }
+        return string(_string);
+    }
+
+    function equal(
+        string memory a,
+        string memory b
+    ) internal pure returns (bool) {
+        return
+            bytes(a).length == bytes(b).length &&
+            keccak256(bytes(a)) == keccak256(bytes(b));
+    }
+
+    function bytesToString(
+        bytes memory data
+    ) internal pure returns (string memory) {
+        if (data.length == 0) {
+            return "0x";
+        }
+        
+        bytes memory result = new bytes(2 + data.length * 2);
+        result[0] = "0";
+        result[1] = "x";
+        
+        for (uint256 i = 0; i < data.length; i++) {
+            result[2 + i * 2] = HEX_DIGITS[uint8(data[i] >> 4)];
+            result[3 + i * 2] = HEX_DIGITS[uint8(data[i] & 0x0f)];
+        }
+        
+        return string(result);
+    }
+
+    function bytes32ToString(
+        bytes32 data
+    ) internal pure returns (string memory) {
+        bytes memory result = new bytes(66);
+        result[0] = "0";
+        result[1] = "x";
+        
+        for (uint256 i = 0; i < 32; i++) {
+            result[2 + i * 2] = HEX_DIGITS[uint8(data[i] >> 4)];
+            result[3 + i * 2] = HEX_DIGITS[uint8(data[i] & 0x0f)];
+        }
+        
+        return string(result);
     }
 }

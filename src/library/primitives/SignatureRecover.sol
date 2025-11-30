@@ -14,7 +14,7 @@ library SignatureRecover {
         bytes32 messageHash = keccak256(
             abi.encodePacked(
                 "\x19Ethereum Signed Message:\n",
-                AdvancedStrings.toString(bytes(message).length),
+                AdvancedStrings.uintToString(bytes(message).length),
                 message
             )
         );

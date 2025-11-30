@@ -26,7 +26,7 @@ library SignatureUtils {
     ) internal pure returns (bool) {
         return
             SignatureUtil.verifySignature(
-                Strings.toString(evvmID),
+                evvmID,
                 "makeOrder",
                 string.concat(
                     Strings.toString(_nonce),
@@ -55,7 +55,7 @@ library SignatureUtils {
     ) internal pure returns (bool) {
         return
             SignatureUtil.verifySignature(
-                Strings.toString(evvmID),
+                evvmID,
                 "cancelOrder",
                 string.concat(
                     Strings.toString(_nonce),
@@ -82,7 +82,7 @@ library SignatureUtils {
     ) internal pure returns (bool) {
         return
             SignatureUtil.verifySignature(
-                Strings.toString(evvmID),
+                evvmID,
                 "dispatchOrder",
                 string.concat(
                     Strings.toString(_nonce),

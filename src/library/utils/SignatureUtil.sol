@@ -4,10 +4,11 @@
 pragma solidity ^0.8.0;
 
 import {SignatureRecover} from "@EVVM/playground/library/primitives/SignatureRecover.sol";
+import {AdvancedStrings} from "@EVVM/playground/library/utils/AdvancedStrings.sol";
 
 library SignatureUtil {
     function verifySignature(
-        string memory evvmID,
+        uint256 evvmID,
         string memory functionName,
         string memory inputs,
         bytes memory signature,
@@ -15,7 +16,13 @@ library SignatureUtil {
     ) internal pure returns (bool) {
         return
             SignatureRecover.recoverSigner(
-                string.concat(evvmID, ",", functionName, ",", inputs),
+                string.concat(
+                    AdvancedStrings.uintToString(evvmID),
+                    ",",
+                    functionName,
+                    ",",
+                    inputs
+                ),
                 signature
             ) == expectedSigner;
     }
