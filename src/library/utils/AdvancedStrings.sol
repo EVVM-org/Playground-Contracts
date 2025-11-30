@@ -3,9 +3,11 @@
 
 pragma solidity ^0.8.0;
 
-import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
+import {Math} from "@EVVM/playground/library/primitives/Math.sol";
 
 library AdvancedStrings {
+    bytes16 private constant HEX_DIGITS = "0123456789abcdef";
+
     function addressToString(
         address _address
     ) internal pure returns (string memory) {
@@ -64,7 +66,9 @@ library AdvancedStrings {
         );
     }
 
-    function bytes32ToString(bytes32 data) internal pure returns (string memory) {
+    function bytes32ToString(
+        bytes32 data
+    ) internal pure returns (string memory) {
         return
             string(
                 abi.encodePacked(
@@ -75,7 +79,34 @@ library AdvancedStrings {
             );
     }
 
-    function equal(string memory a, string memory b) internal pure returns (bool) {
-        return bytes(a).length == bytes(b).length && keccak256(bytes(a)) == keccak256(bytes(b));
+    function equal(
+        string memory a,
+        string memory b
+    ) internal pure returns (bool) {
+        return
+            bytes(a).length == bytes(b).length &&
+            keccak256(bytes(a)) == keccak256(bytes(b));
+    }
+
+    function toString(uint256 value) internal pure returns (string memory) {
+        unchecked {
+            uint256 length = Math.log10(value) + 1;
+            string memory buffer = new string(length);
+            uint256 ptr;
+            /// @solidity memory-safe-assembly
+            assembly {
+                ptr := add(buffer, add(32, length))
+            }
+            while (true) {
+                ptr--;
+                /// @solidity memory-safe-assembly
+                assembly {
+                    mstore8(ptr, byte(mod(value, 10), HEX_DIGITS))
+                }
+                value /= 10;
+                if (value == 0) break;
+            }
+            return buffer;
+        }
     }
 }

@@ -15,14 +15,14 @@ pragma solidity ^0.8.0;
 
 import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
 import {Staking} from "@EVVM/playground/contracts/staking/Staking.sol";
-import {SignatureRecover} from "@EVVM/playground/library/SignatureRecover.sol";
+import {SignatureUtil} from "@EVVM/playground/library/utils/SignatureUtil.sol";
 import {SignatureUtils} from "@EVVM/playground/contracts/p2pSwap/lib/SignatureUtils.sol";
-import {AdvancedStrings} from "@EVVM/playground/library/AdvancedStrings.sol";
+import {AdvancedStrings} from "@EVVM/playground/library/utils/AdvancedStrings.sol";
 import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
-import {StakingServiceHooks} from "@EVVM/playground/library/StakingServiceHooks.sol";
+import {StakingServiceUtils} from "@EVVM/playground/library/utils/StakingServiceUtils.sol";
 
-contract P2PSwap is StakingServiceHooks {
-    using SignatureRecover for *;
+contract P2PSwap is StakingServiceUtils {
+    using SignatureUtil for *;
 
     address owner;
     address owner_proposal;
@@ -120,7 +120,7 @@ contract P2PSwap is StakingServiceHooks {
         address _evvmAddress,
         address _stakingAddress,
         address _owner
-    ) StakingServiceHooks(_stakingAddress) {
+    ) StakingServiceUtils(_stakingAddress) {
         evvmAddress = _evvmAddress;
         owner = _owner;
         maxLimitFillFixedFee = 0.001 ether;

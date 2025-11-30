@@ -1152,6 +1152,8 @@ contract unitTestCorrect_Staking_publicStaking_SyncExecutionOnPay is
             1003
         );
 
+        console.log("Executing stake after full unstake...");
+        console.log("Amount of stakig:", evvm.getBalance(address(staking), address(1)));
         vm.startPrank(COMMON_USER_STAKER.Address);
         staking.publicStaking(
             COMMON_USER_NO_STAKER_1.Address,

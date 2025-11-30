@@ -31,7 +31,7 @@ import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
 import {Erc191TestBuilder} from "@EVVM/playground/library/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/contracts/staking/Estimator.sol";
 import {EvvmStorage} from "@EVVM/playground/contracts/evvm/lib/EvvmStorage.sol";
-import {AdvancedStrings} from "@EVVM/playground/library/AdvancedStrings.sol";
+import {AdvancedStrings} from "@EVVM/playground/library/utils/AdvancedStrings.sol";
 import {Treasury} from "@EVVM/playground/contracts/treasury/Treasury.sol";
 
 contract fuzzTest_NameService_acceptOffer is Test, Constants {

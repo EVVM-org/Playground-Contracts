@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: EVVM-NONCOMMERCIAL-1.0
 // Full license terms available at: https://www.evvm.info/docs/EVVMNoncommercialLicense
 
-import {SignatureRecover} from "@EVVM/playground/library/SignatureRecover.sol";
-import {AdvancedStrings} from "@EVVM/playground/library/AdvancedStrings.sol";
+import {SignatureUtil} from "@EVVM/playground/library/utils/SignatureUtil.sol";
+import {AdvancedStrings} from "@EVVM/playground/library/utils/AdvancedStrings.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 
 pragma solidity ^0.8.0;
@@ -25,7 +25,7 @@ library SignatureUtils {
         bytes memory signature
     ) internal pure returns (bool) {
         return
-            SignatureRecover.signatureVerification(
+            SignatureUtil.verifySignature(
                 Strings.toString(evvmID),
                 "makeOrder",
                 string.concat(
@@ -54,7 +54,7 @@ library SignatureUtils {
         bytes memory signature
     ) internal pure returns (bool) {
         return
-            SignatureRecover.signatureVerification(
+            SignatureUtil.verifySignature(
                 Strings.toString(evvmID),
                 "cancelOrder",
                 string.concat(
@@ -81,7 +81,7 @@ library SignatureUtils {
         bytes memory signature
     ) internal pure returns (bool) {
         return
-            SignatureRecover.signatureVerification(
+            SignatureUtil.verifySignature(
                 Strings.toString(evvmID),
                 "dispatchOrder",
                 string.concat(

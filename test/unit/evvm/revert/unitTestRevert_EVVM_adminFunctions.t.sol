@@ -44,7 +44,7 @@ contract unitTestRevert_EVVM_adminFunctions is Test, Constants {
             address(staking),
             EvvmStructs.EvvmMetadata({
                 EvvmName: "EVVM",
-                EvvmID: 777,
+                EvvmID: 0,
                 principalTokenName: "EVVM Staking Token",
                 principalTokenSymbol: "EVVM-STK",
                 principalTokenAddress: 0x0000000000000000000000000000000000000001,

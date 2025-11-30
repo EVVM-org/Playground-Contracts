@@ -14,4 +14,5 @@ library ErrorsLib {
     error NotAnCA();
     error SenderIsNotTreasury();
     error WindowToChangeEvvmIDExpired();
+    error debug(uint256);
 }

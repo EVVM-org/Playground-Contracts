@@ -12,7 +12,7 @@ pragma solidity ^0.8.0;
  */
 
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
-import {AdvancedStrings} from "./AdvancedStrings.sol";
+import {AdvancedStrings} from "@EVVM/playground/library/utils/AdvancedStrings.sol";
 
 library Erc191TestBuilder {
     //-----------------------------------------------------------------------------------

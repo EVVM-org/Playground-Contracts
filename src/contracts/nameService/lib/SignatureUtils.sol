@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: EVVM-NONCOMMERCIAL-1.0
 // Full license terms available at: https://www.evvm.info/docs/EVVMNoncommercialLicense
 
-import {SignatureRecover} from "@EVVM/playground/library/SignatureRecover.sol";
-import {AdvancedStrings} from "@EVVM/playground/library/AdvancedStrings.sol";
+import {SignatureUtil} from "@EVVM/playground/library/utils/SignatureUtil.sol";
+import {AdvancedStrings} from "@EVVM/playground/library/utils/AdvancedStrings.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 
 pragma solidity ^0.8.0;
@@ -22,7 +22,7 @@ library SignatureUtils {
         bytes memory signature
     ) internal pure returns (bool) {
         return
-            SignatureRecover.signatureVerification(
+            SignatureUtil.verifySignature(
                 Strings.toString(evvmID),
                 "preRegistrationUsername",
                 string.concat(
@@ -44,7 +44,7 @@ library SignatureUtils {
         bytes memory signature
     ) internal pure returns (bool) {
         return
-            SignatureRecover.signatureVerification(
+            SignatureUtil.verifySignature(
                 Strings.toString(evvmID),
                 "registrationUsername",
                 string.concat(
@@ -69,7 +69,7 @@ library SignatureUtils {
         bytes memory signature
     ) internal pure returns (bool) {
         return
-            SignatureRecover.signatureVerification(
+            SignatureUtil.verifySignature(
                 Strings.toString(evvmID),
                 "makeOffer",
                 string.concat(
@@ -95,7 +95,7 @@ library SignatureUtils {
         bytes memory signature
     ) internal pure returns (bool) {
         return
-            SignatureRecover.signatureVerification(
+            SignatureUtil.verifySignature(
                 Strings.toString(evvmID),
                 "withdrawOffer",
                 string.concat(
@@ -119,7 +119,7 @@ library SignatureUtils {
         bytes memory signature
     ) internal pure returns (bool) {
         return
-            SignatureRecover.signatureVerification(
+            SignatureUtil.verifySignature(
                 Strings.toString(evvmID),
                 "acceptOffer",
                 string.concat(
@@ -142,7 +142,7 @@ library SignatureUtils {
         bytes memory signature
     ) internal pure returns (bool) {
         return
-            SignatureRecover.signatureVerification(
+            SignatureUtil.verifySignature(
                 Strings.toString(evvmID),
                 "renewUsername",
                 string.concat(
@@ -164,7 +164,7 @@ library SignatureUtils {
         bytes memory signature
     ) internal pure returns (bool) {
         return
-            SignatureRecover.signatureVerification(
+            SignatureUtil.verifySignature(
                 Strings.toString(evvmID),
                 "addCustomMetadata",
                 string.concat(
@@ -188,7 +188,7 @@ library SignatureUtils {
         bytes memory signature
     ) internal pure returns (bool) {
         return
-            SignatureRecover.signatureVerification(
+            SignatureUtil.verifySignature(
                 Strings.toString(evvmID),
                 "removeCustomMetadata",
                 string.concat(
@@ -211,7 +211,7 @@ library SignatureUtils {
         bytes memory signature
     ) internal pure returns (bool) {
         return
-            SignatureRecover.signatureVerification(
+            SignatureUtil.verifySignature(
                 Strings.toString(evvmID),
                 "flushCustomMetadata",
                 string.concat(_identity, ",", Strings.toString(_nonce)),
@@ -228,7 +228,7 @@ library SignatureUtils {
         bytes memory signature
     ) internal pure returns (bool) {
         return
-            SignatureRecover.signatureVerification(
+            SignatureUtil.verifySignature(
                 Strings.toString(evvmID),
                 "flushUsername",
                 string.concat(_username, ",", Strings.toString(_nonce)),

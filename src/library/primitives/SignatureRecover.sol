@@ -3,32 +3,9 @@
 
 pragma solidity ^0.8.0;
 
-import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
+import {AdvancedStrings} from "@EVVM/playground/library/utils/AdvancedStrings.sol";
 
 library SignatureRecover {
-    /*
-    function signatureVerification(
-        string memory message,
-        bytes memory signature,
-        address expectedSigner
-    ) internal pure returns (bool) {
-        return recoverSigner(message, signature) == expectedSigner;
-    }
-    */
-
-    function signatureVerification(
-        string memory evvmID,
-        string memory functionName,
-        string memory inputs,
-        bytes memory signature,
-        address expectedSigner
-    ) internal pure returns (bool) {
-        return
-            recoverSigner(
-                string.concat(evvmID, ",", functionName, ",", inputs),
-                signature
-            ) == expectedSigner;
-    }
 
     function recoverSigner(
         string memory message,
@@ -37,7 +14,7 @@ library SignatureRecover {
         bytes32 messageHash = keccak256(
             abi.encodePacked(
                 "\x19Ethereum Signed Message:\n",
-                Strings.toString(bytes(message).length),
+                AdvancedStrings.toString(bytes(message).length),
                 message
             )
         );

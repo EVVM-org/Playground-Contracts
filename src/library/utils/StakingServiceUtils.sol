@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 import {Staking} from "@EVVM/playground/contracts/staking/Staking.sol";
 import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
 
-abstract contract StakingServiceHooks {
+abstract contract StakingServiceUtils {
     address stakingHookAddress;
     address evvmHookAddress;
     constructor(address _stakingAddress) {

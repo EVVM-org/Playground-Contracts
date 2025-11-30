@@ -34,7 +34,7 @@ import {NameService} from "@EVVM/playground/contracts/nameService/NameService.so
 import {EvvmStorage} from "@EVVM/playground/contracts/evvm/lib/EvvmStorage.sol";
 import {ErrorsLib} from "@EVVM/playground/contracts/evvm/lib/ErrorsLib.sol";
 import {SignatureUtils} from "@EVVM/playground/contracts/evvm/lib/SignatureUtils.sol";
-import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
+import {AdvancedStrings} from "@EVVM/playground/library/utils/AdvancedStrings.sol";
 import {EvvmPlaygroundFunctions} from "@EVVM/playground/PlaygroundFunctions.sol";
 
 contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
@@ -103,6 +103,8 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
         address _stakingContractAddress,
         EvvmMetadata memory _evvmMetadata
     ) {
+        evvmMetadata = _evvmMetadata;
+        
         stakingContractAddress = _stakingContractAddress;
 
         admin.current = _initialOwner;
@@ -115,7 +117,7 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
 
         breakerSetupNameServiceAddress = FLAG_IS_STAKER;
 
-        evvmMetadata = _evvmMetadata;
+        
     }
 
     /**
@@ -167,14 +169,14 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
      * @dev Allows the admin to change the EVVM ID within a 1-day window after deployment
      */
     function setEvvmID(uint256 newEvvmID) external onlyAdmin {
-        if (newEvvmID == 0) {
+        if (evvmMetadata.EvvmID != 0) {
             if (block.timestamp > windowTimeToChangeEvvmID)
                 revert ErrorsLib.WindowToChangeEvvmIDExpired();
         }
 
         evvmMetadata.EvvmID = newEvvmID;
 
-        windowTimeToChangeEvvmID = block.timestamp + 1 days;
+        windowTimeToChangeEvvmID = block.timestamp + 24 hours;
     }
 
     /**
@@ -338,7 +340,7 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
         if (priorityFlag && asyncUsedNonce[from][nonce])
             revert ErrorsLib.InvalidAsyncNonce();
 
-        address to = !Strings.equal(to_identity, "")
+        address to = !AdvancedStrings.equal(to_identity, "")
             ? NameService(nameServiceAddress).verifyStrictAndGetOwnerOfIdentity(
                 to_identity
             )
@@ -459,7 +461,7 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
                 }
             }
 
-            to_aux = !Strings.equal(payData[iteration].to_identity, "")
+            to_aux = !AdvancedStrings.equal(payData[iteration].to_identity, "")
                 ? NameService(nameServiceAddress)
                     .verifyStrictAndGetOwnerOfIdentity(
                         payData[iteration].to_identity
@@ -591,7 +593,7 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
         for (uint256 i = 0; i < toData.length; i++) {
             acomulatedAmount += toData[i].amount;
 
-            if (!Strings.equal(toData[i].to_identity, "")) {
+            if (!AdvancedStrings.equal(toData[i].to_identity, "")) {
                 if (
                     NameService(nameServiceAddress).strictVerifyIfIdentityExist(
                         toData[i].to_identity

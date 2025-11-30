@@ -43,7 +43,7 @@ pragma solidity ^0.8.0;
  */
 
 import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
-import {SignatureRecover} from "@EVVM/playground/library/SignatureRecover.sol";
+import {SignatureUtil} from "@EVVM/playground/library/utils/SignatureUtil.sol";
 import {NameService} from "@EVVM/playground/contracts/nameService/NameService.sol";
 import {Estimator} from "@EVVM/playground/contracts/staking/Estimator.sol";
 import {ErrorsLib} from "./lib/ErrorsLib.sol";
@@ -220,7 +220,7 @@ contract Staking {
 
         secondsToUnlockStaking.actual = 0;
 
-        secondsToUnllockFullUnstaking.actual = 30 seconds;
+        secondsToUnllockFullUnstaking.actual = 5 days;
 
         breakerSetupEstimatorAndEvvm = 0x01;
     }
