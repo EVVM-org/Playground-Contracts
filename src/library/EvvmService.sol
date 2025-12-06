@@ -5,13 +5,10 @@ pragma solidity ^0.8.0;
 
 import {EvvmStructs} from "@EVVM/playground/interfaces/IEvvm.sol";
 import {SignatureUtil} from "@EVVM/playground/library/utils/SignatureUtil.sol";
-import {AsyncNonceService} from "@EVVM/playground/library/utils/service/AsyncNonceService.sol";
+import {AsyncNonce} from "@EVVM/playground/library/utils/nonces/AsyncNonce.sol";
 import {PaymentStakingVariables} from "@EVVM/playground/library/utils/service/PaymentStakingVariables.sol";
 
-abstract contract EvvmService is
-    AsyncNonceService,
-    PaymentStakingVariables
-{
+abstract contract EvvmService is AsyncNonce, PaymentStakingVariables {
     error InvalidServiceSignature();
 
     constructor(
@@ -96,8 +93,6 @@ abstract contract EvvmService is
     ) internal virtual {
         evvm.disperseCaPay(toData, token, amount);
     }
-
-
 
     function _makeStakeService(uint256 amountToStake) internal {
         staking.prepareServiceStaking(amountToStake);
