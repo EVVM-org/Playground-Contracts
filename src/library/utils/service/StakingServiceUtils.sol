@@ -2,19 +2,22 @@
 // Full license terms available at: https://www.evvm.info/docs/EVVMNoncommercialLicense
 pragma solidity ^0.8.0;
 
-import {PaymentStakingVariables} from "@EVVM/playground/library/utils/service/PaymentStakingVariables.sol";
+import {IStaking} from "@EVVM/playground/interfaces/IStaking.sol";
+import {IEvvm} from "@EVVM/playground/interfaces/IEvvm.sol";
 
-abstract contract StakingServiceUtils is PaymentStakingVariables {
+abstract contract StakingServiceUtils  {
+    IStaking internal staking;
     constructor(
-        address evvmAddress,
         address stakingAddress
-    ) PaymentStakingVariables(evvmAddress, stakingAddress) {}
+    ) {
+        staking = IStaking(stakingAddress);
+    }
 
     function _makeStakeService(uint256 amountToStake) internal {
         staking.prepareServiceStaking(amountToStake);
-        evvm.caPay(
+        IEvvm(staking.getEvvmAddress()).caPay(
             address(staking),
-            getPrincipalTokenAddress(),
+            IEvvm(staking.getEvvmAddress()).getPrincipalTokenAddress(),
             staking.priceOfStaking() * amountToStake
         );
         staking.confirmServiceStaking();
@@ -22,6 +25,10 @@ abstract contract StakingServiceUtils is PaymentStakingVariables {
 
     function _makeUnstakeService(uint256 amountToUnstake) internal {
         staking.serviceUnstaking(amountToUnstake);
+    }
+
+    function _changeStakingAddress(address newStakingAddress) internal virtual {
+        staking = IStaking(newStakingAddress);
     }
 
 }

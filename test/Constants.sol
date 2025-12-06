@@ -20,6 +20,7 @@ import {Staking} from "@EVVM/playground/contracts/staking/Staking.sol";
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {StakingServiceUtils} from "@EVVM/playground/library/utils/service/StakingServiceUtils.sol";
 import {IStaking} from "@EVVM/playground/interfaces/IStaking.sol";
+import {IEvvm} from "@EVVM/playground/interfaces/IEvvm.sol";
 
 abstract contract Constants {
     bytes32 constant DEPOSIT_HISTORY_SMATE_IDENTIFIER = bytes32(uint256(1));
@@ -145,14 +146,7 @@ abstract contract Constants {
 }
 
 contract MockContractToStake is StakingServiceUtils {
-    constructor(
-        address stakingAddress
-    )
-        StakingServiceUtils(
-            stakingAddress,
-            IStaking(stakingAddress).getEvvmAddress()
-        )
-    {}
+    constructor(address stakingAddress) StakingServiceUtils(stakingAddress) {}
 
     function stake(uint256 amountToStake) public {
         _makeStakeService(amountToStake);
@@ -164,7 +158,7 @@ contract MockContractToStake is StakingServiceUtils {
 
     function stakeJustInPartTwo(uint256 amountToStake) public {
         staking.prepareServiceStaking(amountToStake);
-        evvm.caPay(
+        IEvvm(staking.getEvvmAddress()).caPay(
             address(staking),
             0x0000000000000000000000000000000000000001,
             staking.priceOfStaking() * amountToStake
@@ -180,7 +174,7 @@ contract MockContractToStake is StakingServiceUtils {
         address tokenAddress
     ) public {
         staking.prepareServiceStaking(amountToStake);
-        evvm.caPay(
+        IEvvm(staking.getEvvmAddress()).caPay(
             address(staking),
             tokenAddress,
             staking.priceOfStaking() * amountToStake
@@ -193,7 +187,7 @@ contract MockContractToStake is StakingServiceUtils {
         uint256 amountToStake
     ) public {
         staking.prepareServiceStaking(amountToStake);
-        evvm.caPay(
+        IEvvm(staking.getEvvmAddress()).caPay(
             address(staking),
             0x0000000000000000000000000000000000000001,
             staking.priceOfStaking() * amountToStakeDiscrepancy
@@ -206,10 +200,10 @@ contract MockContractToStake is StakingServiceUtils {
     }
 
     function getBackMate(address user) public {
-        evvm.caPay(
+        IEvvm(staking.getEvvmAddress()).caPay(
             user,
             0x0000000000000000000000000000000000000001,
-            evvm.getBalance(
+            IEvvm(staking.getEvvmAddress()).getBalance(
                 address(this),
                 0x0000000000000000000000000000000000000001
             )

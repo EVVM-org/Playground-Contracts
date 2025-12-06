@@ -4,13 +4,12 @@
 pragma solidity ^0.8.0;
 
 import {IEvvm, EvvmStructs} from "@EVVM/playground/interfaces/IEvvm.sol";
-import {PaymentStakingVariables} from "@EVVM/playground/library/utils/service/PaymentStakingVariables.sol";
 
-abstract contract MakeServicePaymentOnEvvm is PaymentStakingVariables {
+abstract contract MakeServicePaymentOnEvvm {
+    IEvvm internal evvm;
     constructor(
-        address evvmAddress,
-        address stakingAddress
-    ) PaymentStakingVariables(evvmAddress, stakingAddress) {}
+        address evvmAddress
+    ) {}
 
     function requestPay(
         address from,
@@ -71,6 +70,10 @@ abstract contract MakeServicePaymentOnEvvm is PaymentStakingVariables {
         uint256 amount
     ) internal virtual {
         evvm.disperseCaPay(toData, token, amount);
+    }
+
+    function _changeEvvmAddress(address newEvvmAddress) internal virtual {
+        evvm = IEvvm(newEvvmAddress);
     }
 
 }
