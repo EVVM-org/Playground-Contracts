@@ -5,11 +5,10 @@ pragma solidity ^0.8.0;
 import {IStaking} from "@EVVM/playground/interfaces/IStaking.sol";
 import {IEvvm} from "@EVVM/playground/interfaces/IEvvm.sol";
 
-abstract contract StakingServiceUtils  {
+abstract contract StakingServiceUtils {
     IStaking internal staking;
-    constructor(
-        address stakingAddress
-    ) {
+
+    constructor(address stakingAddress) {
         staking = IStaking(stakingAddress);
     }
 
@@ -30,5 +29,4 @@ abstract contract StakingServiceUtils  {
     function _changeStakingAddress(address newStakingAddress) internal virtual {
         staking = IStaking(newStakingAddress);
     }
-
 }

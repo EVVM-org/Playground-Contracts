@@ -7,22 +7,19 @@ import {EvvmStructs} from "@EVVM/playground/interfaces/IEvvm.sol";
 import {SignatureUtil} from "@EVVM/playground/library/utils/SignatureUtil.sol";
 import {AsyncNonce} from "@EVVM/playground/library/utils/nonces/AsyncNonce.sol";
 import {StakingServiceUtils} from "@EVVM/playground/library/utils/service/StakingServiceUtils.sol";
-import {MakeServicePaymentOnEvvm} from "@EVVM/playground/library/utils/service/MakeServicePaymentOnEvvm.sol";
+import {MakePaymentOnEvvm} from "@EVVM/playground/library/utils/service/MakePaymentOnEvvm.sol";
 
 abstract contract EvvmService is
     AsyncNonce,
     StakingServiceUtils,
-    MakeServicePaymentOnEvvm
+    MakePaymentOnEvvm
 {
     error InvalidServiceSignature();
 
     constructor(
         address evvmAddress,
         address stakingAddress
-    )
-        StakingServiceUtils(stakingAddress)
-        MakeServicePaymentOnEvvm(evvmAddress)
-    {}
+    ) StakingServiceUtils(stakingAddress) MakePaymentOnEvvm(evvmAddress) {}
 
     function validateServiceSignature(
         string memory functionName,
@@ -40,6 +37,4 @@ abstract contract EvvmService is
             )
         ) revert InvalidServiceSignature();
     }
-
-
 }

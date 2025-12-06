@@ -5,11 +5,10 @@ pragma solidity ^0.8.0;
 
 import {IEvvm, EvvmStructs} from "@EVVM/playground/interfaces/IEvvm.sol";
 
-abstract contract MakeServicePaymentOnEvvm {
+abstract contract MakePaymentOnEvvm {
     IEvvm internal evvm;
-    constructor(
-        address evvmAddress
-    ) {}
+
+    constructor(address evvmAddress) {}
 
     function requestPay(
         address from,
@@ -75,5 +74,4 @@ abstract contract MakeServicePaymentOnEvvm {
     function _changeEvvmAddress(address newEvvmAddress) internal virtual {
         evvm = IEvvm(newEvvmAddress);
     }
-
 }

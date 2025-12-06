@@ -4,11 +4,10 @@
 pragma solidity ^0.8.0;
 
 abstract contract SyncNonce {
-
     error SyncNonceMismatch();
 
     mapping(address user => uint256 nonce) private syncNonce;
-    
+
     function incrementSyncNonce(address user) internal virtual {
         syncNonce[user]++;
     }
@@ -17,10 +16,8 @@ abstract contract SyncNonce {
         address user,
         uint256 nonce
     ) internal view virtual {
-        if (syncNonce[user] != nonce)
-            revert SyncNonceMismatch();
+        if (syncNonce[user] != nonce) revert SyncNonceMismatch();
     }
-
 
     function getNextCurrentSyncNonce(
         address user

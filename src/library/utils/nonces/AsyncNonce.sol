@@ -4,7 +4,6 @@
 pragma solidity ^0.8.0;
 
 abstract contract AsyncNonce {
-
     error AsyncNonceAlreadyUsed();
 
     mapping(address user => mapping(uint256 nonce => bool availability))
@@ -21,8 +20,7 @@ abstract contract AsyncNonce {
         address user,
         uint256 nonce
     ) internal view virtual {
-        if (asyncNonce[user][nonce])
-            revert AsyncNonceAlreadyUsed();
+        if (asyncNonce[user][nonce]) revert AsyncNonceAlreadyUsed();
     }
 
     function getIfUsedAsyncNonce(
