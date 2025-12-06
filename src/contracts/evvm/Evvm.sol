@@ -1098,6 +1098,14 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
         return evvmMetadata;
     }
 
+    function getPrincipalTokenAddress() external view returns (address) {
+        return evvmMetadata.principalTokenAddress;
+    }
+
+    function getChainHostCoinAddress() external pure returns (address) {
+        return address(0);
+    }
+
     /**
      * @notice Gets the unique identifier string for this EVVM instance
      * @dev Returns the EvvmID used for distinguishing different EVVM deployments
