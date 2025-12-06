@@ -100,7 +100,7 @@ contract P2PSwap is
             revert("Invalid signature");
         }
 
-        verifyAsyncServiceNonce(user, metadata.nonce);
+        verifyAsyncNonce(user, metadata.nonce);
 
         requestPay(
             user,
@@ -156,7 +156,7 @@ contract P2PSwap is
             );
         }
 
-        markAsyncServiceNonceAsUsed(user, metadata.nonce);
+        markAsyncNonceAsUsed(user, metadata.nonce);
     }
 
     function cancelOrder(
@@ -183,7 +183,7 @@ contract P2PSwap is
 
         uint256 market = findMarket(metadata.tokenA, metadata.tokenB);
 
-        verifyAsyncServiceNonce(user, metadata.nonce);
+        verifyAsyncNonce(user, metadata.nonce);
 
         if (
             market == 0 ||
@@ -222,7 +222,7 @@ contract P2PSwap is
             );
         }
         marketMetadata[market].ordersAvailable--;
-        markAsyncServiceNonceAsUsed(user, metadata.nonce);
+        markAsyncNonceAsUsed(user, metadata.nonce);
     }
 
     function dispatchOrder_fillPropotionalFee(
@@ -249,7 +249,7 @@ contract P2PSwap is
 
         uint256 market = findMarket(metadata.tokenA, metadata.tokenB);
 
-        verifyAsyncServiceNonce(user, metadata.nonce);
+        verifyAsyncNonce(user, metadata.nonce);
 
         if (
             market == 0 ||
@@ -341,7 +341,7 @@ contract P2PSwap is
 
         ordersInsideMarket[market][metadata.orderId].seller = address(0);
         marketMetadata[market].ordersAvailable--;
-        markAsyncServiceNonceAsUsed(user, metadata.nonce);
+        markAsyncNonceAsUsed(user, metadata.nonce);
     }
 
     function dispatchOrder_fillFixedFee(
@@ -369,7 +369,7 @@ contract P2PSwap is
 
         uint256 market = findMarket(metadata.tokenA, metadata.tokenB);
 
-        verifyAsyncServiceNonce(user, metadata.nonce);
+        verifyAsyncNonce(user, metadata.nonce);
 
         if (
             market == 0 ||
@@ -466,7 +466,7 @@ contract P2PSwap is
 
         ordersInsideMarket[market][metadata.orderId].seller = address(0);
         marketMetadata[market].ordersAvailable--;
-        markAsyncServiceNonceAsUsed(user, metadata.nonce);
+        markAsyncNonceAsUsed(user, metadata.nonce);
     }
 
     //devolver el 0.05% del monto de la orden
