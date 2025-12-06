@@ -35,6 +35,7 @@ import {AdvancedStrings} from "@EVVM/playground/library/utils/AdvancedStrings.so
 import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
 import {Treasury} from "@EVVM/playground/contracts/treasury/Treasury.sol";
 import {P2PSwap} from "@EVVM/playground/contracts/p2pSwap/P2PSwap.sol";
+import {P2PSwapStructs} from "@EVVM/playground/contracts/p2pSwap/lib/P2PSwapStructs.sol";
 
 contract fuzzTest_P2PSwap_makeOrder is Test, Constants {
     Staking staking;
@@ -115,7 +116,7 @@ contract fuzzTest_P2PSwap_makeOrder is Test, Constants {
 
         uint256 priorityFee = input.hasPriorityFee ? input.priorityFee : 0;
         uint256 nonceEVVM = input.isAsync ? input.nonceEVVM : 0;
-        P2PSwap.MetadataMakeOrder memory metadata = P2PSwap.MetadataMakeOrder({
+        P2PSwapStructs.MetadataMakeOrder memory metadata = P2PSwapStructs.MetadataMakeOrder({
             nonce: input.nonceP2PSwap,
             tokenA: tokenA,
             tokenB: tokenB,

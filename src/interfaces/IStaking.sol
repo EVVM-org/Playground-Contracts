@@ -40,7 +40,7 @@ interface IStaking {
     function cancelChangeAllowPresaleStaking() external;
     function cancelChangeAllowPublicStaking() external;
     function cancelSetSecondsToUnllockFullUnstaking() external;
-    function checkIfStakeNonceUsed(
+    function getIfUsedAsyncNonce(
         address _account,
         uint256 _nonce
     ) external view returns (bool);

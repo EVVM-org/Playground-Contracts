@@ -402,7 +402,7 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
                 revert ErrorsLib.SenderIsNotTheExecutor();
         }
 
-        if (asyncUsedNonce[from][nonce]) revert ErrorsLib.InvalidAsyncNonce();
+        if (asyncUsedNonce[from][nonce]) revert ErrorsLib.AsyncNonceAlreadyUsed();
 
         address to = !Strings.equal(to_identity, "")
             ? NameService(nameServiceAddress).verifyStrictAndGetOwnerOfIdentity(
@@ -551,7 +551,7 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
 
         if (!isAddressStaker(msg.sender)) revert ErrorsLib.NotAnStaker();
 
-        if (asyncUsedNonce[from][nonce]) revert ErrorsLib.InvalidAsyncNonce();
+        if (asyncUsedNonce[from][nonce]) revert ErrorsLib.AsyncNonceAlreadyUsed();
 
         address to = !Strings.equal(to_identity, "")
             ? NameService(nameServiceAddress).verifyStrictAndGetOwnerOfIdentity(
@@ -789,7 +789,7 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
 
         if (priorityFlag) {
             if (asyncUsedNonce[from][nonce])
-                revert ErrorsLib.InvalidAsyncNonce();
+                revert ErrorsLib.AsyncNonceAlreadyUsed();
         }
 
         if (balances[from][token] < amount + priorityFee)

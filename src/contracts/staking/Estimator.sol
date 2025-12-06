@@ -16,6 +16,7 @@ MMMMMMMMMMMM
  */
 
 import {Staking} from "@EVVM/playground/contracts/staking/Staking.sol";
+import {StakingStructs} from "@EVVM/playground/contracts/staking/lib/StakingStructs.sol";
 import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
 
 contract Estimator {
@@ -111,7 +112,7 @@ contract Estimator {
         uint256 sumSmT;
 
         uint256 tLast = epoch.tStart;
-        Staking.HistoryMetadata memory h;
+        StakingStructs.HistoryMetadata memory h;
         uint256 size = Staking(addressStaking.actual).getSizeOfAddressHistory(
             _user
         );
@@ -315,7 +316,7 @@ contract Estimator {
         uint256 sumSmT;
 
         uint256 tLast = epoch.tStart;
-        Staking.HistoryMetadata memory h;
+        StakingStructs.HistoryMetadata memory h;
         uint256 size = Staking(addressStaking.actual).getSizeOfAddressHistory(
             _user
         );

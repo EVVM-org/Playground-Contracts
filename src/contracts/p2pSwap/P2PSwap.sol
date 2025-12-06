@@ -13,79 +13,24 @@ pragma solidity ^0.8.0;
 888       888  "Y88P"   "Y8888P 888  888       "Y8888P"   "Y88P"  888  888  "Y888 888    "Y888888  "Y8888P  "Y888                                                                                                          
  */
 
-import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
 import {Staking} from "@EVVM/playground/contracts/staking/Staking.sol";
-import {SignatureUtil} from "@EVVM/playground/library/utils/SignatureUtil.sol";
 import {SignatureUtils} from "@EVVM/playground/contracts/p2pSwap/lib/SignatureUtils.sol";
 import {AdvancedStrings} from "@EVVM/playground/library/utils/AdvancedStrings.sol";
-import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
-import {StakingServiceUtils} from "@EVVM/playground/library/utils/service/StakingServiceUtils.sol";
+import {P2PSwapStructs} from "@EVVM/playground/contracts/p2pSwap/lib/P2PSwapStructs.sol";
+import {EvvmStructs} from "@EVVM/playground/interfaces/IEvvm.sol";
+import {EvvmService} from "@EVVM/playground/library/EvvmService.sol";
 
-contract P2PSwap is StakingServiceUtils {
-    using SignatureUtil for *;
-
+contract P2PSwap is
+    EvvmService,
+    P2PSwapStructs
+{
     address owner;
     address owner_proposal;
     uint256 owner_timeToAccept;
 
-    address evvmAddress;
-    address stakingAddress;
-
     address constant MATE_TOKEN_ADDRESS =
         0x0000000000000000000000000000000000000001;
     address constant ETH_ADDRESS = 0x0000000000000000000000000000000000000000;
-
-    struct MarketInformation {
-        address tokenA;
-        address tokenB;
-        uint256 maxSlot;
-        uint256 ordersAvailable;
-    }
-
-    struct Order {
-        address seller;
-        uint256 amountA;
-        uint256 amountB;
-    }
-
-    struct OrderForGetter {
-        uint256 marketId;
-        uint256 orderId;
-        address seller;
-        uint256 amountA;
-        uint256 amountB;
-    }
-
-    struct Percentage {
-        uint256 seller;
-        uint256 service;
-        uint256 mateStaker;
-    }
-
-    struct MetadataMakeOrder {
-        uint256 nonce;
-        address tokenA;
-        address tokenB;
-        uint256 amountA;
-        uint256 amountB;
-    }
-
-    struct MetadataCancelOrder {
-        uint256 nonce;
-        address tokenA;
-        address tokenB;
-        uint256 orderId;
-        bytes signature;
-    }
-
-    struct MetadataDispatchOrder {
-        uint256 nonce;
-        address tokenA;
-        address tokenB;
-        uint256 orderId;
-        uint256 amountOfTokenBToFill;
-        bytes signature;
-    }
 
     Percentage rewardPercentage;
     Percentage rewardPercentage_proposal;
@@ -106,8 +51,6 @@ contract P2PSwap is StakingServiceUtils {
 
     uint256 marketCount;
 
-    mapping(address user => mapping(uint256 nonce => bool isUsed)) nonceP2PSwap;
-
     mapping(address tokenA => mapping(address tokenB => uint256 id)) marketId;
 
     mapping(uint256 id => MarketInformation info) marketMetadata;
@@ -120,8 +63,9 @@ contract P2PSwap is StakingServiceUtils {
         address _evvmAddress,
         address _stakingAddress,
         address _owner
-    ) StakingServiceUtils(_stakingAddress) {
-        evvmAddress = _evvmAddress;
+    )
+        EvvmService(_evvmAddress, _stakingAddress)
+    {
         owner = _owner;
         maxLimitFillFixedFee = 0.001 ether;
         percentageFee = 500;
@@ -130,7 +74,6 @@ contract P2PSwap is StakingServiceUtils {
             service: 4000,
             mateStaker: 1000
         });
-        stakingAddress = _stakingAddress;
     }
 
     function makeOrder(
@@ -144,7 +87,7 @@ contract P2PSwap is StakingServiceUtils {
     ) external returns (uint256 market, uint256 orderId) {
         if (
             !SignatureUtils.verifyMessageSignedForMakeOrder(
-                Evvm(evvmAddress).getEvvmID(),
+                evvm.getEvvmID(),
                 user,
                 metadata.nonce,
                 metadata.tokenA,
@@ -157,11 +100,9 @@ contract P2PSwap is StakingServiceUtils {
             revert("Invalid signature");
         }
 
-        if (nonceP2PSwap[user][metadata.nonce]) {
-            revert("Nonce already used");
-        }
+        verifyAsyncServiceNonce(user, metadata.nonce);
 
-        makePay(
+        requestPay(
             user,
             metadata.tokenA,
             _nonce_Evvm,
@@ -199,7 +140,7 @@ contract P2PSwap is StakingServiceUtils {
             metadata.amountB
         );
 
-        if (Evvm(evvmAddress).isAddressStaker(msg.sender)) {
+        if (evvm.isAddressStaker(msg.sender)) {
             if (_priorityFee_Evvm > 0) {
                 // send the executor the priorityFee
                 makeCaPay(msg.sender, metadata.tokenA, _priorityFee_Evvm);
@@ -210,12 +151,12 @@ contract P2PSwap is StakingServiceUtils {
                 msg.sender,
                 MATE_TOKEN_ADDRESS,
                 _priorityFee_Evvm > 0
-                    ? (Evvm(evvmAddress).getRewardAmount() * 3)
-                    : (Evvm(evvmAddress).getRewardAmount() * 2)
+                    ? (evvm.getRewardAmount() * 3)
+                    : (evvm.getRewardAmount() * 2)
             );
         }
 
-        nonceP2PSwap[user][metadata.nonce] = true;
+        markAsyncServiceNonceAsUsed(user, metadata.nonce);
     }
 
     function cancelOrder(
@@ -228,7 +169,7 @@ contract P2PSwap is StakingServiceUtils {
     ) external {
         if (
             !SignatureUtils.verifyMessageSignedForCancelOrder(
-                Evvm(evvmAddress).getEvvmID(),
+                evvm.getEvvmID(),
                 user,
                 metadata.nonce,
                 metadata.tokenA,
@@ -242,9 +183,7 @@ contract P2PSwap is StakingServiceUtils {
 
         uint256 market = findMarket(metadata.tokenA, metadata.tokenB);
 
-        if (nonceP2PSwap[user][metadata.nonce]) {
-            revert("Invalid nonce");
-        }
+        verifyAsyncServiceNonce(user, metadata.nonce);
 
         if (
             market == 0 ||
@@ -254,7 +193,7 @@ contract P2PSwap is StakingServiceUtils {
         }
 
         if (_priorityFee_Evvm > 0) {
-            makePay(
+            requestPay(
                 user,
                 MATE_TOKEN_ADDRESS,
                 _nonce_Evvm,
@@ -273,18 +212,17 @@ contract P2PSwap is StakingServiceUtils {
 
         ordersInsideMarket[market][metadata.orderId].seller = address(0);
 
-        if (Evvm(evvmAddress).isAddressStaker(msg.sender)) {
+        if (evvm.isAddressStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
                 MATE_TOKEN_ADDRESS,
                 _priorityFee_Evvm > 0
-                    ? ((Evvm(evvmAddress).getRewardAmount() * 3) +
-                        _priorityFee_Evvm)
-                    : (Evvm(evvmAddress).getRewardAmount() * 2)
+                    ? ((evvm.getRewardAmount() * 3) + _priorityFee_Evvm)
+                    : (evvm.getRewardAmount() * 2)
             );
         }
         marketMetadata[market].ordersAvailable--;
-        nonceP2PSwap[user][metadata.nonce] = true;
+        markAsyncServiceNonceAsUsed(user, metadata.nonce);
     }
 
     function dispatchOrder_fillPropotionalFee(
@@ -297,7 +235,7 @@ contract P2PSwap is StakingServiceUtils {
     ) external {
         if (
             !SignatureUtils.verifyMessageSignedForDispatchOrder(
-                Evvm(evvmAddress).getEvvmID(),
+                evvm.getEvvmID(),
                 user,
                 metadata.nonce,
                 metadata.tokenA,
@@ -311,9 +249,7 @@ contract P2PSwap is StakingServiceUtils {
 
         uint256 market = findMarket(metadata.tokenA, metadata.tokenB);
 
-        if (nonceP2PSwap[user][metadata.nonce]) {
-            revert("Invalid nonce");
-        }
+        verifyAsyncServiceNonce(user, metadata.nonce);
 
         if (
             market == 0 ||
@@ -333,7 +269,7 @@ contract P2PSwap is StakingServiceUtils {
             revert("Insuficient amountOfTokenToFill");
         }
 
-        makePay(
+        requestPay(
             user,
             metadata.tokenB,
             _nonce_Evvm,
@@ -392,20 +328,20 @@ contract P2PSwap is StakingServiceUtils {
             ordersInsideMarket[market][metadata.orderId].amountA
         );
 
-        if (Evvm(evvmAddress).isAddressStaker(msg.sender)) {
+        if (evvm.isAddressStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
                 MATE_TOKEN_ADDRESS,
                 metadata.amountOfTokenBToFill >
                     ordersInsideMarket[market][metadata.orderId].amountB + fee
-                    ? Evvm(evvmAddress).getRewardAmount() * 5
-                    : Evvm(evvmAddress).getRewardAmount() * 4
+                    ? evvm.getRewardAmount() * 5
+                    : evvm.getRewardAmount() * 4
             );
         }
 
         ordersInsideMarket[market][metadata.orderId].seller = address(0);
         marketMetadata[market].ordersAvailable--;
-        nonceP2PSwap[user][metadata.nonce] = true;
+        markAsyncServiceNonceAsUsed(user, metadata.nonce);
     }
 
     function dispatchOrder_fillFixedFee(
@@ -419,7 +355,7 @@ contract P2PSwap is StakingServiceUtils {
     ) external {
         if (
             !SignatureUtils.verifyMessageSignedForDispatchOrder(
-                Evvm(evvmAddress).getEvvmID(),
+                evvm.getEvvmID(),
                 user,
                 metadata.nonce,
                 metadata.tokenA,
@@ -433,9 +369,7 @@ contract P2PSwap is StakingServiceUtils {
 
         uint256 market = findMarket(metadata.tokenA, metadata.tokenB);
 
-        if (nonceP2PSwap[user][metadata.nonce]) {
-            revert("Invalid nonce");
-        }
+        verifyAsyncServiceNonce(user, metadata.nonce);
 
         if (
             market == 0 ||
@@ -456,7 +390,7 @@ contract P2PSwap is StakingServiceUtils {
             revert("Insuficient amountOfTokenBToFill");
         }
 
-        makePay(
+        requestPay(
             user,
             metadata.tokenB,
             _nonce_Evvm,
@@ -519,20 +453,20 @@ contract P2PSwap is StakingServiceUtils {
             ordersInsideMarket[market][metadata.orderId].amountA
         );
 
-        if (Evvm(evvmAddress).isAddressStaker(msg.sender)) {
+        if (evvm.isAddressStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
                 MATE_TOKEN_ADDRESS,
                 metadata.amountOfTokenBToFill >
                     ordersInsideMarket[market][metadata.orderId].amountB + fee
-                    ? Evvm(evvmAddress).getRewardAmount() * 5
-                    : Evvm(evvmAddress).getRewardAmount() * 4
+                    ? evvm.getRewardAmount() * 5
+                    : evvm.getRewardAmount() * 4
             );
         }
 
         ordersInsideMarket[market][metadata.orderId].seller = address(0);
         marketMetadata[market].ordersAvailable--;
-        nonceP2PSwap[user][metadata.nonce] = true;
+        markAsyncServiceNonceAsUsed(user, metadata.nonce);
     }
 
     //devolver el 0.05% del monto de la orden
@@ -563,49 +497,6 @@ contract P2PSwap is StakingServiceUtils {
         marketId[tokenA][tokenB] = marketCount;
         marketMetadata[marketCount] = MarketInformation(tokenA, tokenB, 0, 0);
         return marketCount;
-    }
-
-    //◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢
-    // Tools for Evvm
-    //◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢
-
-    function makePay(
-        address _user_Evvm,
-        address _token_Evvm,
-        uint256 _nonce_Evvm,
-        uint256 _ammount_Evvm,
-        uint256 _priorityFee_Evvm,
-        bool _priority_Evvm,
-        bytes memory _signature_Evvm
-    ) internal {
-        Evvm(evvmAddress).pay(
-            _user_Evvm,
-            address(this),
-            "",
-            _token_Evvm,
-            _ammount_Evvm,
-            _priorityFee_Evvm,
-            _nonce_Evvm,
-            _priority_Evvm,
-            address(this),
-            _signature_Evvm
-        );
-    }
-
-    function makeCaPay(
-        address _user_Evvm,
-        address _token_Evvm,
-        uint256 _ammount_Evvm
-    ) internal {
-        Evvm(evvmAddress).caPay(_user_Evvm, _token_Evvm, _ammount_Evvm);
-    }
-
-    function makeDisperseCaPay(
-        EvvmStructs.DisperseCaPayMetadata[] memory toData,
-        address token,
-        uint256 amount
-    ) internal {
-        Evvm(evvmAddress).disperseCaPay(toData, token, amount);
     }
 
     //◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢
@@ -805,7 +696,7 @@ contract P2PSwap is StakingServiceUtils {
     function stake(uint256 amount) external {
         if (
             msg.sender != owner ||
-            amount * Staking(stakingAddress).priceOfStaking() >
+            amount * staking.priceOfStaking() >
             balancesOfContract[0x0000000000000000000000000000000000000001]
         ) revert();
 
@@ -900,13 +791,6 @@ contract P2PSwap is StakingServiceUtils {
             markets[i - 1] = marketMetadata[i];
         }
         return markets;
-    }
-
-    function checkIfANonceP2PSwapIsUsed(
-        address user,
-        uint256 nonce
-    ) public view returns (bool) {
-        return nonceP2PSwap[user][nonce];
     }
 
     function getBalanceOfContract(

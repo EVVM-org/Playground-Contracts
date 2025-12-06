@@ -22,6 +22,7 @@ import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
 
 import {Staking} from "@EVVM/playground/contracts/staking/Staking.sol";
 import {NameService} from "@EVVM/playground/contracts/nameService/NameService.sol";
+import {NameServiceStructs} from "@EVVM/playground/contracts/nameService/lib/NameServiceStructs.sol";
 import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/playground/library/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/contracts/staking/Estimator.sol";
@@ -95,7 +96,7 @@ contract unitTestCorrect_EVVM_dispersePay_async is
     function test__unit_correct__dispersePay_async__nS_nPF_nEX() external {
         nameService._setIdentityBaseMetadata(
             "dummy",
-            NameService.IdentityBaseMetadata({
+            NameServiceStructs.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,
@@ -174,7 +175,7 @@ contract unitTestCorrect_EVVM_dispersePay_async is
     function test__unit_correct__dispersePay_async__nS_PF_nEX() external {
         nameService._setIdentityBaseMetadata(
             "dummy",
-            NameService.IdentityBaseMetadata({
+            NameServiceStructs.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,
@@ -249,7 +250,7 @@ contract unitTestCorrect_EVVM_dispersePay_async is
     function test__unit_correct__dispersePay_async__nS_nPF_EX() external {
         nameService._setIdentityBaseMetadata(
             "dummy",
-            NameService.IdentityBaseMetadata({
+            NameServiceStructs.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,
@@ -326,7 +327,7 @@ contract unitTestCorrect_EVVM_dispersePay_async is
     function test__unit_correct__dispersePay_async__nS_PF_EX() external {
         nameService._setIdentityBaseMetadata(
             "dummy",
-            NameService.IdentityBaseMetadata({
+            NameServiceStructs.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,
@@ -403,7 +404,7 @@ contract unitTestCorrect_EVVM_dispersePay_async is
     function test__unit_correct__dispersePay_async__S_nPF_nEX() external {
         nameService._setIdentityBaseMetadata(
             "dummy",
-            NameService.IdentityBaseMetadata({
+            NameServiceStructs.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,
@@ -485,7 +486,7 @@ contract unitTestCorrect_EVVM_dispersePay_async is
     function test__unit_correct__dispersePay_async__S_PF_nEX() external {
         nameService._setIdentityBaseMetadata(
             "dummy",
-            NameService.IdentityBaseMetadata({
+            NameServiceStructs.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,
@@ -569,7 +570,7 @@ contract unitTestCorrect_EVVM_dispersePay_async is
     function test__unit_correct__dispersePay_async__S_nPF_EX() external {
         nameService._setIdentityBaseMetadata(
             "dummy",
-            NameService.IdentityBaseMetadata({
+            NameServiceStructs.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,
@@ -650,7 +651,7 @@ contract unitTestCorrect_EVVM_dispersePay_async is
     function test__unit_correct__dispersePay_async__S_PF_EX() external {
         nameService._setIdentityBaseMetadata(
             "dummy",
-            NameService.IdentityBaseMetadata({
+            NameServiceStructs.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,

@@ -104,7 +104,7 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
         EvvmMetadata memory _evvmMetadata
     ) {
         evvmMetadata = _evvmMetadata;
-        
+
         stakingContractAddress = _stakingContractAddress;
 
         admin.current = _initialOwner;
@@ -116,8 +116,6 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
         stakerList[_stakingContractAddress] = FLAG_IS_STAKER;
 
         breakerSetupNameServiceAddress = FLAG_IS_STAKER;
-
-        
     }
 
     /**
@@ -325,7 +323,7 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
                 token,
                 amount,
                 priorityFee,
-                priorityFlag ? nonce : nextSyncUsedNonce[from],
+                nonce,
                 priorityFlag,
                 executor,
                 signature
@@ -337,8 +335,13 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
                 revert ErrorsLib.SenderIsNotTheExecutor();
         }
 
-        if (priorityFlag && asyncUsedNonce[from][nonce])
-            revert ErrorsLib.InvalidAsyncNonce();
+        if (priorityFlag) {
+            if (asyncUsedNonce[from][nonce])
+                revert ErrorsLib.AsyncNonceAlreadyUsed();
+        } else {
+            if (nextSyncUsedNonce[from] != nonce)
+                revert ErrorsLib.SyncNonceMismatch();
+        }
 
         address to = !AdvancedStrings.equal(to_identity, "")
             ? NameService(nameServiceAddress).verifyStrictAndGetOwnerOfIdentity(
@@ -413,9 +416,7 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
                     payData[iteration].token,
                     payData[iteration].amount,
                     payData[iteration].priorityFee,
-                    payData[iteration].priorityFlag
-                        ? payData[iteration].nonce
-                        : nextSyncUsedNonce[payData[iteration].from],
+                    payData[iteration].nonce,
                     payData[iteration].priorityFlag,
                     payData[iteration].executor,
                     payData[iteration].signature
@@ -567,7 +568,7 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
                 token,
                 amount,
                 priorityFee,
-                priorityFlag ? nonce : nextSyncUsedNonce[from],
+                nonce,
                 priorityFlag,
                 executor,
                 signature
@@ -581,7 +582,10 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
 
         if (priorityFlag) {
             if (asyncUsedNonce[from][nonce])
-                revert ErrorsLib.InvalidAsyncNonce();
+                revert ErrorsLib.AsyncNonceAlreadyUsed();
+        } else {
+            if (nextSyncUsedNonce[from] != nonce)
+                revert ErrorsLib.SyncNonceMismatch();
         }
 
         if (balances[from][token] < amount + priorityFee)

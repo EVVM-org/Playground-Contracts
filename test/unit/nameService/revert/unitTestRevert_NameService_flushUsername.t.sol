@@ -21,6 +21,7 @@ import {Constants} from "test/Constants.sol";
 
 import {Staking} from "@EVVM/playground/contracts/staking/Staking.sol";
 import {NameService} from "@EVVM/playground/contracts/nameService/NameService.sol";
+import {NameServiceStructs} from "@EVVM/playground/contracts/nameService/lib/NameServiceStructs.sol";
 import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/playground/library/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/contracts/staking/Estimator.sol";
@@ -1568,7 +1569,7 @@ contract unitTestRevert_NameService_flushUsername is Test, Constants {
     {
         nameService._setIdentityBaseMetadata(
             "test@mail.com",
-            NameService.IdentityBaseMetadata(
+            NameServiceStructs.IdentityBaseMetadata(
                 COMMON_USER_NO_STAKER_1.Address,
                 block.timestamp + 366 days,
                 0,

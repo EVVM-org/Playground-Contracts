@@ -202,7 +202,7 @@ contract fuzzTest_Staking_presaleStaking is Test, Constants {
 
         for (uint256 i = 0; i < input.length; i++) {
             if (
-                staking.checkIfStakeNonceUsed(
+                staking.getIfUsedAsyncNonce(
                     COMMON_USER_NO_STAKER_1.Address,
                     input[i].nonceStaking
                 )

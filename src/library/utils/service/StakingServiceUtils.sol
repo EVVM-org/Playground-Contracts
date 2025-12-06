@@ -2,36 +2,26 @@
 // Full license terms available at: https://www.evvm.info/docs/EVVMNoncommercialLicense
 pragma solidity ^0.8.0;
 
-import {IEvvm} from "@EVVM/playground/interfaces/IEvvm.sol";
-import {IStaking} from "@EVVM/playground/interfaces/IStaking.sol";
+import {PaymentStakingVariables} from "@EVVM/playground/library/utils/service/PaymentStakingVariables.sol";
 
-abstract contract StakingServiceUtils {
-    address stakingHookAddress;
-    address evvmHookAddress;
-    constructor(address _stakingAddress) {
-        stakingHookAddress = _stakingAddress;
-        evvmHookAddress = IStaking(stakingHookAddress).getEvvmAddress();
-    }
+abstract contract StakingServiceUtils is PaymentStakingVariables {
+    constructor(
+        address evvmAddress,
+        address stakingAddress
+    ) PaymentStakingVariables(evvmAddress, stakingAddress) {}
+
     function _makeStakeService(uint256 amountToStake) internal {
-        IStaking(stakingHookAddress).prepareServiceStaking(amountToStake);
-        IEvvm(evvmHookAddress).caPay(
-            address(stakingHookAddress),
-            0x0000000000000000000000000000000000000001,
-            IStaking(stakingHookAddress).priceOfStaking() * amountToStake
+        staking.prepareServiceStaking(amountToStake);
+        evvm.caPay(
+            address(staking),
+            getPrincipalTokenAddress(),
+            staking.priceOfStaking() * amountToStake
         );
-        IStaking(stakingHookAddress).confirmServiceStaking();
+        staking.confirmServiceStaking();
     }
 
     function _makeUnstakeService(uint256 amountToUnstake) internal {
-        IStaking(stakingHookAddress).serviceUnstaking(amountToUnstake);
+        staking.serviceUnstaking(amountToUnstake);
     }
 
-    function _changeStakingAddress(address newStakingAddress) internal {
-        stakingHookAddress = newStakingAddress;
-        evvmHookAddress = IStaking(stakingHookAddress).getEvvmAddress();
-    }
-
-    function _changeEvvmHookAddress(address newEvvmAddress) internal {
-        evvmHookAddress = newEvvmAddress;
-    }
 }

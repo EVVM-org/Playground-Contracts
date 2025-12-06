@@ -19,6 +19,7 @@ import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
 import {Staking} from "@EVVM/playground/contracts/staking/Staking.sol";
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {StakingServiceUtils} from "@EVVM/playground/library/utils/service/StakingServiceUtils.sol";
+import {IStaking} from "@EVVM/playground/interfaces/IStaking.sol";
 
 abstract contract Constants {
     bytes32 constant DEPOSIT_HISTORY_SMATE_IDENTIFIER = bytes32(uint256(1));
@@ -144,17 +145,16 @@ abstract contract Constants {
 }
 
 contract MockContractToStake is StakingServiceUtils {
-    Staking staking;
-    Evvm evvm;
+    constructor(
+        address stakingAddress
+    )
+        StakingServiceUtils(
+            stakingAddress,
+            IStaking(stakingAddress).getEvvmAddress()
+        )
+    {}
 
-    constructor(address stakingAddress) StakingServiceUtils(stakingAddress) {
-        staking = Staking(stakingAddress);
-        evvm = Evvm(staking.getEvvmAddress());
-    }
-
-    function stake (
-        uint256 amountToStake
-    ) public {
+    function stake(uint256 amountToStake) public {
         _makeStakeService(amountToStake);
     }
 
@@ -201,9 +201,7 @@ contract MockContractToStake is StakingServiceUtils {
         staking.confirmServiceStaking();
     }
 
-    function unstake(
-        uint256 amountToUnstake
-    ) public {
+    function unstake(uint256 amountToUnstake) public {
         _makeUnstakeService(amountToUnstake);
     }
 

@@ -29,6 +29,7 @@ import {EvvmStorage} from "@EVVM/playground/contracts/evvm/lib/EvvmStorage.sol";
 import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
 import {Treasury} from "@EVVM/playground/contracts/treasury/Treasury.sol";
 import {P2PSwap} from "@EVVM/playground/contracts/p2pSwap/P2PSwap.sol";
+import {P2PSwapStructs} from "@EVVM/playground/contracts/p2pSwap/lib/P2PSwapStructs.sol";
 
 contract unitTestRevert_P2PSwap_makeOrder is Test, Constants {
     Staking staking;
@@ -112,7 +113,7 @@ contract unitTestRevert_P2PSwap_makeOrder is Test, Constants {
             s
         );
 
-        P2PSwap.MetadataMakeOrder memory orderData = P2PSwap.MetadataMakeOrder({
+        P2PSwapStructs.MetadataMakeOrder memory orderData = P2PSwapStructs.MetadataMakeOrder({
             nonce: nonceP2PSwap,
             tokenA: tokenA,
             tokenB: tokenB,
@@ -199,7 +200,7 @@ contract unitTestRevert_P2PSwap_makeOrder is Test, Constants {
             s
         );
 
-        P2PSwap.MetadataMakeOrder memory orderData = P2PSwap.MetadataMakeOrder({
+        P2PSwapStructs.MetadataMakeOrder memory orderData = P2PSwapStructs.MetadataMakeOrder({
             nonce: nonceP2PSwap,
             tokenA: tokenA,
             tokenB: tokenB,
@@ -286,7 +287,7 @@ contract unitTestRevert_P2PSwap_makeOrder is Test, Constants {
             s
         );
 
-        P2PSwap.MetadataMakeOrder memory orderData = P2PSwap.MetadataMakeOrder({
+        P2PSwapStructs.MetadataMakeOrder memory orderData = P2PSwapStructs.MetadataMakeOrder({
             nonce: nonceP2PSwap,
             tokenA: tokenA,
             tokenB: tokenB,
@@ -416,7 +417,7 @@ contract unitTestRevert_P2PSwap_makeOrder is Test, Constants {
             s
         );
 
-        P2PSwap.MetadataMakeOrder memory orderData = P2PSwap.MetadataMakeOrder({
+        P2PSwapStructs.MetadataMakeOrder memory orderData = P2PSwapStructs.MetadataMakeOrder({
             nonce: nonceP2PSwap,
             tokenA: tokenA,
             tokenB: tokenB,

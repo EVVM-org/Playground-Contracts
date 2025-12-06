@@ -43,100 +43,15 @@ pragma solidity ^0.8.0;
  */
 
 import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
+import {AsyncNonce} from "@EVVM/playground/library/utils/nonces/AsyncNonce.sol";
+import {StakingStructs} from "@EVVM/playground/contracts/staking/lib/StakingStructs.sol";
 import {SignatureUtil} from "@EVVM/playground/library/utils/SignatureUtil.sol";
 import {NameService} from "@EVVM/playground/contracts/nameService/NameService.sol";
 import {Estimator} from "@EVVM/playground/contracts/staking/Estimator.sol";
 import {ErrorsLib} from "./lib/ErrorsLib.sol";
 import {SignatureUtils} from "@EVVM/playground/contracts/staking/lib/SignatureUtils.sol";
 
-contract Staking {
-    /**
-     * @dev Metadata for presale stakers
-     * @param isAllow Whether the address is allowed to participate in presale staking
-     * @param stakingAmount Current number of staking tokens staked (max 2 for presale)
-     */
-    struct presaleStakerMetadata {
-        bool isAllow;
-        uint256 stakingAmount;
-    }
-
-    /**
-     * @dev Struct to store the history of the user
-     * @param transactionType Type of transaction:
-     *          - 0x01 for staking
-     *          - 0x02 for unstaking
-     *          - Other values for yield/reward transactions
-     * @param amount Amount of staking staked/unstaked or reward received
-     * @param timestamp Timestamp when the transaction occurred
-     * @param totalStaked Total amount of staking currently staked after this transaction
-     */
-    struct HistoryMetadata {
-        bytes32 transactionType;
-        uint256 amount;
-        uint256 timestamp;
-        uint256 totalStaked;
-    }
-
-    /**
-     * @dev Struct for managing address change proposals with time delay
-     * @param actual Current active address
-     * @param proposal Proposed new address
-     * @param timeToAccept Timestamp when the proposal can be accepted
-     */
-    struct AddressTypeProposal {
-        address actual;
-        address proposal;
-        uint256 timeToAccept;
-    }
-
-    /**
-     * @dev Struct for managing uint256 change proposals with time delay
-     * @param actual Current active value
-     * @param proposal Proposed new value
-     * @param timeToAccept Timestamp when the proposal can be accepted
-     */
-    struct UintTypeProposal {
-        uint256 actual;
-        uint256 proposal;
-        uint256 timeToAccept;
-    }
-
-    /**
-     * @dev Struct for managing boolean flag changes with time delay
-     * @param flag Current boolean state
-     * @param timeToAccept Timestamp when the flag change can be executed
-     */
-    struct BoolTypeProposal {
-        bool flag;
-        uint256 timeToAccept;
-    }
-
-    /**
-     * @dev Struct to store service staking metadata during the staking process
-     * @param service Address of the service or contract account
-     * @param timestamp Timestamp when the prepareServiceStaking was called
-     * @param amountOfStaking Amount of staking tokens to be staked
-     * @param amountServiceBeforeStaking Service's Principal Token balance before staking
-     * @param amountStakingBeforeStaking Staking contract's Principal Token balance before staking
-     */
-    struct ServiceStakingMetadata {
-        address service;
-        uint256 timestamp;
-        uint256 amountOfStaking;
-        uint256 amountServiceBeforeStaking;
-        uint256 amountStakingBeforeStaking;
-    }
-
-    /**
-     * @dev Struct to encapsulate account metadata for staking operations
-     * @param Address Address of the account
-     * @param IsAService Boolean indicating if the account is a smart contract (service) account
-     */
-    struct AccountMetadata {
-        address Address;
-        bool IsAService;
-    }
-
+contract Staking is AsyncNonce, StakingStructs {
     uint256 constant TIME_TO_ACCEPT_PROPOSAL = 1 days;
 
     /// @dev Address of the EVVM core contract
@@ -172,9 +87,6 @@ contract Staking {
 
     /// @dev One-time setup breaker for estimator and EVVM addresses
     bytes1 private breakerSetupEstimatorAndEvvm;
-
-    /// @dev Mapping to track used nonces for staking operations per user
-    mapping(address => mapping(uint256 => bool)) private stakingNonce;
 
     /// @dev Mapping to store presale staker metadata
     mapping(address => presaleStakerMetadata) private userPresaleStaker;
@@ -302,8 +214,7 @@ contract Staking {
             )
         ) revert ErrorsLib.InvalidSignatureOnStaking();
 
-        if (checkIfStakeNonceUsed(user, nonce))
-            revert ErrorsLib.StakingNonceAlreadyUsed();
+        verifyAsyncNonce(user, nonce);
 
         presaleClaims(isStaking, user);
 
@@ -320,7 +231,7 @@ contract Staking {
             signature_EVVM
         );
 
-        stakingNonce[user][nonce] = true;
+        markAsyncNonceAsUsed(user, nonce);
     }
 
     /**
@@ -395,8 +306,7 @@ contract Staking {
             )
         ) revert ErrorsLib.InvalidSignatureOnStaking();
 
-        if (checkIfStakeNonceUsed(user, nonce))
-            revert ErrorsLib.StakingNonceAlreadyUsed();
+        verifyAsyncNonce(user, nonce);
 
         stakingBaseProcess(
             AccountMetadata({Address: user, IsAService: false}),
@@ -408,7 +318,7 @@ contract Staking {
             signature_EVVM
         );
 
-        stakingNonce[user][nonce] = true;
+        markAsyncNonceAsUsed(user, nonce);
     }
 
     /**
@@ -1123,20 +1033,6 @@ contract Staking {
         }
 
         return userHistory[_account][lengthOfHistory - 1].totalStaked;
-    }
-
-    /**
-     * @notice Checks if a specific nonce has been used for staking by a user
-     * @dev Prevents replay attacks by tracking used nonces
-     * @param _account Address to check the nonce for
-     * @param _nonce Nonce value to check
-     * @return True if the nonce has been used, false otherwise
-     */
-    function checkIfStakeNonceUsed(
-        address _account,
-        uint256 _nonce
-    ) public view returns (bool) {
-        return stakingNonce[_account][_nonce];
     }
 
     /**

@@ -3,21 +3,21 @@
 
 pragma solidity ^0.8.0;
 
-import {IEvvm} from "@EVVM/playground/interfaces/IEvvm.sol";
-import {IStaking} from "@EVVM/playground/interfaces/IStaking.sol";
+import {EvvmStructs} from "@EVVM/playground/interfaces/IEvvm.sol";
 import {SignatureUtil} from "@EVVM/playground/library/utils/SignatureUtil.sol";
 import {AsyncNonceService} from "@EVVM/playground/library/utils/service/AsyncNonceService.sol";
+import {PaymentStakingVariables} from "@EVVM/playground/library/utils/service/PaymentStakingVariables.sol";
 
-abstract contract EvvmService is AsyncNonceService {
+abstract contract EvvmService is
+    AsyncNonceService,
+    PaymentStakingVariables
+{
     error InvalidServiceSignature();
 
-    IEvvm evvm;
-    IStaking staking;
-
-    constructor(address evvmAddress, address stakingAddress) {
-        evvm = IEvvm(evvmAddress);
-        staking = IStaking(stakingAddress);
-    }
+    constructor(
+        address evvmAddress,
+        address stakingAddress
+    ) PaymentStakingVariables(evvmAddress, stakingAddress) {}
 
     function validateServiceSignature(
         string memory functionName,
@@ -59,6 +59,28 @@ abstract contract EvvmService is AsyncNonceService {
         );
     }
 
+    function requestDispersePay(
+        EvvmStructs.DispersePayMetadata[] memory toData,
+        address token,
+        uint256 amount,
+        uint256 priorityFee,
+        uint256 nonce,
+        bool priorityFlag,
+        bytes memory signature
+    ) internal virtual {
+        evvm.dispersePay(
+            address(this),
+            toData,
+            token,
+            amount,
+            priorityFee,
+            nonce,
+            priorityFlag,
+            address(this),
+            signature
+        );
+    }
+
     function makeCaPay(
         address to,
         address token,
@@ -66,6 +88,16 @@ abstract contract EvvmService is AsyncNonceService {
     ) internal virtual {
         evvm.caPay(to, token, amount);
     }
+
+    function makeDisperseCaPay(
+        EvvmStructs.DisperseCaPayMetadata[] memory toData,
+        address token,
+        uint256 amount
+    ) internal virtual {
+        evvm.disperseCaPay(toData, token, amount);
+    }
+
+
 
     function _makeStakeService(uint256 amountToStake) internal {
         staking.prepareServiceStaking(amountToStake);
@@ -79,26 +111,5 @@ abstract contract EvvmService is AsyncNonceService {
 
     function _makeUnstakeService(uint256 amountToUnstake) internal {
         staking.serviceUnstaking(amountToUnstake);
-    }
-
-    function _changeEvvmAddress(address newEvvmAddress) internal {
-        evvm = IEvvm(newEvvmAddress);
-    }
-
-    function _changeStakingAddress(address newStakingAddress) internal {
-        staking = IStaking(newStakingAddress);
-    }
-
-    function getPrincipalTokenAddress()
-        internal
-        pure
-        virtual
-        returns (address)
-    {
-        return address(1);
-    }
-
-    function getEtherAddress() internal pure virtual returns (address) {
-        return address(0);
     }
 }

@@ -3,16 +3,16 @@
 
 pragma solidity ^0.8.0;
 
-import {IEvvm} from "@EVVM/playground/interfaces/IEvvm.sol";
+import {IEvvm, EvvmStructs} from "@EVVM/playground/interfaces/IEvvm.sol";
+import {PaymentStakingVariables} from "@EVVM/playground/library/utils/service/PaymentStakingVariables.sol";
 
-abstract contract MakeServicePaymentOnEvvm {
-    IEvvm public evvm;
+abstract contract MakeServicePaymentOnEvvm is PaymentStakingVariables {
+    constructor(
+        address evvmAddress,
+        address stakingAddress
+    ) PaymentStakingVariables(evvmAddress, stakingAddress) {}
 
-    constructor(address evvmAddress) {
-        evvm = IEvvm(evvmAddress);
-    }
-
-    function makePay(
+    function requestPay(
         address from,
         address token,
         uint256 amount,
@@ -35,6 +35,28 @@ abstract contract MakeServicePaymentOnEvvm {
         );
     }
 
+    function requestDispersePay(
+        EvvmStructs.DispersePayMetadata[] memory toData,
+        address token,
+        uint256 amount,
+        uint256 priorityFee,
+        uint256 nonce,
+        bool priorityFlag,
+        bytes memory signature
+    ) internal virtual {
+        evvm.dispersePay(
+            address(this),
+            toData,
+            token,
+            amount,
+            priorityFee,
+            nonce,
+            priorityFlag,
+            address(this),
+            signature
+        );
+    }
+
     function makeCaPay(
         address to,
         address token,
@@ -43,7 +65,12 @@ abstract contract MakeServicePaymentOnEvvm {
         evvm.caPay(to, token, amount);
     }
 
-    function _changeEvvmAddress(address newEvvmAddress) internal {
-        evvm = IEvvm(newEvvmAddress);
+    function makeDisperseCaPay(
+        EvvmStructs.DisperseCaPayMetadata[] memory toData,
+        address token,
+        uint256 amount
+    ) internal virtual {
+        evvm.disperseCaPay(toData, token, amount);
     }
+
 }

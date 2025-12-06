@@ -24,6 +24,7 @@ import "forge-std/console2.sol";
 import {Constants} from "test/Constants.sol";
 
 import {Staking} from "@EVVM/playground/contracts/staking/Staking.sol";
+import {NameServiceStructs} from "@EVVM/playground/contracts/nameService/lib/NameServiceStructs.sol";
 import {NameService} from "@EVVM/playground/contracts/nameService/NameService.sol";
 import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/playground/library/Erc191TestBuilder.sol";
@@ -78,7 +79,7 @@ contract fuzzTest_EVVM_pay_staker_sync is Test, Constants {
 
         nameService._setIdentityBaseMetadata(
             "dummy",
-            NameService.IdentityBaseMetadata({
+            NameServiceStructs.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,

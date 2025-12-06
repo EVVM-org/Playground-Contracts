@@ -57,11 +57,13 @@ pragma solidity ^0.8.0;
  */
 
 import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
+import {AsyncNonce} from "@EVVM/playground/library/utils/nonces/AsyncNonce.sol";
+import {NameServiceStructs} from "@EVVM/playground/contracts/nameService/lib/NameServiceStructs.sol";
 import {AdvancedStrings} from "@EVVM/playground/library/utils/AdvancedStrings.sol";
 import {ErrorsLib} from "@EVVM/playground/contracts/nameService/lib/ErrorsLib.sol";
 import {SignatureUtils} from "@EVVM/playground/contracts/nameService/lib/SignatureUtils.sol";
 
-contract NameService {
+contract NameService is AsyncNonce, NameServiceStructs {
     /**
      * @dev _setIdentityBaseMetadata and _setIdentityCustomMetadata are debug functions
      *      DO NOT USE IN PRODUCTION!!!!!!!
@@ -82,72 +84,6 @@ contract NameService {
         identityCustomMetadata[_identity][_numberKey] = _customValue;
     }
 
-    /**
-     * @dev Struct for managing address change proposals with time delay
-     * @param current Currently active address
-     * @param proposal Proposed new address waiting for approval
-     * @param timeToAccept Timestamp when the proposal can be accepted
-     */
-    struct AddressTypeProposal {
-        address current;
-        address proposal;
-        uint256 timeToAccept;
-    }
-
-    /**
-     * @dev Struct for managing uint256 value proposals with time delay
-     * @param current Currently active value
-     * @param proposal Proposed new value waiting for approval
-     * @param timeToAccept Timestamp when the proposal can be accepted
-     */
-    struct UintTypeProposal {
-        uint256 current;
-        uint256 proposal;
-        uint256 timeToAccept;
-    }
-
-    /**
-     * @dev Struct for managing boolean flag changes with time delay
-     * @param flag Current boolean state
-     * @param timeToAcceptChange Timestamp when the flag change can be executed
-     */
-    struct BoolTypeProposal {
-        bool flag;
-        uint256 timeToAcceptChange;
-    }
-
-    /**
-     * @dev Core metadata for each registered identity/username
-     * @param owner Address that owns this identity
-     * @param expireDate Timestamp when the registration expires
-     * @param customMetadataMaxSlots Number of custom metadata entries stored
-     * @param offerMaxSlots Maximum number of offers that have been made
-     * @param flagNotAUsername Flag indicating if this is a pre-registration (0x01) or actual username (0x00)
-     */
-    struct IdentityBaseMetadata {
-        address owner;
-        uint256 expireDate;
-        uint256 customMetadataMaxSlots;
-        uint256 offerMaxSlots;
-        bytes1 flagNotAUsername;
-    }
-
-    /// @dev Mapping from username to its core metadata and registration details
-    mapping(string username => IdentityBaseMetadata basicMetadata)
-        private identityDetails;
-
-    /**
-     * @dev Metadata for marketplace offers on usernames
-     * @param offerer Address making the offer
-     * @param expireDate Timestamp when the offer expires
-     * @param amount Amount offered in Principal Tokens (after 0.5% marketplace fee deduction)
-     */
-    struct OfferMetadata {
-        address offerer;
-        uint256 expireDate;
-        uint256 amount;
-    }
-
     uint256 constant TIME_TO_ACCEPT_PROPOSAL = 1 days;
 
     /// @dev Amount of Principal Tokens locked in pending marketplace offers
@@ -160,9 +96,6 @@ contract NameService {
     /// @dev Nested mapping: username => metadata key => custom value string
     mapping(string username => mapping(uint256 numberKey => string customValue))
         private identityCustomMetadata;
-
-    /// @dev Mapping to track used nonces per address to prevent replay attacks
-    mapping(address => mapping(uint256 => bool)) private nameServiceNonce;
 
     /// @dev Proposal system for token withdrawal amounts with time delay
     UintTypeProposal amountToWithdrawTokens;
@@ -177,6 +110,10 @@ contract NameService {
     address private constant PRINCIPAL_TOKEN_ADDRESS =
         0x0000000000000000000000000000000000000001;
 
+    /// @dev Mapping from username to its core metadata and registration details
+    mapping(string username => IdentityBaseMetadata basicMetadata)
+        private identityDetails;
+
     /// @dev Restricts function access to the current admin address only
     modifier onlyAdmin() {
         if (msg.sender != admin.current) revert ErrorsLib.SenderIsNotAdmin();
@@ -188,14 +125,6 @@ contract NameService {
     modifier onlyOwnerOfIdentity(address _user, string memory _identity) {
         if (identityDetails[_identity].owner != _user)
             revert ErrorsLib.UserIsNotOwnerOfIdentity();
-
-        _;
-    }
-
-    /// @dev Ensures the nonce hasn't been used before to prevent replay attacks
-    modifier verifyIfNonceIsAvailable(address _user, uint256 _nonce) {
-        if (nameServiceNonce[_user][_nonce])
-            revert ErrorsLib.NonceAlreadyUsed();
 
         _;
     }
@@ -232,7 +161,7 @@ contract NameService {
         uint256 nonce_EVVM,
         bool priorityFlag_EVVM,
         bytes memory signature_EVVM
-    ) public verifyIfNonceIsAvailable(user, nonce) {
+    ) external {
         if (
             !SignatureUtils.verifyMessageSignedForPreRegistrationUsername(
                 Evvm(evvmAddress.current).getEvvmID(),
@@ -242,6 +171,8 @@ contract NameService {
                 signature
             )
         ) revert ErrorsLib.InvalidSignatureOnNameService();
+
+        verifyAsyncNonce(user, nonce);
 
         if (priorityFee_EVVM > 0) {
             makePay(
@@ -267,7 +198,7 @@ contract NameService {
             flagNotAUsername: 0x01
         });
 
-        nameServiceNonce[user][nonce] = true;
+        markAsyncNonceAsUsed(user, nonce);
 
         if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
             makeCaPay(
@@ -300,7 +231,7 @@ contract NameService {
         uint256 nonce_EVVM,
         bool priorityFlag_EVVM,
         bytes memory signature_EVVM
-    ) public verifyIfNonceIsAvailable(user, nonce) {
+    ) external {
         if (admin.current != user) isValidUsername(username);
 
         if (!isUsernameAvailable(username)) {
@@ -317,6 +248,8 @@ contract NameService {
                 signature
             )
         ) revert ErrorsLib.InvalidSignatureOnNameService();
+
+        verifyAsyncNonce(user, nonce);
 
         makePay(
             user,
@@ -345,7 +278,7 @@ contract NameService {
             flagNotAUsername: 0x00
         });
 
-        nameServiceNonce[user][nonce] = true;
+        markAsyncNonceAsUsed(user, nonce);
 
         if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
             makeCaPay(
@@ -384,7 +317,7 @@ contract NameService {
         uint256 nonce_EVVM,
         bool priorityFlag_EVVM,
         bytes memory signature_EVVM
-    ) public verifyIfNonceIsAvailable(user, nonce) returns (uint256 offerID) {
+    ) external returns (uint256 offerID) {
         if (
             identityDetails[username].flagNotAUsername == 0x01 ||
             !verifyIfIdentityExists(username) ||
@@ -403,6 +336,8 @@ contract NameService {
                 signature
             )
         ) revert ErrorsLib.InvalidSignatureOnNameService();
+
+        verifyAsyncNonce(user, nonce);
 
         makePay(
             user,
@@ -439,7 +374,7 @@ contract NameService {
             identityDetails[username].offerMaxSlots++;
         }
 
-        nameServiceNonce[user][nonce] = true;
+        markAsyncNonceAsUsed(user, nonce);
     }
 
     /**
@@ -465,7 +400,7 @@ contract NameService {
         uint256 nonce_EVVM,
         bool priorityFlag_EVVM,
         bytes memory signature_EVVM
-    ) public verifyIfNonceIsAvailable(user, nonce) {
+    ) external {
         if (usernameOffers[username][offerID].offerer != user)
             revert ErrorsLib.UserIsNotOwnerOfOffer();
 
@@ -479,6 +414,8 @@ contract NameService {
                 signature
             )
         ) revert ErrorsLib.InvalidSignatureOnNameService();
+
+        verifyAsyncNonce(user, nonce);
 
         if (priorityFee_EVVM > 0) {
             makePay(
@@ -506,7 +443,7 @@ contract NameService {
             (usernameOffers[username][offerID].amount) +
             (((usernameOffers[username][offerID].amount * 1) / 199) / 4);
 
-        nameServiceNonce[user][nonce] = true;
+        markAsyncNonceAsUsed(user, nonce);
     }
 
     /**
@@ -532,11 +469,7 @@ contract NameService {
         uint256 nonce_EVVM,
         bool priorityFlag_EVVM,
         bytes memory signature_EVVM
-    )
-        public
-        onlyOwnerOfIdentity(user, username)
-        verifyIfNonceIsAvailable(user, nonce)
-    {
+    ) external onlyOwnerOfIdentity(user, username) {
         if (
             usernameOffers[username][offerID].offerer == address(0) ||
             usernameOffers[username][offerID].expireDate < block.timestamp
@@ -552,6 +485,8 @@ contract NameService {
                 signature
             )
         ) revert ErrorsLib.InvalidSignatureOnNameService();
+
+        verifyAsyncNonce(user, nonce);
 
         if (priorityFee_EVVM > 0) {
             makePay(
@@ -585,7 +520,7 @@ contract NameService {
             (usernameOffers[username][offerID].amount) +
             (((usernameOffers[username][offerID].amount * 1) / 199) / 4);
 
-        nameServiceNonce[user][nonce] = true;
+        markAsyncNonceAsUsed(user, nonce);
     }
 
     /**
@@ -616,11 +551,7 @@ contract NameService {
         uint256 nonce_EVVM,
         bool priorityFlag_EVVM,
         bytes memory signature_EVVM
-    )
-        public
-        onlyOwnerOfIdentity(user, username)
-        verifyIfNonceIsAvailable(user, nonce)
-    {
+    ) external onlyOwnerOfIdentity(user, username) {
         if (
             identityDetails[username].flagNotAUsername == 0x01 ||
             identityDetails[username].expireDate > block.timestamp + 36500 days
@@ -635,6 +566,8 @@ contract NameService {
                 signature
             )
         ) revert ErrorsLib.InvalidSignatureOnNameService();
+
+        verifyAsyncNonce(user, nonce);
 
         uint256 priceOfRenew = seePriceToRenew(username);
 
@@ -657,7 +590,7 @@ contract NameService {
         }
 
         identityDetails[username].expireDate += 366 days;
-        nameServiceNonce[user][nonce] = true;
+        markAsyncNonceAsUsed(user, nonce);
     }
 
     /**
@@ -697,11 +630,7 @@ contract NameService {
         uint256 nonce_EVVM,
         bool priorityFlag_EVVM,
         bytes memory signature_EVVM
-    )
-        public
-        onlyOwnerOfIdentity(user, identity)
-        verifyIfNonceIsAvailable(user, nonce)
-    {
+    ) external onlyOwnerOfIdentity(user, identity) {
         if (bytes(value).length == 0) revert ErrorsLib.EmptyCustomMetadata();
 
         if (
@@ -714,6 +643,8 @@ contract NameService {
                 signature
             )
         ) revert ErrorsLib.InvalidSignatureOnNameService();
+
+        verifyAsyncNonce(user, nonce);
 
         makePay(
             user,
@@ -738,7 +669,7 @@ contract NameService {
         ] = value;
 
         identityDetails[identity].customMetadataMaxSlots++;
-        nameServiceNonce[user][nonce] = true;
+        markAsyncNonceAsUsed(user, nonce);
     }
 
     /**
@@ -764,11 +695,7 @@ contract NameService {
         uint256 nonce_EVVM,
         bool priorityFlag_EVVM,
         bytes memory signature_EVVM
-    )
-        public
-        onlyOwnerOfIdentity(user, identity)
-        verifyIfNonceIsAvailable(user, nonce)
-    {
+    ) external onlyOwnerOfIdentity(user, identity) {
         if (
             !SignatureUtils.verifyMessageSignedForRemoveCustomMetadata(
                 Evvm(evvmAddress.current).getEvvmID(),
@@ -779,6 +706,8 @@ contract NameService {
                 signature
             )
         ) revert ErrorsLib.InvalidSignatureOnNameService();
+
+        verifyAsyncNonce(user, nonce);
 
         if (identityDetails[identity].customMetadataMaxSlots <= key)
             revert ErrorsLib.InvalidKey();
@@ -809,7 +738,7 @@ contract NameService {
             ];
         }
         identityDetails[identity].customMetadataMaxSlots--;
-        nameServiceNonce[user][nonce] = true;
+        markAsyncNonceAsUsed(user, nonce);
         if (Evvm(evvmAddress.current).isAddressStaker(msg.sender)) {
             makeCaPay(
                 msg.sender,
@@ -840,11 +769,7 @@ contract NameService {
         uint256 nonce_EVVM,
         bool priorityFlag_EVVM,
         bytes memory signature_EVVM
-    )
-        public
-        onlyOwnerOfIdentity(user, identity)
-        verifyIfNonceIsAvailable(user, nonce)
-    {
+    ) external onlyOwnerOfIdentity(user, identity) {
         if (
             !SignatureUtils.verifyMessageSignedForFlushCustomMetadata(
                 Evvm(evvmAddress.current).getEvvmID(),
@@ -854,6 +779,8 @@ contract NameService {
                 signature
             )
         ) revert ErrorsLib.InvalidSignatureOnNameService();
+
+        verifyAsyncNonce(user, nonce);
 
         if (identityDetails[identity].customMetadataMaxSlots == 0)
             revert ErrorsLib.EmptyCustomMetadata();
@@ -885,7 +812,7 @@ contract NameService {
         }
 
         identityDetails[identity].customMetadataMaxSlots = 0;
-        nameServiceNonce[user][nonce] = true;
+        markAsyncNonceAsUsed(user, nonce);
     }
 
     /**
@@ -909,11 +836,7 @@ contract NameService {
         uint256 nonce_EVVM,
         bool priorityFlag_EVVM,
         bytes memory signature_EVVM
-    )
-        public
-        verifyIfNonceIsAvailable(user, nonce)
-        onlyOwnerOfIdentity(user, username)
-    {
+    ) external onlyOwnerOfIdentity(user, username) {
         if (
             block.timestamp >= identityDetails[username].expireDate ||
             identityDetails[username].flagNotAUsername == 0x01
@@ -928,6 +851,8 @@ contract NameService {
                 signature
             )
         ) revert ErrorsLib.InvalidSignatureOnNameService();
+
+        verifyAsyncNonce(user, nonce);
 
         makePay(
             user,
@@ -960,7 +885,7 @@ contract NameService {
             offerMaxSlots: identityDetails[username].offerMaxSlots,
             flagNotAUsername: 0x00
         });
-        nameServiceNonce[user][nonce] = true;
+        markAsyncNonceAsUsed(user, nonce);
     }
 
     //█ Administrative Functions with Time-Delayed Governance ████████████████████████████████████
@@ -1510,22 +1435,6 @@ contract NameService {
             ((10 * Evvm(evvmAddress.current).getRewardAmount()) *
                 identityDetails[_identity].customMetadataMaxSlots) +
             Evvm(evvmAddress.current).getRewardAmount();
-    }
-
-    //█ User Management Functions ████████████████████████████████████████████████████████████████████
-
-    /**
-     * @notice Checks if a nonce has been used by a specific user
-     * @dev Prevents replay attacks by tracking used nonces per user
-     * @param _user Address of the user to check
-     * @param _nonce Nonce value to verify
-     * @return True if the nonce has been used, false if still available
-     */
-    function checkIfNameServiceNonceIsAvailable(
-        address _user,
-        uint256 _nonce
-    ) public view returns (bool) {
-        return nameServiceNonce[_user][_nonce];
     }
 
     //█ Identity Availability Functions ██████████████████████████████████████████████████████████████

@@ -35,6 +35,7 @@ import {AdvancedStrings} from "@EVVM/playground/library/utils/AdvancedStrings.so
 import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
 import {Treasury} from "@EVVM/playground/contracts/treasury/Treasury.sol";
 import {P2PSwap} from "@EVVM/playground/contracts/p2pSwap/P2PSwap.sol";
+import {P2PSwapStructs} from "@EVVM/playground/contracts/p2pSwap/lib/P2PSwapStructs.sol";
 
 contract fuzzTest_P2PSwap_dispatchOrder is Test, Constants {
     Staking staking;
@@ -99,7 +100,7 @@ contract fuzzTest_P2PSwap_dispatchOrder is Test, Constants {
         uint256 nonceEVVM,
         bool priorityFlag
     ) private returns (uint256 market, uint256 orderId) {
-        P2PSwap.MetadataMakeOrder memory orderData = P2PSwap.MetadataMakeOrder({
+        P2PSwapStructs.MetadataMakeOrder memory orderData = P2PSwapStructs.MetadataMakeOrder({
             nonce: nonceP2PSwap,
             tokenA: tokenA,
             tokenB: tokenB,
@@ -234,7 +235,7 @@ contract fuzzTest_P2PSwap_dispatchOrder is Test, Constants {
         );
 
         // 3.2 crete evvm signature
-        P2PSwap.MetadataDispatchOrder memory metadata = P2PSwap
+        P2PSwap.MetadataDispatchOrder memory metadata = P2PSwapStructs
             .MetadataDispatchOrder({
                 nonce: input.nonceP2PSwap,
                 tokenA: tokenA,
@@ -393,7 +394,7 @@ contract fuzzTest_P2PSwap_dispatchOrder is Test, Constants {
         );
 
         // 3.2 crete evvm signature
-        P2PSwap.MetadataDispatchOrder memory metadata = P2PSwap
+        P2PSwap.MetadataDispatchOrder memory metadata = P2PSwapStructs
             .MetadataDispatchOrder({
                 nonce: input.nonceP2PSwap,
                 tokenA: tokenA,

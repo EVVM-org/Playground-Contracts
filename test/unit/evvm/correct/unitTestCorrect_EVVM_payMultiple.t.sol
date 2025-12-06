@@ -22,6 +22,7 @@ import {Constants} from "test/Constants.sol";
 import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
 import {Staking} from "@EVVM/playground/contracts/staking/Staking.sol";
 import {NameService} from "@EVVM/playground/contracts/nameService/NameService.sol";
+import {NameServiceStructs} from "@EVVM/playground/contracts/nameService/lib/NameServiceStructs.sol";
 import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
 import {Erc191TestBuilder} from "@EVVM/playground/library/Erc191TestBuilder.sol";
 import {Estimator} from "@EVVM/playground/contracts/staking/Estimator.sol";
@@ -96,7 +97,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
     function test__unit_correct__payMultiple__nonStaker() external {
         nameService._setIdentityBaseMetadata(
             "dummy",
-            NameService.IdentityBaseMetadata({
+            NameServiceStructs.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,
@@ -450,7 +451,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
     function test_payMultiple_staker() external {
         nameService._setIdentityBaseMetadata(
             "dummy",
-            NameService.IdentityBaseMetadata({
+            NameServiceStructs.IdentityBaseMetadata({
                 owner: COMMON_USER_NO_STAKER_2.Address,
                 expireDate: block.timestamp + 366 days,
                 customMetadataMaxSlots: 0,
