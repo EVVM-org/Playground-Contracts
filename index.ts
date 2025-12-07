@@ -19,6 +19,11 @@ type InputAddresses = {
   activator: `0x${string}` | null;
 };
 
+interface CreatedContract {
+  contractName: string;
+  contractAddress: `0x${string}`;
+}
+
 type EvvmMetadata = {
   EvvmName: string | null;
   EvvmID: number | null;
@@ -127,6 +132,8 @@ async function deployEvvm(args: string[], options: any) {
 
   let confirmationDone: boolean = false;
 
+  let evvmAddress: `0x${string}` | null = null;
+
   let evvmMetadata: EvvmMetadata = {
     EvvmName: "EVVM",
     EvvmID: 0,
@@ -232,19 +239,34 @@ async function deployEvvm(args: string[], options: any) {
     }
 
     if (confirmAnswer.configureAdvancedMetadata.toLowerCase() === "y") {
+      // Format numbers without scientific notation for display
+      const formatNumber = (num: number | null) => {
+        if (num === null) return "0";
+        if (num > 1e15) {
+          return num.toLocaleString("fullwide", { useGrouping: false });
+        }
+        return num.toString();
+      };
+
       // total supply
       let totalSupplyInput = prompt(
-        `${colors.yellow}Total Supply ${colors.darkGray}[${evvmMetadata.totalSupply}]:${colors.reset}`
+        `${colors.yellow}Total Supply ${colors.darkGray}[${formatNumber(
+          evvmMetadata.totalSupply
+        )}]:${colors.reset}`
       );
 
       // eraTokens
       let eraTokensInput = prompt(
-        `${colors.yellow}Era Tokens ${colors.darkGray}[${evvmMetadata.eraTokens}]:${colors.reset}`
+        `${colors.yellow}Era Tokens ${colors.darkGray}[${formatNumber(
+          evvmMetadata.eraTokens
+        )}]:${colors.reset}`
       );
 
       // reward
       let rewardInput = prompt(
-        `${colors.yellow}Reward ${colors.darkGray}[${evvmMetadata.reward}]:${colors.reset}`
+        `${colors.yellow}Reward ${colors.darkGray}[${formatNumber(
+          evvmMetadata.reward
+        )}]:${colors.reset}`
       );
     }
 
@@ -351,24 +373,78 @@ abstract contract Inputs {
     return;
   }
 
-  // Retrieve chain ID from the RPC URL
-  const rpcUrl = "http://0.0.0.0:8545";
+  // Retrieve chain ID from the RPC_URL environment variable
+  let rpcUrl: string | undefined | null = process.env.RPC_URL;
+  if (!rpcUrl) rpcUrl = null;
+
+  while (!rpcUrl) {
+    rpcUrl = prompt(
+      `${colors.yellow}Please enter the RPC URL for deployment:${colors.reset}`
+    );
+    if (!rpcUrl) {
+      console.log(
+        `${colors.red}RPC URL cannot be empty. Please enter a valid RPC URL.${colors.reset}`
+      );
+    }
+  }
+
   const chainId = await getChainId(rpcUrl);
 
-  console.log(`${colors.blue}Deploying at chain host id:${colors.reset} ${chainId}`);
+  console.log(
+    `${colors.blue}Deploying at chain host id:${colors.reset} ${chainId}`
+  );
 
   console.log(
     `${colors.evvmGreen}Starting deployment to EVVM...${colors.reset}`
   );
   try {
     await $`forge clean`.quiet();
-    await $`forge script script/Deploy.s.sol:DeployScript --via-ir --optimize true --rpc-url http://0.0.0.0:8545 --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 --broadcast -vvvv`;
+    await $`forge script script/Deploy.s.sol:DeployScript --via-ir --optimize true --rpc-url ${rpcUrl} --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 --broadcast -vvvv`;
     console.log(
       `${colors.green}Deployment completed successfully!${colors.reset}`
     );
   } catch (error) {
     console.error(`${colors.red}Deployment failed:${colors.reset}`, error);
+    return;
   }
+
+  // open ./broadcast/Deploy.s.sol/$CHAIN_ID/run-latest.json
+  const broadcastFile = `./broadcast/Deploy.s.sol/${chainId}/run-latest.json`;
+  //parse the file to json
+  const broadcastContent = await Bun.file(broadcastFile).text();
+  const broadcastJson = JSON.parse(broadcastContent);
+  /*
+  from the "transactions": [] array if the transactionType is "CREATE"
+  we need to extract the contractName and contractAddress using map
+  from CreatedContract interface
+  */
+  const createdContracts = broadcastJson.transactions
+    .filter((tx: any) => tx.transactionType === "CREATE")
+    .map(
+      (tx: any) =>
+        ({
+          contractName: tx.contractName,
+          contractAddress: tx.contractAddress,
+        } as CreatedContract)
+    );
+
+  console.log(`${colors.bright}=== Deployed Contracts ===${colors.reset}`);
+  createdContracts.forEach((contract: CreatedContract) => {
+    console.log(
+      `  ${colors.blue}${contract.contractName}:${colors.reset} ${contract.contractAddress}`
+    );
+  });
+
+  // search for Evvm contract address and store it in evvmAddress
+  evvmAddress =
+    createdContracts.find(
+      (contract: CreatedContract) => contract.contractName === "Evvm"
+    )?.contractAddress ?? null;
+
+  console.log();
+  console.log(
+    `${colors.green}Evvm deployed at address: ${evvmAddress}${colors.reset}`
+  );
 }
 
 async function fullTest() {
@@ -382,9 +458,6 @@ async function fullTest() {
 function showVersion() {
   console.log(`v${version}`);
 }
-
-
-
 
 // Global error handling
 process.on("uncaughtException", (error) => {
@@ -422,7 +495,7 @@ async function getChainId(rpcUrl: string): Promise<number> {
       id: 1,
     }),
   });
-  
+
   if (!response.ok) {
     throw new Error(`Failed to fetch chain ID: ${response.statusText}`);
   }
