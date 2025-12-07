@@ -132,8 +132,6 @@ async function deployEvvm(args: string[], options: any) {
 
   let confirmationDone: boolean = false;
 
-  let evvmAddress: `0x${string}` | null = null;
-
   let evvmMetadata: EvvmMetadata = {
     EvvmName: "EVVM",
     EvvmID: 0,
@@ -313,38 +311,10 @@ async function deployEvvm(args: string[], options: any) {
     return;
   }
 
-  // open ./broadcast/Deploy.s.sol/$CHAIN_ID/run-latest.json
-  const broadcastFile = `./broadcast/Deploy.s.sol/${chainId}/run-latest.json`;
-  //parse the file to json
-  const broadcastContent = await Bun.file(broadcastFile).text();
-  const broadcastJson = JSON.parse(broadcastContent);
-  /*
-  from the "transactions": [] array if the transactionType is "CREATE"
-  we need to extract the contractName and contractAddress using map
-  from CreatedContract interface
-  */
-  const createdContracts = broadcastJson.transactions
-    .filter((tx: any) => tx.transactionType === "CREATE")
-    .map(
-      (tx: any) =>
-        ({
-          contractName: tx.contractName,
-          contractAddress: tx.contractAddress,
-        } as CreatedContract)
-    );
+  // Show deployed contracts and find Evvm address
 
-  console.log(`${colors.bright}=== Deployed Contracts ===${colors.reset}`);
-  createdContracts.forEach((contract: CreatedContract) => {
-    console.log(
-      `  ${colors.blue}${contract.contractName}:${colors.reset} ${contract.contractAddress}`
-    );
-  });
-
-  // search for Evvm contract address and store it in evvmAddress
-  evvmAddress =
-    createdContracts.find(
-      (contract: CreatedContract) => contract.contractName === "Evvm"
-    )?.contractAddress ?? null;
+  const evvmAddress: `0x${string}` | null =
+    await showDeployContractsAndFindEvvm(chainId);
 
   console.log();
   console.log(
@@ -379,18 +349,20 @@ main().catch((error) => {
 // Helpers ////////////////////////////////////////////////////////////////////////////////////
 function promptString(message: string, defaultValue?: string): string {
   const input = prompt(message);
-  
+
   // Si está vacío y hay valor por defecto, usar el default
   if (!input && defaultValue !== undefined) {
     return defaultValue;
   }
-  
+
   // Si no hay input ni default, pedir nuevamente
   if (!input) {
-    console.log(`${colors.red}Input cannot be empty. Please enter a value.${colors.reset}`);
+    console.log(
+      `${colors.red}Input cannot be empty. Please enter a value.${colors.reset}`
+    );
     return promptString(message, defaultValue);
   }
-  
+
   return input;
 }
 
@@ -551,4 +523,42 @@ async function foundryIsInstalledAndSetup(): Promise<boolean> {
     return false;
   }
   return true;
+}
+
+async function showDeployContractsAndFindEvvm(
+  chainId: number
+): Promise<`0x${string}` | null> {
+  // open ./broadcast/Deploy.s.sol/$CHAIN_ID/run-latest.json
+  const broadcastFile = `./broadcast/Deploy.s.sol/${chainId}/run-latest.json`;
+  //parse the file to json
+  const broadcastContent = await Bun.file(broadcastFile).text();
+  const broadcastJson = JSON.parse(broadcastContent);
+  /*
+  from the "transactions": [] array if the transactionType is "CREATE"
+  we need to extract the contractName and contractAddress using map
+  from CreatedContract interface
+  */
+  const createdContracts = broadcastJson.transactions
+    .filter((tx: any) => tx.transactionType === "CREATE")
+    .map(
+      (tx: any) =>
+        ({
+          contractName: tx.contractName,
+          contractAddress: tx.contractAddress,
+        } as CreatedContract)
+    );
+
+  console.log(`${colors.bright}=== Deployed Contracts ===${colors.reset}`);
+  createdContracts.forEach((contract: CreatedContract) => {
+    console.log(
+      `  ${colors.blue}${contract.contractName}:${colors.reset} ${contract.contractAddress}`
+    );
+  });
+
+  // search for Evvm contract address and return it
+  return (
+    createdContracts.find(
+      (contract: CreatedContract) => contract.contractName === "Evvm"
+    )?.contractAddress ?? null
+  );
 }
