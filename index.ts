@@ -8,9 +8,9 @@ import { parseArgs } from "util";
 import { version } from "./package.json";
 
 type ConfirmAnswer = {
-  configureAdvancedMetadata: string | null;
-  confirmInputs: string | null;
-  deploy: string | null;
+  configureAdvancedMetadata: string;
+  confirmInputs: string;
+  deploy: string;
 };
 
 type InputAddresses = {
@@ -125,9 +125,9 @@ ${colors.bright}OPTIONS:${colors.reset}
 
 async function deployEvvm(args: string[], options: any) {
   let confirmAnswer: ConfirmAnswer = {
-    configureAdvancedMetadata: null,
-    confirmInputs: null,
-    deploy: null,
+    configureAdvancedMetadata: "",
+    confirmInputs: "",
+    deploy: "",
   };
 
   let confirmationDone: boolean = false;
@@ -162,111 +162,63 @@ async function deployEvvm(args: string[], options: any) {
   console.log("░▒▓████████▓▒░  ░▒▓██▓▒░     ░▒▓██▓▒░  ░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░ ");
   console.log(`${colors.reset}`);
 
-  // we verify if foundry is installed
-  try {
-    await $`foundryup --version`.quiet();
-  } catch (error) {
-    console.log(
-      `${colors.red}Error: Foundry is not installed. Please install Foundry to proceed with deployment.${colors.reset}`
-    );
-    return;
-  }
-
-  // Verify defaultKey wallet exists
-  const walletList = await $`cast wallet list`.quiet();
-  if (!walletList.stdout.includes("defaultKey (Local)")) {
-    console.log(
-      `${colors.red}Error: Wallet 'defaultKey (Local)' is not available. Deployment aborted.${colors.reset}`
-    );
-    return;
-  }
+  // Verify foundry installation and setup
+  if (!(await foundryIsInstalledAndSetup())) return;
 
   while (!confirmationDone) {
+    // Collect addresses with validation
     for (const key of Object.keys(addresses) as (keyof InputAddresses)[]) {
-      let input: string | null = null;
-      while (!input) {
-        input = prompt(
-          `${colors.yellow}Please enter the address for ${key}:${colors.reset}`
-        );
-        if (input && /^0x[a-fA-F0-9]{40}$/.test(input)) {
-          addresses[key] = input as `0x${string}`;
-        } else {
-          console.log(
-            `${colors.red}Invalid address format. Please enter a valid Ethereum address.${colors.reset}`
-          );
-          input = null;
-        }
-      }
+      addresses[key] = promptAddress(
+        `${colors.yellow}Please enter the address for ${key}:${colors.reset}`
+      );
     }
 
     // Ask EvvmName (by default "EVVM")
-
-    let evvmNameInput = prompt(
-      `${colors.yellow}EVVM Name ${colors.darkGray}[${evvmMetadata.EvvmName}]:${colors.reset}`
+    evvmMetadata.EvvmName = promptString(
+      `${colors.yellow}EVVM Name ${colors.darkGray}[${evvmMetadata.EvvmName}]:${colors.reset}`,
+      evvmMetadata.EvvmName ?? undefined
     );
-    if (evvmNameInput) {
-      evvmMetadata.EvvmName = evvmNameInput;
-    }
 
-    // ask for principal token details
-
-    // principal token name
-
-    let principalTokenNameInput = prompt(
-      `${colors.yellow}Principal Token Name ${colors.darkGray}[${evvmMetadata.principalTokenName}]:${colors.reset}`
+    // Principal token name
+    evvmMetadata.principalTokenName = promptString(
+      `${colors.yellow}Principal Token Name ${colors.darkGray}[${evvmMetadata.principalTokenName}]:${colors.reset}`,
+      evvmMetadata.principalTokenName ?? undefined
     );
-    if (principalTokenNameInput) {
-      evvmMetadata.principalTokenName = principalTokenNameInput;
-    }
 
-    // principal token symbol
-    let principalTokenSymbolInput = prompt(
-      `${colors.yellow}Principal Token Symbol ${colors.darkGray}[${evvmMetadata.principalTokenSymbol}]:${colors.reset}`
+    // Principal token symbol
+    evvmMetadata.principalTokenSymbol = promptString(
+      `${colors.yellow}Principal Token Symbol ${colors.darkGray}[${evvmMetadata.principalTokenSymbol}]:${colors.reset}`,
+      evvmMetadata.principalTokenSymbol ?? undefined
     );
-    if (principalTokenSymbolInput) {
-      evvmMetadata.principalTokenSymbol = principalTokenSymbolInput;
-    }
 
     // ask for advanced metadata confirmation
-    while (
-      confirmAnswer.configureAdvancedMetadata === null ||
-      (confirmAnswer.configureAdvancedMetadata.toLowerCase() !== "y" &&
-        confirmAnswer.configureAdvancedMetadata.toLowerCase() !== "n")
-    ) {
-      confirmAnswer.configureAdvancedMetadata = prompt(
-        `${colors.yellow}Do you want to configure advanced metadata? (y/n):${colors.reset}`
-      );
-    }
+    confirmAnswer.configureAdvancedMetadata = promptYesNo(
+      `${colors.yellow}Do you want to configure advanced metadata? (y/n):${colors.reset}`
+    );
 
     if (confirmAnswer.configureAdvancedMetadata.toLowerCase() === "y") {
-      // Format numbers without scientific notation for display
-      const formatNumber = (num: number | null) => {
-        if (num === null) return "0";
-        if (num > 1e15) {
-          return num.toLocaleString("fullwide", { useGrouping: false });
-        }
-        return num.toString();
-      };
-
       // total supply
-      let totalSupplyInput = prompt(
+      evvmMetadata.totalSupply = promptNumber(
         `${colors.yellow}Total Supply ${colors.darkGray}[${formatNumber(
           evvmMetadata.totalSupply
-        )}]:${colors.reset}`
+        )}]:${colors.reset}`,
+        evvmMetadata.totalSupply ?? undefined
       );
 
       // eraTokens
-      let eraTokensInput = prompt(
+      evvmMetadata.eraTokens = promptNumber(
         `${colors.yellow}Era Tokens ${colors.darkGray}[${formatNumber(
           evvmMetadata.eraTokens
-        )}]:${colors.reset}`
+        )}]:${colors.reset}`,
+        evvmMetadata.eraTokens ?? undefined
       );
 
       // reward
-      let rewardInput = prompt(
+      evvmMetadata.reward = promptNumber(
         `${colors.yellow}Reward ${colors.darkGray}[${formatNumber(
           evvmMetadata.reward
-        )}]:${colors.reset}`
+        )}]:${colors.reset}`,
+        evvmMetadata.reward ?? undefined
       );
     }
 
@@ -297,15 +249,9 @@ async function deployEvvm(args: string[], options: any) {
     console.log();
 
     // Ask for confirmation
-    while (
-      confirmAnswer.confirmInputs === null ||
-      (confirmAnswer.confirmInputs.toLowerCase() !== "y" &&
-        confirmAnswer.confirmInputs.toLowerCase() !== "n")
-    ) {
-      confirmAnswer.confirmInputs = prompt(
-        `${colors.yellow}Are all inputs correct? (y/n):${colors.reset}`
-      );
-    }
+    confirmAnswer.confirmInputs = promptYesNo(
+      `${colors.yellow}Are all inputs correct? (y/n):${colors.reset}`
+    );
 
     if (confirmAnswer.confirmInputs.toLowerCase() === "y") {
       confirmationDone = true;
@@ -322,15 +268,9 @@ async function deployEvvm(args: string[], options: any) {
   //console.log(`${colors.blue}Updated ${inputFile}${colors.reset}`);
 
   // Confirmation prompt
-  while (
-    confirmAnswer.deploy === null ||
-    (confirmAnswer.deploy.toLowerCase() !== "y" &&
-      confirmAnswer.deploy.toLowerCase() !== "n")
-  ) {
-    confirmAnswer.deploy = prompt(
-      `${colors.yellow}Are you sure you want to deploy to EVVM? (y/n):${colors.reset}`
-    );
-  }
+  confirmAnswer.deploy = promptYesNo(
+    `${colors.yellow}Are you sure you want to deploy to EVVM? (y/n):${colors.reset}`
+  );
 
   if (confirmAnswer.deploy.toLowerCase() !== "y") {
     console.log(`${colors.red}Deployment cancelled${colors.reset}`);
@@ -436,7 +376,88 @@ main().catch((error) => {
   process.exit(1);
 });
 
-// Helpers
+// Helpers ////////////////////////////////////////////////////////////////////////////////////
+function promptString(message: string, defaultValue?: string): string {
+  const input = prompt(message);
+  
+  // Si está vacío y hay valor por defecto, usar el default
+  if (!input && defaultValue !== undefined) {
+    return defaultValue;
+  }
+  
+  // Si no hay input ni default, pedir nuevamente
+  if (!input) {
+    console.log(`${colors.red}Input cannot be empty. Please enter a value.${colors.reset}`);
+    return promptString(message, defaultValue);
+  }
+  
+  return input;
+}
+
+function promptNumber(message: string, defaultValue?: number): number {
+  const input = prompt(message);
+
+  // Si está vacío y hay valor por defecto, usar el default
+  if (!input && defaultValue !== undefined) {
+    return defaultValue;
+  }
+
+  // Validar que sea un número válido
+  const num = Number(input);
+  if (isNaN(num) || num < 0) {
+    console.log(
+      `${colors.red}Invalid number. Please enter a valid positive number.${colors.reset}`
+    );
+    return promptNumber(message, defaultValue);
+  }
+
+  return num;
+}
+
+function promptAddress(
+  message: string,
+  defaultValue?: `0x${string}`
+): `0x${string}` {
+  const input = prompt(message);
+
+  // Si está vacío y hay valor por defecto, usar el default
+  if (!input && defaultValue !== undefined) {
+    return defaultValue;
+  }
+
+  // Validar que sea una dirección válida
+  if (!verifyAddress(input)) {
+    console.log(
+      `${colors.red}Invalid address format. Please enter a valid Ethereum address.${colors.reset}`
+    );
+    return promptAddress(message, defaultValue);
+  }
+
+  return input as `0x${string}`;
+}
+
+function promptYesNo(message: string, defaultValue?: string): string {
+  const input = prompt(message);
+
+  // Si está vacío y hay valor por defecto, usar el default
+  if (!input && defaultValue !== undefined) {
+    return defaultValue;
+  }
+
+  // Validar que sea 'y' o 'n'
+  if (input?.toLowerCase() !== "y" && input?.toLowerCase() !== "n") {
+    console.log(`${colors.red}Please enter 'y' or 'n'${colors.reset}`);
+    return promptYesNo(message, defaultValue);
+  }
+
+  return input.toLowerCase();
+}
+
+function verifyAddress(address: string | null): boolean {
+  if (!address) return false;
+  return /^0x[a-fA-F0-9]{40}$/.test(address);
+}
+
 const formatNumber = (num: number | null) => {
   if (num === null) return "0";
   if (num > 1e15) {
@@ -461,10 +482,6 @@ async function writeInputsFile(
     await Bun.write(inputFile, "");
     console.log(`${colors.blue}Created ${inputFile}${colors.reset}`);
   }
-
-  // Reescribe input/Inputs.sol with new data
-
-  // Format large numbers without scientific notation
 
   const inputFileContent = `// SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
@@ -495,8 +512,6 @@ abstract contract Inputs {
 }
 
 async function getChainId(rpcUrl: string): Promise<number> {
-  //curl -X POST -H "Content-Type: application/json" --data '{"jsonrpc":"2.0","method":"eth_chainId","params":[],"id":1}' [YOUR_RPC_URL]
-
   const response = await fetch(rpcUrl, {
     method: "POST",
     headers: {
@@ -515,4 +530,25 @@ async function getChainId(rpcUrl: string): Promise<number> {
   }
   const data = (await response.json()) as { result: string };
   return parseInt(data.result, 16);
+}
+
+async function foundryIsInstalledAndSetup(): Promise<boolean> {
+  try {
+    await $`foundryup --version`.quiet();
+  } catch (error) {
+    console.log(
+      `${colors.red}Error: Foundry is not installed. Please install Foundry to proceed with deployment.${colors.reset}`
+    );
+    return false;
+  }
+
+  // Verify defaultKey wallet exists
+  let walletList = await $`cast wallet list`.quiet();
+  if (!walletList.stdout.includes("defaultKey (Local)")) {
+    console.log(
+      `${colors.red}Error: Wallet 'defaultKey (Local)' is not available. Deployment aborted.${colors.reset}`
+    );
+    return false;
+  }
+  return true;
 }
