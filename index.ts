@@ -312,48 +312,12 @@ async function deployEvvm(args: string[], options: any) {
     }
   }
 
-  // Verify if input/Inputs.sol exists, if not create it
-  const inputDir = "./input";
-  const inputFile = `${inputDir}/Inputs.sol`;
-
-  try {
-    await Bun.file(inputFile).text();
-  } catch {
-    // File doesn't exist, create directory and file
-    await $`mkdir -p ${inputDir}`.quiet();
-    await Bun.write(inputFile, "");
-    console.log(`${colors.blue}Created ${inputFile}${colors.reset}`);
+  if (!(await writeInputsFile(addresses, evvmMetadata))) {
+    console.log(
+      `${colors.red}Error: Failed to write inputs file. Deployment aborted.${colors.reset}`
+    );
+    return;
   }
-
-  // Reescribe input/Inputs.sol with new data
-
-  // Format large numbers without scientific notation
-
-  const inputFileContent = `// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
-import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
-
-abstract contract Inputs {
-    address admin = ${addresses.admin};
-    address goldenFisher = ${addresses.goldenFisher};
-    address activator = ${addresses.activator};
-
-    EvvmStructs.EvvmMetadata inputMetadata =
-        EvvmStructs.EvvmMetadata({
-            EvvmName: "${evvmMetadata.EvvmName}",
-            // evvmID will be set to 0, and it will be assigned when you register the evvm
-            EvvmID: 0,
-            principalTokenName: "${evvmMetadata.principalTokenName}",
-            principalTokenSymbol: "${evvmMetadata.principalTokenSymbol}",
-            principalTokenAddress: ${evvmMetadata.principalTokenAddress},
-            totalSupply: ${formatNumber(evvmMetadata.totalSupply)},
-            eraTokens: ${formatNumber(evvmMetadata.eraTokens)},
-            reward: ${formatNumber(evvmMetadata.reward)}
-        });
-}
-`;
-
-  await Bun.write(inputFile, inputFileContent);
 
   //console.log(`${colors.blue}Updated ${inputFile}${colors.reset}`);
 
@@ -378,6 +342,7 @@ abstract contract Inputs {
   if (!rpcUrl) rpcUrl = null;
 
   while (!rpcUrl) {
+    console.log(`${colors.red}RPC URL not found in .env file.${colors.reset}`);
     rpcUrl = prompt(
       `${colors.yellow}Please enter the RPC URL for deployment:${colors.reset}`
     );
@@ -479,6 +444,55 @@ const formatNumber = (num: number | null) => {
   }
   return num.toString();
 };
+
+async function writeInputsFile(
+  addresses: InputAddresses,
+  evvmMetadata: EvvmMetadata
+): Promise<boolean> {
+  // Verify if input/Inputs.sol exists, if not create it
+  const inputDir = "./input";
+  const inputFile = `${inputDir}/Inputs.sol`;
+
+  try {
+    await Bun.file(inputFile).text();
+  } catch {
+    // File doesn't exist, create directory and file
+    await $`mkdir -p ${inputDir}`.quiet();
+    await Bun.write(inputFile, "");
+    console.log(`${colors.blue}Created ${inputFile}${colors.reset}`);
+  }
+
+  // Reescribe input/Inputs.sol with new data
+
+  // Format large numbers without scientific notation
+
+  const inputFileContent = `// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.0;
+import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
+
+abstract contract Inputs {
+    address admin = ${addresses.admin};
+    address goldenFisher = ${addresses.goldenFisher};
+    address activator = ${addresses.activator};
+
+    EvvmStructs.EvvmMetadata inputMetadata =
+        EvvmStructs.EvvmMetadata({
+            EvvmName: "${evvmMetadata.EvvmName}",
+            // evvmID will be set to 0, and it will be assigned when you register the evvm
+            EvvmID: 0,
+            principalTokenName: "${evvmMetadata.principalTokenName}",
+            principalTokenSymbol: "${evvmMetadata.principalTokenSymbol}",
+            principalTokenAddress: ${evvmMetadata.principalTokenAddress},
+            totalSupply: ${formatNumber(evvmMetadata.totalSupply)},
+            eraTokens: ${formatNumber(evvmMetadata.eraTokens)},
+            reward: ${formatNumber(evvmMetadata.reward)}
+        });
+}
+`;
+
+  await Bun.write(inputFile, inputFileContent);
+  return true;
+}
 
 async function getChainId(rpcUrl: string): Promise<number> {
   //curl -X POST -H "Content-Type: application/json" --data '{"jsonrpc":"2.0","method":"eth_chainId","params":[],"id":1}' [YOUR_RPC_URL]
