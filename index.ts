@@ -46,8 +46,6 @@ const colors = {
 const commands = {
   help: showHelp,
   version: showVersion,
-  greet: greetCommand,
-  example: exampleCommand,
   deploy: deployEvvm,
   fulltest: fullTest,
 };
@@ -111,22 +109,12 @@ ${colors.bright}USAGE:${colors.reset}
 ${colors.bright}COMMANDS:${colors.reset}
   ${colors.green}help${colors.reset}              Show this help
   ${colors.green}version${colors.reset}           Show version
-  ${colors.green}greet${colors.reset}             Greet user
-  ${colors.green}example${colors.reset}           Example command
-  ${colors.green}deploy${colors.reset}            Deploy to EVVM
+  ${colors.green}deploy${colors.reset}            Deploy and verify an EVVM
   ${colors.green}fulltest${colors.reset}          Run full test suite
 
 ${colors.bright}OPTIONS:${colors.reset}
   -h, --help          Show help
   -v, --version       Show version
-  -n, --name <name>   Specify a name
-  --verbose           Verbose mode
-
-${colors.bright}EXAMPLES:${colors.reset}
-  evvm greet --name John
-  evvm example --verbose
-  evvm deploy
-  evvm fulltest
   `);
 }
 
@@ -395,32 +383,8 @@ function showVersion() {
   console.log(`v${version}`);
 }
 
-// Command: greet
-async function greetCommand(args: string[], options: any) {
-  const name = options.name || "user";
-  console.log(`${colors.green}Hello, ${name}!${colors.reset}`);
 
-  if (options.verbose) {
-    console.log(
-      `${colors.blue}[Verbose]${colors.reset} Executing greet command`
-    );
-  }
-}
 
-// Command: example
-async function exampleCommand(args: string[], options: any) {
-  console.log(`${colors.yellow}Executing example command...${colors.reset}`);
-
-  // Simulate async operation
-  await Bun.sleep(1000);
-
-  console.log(`${colors.green}✓${colors.reset} Operation completed!`);
-
-  if (options.verbose) {
-    console.log(`${colors.blue}[Verbose]${colors.reset} Args:`, args);
-    console.log(`${colors.blue}[Verbose]${colors.reset} Options:`, options);
-  }
-}
 
 // Global error handling
 process.on("uncaughtException", (error) => {
