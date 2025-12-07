@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.13;
+pragma solidity ^0.8.0;
 
 import {Script, console2} from "forge-std/Script.sol";
 import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
@@ -11,8 +11,9 @@ import {
 import {Treasury} from "@EVVM/playground/contracts/treasury/Treasury.sol";
 import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
 import {P2PSwap} from "@EVVM/playground/contracts/p2pSwap/P2PSwap.sol";
+import {Inputs} from "../input/Inputs.sol";
 
-contract DeployScript is Script {
+contract DeployScript is Script, Inputs {
     Staking staking;
     Evvm evvm;
     Estimator estimator;
@@ -20,98 +21,21 @@ contract DeployScript is Script {
     Treasury treasury;
     P2PSwap p2pSwap;
 
-    address admin = 0x5cBf2D4Bbf834912Ad0bD59980355b57695e8309;
-    address goldenFisher = 0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc;
-    address activator = 0x976EA74026E726554dB657fA54763abd0C3a0aa9;
-
-    struct AddressData {
-        address activator;
-        address admin;
-        address goldenFisher;
-    }
-
-    struct BasicMetadata {
-        string EvvmName;
-        string principalTokenName;
-        string principalTokenSymbol;
-    }
-
-    struct AdvancedMetadata {
-        uint256 eraTokens;
-        uint256 reward;
-        uint256 totalSupply;
-    }
-
     function setUp() public {}
 
     function run() public {
-        string memory path = "input/address.json";
-        assert(vm.isFile(path));
-        string memory data = vm.readFile(path);
-        bytes memory dataJson = vm.parseJson(data);
-
-        AddressData memory addressData = abi.decode(dataJson, (AddressData));
-
-        path = "input/evvmBasicMetadata.json";
-        data = vm.readFile(path);
-        //console2.log("Deploy without parsing:", data);
-        dataJson = vm.parseJson(data);
-        //console2.logBytes(dataJson);
-
-        BasicMetadata memory basicMetadata = abi.decode(
-            dataJson,
-            (BasicMetadata)
-        );
-
-        path = "input/evvmAdvancedMetadata.json";
-        data = vm.readFile(path);
-        console2.log("Deploy without parsing:", data);
-        dataJson = vm.parseJson(data);
-        console2.logBytes(dataJson);
-
-        AdvancedMetadata memory advancedMetadata = abi.decode(
-            dataJson,
-            (AdvancedMetadata)
-        );
-
-        console2.log("Admin:", addressData.admin);
-        console2.log("GoldenFisher:", addressData.goldenFisher);
-        console2.log("Activator:", addressData.activator);
-        console2.log("EvvmName:", basicMetadata.EvvmName);
-        console2.log("PrincipalTokenName:", basicMetadata.principalTokenName);
-        console2.log(
-            "PrincipalTokenSymbol:",
-            basicMetadata.principalTokenSymbol
-        );
-        console2.log("TotalSupply:", advancedMetadata.totalSupply);
-        console2.log("EraTokens:", advancedMetadata.eraTokens);
-        console2.log("Reward:", advancedMetadata.reward);
-
-        EvvmStructs.EvvmMetadata memory inputMetadata = EvvmStructs
-            .EvvmMetadata({
-                EvvmName: basicMetadata.EvvmName,
-                // evvmID will be set to 0, and it will be assigned when you register the evvm
-                EvvmID: 0,
-                principalTokenName: basicMetadata.principalTokenName,
-                principalTokenSymbol: basicMetadata.principalTokenSymbol,
-                principalTokenAddress: 0x0000000000000000000000000000000000000001,
-                totalSupply: advancedMetadata.totalSupply,
-                eraTokens: advancedMetadata.eraTokens,
-                reward: advancedMetadata.reward
-            });
-
         vm.startBroadcast();
 
-        staking = new Staking(addressData.admin, addressData.goldenFisher);
-        evvm = new Evvm(addressData.admin, address(staking), inputMetadata);
+        staking = new Staking(admin, goldenFisher);
+        evvm = new Evvm(admin, address(staking), inputMetadata);
         estimator = new Estimator(
-            addressData.activator,
+            activator,
             address(evvm),
             address(staking),
-            addressData.admin
+            admin
         );
 
-        nameService = new NameService(address(evvm), addressData.admin);
+        nameService = new NameService(address(evvm), admin);
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         treasury = new Treasury(address(evvm));
@@ -122,7 +46,7 @@ contract DeployScript is Script {
         p2pSwap = new P2PSwap(
             address(evvm),
             address(staking),
-            addressData.admin
+            admin
         );
 
         vm.stopBroadcast();

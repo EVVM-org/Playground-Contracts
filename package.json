@@ -1,5 +1,12 @@
 {
-  "dependencies": {
-    "@hyperlane-xyz/core": "^3.6.1"
-  }
+  "name": "playgrounnd-contracts",
+  "version": "1.0.0",
+  "bin": {
+    "mycli": "./index.ts"
+  },
+  "scripts": {
+    "dev": "bun run index.ts",
+    "build": "bun build index.ts --compile --outfile evvmCli"
+  },
+  "type": "module"
 }
