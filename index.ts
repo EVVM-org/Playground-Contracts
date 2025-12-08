@@ -45,6 +45,7 @@ const colors = {
   red: "\x1b[31m",
   darkGray: "\x1b[90m",
   evvmGreen: "\x1b[38;2;1;240;148m",
+  orange: "\x1b[38;2;255;165;0m",
 };
 
 // Available commands
@@ -258,12 +259,10 @@ async function deployEvvm(args: string[], options: any) {
 
   if (!(await writeInputsFile(addresses, evvmMetadata))) {
     console.log(
-      `${colors.red}Error: Failed to write inputs file. Deployment aborted.${colors.reset}`
+      `${colors.red}🯀  Error: Failed to write inputs file.${colors.reset}\nPlease try again\nIf the issue persists, make a issue on GitHub.\nDeployment aborted.`
     );
     return;
   }
-
-  //console.log(`${colors.blue}Updated ${inputFile}${colors.reset}`);
 
   // Confirmation prompt
   confirmAnswer.deploy = promptYesNo(
@@ -280,7 +279,7 @@ async function deployEvvm(args: string[], options: any) {
   if (!rpcUrl) rpcUrl = null;
 
   while (!rpcUrl) {
-    console.log(`${colors.red}RPC URL not found in .env file.${colors.reset}`);
+    console.log(`${colors.orange}RPC URL not found in .env file.${colors.reset}`);
     rpcUrl = prompt(
       `${colors.yellow}Please enter the RPC URL for deployment:${colors.reset}`
     );
@@ -293,6 +292,12 @@ async function deployEvvm(args: string[], options: any) {
 
   const chainId = await getChainId(rpcUrl);
 
+  const etherscanFlag = process.env.ETHERSCAN_API
+    ? `--verify --etherscan-api-key ${process.env.ETHERSCAN_API}`
+    : "";
+
+  const broadcaster = `--private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80`;
+
   console.log(
     `${colors.blue}Deploying at chain host id:${colors.reset} ${chainId}`
   );
@@ -302,7 +307,7 @@ async function deployEvvm(args: string[], options: any) {
   );
   try {
     await $`forge clean`.quiet();
-    await $`forge script script/Deploy.s.sol:DeployScript --via-ir --optimize true --rpc-url ${rpcUrl} --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 --broadcast -vvvv`;
+    await $`forge script script/Deploy.s.sol:DeployScript --via-ir --optimize true --rpc-url ${rpcUrl} ${broadcaster} --broadcast ${etherscanFlag} -vvvv`;
     console.log(
       `${colors.green}Deployment completed successfully!${colors.reset}`
     );
@@ -508,8 +513,8 @@ async function foundryIsInstalledAndSetup(): Promise<boolean> {
   try {
     await $`foundryup --version`.quiet();
   } catch (error) {
-    console.log(
-      `${colors.red}Error: Foundry is not installed. Please install Foundry to proceed with deployment.${colors.reset}`
+    console.error(
+      `${colors.red}🯀  Error: Foundry is not installed.${colors.reset}\nPlease install Foundry to proceed with deployment.\nDeployment aborted.`
     );
     return false;
   }
@@ -517,8 +522,8 @@ async function foundryIsInstalledAndSetup(): Promise<boolean> {
   // Verify defaultKey wallet exists
   let walletList = await $`cast wallet list`.quiet();
   if (!walletList.stdout.includes("defaultKey (Local)")) {
-    console.log(
-      `${colors.red}Error: Wallet 'defaultKey (Local)' is not available. Deployment aborted.${colors.reset}`
+    console.error(
+      `${colors.red}🯀  Error: Wallet 'defaultKey (Local)' is not available. ${colors.reset}\nPlease create a wallet named 'defaultKey' using 'cast wallet new defaultKey'.\nDeployment aborted.`
     );
     return false;
   }
