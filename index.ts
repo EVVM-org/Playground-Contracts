@@ -258,9 +258,7 @@ async function deployEvvm(args: string[], options: any) {
   }
 
   if (!(await writeInputsFile(addresses, evvmMetadata))) {
-    console.log(
-      `${colors.red}🯀  Error: Failed to write inputs file.${colors.reset}\nPlease try again\nIf the issue persists, make a issue on GitHub.\nDeployment aborted.`
-    );
+    showError("Failed to write inputs file.", "Please try again\nIf the issue persists, make a issue on GitHub.");
     return;
   }
 
@@ -435,13 +433,13 @@ function verifyAddress(address: string | null): boolean {
   return /^0x[a-fA-F0-9]{40}$/.test(address);
 }
 
-const formatNumber = (num: number | null) => {
+function formatNumber(num: number | null): string {
   if (num === null) return "0";
   if (num > 1e15) {
     return num.toLocaleString("fullwide", { useGrouping: false });
   }
   return num.toString();
-};
+}
 
 async function writeInputsFile(
   addresses: InputAddresses,
@@ -513,18 +511,14 @@ async function foundryIsInstalledAndSetup(): Promise<boolean> {
   try {
     await $`foundryup --version`.quiet();
   } catch (error) {
-    console.error(
-      `${colors.red}🯀  Error: Foundry is not installed.${colors.reset}\nPlease install Foundry to proceed with deployment.\nDeployment aborted.`
-    );
+    showError("Foundry is not installed.", "Please install Foundry to proceed with deployment.");
     return false;
   }
 
   // Verify defaultKey wallet exists
   let walletList = await $`cast wallet list`.quiet();
   if (!walletList.stdout.includes("defaultKey (Local)")) {
-    console.error(
-      `${colors.red}🯀  Error: Wallet 'defaultKey (Local)' is not available. ${colors.reset}\nPlease create a wallet named 'defaultKey' using 'cast wallet new defaultKey'.\nDeployment aborted.`
-    );
+    showError("Wallet 'defaultKey (Local)' is not available.", "Please create a wallet named 'defaultKey' using 'cast wallet new defaultKey'.");
     return false;
   }
   return true;
@@ -566,4 +560,8 @@ async function showDeployContractsAndFindEvvm(
       (contract: CreatedContract) => contract.contractName === "Evvm"
     )?.contractAddress ?? null
   );
+}
+
+function showError(message: string, extraMessage: string = "") {
+  console.error(`${colors.red}🯀  Error: ${message}${colors.reset}\n${extraMessage}\n${colors.red}Deployment aborted.${colors.reset}`);
 }
