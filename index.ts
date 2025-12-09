@@ -125,6 +125,8 @@ ${colors.bright}OPTIONS:${colors.reset}
 }
 
 async function deployEvvm(args: string[], options: any) {
+  let isDeployingOnLocalBlockchain = false;
+
   let confirmAnswer: ConfirmAnswer = {
     configureAdvancedMetadata: "",
     confirmInputs: "",
@@ -258,7 +260,10 @@ async function deployEvvm(args: string[], options: any) {
   }
 
   if (!(await writeInputsFile(addresses, evvmMetadata))) {
-    showError("Failed to write inputs file.", "Please try again\nIf the issue persists, make a issue on GitHub.");
+    showError(
+      "Failed to write inputs file.",
+      `Please try again. If the issue persists, create an issue on GitHub:\n${colors.blue}https://github.com/EVVM-org/Playgrounnd-Contracts/issues${colors.reset}`
+    );
     return;
   }
 
@@ -273,28 +278,90 @@ async function deployEvvm(args: string[], options: any) {
   }
 
   // Retrieve chain ID from the RPC_URL environment variable
-  let rpcUrl: string | undefined | null = process.env.RPC_URL;
-  if (!rpcUrl) rpcUrl = null;
+  //let rpcUrl: string | undefined | null = process.env.RPC_URL;
+  const { rpcUrl, chainId } = await getRPCUrlAndChainId(process.env.RPC_URL);
 
-  while (!rpcUrl) {
-    console.log(`${colors.orange}RPC URL not found in .env file.${colors.reset}`);
-    rpcUrl = prompt(
-      `${colors.yellow}Please enter the RPC URL for deployment:${colors.reset}`
+  isDeployingOnLocalBlockchain = chainId === 31337 || chainId === 1337;
+
+  //skip verification if host blockchain is local (Anvil, Hardhat)
+  if (isDeployingOnLocalBlockchain) {
+    console.log(
+      `\n${colors.orange}Local blockchain detected (Chain ID: ${chainId})${colors.reset}`
     );
-    if (!rpcUrl) {
-      console.log(
-        `${colors.red}RPC URL cannot be empty. Please enter a valid RPC URL.${colors.reset}`
+    console.log(
+      `${colors.darkGray}Skipping host chain verification step for local development.${colors.reset}\n`
+    );
+  } else {
+    const isSupported = await checkIsChainIdSupported(chainId);
+
+    if (isSupported === undefined) {
+      showError(
+        `Chain ID ${chainId} is not supported.`,
+        `Please try again or if the issue persists, make an issue on GitHub.`
       );
+      return;
+    }
+
+    if (isSupported) {
+      showError(
+        `Host Chain ID ${chainId} is not supported.`,
+        `\n${colors.yellow}Possible solutions:${colors.reset}
+  ${colors.bright}• Testnet chains:${colors.reset}
+    Request support by creating an issue at:
+    ${colors.blue}https://github.com/EVVM-org/evvm-registry-contracts${colors.reset}
+    
+  ${colors.bright}• Mainnet chains:${colors.reset}
+    EVVM currently does not support mainnet deployments.
+    
+  ${colors.bright}• Local blockchains (Anvil/Hardhat):${colors.reset}
+    Use an unregistered chain ID.
+    ${colors.darkGray}Example: Chain ID 31337 is registered, use 1337 instead.${colors.reset}`
+      );
+      return;
     }
   }
 
-  const chainId = await getChainId(rpcUrl);
+  const verification = await promptSelect(
+    "Select block explorer verification:",
+    [
+      "Etherscan v2",
+      "Blockscout",
+      "Custom",
+      "Skip verification (not recommended)",
+    ]
+  );
 
-  const etherscanFlag = process.env.ETHERSCAN_API
-    ? `--verify --etherscan-api-key ${process.env.ETHERSCAN_API}`
-    : "";
+  let verificationflag: string = "";
 
-  const broadcaster = `--private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80`;
+  switch (verification) {
+    case "Etherscan v2":
+      // Handle Etherscan v2 verification
+      let etherscanAPI = process.env.ETHERSCAN_API
+        ? process.env.ETHERSCAN_API
+        : promptSecret("Enter your Etherscan API key");
+
+      verificationflag = `--verify --etherscan-api-key ${etherscanAPI}`;
+      break;
+
+    case "Blockscout":
+      // Handle Blockscout verification
+      let blockscoutHomepage = process.env.BLOCKSCOUT_HOMEPAGE
+        ? process.env.BLOCKSCOUT_HOMEPAGE
+        : promptString("Enter your Blockscout homepage URL");
+      verificationflag = ` --verifier blockscout --verifier-url ${blockscoutHomepage}/api/`;
+      break;
+    case "Custom":
+      // Handle Custom verification
+      verificationflag = promptString("Enter your custom verification flags:");
+      break;
+    case "Skip verification (not recommended)":
+      // Handle Skip verification
+      verificationflag = "";
+      break;
+  }
+
+  const privateKey =
+    "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 
   console.log(
     `${colors.blue}Deploying at chain host id:${colors.reset} ${chainId}`
@@ -305,12 +372,15 @@ async function deployEvvm(args: string[], options: any) {
   );
   try {
     await $`forge clean`.quiet();
-    await $`forge script script/Deploy.s.sol:DeployScript --via-ir --optimize true --rpc-url ${rpcUrl} ${broadcaster} --broadcast ${etherscanFlag} -vvvv`;
+    await $`forge script script/Deploy.s.sol:DeployScript --via-ir --optimize true --rpc-url ${rpcUrl} --private-key ${privateKey} ${verificationflag} --broadcast -vvvv`;
     console.log(
       `${colors.green}Deployment completed successfully!${colors.reset}`
     );
   } catch (error) {
-    console.error(`${colors.red}Deployment failed:${colors.reset}`, error);
+    showError(
+      "Deployment process encountered an error.",
+      "Please check the error message above for details."
+    );
     return;
   }
 
@@ -428,6 +498,60 @@ function promptYesNo(message: string, defaultValue?: string): string {
   return input.toLowerCase();
 }
 
+function promptSecret(message: string): Promise<string> {
+  // Mostrar mensaje antes de escribir
+  process.stdout.write(`${colors.yellow}${message}: ${colors.reset}`);
+
+  let secret = "";
+
+  // Habilitar modo raw para capturar cada tecla
+  if (process.stdin.isTTY) {
+    process.stdin.setRawMode(true);
+  }
+  process.stdin.resume();
+  process.stdin.setEncoding("utf8");
+
+  return new Promise<string>((resolve) => {
+    const onKeyPress = (key: string) => {
+      // Ctrl+C para salir
+      if (key === "\u0003") {
+        if (process.stdin.isTTY) {
+          process.stdin.setRawMode(false);
+        }
+        process.stdin.pause();
+        process.exit();
+      }
+
+      // Enter - finalizar
+      if (key === "\r" || key === "\n") {
+        process.stdin.removeListener("data", onKeyPress);
+        if (process.stdin.isTTY) {
+          process.stdin.setRawMode(false);
+        }
+        process.stdin.pause();
+        console.log(); // Nueva línea después de escribir
+        resolve(secret);
+      }
+
+      // Backspace - borrar último caracter
+      if (key === "\x7f" || key === "\b") {
+        if (secret.length > 0) {
+          secret = secret.slice(0, -1);
+          process.stdout.write("\b \b"); // Borrar visualmente
+        }
+      }
+
+      // Caracteres normales
+      else if (key.length === 1 && key !== "\r" && key !== "\n") {
+        secret += key;
+        process.stdout.write("*"); // Mostrar asterisco
+      }
+    };
+
+    process.stdin.on("data", onKeyPress);
+  });
+}
+
 function verifyAddress(address: string | null): boolean {
   if (!address) return false;
   return /^0x[a-fA-F0-9]{40}$/.test(address);
@@ -486,6 +610,31 @@ abstract contract Inputs {
   return true;
 }
 
+async function getRPCUrlAndChainId(rpcUrl: string | undefined | null): Promise<{
+  rpcUrl: string;
+  chainId: number;
+}> {
+  if (!rpcUrl) rpcUrl = null;
+
+  while (!rpcUrl) {
+    console.log(
+      `${colors.orange}RPC URL not found in .env file.${colors.reset}`
+    );
+    rpcUrl = prompt(
+      `${colors.yellow}Please enter the RPC URL for deployment:${colors.reset}`
+    );
+    if (!rpcUrl) {
+      console.log(
+        `${colors.red}RPC URL cannot be empty. Please enter a valid RPC URL.${colors.reset}`
+      );
+    }
+  }
+
+  const chainId = await getChainId(rpcUrl);
+
+  return { rpcUrl, chainId };
+}
+
 async function getChainId(rpcUrl: string): Promise<number> {
   const response = await fetch(rpcUrl, {
     method: "POST",
@@ -507,18 +656,43 @@ async function getChainId(rpcUrl: string): Promise<number> {
   return parseInt(data.result, 16);
 }
 
+async function checkIsChainIdSupported(
+  chainId: number
+): Promise<boolean | undefined> {
+  //cast call 0x389dC8fb09211bbDA841D59f4a51160dA2377832 --rpc-url https://sepolia.drpc.org "isChainIdRegistered(uint256)(bool)" ${chainId}
+
+  try {
+    const result =
+      await $`cast call 0x389dC8fb09211bbDA841D59f4a51160dA2377832 --rpc-url https://sepolia.drpc.org "isChainIdRegistered(uint256)(bool)" ${chainId}`.quiet();
+    const isSupported = result.stdout.toString().trim() === "true";
+    return isSupported;
+  } catch (error) {
+    console.error(
+      `${colors.red}Error checking chain ID support:${colors.reset}`,
+      error
+    );
+    return undefined;
+  }
+}
+
 async function foundryIsInstalledAndSetup(): Promise<boolean> {
   try {
     await $`foundryup --version`.quiet();
   } catch (error) {
-    showError("Foundry is not installed.", "Please install Foundry to proceed with deployment.");
+    showError(
+      "Foundry is not installed.",
+      "Please install Foundry to proceed with deployment."
+    );
     return false;
   }
 
   // Verify defaultKey wallet exists
   let walletList = await $`cast wallet list`.quiet();
   if (!walletList.stdout.includes("defaultKey (Local)")) {
-    showError("Wallet 'defaultKey (Local)' is not available.", "Please create a wallet named 'defaultKey' using 'cast wallet new defaultKey'.");
+    showError(
+      "Wallet 'defaultKey (Local)' is not available.",
+      "Please create a wallet named 'defaultKey' using 'cast wallet new defaultKey'."
+    );
     return false;
   }
   return true;
@@ -547,7 +721,9 @@ async function showDeployContractsAndFindEvvm(
         } as CreatedContract)
     );
 
-  console.log(`${colors.bright}=== Deployed Contracts ===${colors.reset}`);
+  console.log(
+    `${colors.bright}▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣ Deployed Contracts ▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣${colors.reset}`
+  );
   createdContracts.forEach((contract: CreatedContract) => {
     console.log(
       `  ${colors.blue}${contract.contractName}:${colors.reset} ${contract.contractAddress}`
@@ -562,6 +738,84 @@ async function showDeployContractsAndFindEvvm(
   );
 }
 
+async function promptSelect(
+  message: string,
+  options: string[]
+): Promise<string> {
+  console.log(`\n${colors.yellow}${message}${colors.reset}`);
+
+  let selectedIndex = 0;
+  let isFirstRender = true;
+
+  const renderOptions = () => {
+    // Si no es el primer render, subir el cursor
+    if (!isFirstRender) {
+      process.stdout.write(`\x1b[${options.length}A`);
+    }
+    isFirstRender = false;
+
+    options.forEach((option, index) => {
+      // Limpiar la línea completa antes de escribir
+      process.stdout.write("\x1b[2K");
+      if (index === selectedIndex) {
+        console.log(`${colors.evvmGreen}🭬 ${option}${colors.reset}`);
+      } else {
+        console.log(`  ${option}`);
+      }
+    });
+  };
+
+  renderOptions();
+
+  if (process.stdin.isTTY) {
+    process.stdin.setRawMode(true);
+  }
+  process.stdin.resume();
+  process.stdin.setEncoding("utf8");
+
+  return new Promise<string>((resolve) => {
+    const onKeyPress = (key: string) => {
+      if (key === "\u0003") {
+        if (process.stdin.isTTY) {
+          process.stdin.setRawMode(false);
+        }
+        process.stdin.pause();
+        process.exit();
+      }
+
+      if (key === "\x1b[A") {
+        selectedIndex =
+          selectedIndex > 0 ? selectedIndex - 1 : options.length - 1;
+        renderOptions();
+      }
+
+      if (key === "\x1b[B") {
+        selectedIndex =
+          selectedIndex < options.length - 1 ? selectedIndex + 1 : 0;
+        renderOptions();
+      }
+
+      if (key === "\r" || key === "\n") {
+        process.stdin.removeListener("data", onKeyPress);
+        if (process.stdin.isTTY) {
+          process.stdin.setRawMode(false);
+        }
+        process.stdin.pause();
+
+        const selected = options[selectedIndex];
+        if (selected) {
+          console.log(); // Salto de línea final
+          resolve(selected);
+        }
+      }
+    };
+
+    process.stdin.on("data", onKeyPress);
+  });
+}
+
 function showError(message: string, extraMessage: string = "") {
-  console.error(`${colors.red}🯀  Error: ${message}${colors.reset}\n${extraMessage}\n${colors.red}Deployment aborted.${colors.reset}`);
+  console.error(
+    `${colors.red}🯀  Error: ${message}${colors.reset}\n${extraMessage}\n${colors.red}Deployment aborted.${colors.reset}`
+  );
 }
