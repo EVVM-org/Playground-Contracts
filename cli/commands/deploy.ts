@@ -6,10 +6,10 @@ import { formatNumber, showError } from "../utils/validators";
 import {
   foundryIsInstalledAndSetup,
   writeInputsFile,
-  getRPCUrlAndChainId,
   checkIsChainIdSupported,
   showDeployContractsAndFindEvvm,
 } from "../utils/foundry";
+import { getRPCUrlAndChainId } from "../utils/rpc";
 
 export async function deployEvvm(args: string[], options: any) {
   let isDeployingOnLocalBlockchain = false;
