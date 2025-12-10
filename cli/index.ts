@@ -30,6 +30,7 @@ async function main() {
       version: { type: "boolean", short: "v" },
       name: { type: "string", short: "n" },
       verbose: { type: "boolean" },
+      skipInputConfig: { type: "boolean", short: "s" },
     },
     allowPositionals: true,
   });

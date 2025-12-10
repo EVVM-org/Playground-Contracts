@@ -1,7 +1,14 @@
 import { $ } from "bun";
 import type { ConfirmAnswer, InputAddresses, EvvmMetadata } from "../types";
 import { colors } from "../constants";
-import { promptString, promptNumber, promptAddress, promptYesNo, promptSecret, promptSelect } from "../utils/prompts";
+import {
+  promptString,
+  promptNumber,
+  promptAddress,
+  promptYesNo,
+  promptSecret,
+  promptSelect,
+} from "../utils/prompts";
 import { formatNumber, showError } from "../utils/validators";
 import {
   foundryIsInstalledAndSetup,
@@ -12,6 +19,8 @@ import {
 import { getRPCUrlAndChainId } from "../utils/rpc";
 
 export async function deployEvvm(args: string[], options: any) {
+  const skipInputConfig = options.skipInputConfig || false;
+
   let isDeployingOnLocalBlockchain = false;
 
   let confirmAnswer: ConfirmAnswer = {
@@ -51,103 +60,111 @@ export async function deployEvvm(args: string[], options: any) {
   console.log(`${colors.reset}`);
 
   if (!(await foundryIsInstalledAndSetup())) return;
-
-  while (!confirmationDone) {
-    for (const key of Object.keys(addresses) as (keyof InputAddresses)[]) {
-      addresses[key] = promptAddress(
-        `${colors.yellow}Please enter the address for ${key}:${colors.reset}`
-      );
-    }
-
-    evvmMetadata.EvvmName = promptString(
-      `${colors.yellow}EVVM Name ${colors.darkGray}[${evvmMetadata.EvvmName}]:${colors.reset}`,
-      evvmMetadata.EvvmName ?? undefined
-    );
-
-    evvmMetadata.principalTokenName = promptString(
-      `${colors.yellow}Principal Token Name ${colors.darkGray}[${evvmMetadata.principalTokenName}]:${colors.reset}`,
-      evvmMetadata.principalTokenName ?? undefined
-    );
-
-    evvmMetadata.principalTokenSymbol = promptString(
-      `${colors.yellow}Principal Token Symbol ${colors.darkGray}[${evvmMetadata.principalTokenSymbol}]:${colors.reset}`,
-      evvmMetadata.principalTokenSymbol ?? undefined
-    );
-
-    confirmAnswer.configureAdvancedMetadata = promptYesNo(
-      `${colors.yellow}Do you want to configure advanced metadata? (y/n):${colors.reset}`
-    );
-
-    if (confirmAnswer.configureAdvancedMetadata.toLowerCase() === "y") {
-      evvmMetadata.totalSupply = promptNumber(
-        `${colors.yellow}Total Supply ${colors.darkGray}[${formatNumber(
-          evvmMetadata.totalSupply
-        )}]:${colors.reset}`,
-        evvmMetadata.totalSupply ?? undefined
-      );
-
-      evvmMetadata.eraTokens = promptNumber(
-        `${colors.yellow}Era Tokens ${colors.darkGray}[${formatNumber(
-          evvmMetadata.eraTokens
-        )}]:${colors.reset}`,
-        evvmMetadata.eraTokens ?? undefined
-      );
-
-      evvmMetadata.reward = promptNumber(
-        `${colors.yellow}Reward ${colors.darkGray}[${formatNumber(
-          evvmMetadata.reward
-        )}]:${colors.reset}`,
-        evvmMetadata.reward ?? undefined
-      );
-    }
-
+  
+  if (skipInputConfig) {
     console.log(
-      `\n${colors.bright}=== Configuration Summary ===${colors.reset}\n`
+      `${colors.yellow}Skipping input configuration...${colors.reset}`
     );
-
-    console.log(`${colors.bright}Addresses:${colors.reset}`);
-    for (const key of Object.keys(addresses) as (keyof InputAddresses)[]) {
-      console.log(`  ${colors.blue}${key}:${colors.reset} ${addresses[key]}`);
-    }
-
-    console.log(`\n${colors.bright}EVVM Metadata:${colors.reset}`);
-    for (const [metaKey, metaValue] of Object.entries(evvmMetadata)) {
-      if (metaKey === "EvvmID") continue;
-
-      let displayValue = metaValue;
-      if (typeof metaValue === "number" && metaValue > 1e15) {
-        displayValue = metaValue.toLocaleString("fullwide", {
-          useGrouping: false,
-        });
+  } else {
+    while (!confirmationDone) {
+      for (const key of Object.keys(addresses) as (keyof InputAddresses)[]) {
+        addresses[key] = promptAddress(
+          `${colors.yellow}Please enter the address for ${key}:${colors.reset}`
+        );
       }
-      console.log(`  ${colors.blue}${metaKey}:${colors.reset} ${displayValue}`);
-    }
-    console.log();
 
-    confirmAnswer.confirmInputs = promptYesNo(
-      `${colors.yellow}Are all inputs correct? (y/n):${colors.reset}`
+      evvmMetadata.EvvmName = promptString(
+        `${colors.yellow}EVVM Name ${colors.darkGray}[${evvmMetadata.EvvmName}]:${colors.reset}`,
+        evvmMetadata.EvvmName ?? undefined
+      );
+
+      evvmMetadata.principalTokenName = promptString(
+        `${colors.yellow}Principal Token Name ${colors.darkGray}[${evvmMetadata.principalTokenName}]:${colors.reset}`,
+        evvmMetadata.principalTokenName ?? undefined
+      );
+
+      evvmMetadata.principalTokenSymbol = promptString(
+        `${colors.yellow}Principal Token Symbol ${colors.darkGray}[${evvmMetadata.principalTokenSymbol}]:${colors.reset}`,
+        evvmMetadata.principalTokenSymbol ?? undefined
+      );
+
+      confirmAnswer.configureAdvancedMetadata = promptYesNo(
+        `${colors.yellow}Do you want to configure advanced metadata? (y/n):${colors.reset}`
+      );
+
+      if (confirmAnswer.configureAdvancedMetadata.toLowerCase() === "y") {
+        evvmMetadata.totalSupply = promptNumber(
+          `${colors.yellow}Total Supply ${colors.darkGray}[${formatNumber(
+            evvmMetadata.totalSupply
+          )}]:${colors.reset}`,
+          evvmMetadata.totalSupply ?? undefined
+        );
+
+        evvmMetadata.eraTokens = promptNumber(
+          `${colors.yellow}Era Tokens ${colors.darkGray}[${formatNumber(
+            evvmMetadata.eraTokens
+          )}]:${colors.reset}`,
+          evvmMetadata.eraTokens ?? undefined
+        );
+
+        evvmMetadata.reward = promptNumber(
+          `${colors.yellow}Reward ${colors.darkGray}[${formatNumber(
+            evvmMetadata.reward
+          )}]:${colors.reset}`,
+          evvmMetadata.reward ?? undefined
+        );
+      }
+
+      console.log(
+        `\n${colors.bright}=== Configuration Summary ===${colors.reset}\n`
+      );
+
+      console.log(`${colors.bright}Addresses:${colors.reset}`);
+      for (const key of Object.keys(addresses) as (keyof InputAddresses)[]) {
+        console.log(`  ${colors.blue}${key}:${colors.reset} ${addresses[key]}`);
+      }
+
+      console.log(`\n${colors.bright}EVVM Metadata:${colors.reset}`);
+      for (const [metaKey, metaValue] of Object.entries(evvmMetadata)) {
+        if (metaKey === "EvvmID") continue;
+
+        let displayValue = metaValue;
+        if (typeof metaValue === "number" && metaValue > 1e15) {
+          displayValue = metaValue.toLocaleString("fullwide", {
+            useGrouping: false,
+          });
+        }
+        console.log(
+          `  ${colors.blue}${metaKey}:${colors.reset} ${displayValue}`
+        );
+      }
+      console.log();
+
+      confirmAnswer.confirmInputs = promptYesNo(
+        `${colors.yellow}Are all inputs correct? (y/n):${colors.reset}`
+      );
+
+      if (confirmAnswer.confirmInputs.toLowerCase() === "y") {
+        confirmationDone = true;
+      }
+    }
+
+    if (!(await writeInputsFile(addresses, evvmMetadata))) {
+      showError(
+        "Failed to write inputs file.",
+        `Please try again. If the issue persists, create an issue on GitHub:\n${colors.blue}https://github.com/EVVM-org/Playgrounnd-Contracts/issues${colors.reset}`
+      );
+      return;
+    }
+
+    confirmAnswer.deploy = promptYesNo(
+      `${colors.yellow}Are you sure you want to deploy to EVVM? (y/n):${colors.reset}`
     );
 
-    if (confirmAnswer.confirmInputs.toLowerCase() === "y") {
-      confirmationDone = true;
+    if (confirmAnswer.deploy.toLowerCase() !== "y") {
+      console.log(`${colors.red}Deployment cancelled${colors.reset}`);
+      return;
     }
-  }
-
-  if (!(await writeInputsFile(addresses, evvmMetadata))) {
-    showError(
-      "Failed to write inputs file.",
-      `Please try again. If the issue persists, create an issue on GitHub:\n${colors.blue}https://github.com/EVVM-org/Playgrounnd-Contracts/issues${colors.reset}`
-    );
-    return;
-  }
-
-  confirmAnswer.deploy = promptYesNo(
-    `${colors.yellow}Are you sure you want to deploy to EVVM? (y/n):${colors.reset}`
-  );
-
-  if (confirmAnswer.deploy.toLowerCase() !== "y") {
-    console.log(`${colors.red}Deployment cancelled${colors.reset}`);
-    return;
   }
 
   const { rpcUrl, chainId } = await getRPCUrlAndChainId(process.env.RPC_URL);
