@@ -5,7 +5,7 @@
 import { $ } from "bun";
 
 import { parseArgs } from "util";
-import { version } from "./package.json";
+import { version } from "../package.json";
 
 type ConfirmAnswer = {
   configureAdvancedMetadata: string;

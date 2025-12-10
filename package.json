@@ -2,11 +2,11 @@
   "name": "playgrounnd-contracts",
   "version": "1.0.0",
   "bin": {
-    "mycli": "./index.ts"
+    "mycli": "./cli/index.ts"
   },
   "scripts": {
-    "dev": "bun run index.ts",
-    "build": "bun build index.ts --compile --outfile evvmCli"
+    "dev": "bun run cli/index.ts",
+    "build": "bun build cli/index.ts --compile --outfile evvmCli"
   },
   "type": "module"
 }
