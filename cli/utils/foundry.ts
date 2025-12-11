@@ -70,13 +70,12 @@ export async function isChainIdRegistered(
 export async function callRegisterEvvm(
   hostChainId: number,
   evvmAddress: `0x${string}`,
-  privateKey: string
+  walletName: string = "defaultKey"
 ): Promise<number | undefined> {
   try {
     const result =
-      await $`cast call ${RegisteryEvvmAddress} --rpc-url ${EthSepoliaPublicRpc} "registerEvvm(uint256,address)(uint256)" ${hostChainId} ${evvmAddress}`.quiet();
-
-    await $`cast send ${RegisteryEvvmAddress} --rpc-url ${EthSepoliaPublicRpc} "registerEvvm(uint256,address)(uint256)" ${hostChainId} ${evvmAddress} --private-key ${privateKey}`;
+      await $`cast call ${RegisteryEvvmAddress} --rpc-url ${EthSepoliaPublicRpc} "registerEvvm(uint256,address)(uint256)" ${hostChainId} ${evvmAddress} --account ${walletName}`.quiet();
+    await $`cast send ${RegisteryEvvmAddress} --rpc-url ${EthSepoliaPublicRpc} "registerEvvm(uint256,address)(uint256)" ${hostChainId} ${evvmAddress} --account  ${walletName}`;
 
     const evvmID = result.stdout.toString().trim();
     return Number(evvmID);
@@ -89,10 +88,10 @@ export async function callSetEvvmID(
   evvmAddress: `0x${string}`,
   evvmID: number,
   hostChainRpcUrl: string,
-  privateKey: string
+  walletName: string = "defaultKey"
 ): Promise<boolean> {
   try {
-    await $`cast send ${evvmAddress} --rpc-url ${hostChainRpcUrl} "setEvvmID(uint256)" ${evvmID} --private-key ${privateKey}`;
+    await $`cast send ${evvmAddress} --rpc-url ${hostChainRpcUrl} "setEvvmID(uint256)" ${evvmID} --account ${walletName} `;
     console.log(
       `${colors.evvmGreen}EVVM ID set successfully on the EVVM contract.${colors.reset}`
     );
@@ -102,23 +101,18 @@ export async function callSetEvvmID(
   }
 }
 
-export async function foundryIsInstalledAndSetup(): Promise<boolean> {
+export async function foundryIsInstalled(): Promise<boolean> {
   try {
     await $`foundryup --version`.quiet();
   } catch (error) {
-    showError(
-      "Foundry is not installed.",
-      "Please install Foundry to proceed with deployment."
-    );
     return false;
   }
+  return true;
+}
 
+export async function walletIsSetup(walletName: string = "defaultKey"): Promise<boolean> {
   let walletList = await $`cast wallet list`.quiet();
-  if (!walletList.stdout.includes("defaultKey (Local)")) {
-    showError(
-      "Wallet 'defaultKey (Local)' is not available.",
-      "Please create a wallet named 'defaultKey' using 'cast wallet new defaultKey'."
-    );
+  if (!walletList.stdout.includes(`${walletName} (Local)`)) {
     return false;
   }
   return true;

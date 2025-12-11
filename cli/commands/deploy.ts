@@ -9,10 +9,11 @@ import {
 } from "../utils/prompts";
 import { formatNumber, showError } from "../utils/validators";
 import {
-  foundryIsInstalledAndSetup,
   writeInputsFile,
   isChainIdRegistered,
   showDeployContractsAndFindEvvm,
+  foundryIsInstalled,
+  walletIsSetup,
 } from "../utils/foundry";
 import { getRPCUrlAndChainId } from "../utils/rpc";
 import { registerEvvm } from "./registerEvvm";
@@ -20,6 +21,7 @@ import { explorerVerification } from "../utils/explorerVerification";
 
 export async function deployEvvm(args: string[], options: any) {
   const skipInputConfig = options.skipInputConfig || false;
+  const walletName = options.walletName || "defaultKey";
 
   let isDeployingOnLocalBlockchain = false;
 
@@ -27,7 +29,7 @@ export async function deployEvvm(args: string[], options: any) {
     configureAdvancedMetadata: "",
     confirmInputs: "",
     deploy: "",
-    register: ""
+    register: "",
   };
 
   let confirmationDone: boolean = false;
@@ -62,7 +64,21 @@ export async function deployEvvm(args: string[], options: any) {
   console.log("░▒▓████████▓▒░  ░▒▓██▓▒░     ░▒▓██▓▒░  ░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░ ");
   console.log(`${colors.reset}`);
 
-  if (!(await foundryIsInstalledAndSetup())) return;
+  if (!(await foundryIsInstalled())) {
+    showError(
+      "Foundry is not installed.",
+      "Please install Foundry to proceed with deployment."
+    );
+    return;
+  }
+
+  if (!(await walletIsSetup(walletName))) {
+    showError(
+      `Wallet '${walletName} (Local)' is not available.`,
+      `Please create a wallet named '${walletName}' using 'cast wallet new ${walletName}'.`
+    );
+    return;
+  }
 
   if (skipInputConfig) {
     console.log(
@@ -231,19 +247,40 @@ export async function deployEvvm(args: string[], options: any) {
   const privateKey =
     "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 
-  console.log(`\n${colors.bright}═══════════════════════════════════════${colors.reset}`);
+  console.log(
+    `\n${colors.bright}═══════════════════════════════════════${colors.reset}`
+  );
   console.log(`${colors.bright}             Deployment${colors.reset}`);
-  console.log(`${colors.bright}═══════════════════════════════════════${colors.reset}\n`);
-  
   console.log(
-    `${colors.blue} Chain ID:${colors.reset} ${chainId}`
+    `${colors.bright}═══════════════════════════════════════${colors.reset}\n`
   );
-  console.log(
-    `${colors.evvmGreen}Starting deployment...${colors.reset}\n`
-  );
+
+  console.log(`${colors.blue} Chain ID:${colors.reset} ${chainId}`);
+  console.log(`${colors.evvmGreen}Starting deployment...${colors.reset}\n`);
   try {
     await $`forge clean`.quiet();
-    await $`forge script script/Deploy.s.sol:DeployScript --via-ir --optimize true --rpc-url ${rpcUrl} --private-key ${privateKey} ${verificationflag} --broadcast -vvvv`;
+
+    // Split verification flags into array to avoid treating them as a single argument
+    const verificationArgs = verificationflag
+      ? verificationflag.split(" ")
+      : [];
+    const command = [
+      "forge",
+      "script",
+      "script/Deploy.s.sol:DeployScript",
+      "--via-ir",
+      "--optimize",
+      "true",
+      "--rpc-url",
+      rpcUrl,
+      "--account",
+      "defaultKey",
+      ...verificationArgs,
+      "--broadcast",
+      "-vvvv",
+    ];
+
+    await $`${command}`;
     console.log(
       `\n${colors.green}✓ Deployment completed successfully!${colors.reset}`
     );
@@ -258,36 +295,60 @@ export async function deployEvvm(args: string[], options: any) {
   const evvmAddress: `0x${string}` | null =
     await showDeployContractsAndFindEvvm(chainId);
 
-  console.log(`\n${colors.bright}═══════════════════════════════════════${colors.reset}`);
+  console.log(
+    `\n${colors.bright}═══════════════════════════════════════${colors.reset}`
+  );
   console.log(`${colors.bright}            Deployment Success${colors.reset}`);
-  console.log(`${colors.bright}═══════════════════════════════════════${colors.reset}\n`);
-  
+  console.log(
+    `${colors.bright}═══════════════════════════════════════${colors.reset}\n`
+  );
+
   console.log(
     `${colors.green}✓ EVVM deployed successfully at: ${evvmAddress}${colors.reset}\n`
   );
 
-  console.log(`${colors.bright}═══════════════════════════════════════${colors.reset}`);
-  console.log(`${colors.bright}          Next Step: Registration${colors.reset}`);
-  console.log(`${colors.bright}═══════════════════════════════════════${colors.reset}`);
-  console.log(`${colors.blue}Your EVVM instance is ready to be registered.${colors.reset}`);
+  console.log(
+    `${colors.bright}═══════════════════════════════════════${colors.reset}`
+  );
+  console.log(
+    `${colors.bright}          Next Step: Registration${colors.reset}`
+  );
+  console.log(
+    `${colors.bright}═══════════════════════════════════════${colors.reset}`
+  );
+  console.log(
+    `${colors.blue}Your EVVM instance is ready to be registered.${colors.reset}`
+  );
   console.log();
-  console.log(`${colors.yellow}⚠️  Important:${colors.reset}`);
-  console.log(`   To register now, your Admin address must match the defaultKey wallet.`);
-  console.log(`   ${colors.darkGray}Otherwise, you can register later using:${colors.reset}`);
-  console.log(`   ${colors.evvmGreen}evvm register --evvmAddress ${evvmAddress} --hostChainId ${chainId} --hostRpcUrl <rpc-url>${colors.reset}`);
+  console.log(`${colors.yellow}Important:${colors.reset}`);
+  console.log(
+    `   To register now, your Admin address must match the defaultKey wallet.`
+  );
+  console.log(
+    `   ${colors.darkGray}Otherwise, you can register later using:${colors.reset}`
+  );
+  console.log(
+    `   ${colors.evvmGreen}evvm register --evvmAddress ${evvmAddress} --hostChainId ${chainId} --hostRpcUrl <rpc-url>${colors.reset}`
+  );
   console.log();
-  console.log(`   ${colors.darkGray}📖 For more details, visit:${colors.reset}`);
-  console.log(`   ${colors.blue}https://www.evvm.info/docs/QuickStart#7-register-in-registry-evvm${colors.reset}`);
+  console.log(
+    `   ${colors.darkGray}📖 For more details, visit:${colors.reset}`
+  );
+  console.log(
+    `   ${colors.blue}https://www.evvm.info/docs/QuickStart#7-register-in-registry-evvm${colors.reset}`
+  );
   console.log();
-  
+
   confirmAnswer.register = promptYesNo(
     `${colors.yellow}Do you want to register the EVVM instance now? (y/n):${colors.reset}`
   );
 
   if (confirmAnswer.register.toLowerCase() !== "y") {
-    console.log(`${colors.red}Registration skipped. You can register later using the command above.${colors.reset}`);
+    console.log(
+      `${colors.red}Registration skipped. You can register later using the command above.${colors.reset}`
+    );
     return;
-  } 
+  }
   registerEvvm([], {
     evvmAddress: evvmAddress,
     hostChainId: chainId,

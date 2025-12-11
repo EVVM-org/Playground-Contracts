@@ -2,6 +2,7 @@ import { colors } from "../constants";
 import { promptAddress, promptNumber, promptString } from "../utils/prompts";
 import { callRegisterEvvm, callSetEvvmID, isChainIdRegistered } from "../utils/foundry";
 import { showError } from "../utils/validators";
+import { getRPCUrlAndChainId } from "../utils/rpc";
 
 export async function registerEvvm(_args: string[], options: any) {
   console.log(
@@ -10,8 +11,7 @@ export async function registerEvvm(_args: string[], options: any) {
 
   // Obtener valores de los flags opcionales
   let evvmAddress: `0x${string}` | undefined = options.evvmAddress;
-  let hostChainId: number | undefined = options.hostChainId ? Number(options.hostChainId) : undefined;
-  let hostRpcUrl: string | undefined = options.hostRpcUrl;
+  let walletName: string = options.walletName || "defaultKey";
 
   // Validar o solicitar valores faltantes
   if (!evvmAddress) {
@@ -20,20 +20,10 @@ export async function registerEvvm(_args: string[], options: any) {
     );
   }
 
-  if (!hostChainId) {
-    hostChainId = promptNumber(
-      `${colors.yellow}Enter the Host Chain ID:${colors.reset}`
-    );
-  }
-
-  if (!hostRpcUrl) {
-    hostRpcUrl = promptString(
-      `${colors.yellow}Enter the Host RPC URL:${colors.reset}`
-    );
-  }
+  let { rpcUrl, chainId } = await getRPCUrlAndChainId(process.env.RPC_URL);
 
   const isDeployingOnLocalBlockchain: boolean =
-    hostChainId === 31337 || hostChainId === 1337;
+    chainId === 31337 || chainId === 1337;
 
   if (isDeployingOnLocalBlockchain) {
     console.log(`\n${colors.orange}Local Blockchain Detected${colors.reset}`);
@@ -41,7 +31,7 @@ export async function registerEvvm(_args: string[], options: any) {
     return;
   }
 
-  const isSupported = await isChainIdRegistered(hostChainId);
+  const isSupported = await isChainIdRegistered(chainId);
   if (isSupported === undefined) {
     showError(
       `EVVM registration failed.`,
@@ -51,7 +41,7 @@ export async function registerEvvm(_args: string[], options: any) {
   }
   if (!isSupported) {
     showError(
-      `Host Chain ID ${hostChainId} is not supported.`,
+      `Host Chain ID ${chainId} is not supported.`,
       `\n${colors.yellow}Possible solutions:${colors.reset}
   ${colors.bright}• Testnet chains:${colors.reset}
     Request support by creating an issue at:
@@ -70,7 +60,7 @@ export async function registerEvvm(_args: string[], options: any) {
 
   console.log(`${colors.blue}Setting EVVM ID directly on contract...${colors.reset}\n`);
 
-    const evvmID: number | undefined = await callRegisterEvvm(Number(hostChainId), evvmAddress, "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80");
+    const evvmID: number | undefined = await callRegisterEvvm(Number(chainId), evvmAddress);
     if (!evvmID) {
       showError(
         `EVVM registration failed.`,
@@ -80,13 +70,13 @@ export async function registerEvvm(_args: string[], options: any) {
     }
     console.log(`${colors.green}EVVM ID generated: ${colors.bright}${evvmID}${colors.reset}`);
     console.log(`${colors.blue}Setting EVVM ID on contract...${colors.reset}\n`);
-    
-    const isSet = await callSetEvvmID(evvmAddress, evvmID, hostRpcUrl, "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80");
+
+    const isSet = await callSetEvvmID(evvmAddress, evvmID, rpcUrl, walletName);
 
     if (!isSet) {
       showError(
         `EVVM ID setting failed.`,
-        `\n${colors.yellow}You can try manually with:${colors.reset}\n${colors.blue}cast send ${evvmAddress} \\\n  --rpc-url ${hostRpcUrl} \\\n  "setEvvmID(uint256)" ${evvmID} \\\n  --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80${colors.reset}`
+        `\n${colors.yellow}You can try manually with:${colors.reset}\n${colors.blue}cast send ${evvmAddress} \\\n  --rpc-url ${rpcUrl} \\\n  "setEvvmID(uint256)" ${evvmID} \\\n  --account ${walletName}${colors.reset}`
       );
       return;
     }

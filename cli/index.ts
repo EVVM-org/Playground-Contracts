@@ -38,9 +38,8 @@ async function main() {
       name: { type: "string", short: "n" },
       verbose: { type: "boolean" },
       skipInputConfig: { type: "boolean", short: "s" },
+      walletName: { type: "string", short: "w" },
       evvmAddress: { type: "string" },
-      hostChainId: { type: "string" },
-      hostRpcUrl: { type: "string" },
     },
     allowPositionals: true,
   });

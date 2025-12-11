@@ -6,6 +6,7 @@ export async function explorerVerification(): Promise<string | undefined> {
     [
       "Etherscan v2",
       "Blockscout",
+      "Sourcify",
       "Custom",
       "Skip verification (not recommended)",
     ]
@@ -26,7 +27,10 @@ export async function explorerVerification(): Promise<string | undefined> {
       let blockscoutHomepage = process.env.BLOCKSCOUT_HOMEPAGE
         ? process.env.BLOCKSCOUT_HOMEPAGE
         : promptString("Enter your Blockscout homepage URL");
-      verificationflag = ` --verifier blockscout --verifier-url ${blockscoutHomepage}/api/`;
+      verificationflag = `--verify --verifier blockscout --verifier-url ${blockscoutHomepage}/api/`;
+      break;
+    case "Sourcify":
+      verificationflag = `--verify --verifier sourcify --verifier-url https://sourcify.dev/server`;
       break;
     case "Custom":
       verificationflag = promptString("Enter your custom verification flags:");

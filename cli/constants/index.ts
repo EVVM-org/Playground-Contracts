@@ -10,7 +10,5 @@ export const colors = {
   orange: "\x1b[38;2;255;165;0m",
 } as const;
 
-export const RegisteryEvvmAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512" as const;
-//"0x389dC8fb09211bbDA841D59f4a51160dA2377832" as const;
-export const EthSepoliaPublicRpc = "http://0.0.0.0:8545" as const;
-//"https://sepolia.drpc.org" as const;
+export const RegisteryEvvmAddress = "0x389dC8fb09211bbDA841D59f4a51160dA2377832" as const;
+export const EthSepoliaPublicRpc = "https://0xrpc.io/sep" as const;

@@ -1,20 +1,73 @@
 import { colors } from "../constants";
+import { version } from "../../package.json";
 
 export function showHelp() {
   console.log(`
-${colors.bright}EVVM CLI Tool${colors.reset} - A command line interface tool
+${colors.evvmGreen}╔═══════════════════════════════════════════════════════════╗
+║                     EVVM CLI Tool v${version}                    ║
+╚═══════════════════════════════════════════════════════════╝${colors.reset}
 
 ${colors.bright}USAGE:${colors.reset}
-  evvm <command> [options]
+  ${colors.blue}evvm${colors.reset} ${colors.yellow}<command>${colors.reset} ${colors.darkGray}[options]${colors.reset}
 
 ${colors.bright}COMMANDS:${colors.reset}
-  ${colors.green}help${colors.reset}              Show this help
-  ${colors.green}version${colors.reset}           Show version
-  ${colors.green}deploy${colors.reset}            Deploy and verify an EVVM
-  ${colors.green}fulltest${colors.reset}          Run full test suite
+  ${colors.green}deploy${colors.reset}              Deploy a new EVVM instance to a blockchain
+                      ${colors.darkGray}Includes configuration, deployment, and optional registration${colors.reset}
 
-${colors.bright}OPTIONS:${colors.reset}
-  -h, --help          Show help
-  -v, --version       Show version
+  ${colors.green}register${colors.reset}            Register an existing EVVM instance
+                      ${colors.darkGray}Links your EVVM to the EVVM Registry${colors.reset}
+
+  ${colors.green}fulltest${colors.reset}            Run the complete test suite
+                      ${colors.darkGray}Executes all EVVM contract tests${colors.reset}
+
+  ${colors.green}help${colors.reset}                Display this help message
+
+  ${colors.green}version${colors.reset}             Show CLI version
+
+${colors.bright}DEPLOY OPTIONS:${colors.reset}
+  ${colors.yellow}--skipInputConfig${colors.reset}, ${colors.yellow}-s${colors.reset}
+                      Skip interactive configuration and use existing ./input/Inputs.sol
+  
+  ${colors.yellow}--walletName${colors.reset} ${colors.darkGray}<name>${colors.reset}
+                      Specify wallet name for deployment (default: defaultKey)
+
+  ${colors.darkGray}Note: RPC URL is read from RPC_URL in .env file${colors.reset}
+  ${colors.darkGray}      If not found, you will be prompted to enter it${colors.reset}
+
+${colors.bright}REGISTER OPTIONS:${colors.reset}
+  ${colors.yellow}--evvmAddress${colors.reset} ${colors.darkGray}<address>${colors.reset}
+                      EVVM contract address to register
+  
+  ${colors.yellow}--walletName${colors.reset} ${colors.darkGray}<name>${colors.reset}
+                      Specify wallet name for registration (default: defaultKey)
+
+  ${colors.darkGray}Note: RPC URL is read from RPC_URL in .env file${colors.reset}
+  ${colors.darkGray}      If not found, you will be prompted to enter it${colors.reset}
+
+${colors.bright}GLOBAL OPTIONS:${colors.reset}
+  ${colors.yellow}-h${colors.reset}, ${colors.yellow}--help${colors.reset}          Show help
+  ${colors.yellow}-v${colors.reset}, ${colors.yellow}--version${colors.reset}       Show version
+
+${colors.bright}EXAMPLES:${colors.reset}
+  ${colors.darkGray}# Deploy with interactive configuration${colors.reset}
+  ${colors.blue}evvm deploy${colors.reset}
+
+  ${colors.darkGray}# Deploy using existing config${colors.reset}
+  ${colors.blue}evvm deploy --skipInputConfig${colors.reset}
+
+  ${colors.darkGray}# Register an EVVM instance${colors.reset}
+  ${colors.blue}evvm register --evvmAddress 0x123...${colors.reset}
+
+  ${colors.darkGray}# Register with custom wallet${colors.reset}
+  ${colors.blue}evvm register --evvmAddress 0x123... --walletName myWallet${colors.reset}
+
+  ${colors.darkGray}# Run tests${colors.reset}
+  ${colors.blue}evvm fulltest${colors.reset}
+
+${colors.bright}DOCUMENTATION:${colors.reset}
+  ${colors.blue}https://www.evvm.info/docs${colors.reset}
+
+${colors.bright}SUPPORT:${colors.reset}
+  ${colors.blue}https://github.com/EVVM-org/Playgrounnd-Contracts/issues${colors.reset}
   `);
 }
