@@ -13,7 +13,7 @@ abstract contract Inputs {
             // evvmID will be set to 0, and it will be assigned when you register the evvm
             EvvmID: 0,
             principalTokenName: "Mate Token",
-            principalTokenSymbol: "NYAN",
+            principalTokenSymbol: "MATE",
             principalTokenAddress: 0x0000000000000000000000000000000000000001,
             totalSupply: 2033333333000000000000000000,
             eraTokens: 1016666666500000000000000000,
