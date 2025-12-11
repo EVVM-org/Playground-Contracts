@@ -1,6 +1,10 @@
 import { $ } from "bun";
 import type { InputAddresses, EvvmMetadata, CreatedContract } from "../types";
-import { colors } from "../constants";
+import {
+  colors,
+  EthSepoliaPublicRpc,
+  RegisteryEvvmAddress,
+} from "../constants";
 import { formatNumber, showError } from "./validators";
 
 export async function writeInputsFile(
@@ -46,12 +50,12 @@ abstract contract Inputs {
   return true;
 }
 
-export async function checkIsChainIdSupported(
+export async function isChainIdRegistered(
   chainId: number
 ): Promise<boolean | undefined> {
   try {
     const result =
-      await $`cast call 0x389dC8fb09211bbDA841D59f4a51160dA2377832 --rpc-url https://sepolia.drpc.org "isChainIdRegistered(uint256)(bool)" ${chainId}`.quiet();
+      await $`cast call ${RegisteryEvvmAddress} --rpc-url ${EthSepoliaPublicRpc} "isChainIdRegistered(uint256)(bool)" ${chainId}`.quiet();
     const isSupported = result.stdout.toString().trim() === "true";
     return isSupported;
   } catch (error) {
@@ -60,6 +64,41 @@ export async function checkIsChainIdSupported(
       error
     );
     return undefined;
+  }
+}
+
+export async function callRegisterEvvm(
+  hostChainId: number,
+  evvmAddress: `0x${string}`,
+  privateKey: string
+): Promise<number | undefined> {
+  try {
+    const result =
+      await $`cast call ${RegisteryEvvmAddress} --rpc-url ${EthSepoliaPublicRpc} "registerEvvm(uint256,address)(uint256)" ${hostChainId} ${evvmAddress}`.quiet();
+
+    await $`cast send ${RegisteryEvvmAddress} --rpc-url ${EthSepoliaPublicRpc} "registerEvvm(uint256,address)(uint256)" ${hostChainId} ${evvmAddress} --private-key ${privateKey}`;
+
+    const evvmID = result.stdout.toString().trim();
+    return Number(evvmID);
+  } catch (error) {
+    return undefined;
+  }
+}
+
+export async function callSetEvvmID(
+  evvmAddress: `0x${string}`,
+  evvmID: number,
+  hostChainRpcUrl: string,
+  privateKey: string
+): Promise<boolean> {
+  try {
+    await $`cast send ${evvmAddress} --rpc-url ${hostChainRpcUrl} "setEvvmID(uint256)" ${evvmID} --private-key ${privateKey}`;
+    console.log(
+      `${colors.evvmGreen}EVVM ID set successfully on the EVVM contract.${colors.reset}`
+    );
+    return true;
+  } catch (error) {
+    return false;
   }
 }
 

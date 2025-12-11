@@ -4,7 +4,13 @@
 
 import { parseArgs } from "util";
 import { colors } from "./constants";
-import { showHelp, showVersion, deployEvvm, fullTest } from "./commands";
+import {
+  showHelp,
+  showVersion,
+  deployEvvm,
+  fullTest,
+  registerEvvm,
+} from "./commands";
 
 // Available commands
 const commands = {
@@ -12,6 +18,7 @@ const commands = {
   version: showVersion,
   deploy: deployEvvm,
   fulltest: fullTest,
+  register: registerEvvm,
 };
 
 // Main function
@@ -31,6 +38,9 @@ async function main() {
       name: { type: "string", short: "n" },
       verbose: { type: "boolean" },
       skipInputConfig: { type: "boolean", short: "s" },
+      evvmAddress: { type: "string" },
+      hostChainId: { type: "string" },
+      hostRpcUrl: { type: "string" },
     },
     allowPositionals: true,
   });

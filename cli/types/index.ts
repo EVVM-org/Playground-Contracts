@@ -2,6 +2,7 @@ export type ConfirmAnswer = {
   configureAdvancedMetadata: string;
   confirmInputs: string;
   deploy: string;
+  register: string;
 };
 
 export type InputAddresses = {
