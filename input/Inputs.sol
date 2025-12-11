@@ -9,10 +9,10 @@ abstract contract Inputs {
 
     EvvmStructs.EvvmMetadata inputMetadata =
         EvvmStructs.EvvmMetadata({
-            EvvmName: "GarfieldEVVM",
+            EvvmName: "EVVM",
             // evvmID will be set to 0, and it will be assigned when you register the evvm
             EvvmID: 0,
-            principalTokenName: "NYAN Token",
+            principalTokenName: "Mate Token",
             principalTokenSymbol: "NYAN",
             principalTokenAddress: 0x0000000000000000000000000000000000000001,
             totalSupply: 2033333333000000000000000000,
