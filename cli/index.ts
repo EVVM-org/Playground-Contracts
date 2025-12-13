@@ -40,7 +40,7 @@ async function main() {
       skipInputConfig: { type: "boolean", short: "s" },
       walletName: { type: "string", short: "w" },
       evvmAddress: { type: "string" },
-      useCustomEthRpc: { type: "string" },
+      useCustomEthRpc: { type: "boolean" },
     },
     allowPositionals: true,
   });

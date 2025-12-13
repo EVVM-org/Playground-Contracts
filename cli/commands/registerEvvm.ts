@@ -17,10 +17,12 @@ export async function registerEvvm(_args: string[], options: any) {
   // Obtener valores de los flags opcionales
   let evvmAddress: `0x${string}` | undefined = options.evvmAddress;
   let walletName: string = options.walletName || "defaultKey";
+  let useCustomEthRpc: boolean = options.useCustomEthRpc || false;
+
   let ethRPC: string | undefined;
 
   // si --useCustomEthRpc está presente, buscar en .env ETH_SEPOLIA_RPC o solicitar al usuario
-  if (options.useCustomEthRpc) {
+  if (useCustomEthRpc) {
     ethRPC = process.env.ETH_SEPOLIA_RPC;
     if (!ethRPC) {
       ethRPC = promptString(
