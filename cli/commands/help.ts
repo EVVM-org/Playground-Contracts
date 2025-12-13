@@ -1,6 +1,24 @@
+/**
+ * Help Command Module
+ * 
+ * Displays comprehensive CLI usage information including available commands,
+ * options, and examples.
+ * 
+ * @module cli/commands/help
+ */
+
 import { colors } from "../constants";
 import { version } from "../../package.json";
 
+/**
+ * Displays the CLI help message with all available commands and options
+ * 
+ * Outputs a formatted help screen including:
+ * - Command descriptions and usage
+ * - Available options and flags
+ * - Example command invocations
+ * - Links to documentation and support
+ */
 export function showHelp() {
   console.log(`
 ${colors.evvmGreen}╔═══════════════════════════════════════════════════════════╗

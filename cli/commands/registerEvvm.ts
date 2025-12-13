@@ -1,3 +1,12 @@
+/**
+ * EVVM Registration Command
+ * 
+ * Handles registration of deployed EVVM instances in the EVVM Registry.
+ * Performs chain validation, generates EVVM ID, and updates the contract.
+ * 
+ * @module cli/commands/registerEvvm
+ */
+
 import { colors, EthSepoliaPublicRpc } from "../constants";
 import { promptAddress, promptNumber, promptString } from "../utils/prompts";
 import {
@@ -9,19 +18,32 @@ import {
 import { showError } from "../utils/validators";
 import { getRPCUrlAndChainId } from "../utils/rpc";
 
+/**
+ * Registers an EVVM instance in the registry contract
+ * 
+ * Process:
+ * 1. Validates Foundry installation and wallet setup
+ * 2. Verifies EVVM address and host chain support
+ * 3. Calls registry contract to obtain EVVM ID
+ * 4. Updates EVVM contract with assigned ID
+ * 
+ * @param {string[]} _args - Command arguments (unused)
+ * @param {any} options - Command options including evvmAddress, walletName, useCustomEthRpc
+ * @returns {Promise<void>}
+ */
 export async function registerEvvm(_args: string[], options: any) {
   console.log(
     `${colors.evvmGreen}Registering a new EVVM instance...${colors.reset}`
   );
 
-  // Obtener valores de los flags opcionales
+  // Get values from optional flags
   let evvmAddress: `0x${string}` | undefined = options.evvmAddress;
   let walletName: string = options.walletName || "defaultKey";
   let useCustomEthRpc: boolean = options.useCustomEthRpc || false;
 
   let ethRPC: string | undefined;
 
-  // si --useCustomEthRpc está presente, buscar en .env ETH_SEPOLIA_RPC o solicitar al usuario
+  // If --useCustomEthRpc is present, look for ETH_SEPOLIA_RPC in .env or prompt user
   if (useCustomEthRpc) {
     ethRPC = process.env.ETH_SEPOLIA_RPC;
     if (!ethRPC) {
@@ -37,7 +59,7 @@ export async function registerEvvm(_args: string[], options: any) {
     return;
   }
 
-  // Validar o solicitar valores faltantes
+  // Validate or prompt for missing values
   if (!evvmAddress) {
     evvmAddress = promptAddress(
       `${colors.yellow}Enter the EVVM Address:${colors.reset}`

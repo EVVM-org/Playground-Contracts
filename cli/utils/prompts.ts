@@ -1,5 +1,21 @@
+/**
+ * User Input Prompt Utilities
+ * 
+ * Provides interactive prompting functions for gathering user input with validation.
+ * Supports various input types including strings, numbers, addresses, and selections.
+ * 
+ * @module cli/utils/prompts
+ */
+
 import { colors } from "../constants";
 
+/**
+ * Prompts user for string input with optional default value
+ * 
+ * @param {string} message - Prompt message to display
+ * @param {string} [defaultValue] - Default value if user provides no input
+ * @returns {string} User's input or default value
+ */
 export function promptString(message: string, defaultValue?: string): string {
   const input = prompt(message);
 
@@ -17,6 +33,15 @@ export function promptString(message: string, defaultValue?: string): string {
   return input;
 }
 
+/**
+ * Prompts user for numeric input with validation
+ * 
+ * Validates that input is a valid positive number and recursively re-prompts on invalid input.
+ * 
+ * @param {string} message - Prompt message to display
+ * @param {number} [defaultValue] - Default value if user provides no input
+ * @returns {number} Valid positive number
+ */
 export function promptNumber(message: string, defaultValue?: number): number {
   const input = prompt(message);
 
@@ -35,6 +60,16 @@ export function promptNumber(message: string, defaultValue?: number): number {
   return num;
 }
 
+/**
+ * Prompts user for Ethereum address with format validation
+ * 
+ * Validates address format (0x followed by 40 hex characters) and recursively
+ * re-prompts on invalid input.
+ * 
+ * @param {string} message - Prompt message to display
+ * @param {`0x${string}`} [defaultValue] - Default address if user provides no input
+ * @returns {`0x${string}`} Valid Ethereum address
+ */
 export function promptAddress(
   message: string,
   defaultValue?: `0x${string}`
@@ -55,6 +90,15 @@ export function promptAddress(
   return input as `0x${string}`;
 }
 
+/**
+ * Prompts user for yes/no confirmation
+ * 
+ * Accepts 'y' or 'n' input (case-insensitive) and validates the response.
+ * 
+ * @param {string} message - Prompt message to display
+ * @param {string} [defaultValue] - Default value if user provides no input
+ * @returns {string} Lowercase 'y' or 'n'
+ */
 export function promptYesNo(message: string, defaultValue?: string): string {
   const input = prompt(message);
 
@@ -70,6 +114,15 @@ export function promptYesNo(message: string, defaultValue?: string): string {
   return input.toLowerCase();
 }
 
+/**
+ * Prompts user for secret input with masked display
+ * 
+ * Displays asterisks instead of actual characters while user types.
+ * Handles backspace for correction and Enter to submit.
+ * 
+ * @param {string} message - Prompt message to display
+ * @returns {Promise<string>} The secret input provided by user
+ */
 export function promptSecret(message: string): Promise<string> {
   process.stdout.write(`${colors.yellow}${message}: ${colors.reset}`);
 
@@ -117,6 +170,16 @@ export function promptSecret(message: string): Promise<string> {
   });
 }
 
+/**
+ * Prompts user to select from a list of options using arrow keys
+ * 
+ * Provides an interactive menu where users can navigate with arrow keys
+ * and select with Enter. Selected option is highlighted.
+ * 
+ * @param {string} message - Prompt message to display above options
+ * @param {string[]} options - Array of options to choose from
+ * @returns {Promise<string>} The selected option
+ */
 export async function promptSelect(
   message: string,
   options: string[]
@@ -191,6 +254,12 @@ export async function promptSelect(
   });
 }
 
+/**
+ * Validates Ethereum address format
+ * 
+ * @param {string | null} address - Address to validate
+ * @returns {boolean} True if address matches Ethereum address format
+ */
 function verifyAddress(address: string | null): boolean {
   if (!address) return false;
   return /^0x[a-fA-F0-9]{40}$/.test(address);

@@ -1,3 +1,15 @@
+/**
+ * Foundry Integration Utilities
+ * 
+ * Provides functions for interacting with Foundry toolchain including:
+ * - Contract deployment and verification
+ * - Wallet management and validation
+ * - Registry contract interactions
+ * - Solidity file generation
+ * 
+ * @module cli/utils/foundry
+ */
+
 import { $ } from "bun";
 import type { InputAddresses, EvvmMetadata, CreatedContract } from "../types";
 import {
@@ -7,6 +19,16 @@ import {
 } from "../constants";
 import { formatNumber, showError } from "./validators";
 
+/**
+ * Generates and writes the Inputs.sol file with deployment configuration
+ * 
+ * Creates a Solidity contract containing all deployment parameters including
+ * admin addresses and EVVM metadata. This file is used by the deployment script.
+ * 
+ * @param {InputAddresses} addresses - Admin, golden fisher, and activator addresses
+ * @param {EvvmMetadata} evvmMetadata - EVVM configuration including token economics
+ * @returns {Promise<boolean>} True if file was written successfully
+ */
 export async function writeInputsFile(
   addresses: InputAddresses,
   evvmMetadata: EvvmMetadata
@@ -50,6 +72,15 @@ abstract contract Inputs {
   return true;
 }
 
+/**
+ * Checks if a chain ID is registered in the EVVM Registry
+ * 
+ * Queries the EVVM Registry contract on Ethereum Sepolia to verify if the
+ * target chain ID is supported for EVVM deployments.
+ * 
+ * @param {number} chainId - The chain ID to check
+ * @returns {Promise<boolean | undefined>} True if registered, false if not, undefined on error
+ */
 export async function isChainIdRegistered(
   chainId: number
 ): Promise<boolean | undefined> {
@@ -67,6 +98,18 @@ export async function isChainIdRegistered(
   }
 }
 
+/**
+ * Registers an EVVM instance in the EVVM Registry contract
+ * 
+ * Calls the registry contract to register the EVVM instance and receive a unique
+ * EVVM ID. This ID is used to identify the EVVM instance across the ecosystem.
+ * 
+ * @param {number} hostChainId - Chain ID where the EVVM is deployed
+ * @param {`0x${string}`} evvmAddress - Address of the deployed EVVM contract
+ * @param {string} walletName - Foundry wallet name to use for the transaction
+ * @param {string} ethRpcUrl - Ethereum Sepolia RPC URL for registry interaction
+ * @returns {Promise<number | undefined>} The assigned EVVM ID, or undefined on error
+ */
 export async function callRegisterEvvm(
   hostChainId: number,
   evvmAddress: `0x${string}`,
@@ -85,6 +128,18 @@ export async function callRegisterEvvm(
   }
 }
 
+/**
+ * Sets the EVVM ID on the deployed EVVM contract
+ * 
+ * After receiving an EVVM ID from the registry, this function updates the
+ * EVVM contract with its assigned ID. Required to complete EVVM initialization.
+ * 
+ * @param {`0x${string}`} evvmAddress - Address of the EVVM contract
+ * @param {number} evvmID - The EVVM ID assigned by the registry
+ * @param {string} hostChainRpcUrl - RPC URL for the chain where EVVM is deployed
+ * @param {string} walletName - Foundry wallet name to use for the transaction
+ * @returns {Promise<boolean>} True if successfully set, false on error
+ */
 export async function callSetEvvmID(
   evvmAddress: `0x${string}`,
   evvmID: number,
@@ -102,6 +157,16 @@ export async function callSetEvvmID(
   }
 }
 
+/**
+ * Verifies Foundry installation and wallet setup
+ * 
+ * Performs prerequisite checks before deployment:
+ * 1. Verifies Foundry toolchain is installed
+ * 2. Verifies the specified wallet exists in Foundry keystore
+ * 
+ * @param {string} walletName - Name of the wallet to verify
+ * @returns {Promise<boolean>} True if all prerequisites are met, false otherwise
+ */
 export async function verifyFoundryInstalledAndAccountSetup(
   walletName: string = "defaultKey"
 ): Promise<boolean> {
@@ -123,6 +188,11 @@ export async function verifyFoundryInstalledAndAccountSetup(
   return true;
 }
 
+/**
+ * Checks if Foundry toolchain is installed
+ * 
+ * @returns {Promise<boolean>} True if Foundry is installed and accessible
+ */
 export async function foundryIsInstalled(): Promise<boolean> {
   try {
     await $`foundryup --version`.quiet();
@@ -132,6 +202,12 @@ export async function foundryIsInstalled(): Promise<boolean> {
   return true;
 }
 
+/**
+ * Checks if a wallet exists in Foundry's keystore
+ * 
+ * @param {string} walletName - Name of the wallet to check
+ * @returns {Promise<boolean>} True if wallet exists in keystore
+ */
 export async function walletIsSetup(walletName: string = "defaultKey"): Promise<boolean> {
   let walletList = await $`cast wallet list`.quiet();
   if (!walletList.stdout.includes(`${walletName} (Local)`)) {
@@ -140,6 +216,17 @@ export async function walletIsSetup(walletName: string = "defaultKey"): Promise<
   return true;
 }
 
+/**
+ * Displays deployed contracts and extracts EVVM contract address
+ * 
+ * Reads the Foundry broadcast file to:
+ * 1. Extract all deployed contract addresses
+ * 2. Display them in a formatted list
+ * 3. Locate and return the EVVM contract address
+ * 
+ * @param {number} chainId - Chain ID where contracts were deployed
+ * @returns {Promise<`0x${string}` | null>} EVVM contract address, or null if not found
+ */
 export async function showDeployContractsAndFindEvvm(
   chainId: number
 ): Promise<`0x${string}` | null> {

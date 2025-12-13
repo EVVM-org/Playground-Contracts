@@ -1,3 +1,12 @@
+/**
+ * EVVM Deployment Command
+ * 
+ * Comprehensive deployment wizard for EVVM ecosystem contracts.
+ * Handles configuration, validation, deployment, verification, and registration.
+ * 
+ * @module cli/commands/deploy
+ */
+
 import { $ } from "bun";
 import type { ConfirmAnswer, InputAddresses, EvvmMetadata } from "../types";
 import { colors } from "../constants";
@@ -12,14 +21,27 @@ import {
   writeInputsFile,
   isChainIdRegistered,
   showDeployContractsAndFindEvvm,
-  foundryIsInstalled,
-  walletIsSetup,
   verifyFoundryInstalledAndAccountSetup,
 } from "../utils/foundry";
 import { getRPCUrlAndChainId } from "../utils/rpc";
 import { registerEvvm } from "./registerEvvm";
 import { explorerVerification } from "../utils/explorerVerification";
 
+/**
+ * Deploys a complete EVVM instance with interactive configuration
+ * 
+ * Deployment process:
+ * 1. Validates prerequisites (Foundry, wallet)
+ * 2. Collects deployment configuration (addresses, metadata)
+ * 3. Validates target chain support
+ * 4. Configures block explorer verification
+ * 5. Deploys all EVVM contracts
+ * 6. Optionally registers EVVM in registry
+ * 
+ * @param {string[]} args - Command arguments (unused)
+ * @param {any} options - Command options including skipInputConfig, walletName
+ * @returns {Promise<void>}
+ */
 export async function deployEvvm(args: string[], options: any) {
   const skipInputConfig = options.skipInputConfig || false;
   const walletName = options.walletName || "defaultKey";
@@ -64,10 +86,7 @@ export async function deployEvvm(args: string[], options: any) {
   console.log("░▒▓█▓▒░        ░▒▓█▓▓█▓▒░   ░▒▓█▓▓█▓▒░ ░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░ ");
   console.log("░▒▓█▓▒░        ░▒▓█▓▓█▓▒░   ░▒▓█▓▓█▓▒░ ░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░ ");
   console.log("░▒▓████████▓▒░  ░▒▓██▓▒░     ░▒▓██▓▒░  ░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░ ");
-  console.log("");
-  console.log(`Begin EVVM Deployment Process`);
   console.log(`${colors.reset}`);
-
 
   if (!(await verifyFoundryInstalledAndAccountSetup(walletName))) {
     return;
@@ -346,7 +365,7 @@ export async function deployEvvm(args: string[], options: any) {
   confirmAnswer.useCustomEthRpc = promptYesNo(
     `${colors.yellow}Do you want to use custom Ethereum Sepolia RPC for registry contract calls? (y/n):${colors.reset}`
   );
-  // si decide entonces agregar flag --useCustomEthRpc a la llamada a registerEvvm
+  // If user decides, add --useCustomEthRpc flag to the registerEvvm call
   const ethRPCAns =
     confirmAnswer.useCustomEthRpc.toLowerCase() === "y" ? true : false;
   
@@ -357,3 +376,6 @@ export async function deployEvvm(args: string[], options: any) {
     useCustomEthRpc: ethRPCAns,
   });
 }
+
+
+

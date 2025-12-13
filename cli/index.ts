@@ -1,6 +1,13 @@
 #!/usr/bin/env bun
 
-// index.ts - CLI Entry Point
+/**
+ * EVVM CLI Entry Point
+ * 
+ * This module serves as the main entry point for the EVVM command-line interface.
+ * It handles command parsing, routing, and global error handling for all CLI operations.
+ * 
+ * @module cli/index
+ */
 
 import { parseArgs } from "util";
 import { colors } from "./constants";
@@ -12,7 +19,9 @@ import {
   registerEvvm,
 } from "./commands";
 
-// Available commands
+/**
+ * Available CLI commands mapped to their handler functions
+ */
 const commands = {
   help: showHelp,
   version: showVersion,
@@ -21,7 +30,14 @@ const commands = {
   register: registerEvvm,
 };
 
-// Main function
+/**
+ * Main CLI execution function
+ * 
+ * Parses command-line arguments and routes to the appropriate command handler.
+ * Handles global flags like --help and --version before delegating to specific commands.
+ * 
+ * @throws {Error} When an unknown command is provided
+ */
 async function main() {
   const args = process.argv.slice(2);
 
@@ -30,6 +46,14 @@ async function main() {
     return;
   }
 
+  /**
+   * Parse command-line arguments with supported options:
+   * - help, version: Display help or version information
+   * - skipInputConfig: Skip interactive configuration during deployment
+   * - walletName: Specify Foundry wallet name for transactions
+   * - evvmAddress: EVVM contract address for registration
+   * - useCustomEthRpc: Use custom Ethereum Sepolia RPC for registry calls
+   */
   const { values, positionals } = parseArgs({
     args,
     options: {
@@ -44,6 +68,7 @@ async function main() {
     },
     allowPositionals: true,
   });
+
 
   // Global flags
   if (values.help) {

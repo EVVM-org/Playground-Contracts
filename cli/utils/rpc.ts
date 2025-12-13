@@ -1,6 +1,23 @@
+/**
+ * RPC Utilities
+ * 
+ * Provides functions for RPC endpoint management and chain ID retrieval.
+ * Handles RPC URL validation and fetching chain information from RPC endpoints.
+ * 
+ * @module cli/utils/rpc
+ */
 
 import { colors } from "../constants";
 
+/**
+ * Gets RPC URL from environment or prompts user, then fetches chain ID
+ * 
+ * If RPC URL is not provided in environment variables, prompts the user
+ * to enter it. Then queries the RPC endpoint to retrieve the chain ID.
+ * 
+ * @param {string | undefined | null} rpcUrl - Optional RPC URL from environment
+ * @returns {Promise<{rpcUrl: string, chainId: number}>} RPC URL and chain ID
+ */
 export async function getRPCUrlAndChainId(
   rpcUrl: string | undefined | null
 ): Promise<{
@@ -28,6 +45,16 @@ export async function getRPCUrlAndChainId(
   return { rpcUrl, chainId };
 }
 
+/**
+ * Fetches chain ID from an RPC endpoint
+ * 
+ * Makes an eth_chainId RPC call to retrieve the chain ID and converts
+ * the hexadecimal result to a decimal number.
+ * 
+ * @param {string} rpcUrl - RPC endpoint URL
+ * @returns {Promise<number>} Chain ID as decimal number
+ * @throws {Error} If RPC request fails
+ */
 export async function getChainId(rpcUrl: string): Promise<number> {
   const response = await fetch(rpcUrl, {
     method: "POST",
