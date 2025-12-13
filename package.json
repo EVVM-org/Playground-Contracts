@@ -8,5 +8,8 @@
     "dev": "bun run cli/index.ts",
     "build": "bun build cli/index.ts --compile --outfile evvmCli"
   },
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^25.0.1"
+  }
 }
