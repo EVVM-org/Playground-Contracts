@@ -31,6 +31,7 @@ export async function deployEvvm(args: string[], options: any) {
     confirmInputs: "",
     deploy: "",
     register: "",
+    useCustomEthRpc: "",
   };
 
   let confirmationDone: boolean = false;
@@ -63,7 +64,10 @@ export async function deployEvvm(args: string[], options: any) {
   console.log("░▒▓█▓▒░        ░▒▓█▓▓█▓▒░   ░▒▓█▓▓█▓▒░ ░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░ ");
   console.log("░▒▓█▓▒░        ░▒▓█▓▓█▓▒░   ░▒▓█▓▓█▓▒░ ░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░ ");
   console.log("░▒▓████████▓▒░  ░▒▓██▓▒░     ░▒▓██▓▒░  ░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░ ");
+  console.log("");
+  console.log(`Begin EVVM Deployment Process`);
   console.log(`${colors.reset}`);
+
 
   if (!(await verifyFoundryInstalledAndAccountSetup(walletName))) {
     return;
@@ -317,7 +321,7 @@ export async function deployEvvm(args: string[], options: any) {
     `   ${colors.darkGray}Otherwise, you can register later using:${colors.reset}`
   );
   console.log(
-    `   ${colors.evvmGreen}evvm register --evvmAddress ${evvmAddress} --hostChainId ${chainId} --hostRpcUrl <rpc-url>${colors.reset}`
+    `   ${colors.evvmGreen}evvm register --evvmAddress ${evvmAddress}${colors.reset}`
   );
   console.log();
   console.log(
@@ -338,9 +342,18 @@ export async function deployEvvm(args: string[], options: any) {
     );
     return;
   }
+
+  confirmAnswer.useCustomEthRpc = promptYesNo(
+    `${colors.yellow}Do you want to use custom Ethereum Sepolia RPC for registry contract calls? (y/n):${colors.reset}`
+  );
+  // si decide entonces agregar flag --useCustomEthRpc a la llamada a registerEvvm
+  const ethRPCAns =
+    confirmAnswer.useCustomEthRpc.toLowerCase() === "y" ? true : false;
+  
+
   registerEvvm([], {
     evvmAddress: evvmAddress,
-    hostChainId: chainId,
-    hostRpcUrl: rpcUrl,
+    walletName: walletName,
+    useCustomEthRpc: ethRPCAns,
   });
 }

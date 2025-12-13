@@ -3,6 +3,7 @@ export type ConfirmAnswer = {
   confirmInputs: string;
   deploy: string;
   register: string;
+  useCustomEthRpc: string;
 };
 
 export type InputAddresses = {
