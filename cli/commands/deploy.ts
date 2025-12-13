@@ -14,6 +14,7 @@ import {
   showDeployContractsAndFindEvvm,
   foundryIsInstalled,
   walletIsSetup,
+  verifyFoundryInstalledAndAccountSetup,
 } from "../utils/foundry";
 import { getRPCUrlAndChainId } from "../utils/rpc";
 import { registerEvvm } from "./registerEvvm";
@@ -64,19 +65,7 @@ export async function deployEvvm(args: string[], options: any) {
   console.log("░▒▓████████▓▒░  ░▒▓██▓▒░     ░▒▓██▓▒░  ░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░ ");
   console.log(`${colors.reset}`);
 
-  if (!(await foundryIsInstalled())) {
-    showError(
-      "Foundry is not installed.",
-      "Please install Foundry to proceed with deployment."
-    );
-    return;
-  }
-
-  if (!(await walletIsSetup(walletName))) {
-    showError(
-      `Wallet '${walletName} (Local)' is not available.`,
-      `Please create a wallet named '${walletName}' using 'cast wallet new ${walletName}'.`
-    );
+  if (!(await verifyFoundryInstalledAndAccountSetup(walletName))) {
     return;
   }
 

@@ -101,6 +101,27 @@ export async function callSetEvvmID(
   }
 }
 
+export async function verifyFoundryInstalledAndAccountSetup(
+  walletName: string = "defaultKey"
+): Promise<boolean> {
+  if (!(await foundryIsInstalled())) {
+      showError(
+        "Foundry is not installed.",
+        "Please install Foundry to proceed with deployment."
+      );
+      return false;
+    }
+  
+    if (!(await walletIsSetup(walletName))) {
+      showError(
+        `Wallet '${walletName}' is not available.`,
+        `Please import your wallet using:\n   ${colors.evvmGreen}cast wallet import ${walletName} --interactive${colors.reset}\n\n   You'll be prompted to enter your private key securely.`
+      );
+      return false;
+    }
+  return true;
+}
+
 export async function foundryIsInstalled(): Promise<boolean> {
   try {
     await $`foundryup --version`.quiet();

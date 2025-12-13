@@ -1,6 +1,13 @@
 import { colors } from "../constants";
 import { promptAddress, promptNumber, promptString } from "../utils/prompts";
-import { callRegisterEvvm, callSetEvvmID, isChainIdRegistered } from "../utils/foundry";
+import {
+  callRegisterEvvm,
+  callSetEvvmID,
+  foundryIsInstalled,
+  isChainIdRegistered,
+  verifyFoundryInstalledAndAccountSetup,
+  walletIsSetup,
+} from "../utils/foundry";
 import { showError } from "../utils/validators";
 import { getRPCUrlAndChainId } from "../utils/rpc";
 
@@ -12,6 +19,10 @@ export async function registerEvvm(_args: string[], options: any) {
   // Obtener valores de los flags opcionales
   let evvmAddress: `0x${string}` | undefined = options.evvmAddress;
   let walletName: string = options.walletName || "defaultKey";
+
+  if (!(await verifyFoundryInstalledAndAccountSetup(walletName))) {
+    return;
+  }
 
   // Validar o solicitar valores faltantes
   if (!evvmAddress) {
@@ -27,7 +38,9 @@ export async function registerEvvm(_args: string[], options: any) {
 
   if (isDeployingOnLocalBlockchain) {
     console.log(`\n${colors.orange}Local Blockchain Detected${colors.reset}`);
-    console.log(`${colors.darkGray}Skipping registry contract registration for local development${colors.reset}`);
+    console.log(
+      `${colors.darkGray}Skipping registry contract registration for local development${colors.reset}`
+    );
     return;
   }
 
@@ -57,34 +70,50 @@ export async function registerEvvm(_args: string[], options: any) {
     return;
   }
 
+  console.log(
+    `${colors.blue}Setting EVVM ID directly on contract...${colors.reset}\n`
+  );
 
-  console.log(`${colors.blue}Setting EVVM ID directly on contract...${colors.reset}\n`);
+  const evvmID: number | undefined = await callRegisterEvvm(
+    Number(chainId),
+    evvmAddress
+  );
+  if (!evvmID) {
+    showError(
+      `EVVM registration failed.`,
+      `Please try again or if the issue persists, make an issue on GitHub.`
+    );
+    return;
+  }
+  console.log(
+    `${colors.green}EVVM ID generated: ${colors.bright}${evvmID}${colors.reset}`
+  );
+  console.log(`${colors.blue}Setting EVVM ID on contract...${colors.reset}\n`);
 
-    const evvmID: number | undefined = await callRegisterEvvm(Number(chainId), evvmAddress);
-    if (!evvmID) {
-      showError(
-        `EVVM registration failed.`,
-        `Please try again or if the issue persists, make an issue on GitHub.`
-      );
-      return;
-    }
-    console.log(`${colors.green}EVVM ID generated: ${colors.bright}${evvmID}${colors.reset}`);
-    console.log(`${colors.blue}Setting EVVM ID on contract...${colors.reset}\n`);
+  const isSet = await callSetEvvmID(evvmAddress, evvmID, rpcUrl, walletName);
 
-    const isSet = await callSetEvvmID(evvmAddress, evvmID, rpcUrl, walletName);
+  if (!isSet) {
+    showError(
+      `EVVM ID setting failed.`,
+      `\n${colors.yellow}You can try manually with:${colors.reset}\n${colors.blue}cast send ${evvmAddress} \\\n  --rpc-url ${rpcUrl} \\\n  "setEvvmID(uint256)" ${evvmID} \\\n  --account ${walletName}${colors.reset}`
+    );
+    return;
+  }
 
-    if (!isSet) {
-      showError(
-        `EVVM ID setting failed.`,
-        `\n${colors.yellow}You can try manually with:${colors.reset}\n${colors.blue}cast send ${evvmAddress} \\\n  --rpc-url ${rpcUrl} \\\n  "setEvvmID(uint256)" ${evvmID} \\\n  --account ${walletName}${colors.reset}`
-      );
-      return;
-    }
-
-    console.log(`\n${colors.bright}═══════════════════════════════════════${colors.reset}`);
-    console.log(`${colors.bright}        Registration Complete${colors.reset}`);
-    console.log(`${colors.bright}═══════════════════════════════════════${colors.reset}\n`);
-    console.log(`${colors.green}EVVM ID: ${colors.bright}${evvmID}${colors.reset}`);
-    console.log(`${colors.green}Contract: ${colors.bright}${evvmAddress}${colors.reset}`);
-    console.log(`${colors.darkGray}\nYour EVVM instance is now ready to use!${colors.reset}\n`);
+  console.log(
+    `\n${colors.bright}═══════════════════════════════════════${colors.reset}`
+  );
+  console.log(`${colors.bright}        Registration Complete${colors.reset}`);
+  console.log(
+    `${colors.bright}═══════════════════════════════════════${colors.reset}\n`
+  );
+  console.log(
+    `${colors.green}EVVM ID: ${colors.bright}${evvmID}${colors.reset}`
+  );
+  console.log(
+    `${colors.green}Contract: ${colors.bright}${evvmAddress}${colors.reset}`
+  );
+  console.log(
+    `${colors.darkGray}\nYour EVVM instance is now ready to use!${colors.reset}\n`
+  );
 }
