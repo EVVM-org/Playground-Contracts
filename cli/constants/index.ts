@@ -11,4 +11,4 @@ export const colors = {
 } as const;
 
 export const RegisteryEvvmAddress = "0x389dC8fb09211bbDA841D59f4a51160dA2377832" as const;
-export const EthSepoliaPublicRpc = "https://0xrpc.io/sep" as const;
+export const EthSepoliaPublicRpc = "https://gateway.tenderly.co/public/sepolia" as const;

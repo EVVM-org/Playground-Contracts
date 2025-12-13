@@ -1,12 +1,10 @@
-import { colors } from "../constants";
+import { colors, EthSepoliaPublicRpc } from "../constants";
 import { promptAddress, promptNumber, promptString } from "../utils/prompts";
 import {
   callRegisterEvvm,
   callSetEvvmID,
-  foundryIsInstalled,
   isChainIdRegistered,
   verifyFoundryInstalledAndAccountSetup,
-  walletIsSetup,
 } from "../utils/foundry";
 import { showError } from "../utils/validators";
 import { getRPCUrlAndChainId } from "../utils/rpc";
@@ -19,6 +17,19 @@ export async function registerEvvm(_args: string[], options: any) {
   // Obtener valores de los flags opcionales
   let evvmAddress: `0x${string}` | undefined = options.evvmAddress;
   let walletName: string = options.walletName || "defaultKey";
+  let ethRPC: string | undefined;
+
+  // si --useCustomEthRpc está presente, buscar en .env ETH_SEPOLIA_RPC o solicitar al usuario
+  if (options.useCustomEthRpc) {
+    ethRPC = process.env.ETH_SEPOLIA_RPC;
+    if (!ethRPC) {
+      ethRPC = promptString(
+        `${colors.yellow}Enter the custom Ethereum Sepolia RPC URL:${colors.reset}`
+      );
+    }
+  } else {
+    ethRPC = EthSepoliaPublicRpc;
+  }
 
   if (!(await verifyFoundryInstalledAndAccountSetup(walletName))) {
     return;
@@ -76,7 +87,9 @@ export async function registerEvvm(_args: string[], options: any) {
 
   const evvmID: number | undefined = await callRegisterEvvm(
     Number(chainId),
-    evvmAddress
+    evvmAddress,
+    walletName,
+    ethRPC
   );
   if (!evvmID) {
     showError(

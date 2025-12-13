@@ -70,12 +70,13 @@ export async function isChainIdRegistered(
 export async function callRegisterEvvm(
   hostChainId: number,
   evvmAddress: `0x${string}`,
-  walletName: string = "defaultKey"
+  walletName: string = "defaultKey",
+  ethRpcUrl: string = EthSepoliaPublicRpc
 ): Promise<number | undefined> {
   try {
     const result =
-      await $`cast call ${RegisteryEvvmAddress} --rpc-url ${EthSepoliaPublicRpc} "registerEvvm(uint256,address)(uint256)" ${hostChainId} ${evvmAddress} --account ${walletName}`.quiet();
-    await $`cast send ${RegisteryEvvmAddress} --rpc-url ${EthSepoliaPublicRpc} "registerEvvm(uint256,address)(uint256)" ${hostChainId} ${evvmAddress} --account  ${walletName}`;
+      await $`cast call ${RegisteryEvvmAddress} --rpc-url ${ethRpcUrl} "registerEvvm(uint256,address)(uint256)" ${hostChainId} ${evvmAddress} --account ${walletName}`.quiet();
+    await $`cast send ${RegisteryEvvmAddress} --rpc-url ${ethRpcUrl} "registerEvvm(uint256,address)(uint256)" ${hostChainId} ${evvmAddress} --account  ${walletName}`;
 
     const evvmID = result.stdout.toString().trim();
     return Number(evvmID);
@@ -156,14 +157,16 @@ export async function showDeployContractsAndFindEvvm(
         } as CreatedContract)
     );
 
-  console.log(
-    `${colors.bright}▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣ Deployed Contracts ▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣${colors.reset}`
-  );
+  console.log(`\n${colors.bright}═══════════════════════════════════════${colors.reset}`);
+  console.log(`${colors.bright}          Deployed Contracts${colors.reset}`);
+  console.log(`${colors.bright}═══════════════════════════════════════${colors.reset}\n`);
+  
   createdContracts.forEach((contract: CreatedContract) => {
     console.log(
-      `  ${colors.blue}${contract.contractName}:${colors.reset} ${contract.contractAddress}`
+      `  ${colors.green}✓${colors.reset} ${colors.blue}${contract.contractName}${colors.reset}\n    ${colors.darkGray}→${colors.reset} ${contract.contractAddress}`
     );
   });
+  console.log();
 
   return (
     createdContracts.find(

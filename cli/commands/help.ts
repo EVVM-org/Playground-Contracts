@@ -41,7 +41,12 @@ ${colors.bright}REGISTER OPTIONS:${colors.reset}
   ${colors.yellow}--walletName${colors.reset} ${colors.darkGray}<name>${colors.reset}
                       Specify wallet name for registration (default: defaultKey)
 
-  ${colors.darkGray}Note: RPC URL is read from RPC_URL in .env file${colors.reset}
+  ${colors.yellow}--useCustomEthRpc${colors.reset}
+                      Use custom Ethereum Sepolia RPC for registry contract calls
+                      ${colors.darkGray}Read from ETH_SEPOLIA_RPC in .env or prompts if not found${colors.reset}
+                      ${colors.darkGray}Default: Uses public RPC${colors.reset}
+
+  ${colors.darkGray}Note: Host chain RPC URL is read from RPC_URL in .env file${colors.reset}
   ${colors.darkGray}      If not found, you will be prompted to enter it${colors.reset}
 
 ${colors.bright}GLOBAL OPTIONS:${colors.reset}
@@ -60,6 +65,9 @@ ${colors.bright}EXAMPLES:${colors.reset}
 
   ${colors.darkGray}# Register with custom wallet${colors.reset}
   ${colors.blue}evvm register --evvmAddress 0x123... --walletName myWallet${colors.reset}
+
+  ${colors.darkGray}# Register with custom Ethereum Sepolia RPC${colors.reset}
+  ${colors.blue}evvm register --evvmAddress 0x123... --useCustomEthRpc${colors.reset}
 
   ${colors.darkGray}# Run tests${colors.reset}
   ${colors.blue}evvm fulltest${colors.reset}

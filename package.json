@@ -5,12 +5,15 @@
     "mycli": "./cli/index.ts"
   },
   "scripts": {
-    "dev": "bun run cli/index.ts",
-    "build": "bun build cli/index.ts --compile --outfile evvmCli"
+    "evvmCli": "bun run cli/index.ts",
+    "buildCli": "bun build cli/index.ts --compile --outfile evvmCli"
   },
   "type": "module",
   "devDependencies": {
     "@types/bun": "^1.3.4",
     "@types/node": "^25.0.1"
+  },
+  "dependencies": {
+    "@hyperlane-xyz/core": "^10.1.1"
   }
 }
