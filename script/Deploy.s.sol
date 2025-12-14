@@ -2,15 +2,15 @@
 pragma solidity ^0.8.0;
 
 import {Script, console2} from "forge-std/Script.sol";
-import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
-import {Staking} from "@EVVM/playground/contracts/staking/Staking.sol";
-import {Estimator} from "@EVVM/playground/contracts/staking/Estimator.sol";
+import {Evvm} from "@evvm/playground-contracts/contracts/evvm/Evvm.sol";
+import {Staking} from "@evvm/playground-contracts/contracts/staking/Staking.sol";
+import {Estimator} from "@evvm/playground-contracts/contracts/staking/Estimator.sol";
 import {
     NameService
-} from "@EVVM/playground/contracts/nameService/NameService.sol";
-import {Treasury} from "@EVVM/playground/contracts/treasury/Treasury.sol";
-import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
-import {P2PSwap} from "@EVVM/playground/contracts/p2pSwap/P2PSwap.sol";
+} from "@evvm/playground-contracts/contracts/nameService/NameService.sol";
+import {Treasury} from "@evvm/playground-contracts/contracts/treasury/Treasury.sol";
+import {EvvmStructs} from "@evvm/playground-contracts/contracts/evvm/lib/EvvmStructs.sol";
+import {P2PSwap} from "@evvm/playground-contracts/contracts/p2pSwap/P2PSwap.sol";
 import {Inputs} from "../input/Inputs.sol";
 
 contract DeployScript is Script, Inputs {

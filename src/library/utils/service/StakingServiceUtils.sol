@@ -2,8 +2,8 @@
 // Full license terms available at: https://www.evvm.info/docs/EVVMNoncommercialLicense
 pragma solidity ^0.8.0;
 
-import {IStaking} from "@EVVM/playground/interfaces/IStaking.sol";
-import {IEvvm} from "@EVVM/playground/interfaces/IEvvm.sol";
+import {IStaking} from "@evvm/playground-contracts/interfaces/IStaking.sol";
+import {IEvvm} from "@evvm/playground-contracts/interfaces/IEvvm.sol";
 
 abstract contract StakingServiceUtils {
     IStaking internal staking;

@@ -32,13 +32,13 @@ pragma solidity ^0.8.0;
  */
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {ErrorsLib} from "@EVVM/playground/contracts/treasuryTwoChains/lib/ErrorsLib.sol";
-import {ExternalChainStationStructs} from "@EVVM/playground/contracts/treasuryTwoChains/lib/ExternalChainStationStructs.sol";
+import {ErrorsLib} from "@evvm/playground-contracts/contracts/treasuryTwoChains/lib/ErrorsLib.sol";
+import {ExternalChainStationStructs} from "@evvm/playground-contracts/contracts/treasuryTwoChains/lib/ExternalChainStationStructs.sol";
 
 import {SafeTransferLib} from "@solady/utils/SafeTransferLib.sol";
 
-import {SignatureUtils} from "@EVVM/playground/contracts/treasuryTwoChains/lib/SignatureUtils.sol";
-import {PayloadUtils} from "@EVVM/playground/contracts/treasuryTwoChains/lib/PayloadUtils.sol";
+import {SignatureUtils} from "@evvm/playground-contracts/contracts/treasuryTwoChains/lib/SignatureUtils.sol";
+import {PayloadUtils} from "@evvm/playground-contracts/contracts/treasuryTwoChains/lib/PayloadUtils.sol";
 
 import {IMailbox} from "@hyperlane-xyz/core/contracts/interfaces/IMailbox.sol";
 

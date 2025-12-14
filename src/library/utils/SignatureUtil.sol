@@ -3,8 +3,8 @@
 
 pragma solidity ^0.8.0;
 
-import {SignatureRecover} from "@EVVM/playground/library/primitives/SignatureRecover.sol";
-import {AdvancedStrings} from "@EVVM/playground/library/utils/AdvancedStrings.sol";
+import {SignatureRecover} from "@evvm/playground-contracts/library/primitives/SignatureRecover.sol";
+import {AdvancedStrings} from "@evvm/playground-contracts/library/utils/AdvancedStrings.sol";
 
 library SignatureUtil {
     function verifySignature(

@@ -42,14 +42,14 @@ pragma solidity ^0.8.0;
  * - Estimator integration for yield calculations
  */
 
-import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
-import {AsyncNonce} from "@EVVM/playground/library/utils/nonces/AsyncNonce.sol";
-import {StakingStructs} from "@EVVM/playground/contracts/staking/lib/StakingStructs.sol";
-import {SignatureUtil} from "@EVVM/playground/library/utils/SignatureUtil.sol";
-import {NameService} from "@EVVM/playground/contracts/nameService/NameService.sol";
-import {Estimator} from "@EVVM/playground/contracts/staking/Estimator.sol";
+import {Evvm} from "@evvm/playground-contracts/contracts/evvm/Evvm.sol";
+import {AsyncNonce} from "@evvm/playground-contracts/library/utils/nonces/AsyncNonce.sol";
+import {StakingStructs} from "@evvm/playground-contracts/contracts/staking/lib/StakingStructs.sol";
+import {SignatureUtil} from "@evvm/playground-contracts/library/utils/SignatureUtil.sol";
+import {NameService} from "@evvm/playground-contracts/contracts/nameService/NameService.sol";
+import {Estimator} from "@evvm/playground-contracts/contracts/staking/Estimator.sol";
 import {ErrorsLib} from "./lib/ErrorsLib.sol";
-import {SignatureUtils} from "@EVVM/playground/contracts/staking/lib/SignatureUtils.sol";
+import {SignatureUtils} from "@evvm/playground-contracts/contracts/staking/lib/SignatureUtils.sol";
 
 contract Staking is AsyncNonce, StakingStructs {
     uint256 constant TIME_TO_ACCEPT_PROPOSAL = 1 days;

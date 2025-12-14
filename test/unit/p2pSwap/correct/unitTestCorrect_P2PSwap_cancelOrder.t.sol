@@ -18,18 +18,18 @@ import "forge-std/Test.sol";
 import "forge-std/console2.sol";
 
 import {Constants} from "test/Constants.sol";
-import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
+import {EvvmStructs} from "@evvm/playground-contracts/contracts/evvm/lib/EvvmStructs.sol";
 
-import {Staking} from "@EVVM/playground/contracts/staking/Staking.sol";
-import {NameService} from "@EVVM/playground/contracts/nameService/NameService.sol";
-import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
-import {Erc191TestBuilder} from "@EVVM/playground/library/Erc191TestBuilder.sol";
-import {Estimator} from "@EVVM/playground/contracts/staking/Estimator.sol";
-import {EvvmStorage} from "@EVVM/playground/contracts/evvm/lib/EvvmStorage.sol";
-import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
-import {Treasury} from "@EVVM/playground/contracts/treasury/Treasury.sol";
-import {P2PSwap} from "@EVVM/playground/contracts/p2pSwap/P2PSwap.sol";
-import {P2PSwapStructs} from "@EVVM/playground/contracts/p2pSwap/lib/P2PSwapStructs.sol";
+import {Staking} from "@evvm/playground-contracts/contracts/staking/Staking.sol";
+import {NameService} from "@evvm/playground-contracts/contracts/nameService/NameService.sol";
+import {Evvm} from "@evvm/playground-contracts/contracts/evvm/Evvm.sol";
+import {Erc191TestBuilder} from "@evvm/playground-contracts/library/Erc191TestBuilder.sol";
+import {Estimator} from "@evvm/playground-contracts/contracts/staking/Estimator.sol";
+import {EvvmStorage} from "@evvm/playground-contracts/contracts/evvm/lib/EvvmStorage.sol";
+import {EvvmStructs} from "@evvm/playground-contracts/contracts/evvm/lib/EvvmStructs.sol";
+import {Treasury} from "@evvm/playground-contracts/contracts/treasury/Treasury.sol";
+import {P2PSwap} from "@evvm/playground-contracts/contracts/p2pSwap/P2PSwap.sol";
+import {P2PSwapStructs} from "@evvm/playground-contracts/contracts/p2pSwap/lib/P2PSwapStructs.sol";
 
 contract unitTestCorrect_P2PSwap_cancelOrder is Test, Constants {
     Staking staking;

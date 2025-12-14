@@ -3,11 +3,11 @@
 
 pragma solidity ^0.8.0;
 
-import {EvvmStructs} from "@EVVM/playground/interfaces/IEvvm.sol";
-import {SignatureUtil} from "@EVVM/playground/library/utils/SignatureUtil.sol";
-import {AsyncNonce} from "@EVVM/playground/library/utils/nonces/AsyncNonce.sol";
-import {StakingServiceUtils} from "@EVVM/playground/library/utils/service/StakingServiceUtils.sol";
-import {MakePaymentOnEvvm} from "@EVVM/playground/library/utils/service/MakePaymentOnEvvm.sol";
+import {EvvmStructs} from "@evvm/playground-contracts/interfaces/IEvvm.sol";
+import {SignatureUtil} from "@evvm/playground-contracts/library/utils/SignatureUtil.sol";
+import {AsyncNonce} from "@evvm/playground-contracts/library/utils/nonces/AsyncNonce.sol";
+import {StakingServiceUtils} from "@evvm/playground-contracts/library/utils/service/StakingServiceUtils.sol";
+import {MakePaymentOnEvvm} from "@evvm/playground-contracts/library/utils/service/MakePaymentOnEvvm.sol";
 
 abstract contract EvvmService is
     AsyncNonce,

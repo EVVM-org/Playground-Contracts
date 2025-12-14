@@ -56,12 +56,12 @@ pragma solidity ^0.8.0;
  * - Marketplace takes 0.5% fee on username sales
  */
 
-import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
-import {AsyncNonce} from "@EVVM/playground/library/utils/nonces/AsyncNonce.sol";
-import {NameServiceStructs} from "@EVVM/playground/contracts/nameService/lib/NameServiceStructs.sol";
-import {AdvancedStrings} from "@EVVM/playground/library/utils/AdvancedStrings.sol";
-import {ErrorsLib} from "@EVVM/playground/contracts/nameService/lib/ErrorsLib.sol";
-import {SignatureUtils} from "@EVVM/playground/contracts/nameService/lib/SignatureUtils.sol";
+import {Evvm} from "@evvm/playground-contracts/contracts/evvm/Evvm.sol";
+import {AsyncNonce} from "@evvm/playground-contracts/library/utils/nonces/AsyncNonce.sol";
+import {NameServiceStructs} from "@evvm/playground-contracts/contracts/nameService/lib/NameServiceStructs.sol";
+import {AdvancedStrings} from "@evvm/playground-contracts/library/utils/AdvancedStrings.sol";
+import {ErrorsLib} from "@evvm/playground-contracts/contracts/nameService/lib/ErrorsLib.sol";
+import {SignatureUtils} from "@evvm/playground-contracts/contracts/nameService/lib/SignatureUtils.sol";
 
 contract NameService is AsyncNonce, NameServiceStructs {
     /**

@@ -56,12 +56,12 @@ pragma solidity ^0.8.0;
 888       888  "Y88P"   "Y8888P 888  888       "Y8888P"   "Y88P"  888  888  "Y888 888    "Y888888  "Y8888P  "Y888                                                                                                          
  */
 
-import {NameService} from "@EVVM/playground/contracts/nameService/NameService.sol";
-import {EvvmStorage} from "@EVVM/playground/contracts/evvm/lib/EvvmStorage.sol";
-import {ErrorsLib} from "@EVVM/playground/contracts/evvm/lib/ErrorsLib.sol";
-import {SignatureUtils} from "@EVVM/playground/contracts/evvm/lib/SignatureUtils.sol";
+import {NameService} from "@evvm/playground-contracts/contracts/nameService/NameService.sol";
+import {EvvmStorage} from "@evvm/playground-contracts/contracts/evvm/lib/EvvmStorage.sol";
+import {ErrorsLib} from "@evvm/playground-contracts/contracts/evvm/lib/ErrorsLib.sol";
+import {SignatureUtils} from "@evvm/playground-contracts/contracts/evvm/lib/SignatureUtils.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
-import {EvvmPlaygroundFunctions} from "@EVVM/playground/PlaygroundFunctions.sol";
+import {EvvmPlaygroundFunctions} from "@evvm/playground-contracts/PlaygroundFunctions.sol";
 
 contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
     /**

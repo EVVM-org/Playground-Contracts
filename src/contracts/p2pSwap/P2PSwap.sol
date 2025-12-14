@@ -13,12 +13,12 @@ pragma solidity ^0.8.0;
 888       888  "Y88P"   "Y8888P 888  888       "Y8888P"   "Y88P"  888  888  "Y888 888    "Y888888  "Y8888P  "Y888                                                                                                          
  */
 
-import {Staking} from "@EVVM/playground/contracts/staking/Staking.sol";
-import {SignatureUtils} from "@EVVM/playground/contracts/p2pSwap/lib/SignatureUtils.sol";
-import {AdvancedStrings} from "@EVVM/playground/library/utils/AdvancedStrings.sol";
-import {P2PSwapStructs} from "@EVVM/playground/contracts/p2pSwap/lib/P2PSwapStructs.sol";
-import {EvvmStructs} from "@EVVM/playground/interfaces/IEvvm.sol";
-import {EvvmService} from "@EVVM/playground/library/EvvmService.sol";
+import {Staking} from "@evvm/playground-contracts/contracts/staking/Staking.sol";
+import {SignatureUtils} from "@evvm/playground-contracts/contracts/p2pSwap/lib/SignatureUtils.sol";
+import {AdvancedStrings} from "@evvm/playground-contracts/library/utils/AdvancedStrings.sol";
+import {P2PSwapStructs} from "@evvm/playground-contracts/contracts/p2pSwap/lib/P2PSwapStructs.sol";
+import {EvvmStructs} from "@evvm/playground-contracts/interfaces/IEvvm.sol";
+import {EvvmService} from "@evvm/playground-contracts/library/EvvmService.sol";
 
 contract P2PSwap is
     EvvmService,

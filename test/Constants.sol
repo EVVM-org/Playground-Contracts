@@ -15,12 +15,12 @@ pragma solidity ^0.8.0;
  *         the same storage layout.
  */
 
-import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
-import {Staking} from "@EVVM/playground/contracts/staking/Staking.sol";
+import {Evvm} from "@evvm/playground-contracts/contracts/evvm/Evvm.sol";
+import {Staking} from "@evvm/playground-contracts/contracts/staking/Staking.sol";
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import {StakingServiceUtils} from "@EVVM/playground/library/utils/service/StakingServiceUtils.sol";
-import {IStaking} from "@EVVM/playground/interfaces/IStaking.sol";
-import {IEvvm} from "@EVVM/playground/interfaces/IEvvm.sol";
+import {StakingServiceUtils} from "@evvm/playground-contracts/library/utils/service/StakingServiceUtils.sol";
+import {IStaking} from "@evvm/playground-contracts/interfaces/IStaking.sol";
+import {IEvvm} from "@evvm/playground-contracts/interfaces/IEvvm.sol";
 
 abstract contract Constants {
     bytes32 constant DEPOSIT_HISTORY_SMATE_IDENTIFIER = bytes32(uint256(1));

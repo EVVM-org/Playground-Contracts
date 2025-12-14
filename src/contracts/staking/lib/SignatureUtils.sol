@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: EVVM-NONCOMMERCIAL-1.0
 // Full license terms available at: https://www.evvm.info/docs/EVVMNoncommercialLicense
 
-import {SignatureUtil} from "@EVVM/playground/library/utils/SignatureUtil.sol";
-import {AdvancedStrings} from "@EVVM/playground/library/utils/AdvancedStrings.sol";
+import {SignatureUtil} from "@evvm/playground-contracts/library/utils/SignatureUtil.sol";
+import {AdvancedStrings} from "@evvm/playground-contracts/library/utils/AdvancedStrings.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 
 pragma solidity ^0.8.0;

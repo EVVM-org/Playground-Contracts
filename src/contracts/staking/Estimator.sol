@@ -15,9 +15,9 @@ MMMMMMMMMMMM
  * @author Mate labs
  */
 
-import {Staking} from "@EVVM/playground/contracts/staking/Staking.sol";
-import {StakingStructs} from "@EVVM/playground/contracts/staking/lib/StakingStructs.sol";
-import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
+import {Staking} from "@evvm/playground-contracts/contracts/staking/Staking.sol";
+import {StakingStructs} from "@evvm/playground-contracts/contracts/staking/lib/StakingStructs.sol";
+import {Evvm} from "@evvm/playground-contracts/contracts/evvm/Evvm.sol";
 
 contract Estimator {
     struct AddressTypeProposal {

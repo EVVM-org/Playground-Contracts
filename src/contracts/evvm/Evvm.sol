@@ -30,12 +30,12 @@ pragma solidity ^0.8.0;
  *      - Treasury integration for privileged balance operations
  */
 
-import {NameService} from "@EVVM/playground/contracts/nameService/NameService.sol";
-import {EvvmStorage} from "@EVVM/playground/contracts/evvm/lib/EvvmStorage.sol";
-import {ErrorsLib} from "@EVVM/playground/contracts/evvm/lib/ErrorsLib.sol";
-import {SignatureUtils} from "@EVVM/playground/contracts/evvm/lib/SignatureUtils.sol";
-import {AdvancedStrings} from "@EVVM/playground/library/utils/AdvancedStrings.sol";
-import {EvvmPlaygroundFunctions} from "@EVVM/playground/PlaygroundFunctions.sol";
+import {NameService} from "@evvm/playground-contracts/contracts/nameService/NameService.sol";
+import {EvvmStorage} from "@evvm/playground-contracts/contracts/evvm/lib/EvvmStorage.sol";
+import {ErrorsLib} from "@evvm/playground-contracts/contracts/evvm/lib/ErrorsLib.sol";
+import {SignatureUtils} from "@evvm/playground-contracts/contracts/evvm/lib/SignatureUtils.sol";
+import {AdvancedStrings} from "@evvm/playground-contracts/library/utils/AdvancedStrings.sol";
+import {EvvmPlaygroundFunctions} from "@evvm/playground-contracts/PlaygroundFunctions.sol";
 
 contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
     /**

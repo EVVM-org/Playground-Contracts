@@ -17,16 +17,16 @@ import "forge-std/Test.sol";
 import "forge-std/console2.sol";
 
 import {Constants} from "test/Constants.sol";
-import {EvvmStructs} from "@EVVM/playground/contracts/evvm/lib/EvvmStructs.sol";
+import {EvvmStructs} from "@evvm/playground-contracts/contracts/evvm/lib/EvvmStructs.sol";
 
-import {Staking} from "@EVVM/playground/contracts/staking/Staking.sol";
-import {NameServiceStructs} from "@EVVM/playground/contracts/nameService/lib/NameServiceStructs.sol";
-import {NameService} from "@EVVM/playground/contracts/nameService/NameService.sol";
-import {Evvm} from "@EVVM/playground/contracts/evvm/Evvm.sol";
-import {Erc191TestBuilder} from "@EVVM/playground/library/Erc191TestBuilder.sol";
-import {Estimator} from "@EVVM/playground/contracts/staking/Estimator.sol";
-import {EvvmStorage} from "@EVVM/playground/contracts/evvm/lib/EvvmStorage.sol";
-import {Treasury} from "@EVVM/playground/contracts/treasury/Treasury.sol";
+import {Staking} from "@evvm/playground-contracts/contracts/staking/Staking.sol";
+import {NameServiceStructs} from "@evvm/playground-contracts/contracts/nameService/lib/NameServiceStructs.sol";
+import {NameService} from "@evvm/playground-contracts/contracts/nameService/NameService.sol";
+import {Evvm} from "@evvm/playground-contracts/contracts/evvm/Evvm.sol";
+import {Erc191TestBuilder} from "@evvm/playground-contracts/library/Erc191TestBuilder.sol";
+import {Estimator} from "@evvm/playground-contracts/contracts/staking/Estimator.sol";
+import {EvvmStorage} from "@evvm/playground-contracts/contracts/evvm/lib/EvvmStorage.sol";
+import {Treasury} from "@evvm/playground-contracts/contracts/treasury/Treasury.sol";
 
 contract unitTestRevert_EVVM_dispersePay_asyncExecution is Test, Constants {
     Staking staking;

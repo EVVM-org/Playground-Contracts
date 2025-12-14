@@ -3,7 +3,7 @@
 
 pragma solidity ^0.8.0;
 
-import {AdvancedStrings} from "@EVVM/playground/library/utils/AdvancedStrings.sol";
+import {AdvancedStrings} from "@evvm/playground-contracts/library/utils/AdvancedStrings.sol";
 
 library SignatureRecover {
 

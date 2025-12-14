@@ -3,7 +3,7 @@
 
 pragma solidity ^0.8.0;
 
-import {Math} from "@EVVM/playground/library/primitives/Math.sol";
+import {Math} from "@evvm/playground-contracts/library/primitives/Math.sol";
 
 library AdvancedStrings {
     bytes16 private constant HEX_DIGITS = "0123456789abcdef";
