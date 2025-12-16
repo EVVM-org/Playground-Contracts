@@ -424,7 +424,6 @@ contract unitTestCorrect_EVVM_batchPay is Test, Constants, EvvmStructs {
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
         (
             uint256 successfulTransactions,
-            uint256 failedTransactions,
             bool[] memory status
         ) = evvm.batchPay(payData);
         vm.stopPrank();
@@ -777,7 +776,6 @@ contract unitTestCorrect_EVVM_batchPay is Test, Constants, EvvmStructs {
         vm.startPrank(COMMON_USER_STAKER.Address);
         (
             uint256 successfulTransactions,
-            uint256 failedTransactions,
             bool[] memory status
         ) = evvm.batchPay(payData);
         vm.stopPrank();
