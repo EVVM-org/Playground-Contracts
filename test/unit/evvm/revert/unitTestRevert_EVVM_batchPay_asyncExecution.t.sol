@@ -28,13 +28,13 @@ import {Estimator} from "@evvm/playground-contracts/contracts/staking/Estimator.
 import {EvvmStorage} from "@evvm/playground-contracts/contracts/evvm/lib/EvvmStorage.sol";
 import {Treasury} from "@evvm/playground-contracts/contracts/treasury/Treasury.sol";
 
-contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
+contract unitTestRevert_EVVM_batchPay_asyncExecution is Test, Constants {
     Staking staking;
     Evvm evvm;
     Estimator estimator;
     NameService nameService;
     Treasury treasury;
-    
+
     AccountData COMMON_USER_NO_STAKER_3 = WILDCARD_USER;
 
     function setUp() public {
@@ -88,17 +88,9 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
      * some denominations on test can be explicit expleined
      */
 
-    function test__unit_revert__payMultiple_syncExecution__bSigAtFrom() public {
-        nameService._setIdentityBaseMetadata(
-            "dummy",
-            NameServiceStructs.IdentityBaseMetadata({
-                owner: COMMON_USER_NO_STAKER_2.Address,
-                expireDate: block.timestamp + 366 days,
-                customMetadataMaxSlots: 0,
-                offerMaxSlots: 0,
-                flagNotAUsername: 0x00
-            })
-        );
+    function test__unit_revert__batchPay_asyncExecution__bSigAtFrom()
+        public
+    {
         addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             ETHER_ADDRESS,
@@ -118,8 +110,8 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
                 ETHER_ADDRESS,
                 0.1 ether,
                 0.01 ether,
-                0,
-                false,
+                1001,
+                true,
                 COMMON_USER_STAKER.Address
             )
         );
@@ -136,8 +128,8 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             token: ETHER_ADDRESS,
             amount: 0.1 ether,
             priorityFee: 0.01 ether,
-            nonce: 0,
-            priorityFlag: false,
+            nonce: 1001,
+            priorityFlag: true,
             executor: COMMON_USER_STAKER.Address,
             signature: signatureEVVM
         });
@@ -145,7 +137,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER.Address);
 
         vm.expectRevert();
-        evvm.payMultiple(payData);
+        evvm.batchPay(payData);
 
         vm.stopPrank();
 
@@ -155,19 +147,9 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
         );
     }
 
-    function test__unit_revert__payMultiple_syncExecution__bSigAtToAddress()
+    function test__unit_revert__batchPay_asyncExecution__bSigAtToAddress()
         public
     {
-        nameService._setIdentityBaseMetadata(
-            "dummy",
-            NameServiceStructs.IdentityBaseMetadata({
-                owner: COMMON_USER_NO_STAKER_2.Address,
-                expireDate: block.timestamp + 366 days,
-                customMetadataMaxSlots: 0,
-                offerMaxSlots: 0,
-                flagNotAUsername: 0x00
-            })
-        );
         addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             ETHER_ADDRESS,
@@ -187,8 +169,8 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
                 ETHER_ADDRESS,
                 0.1 ether,
                 0.01 ether,
-                0,
-                false,
+                1001,
+                true,
                 COMMON_USER_STAKER.Address
             )
         );
@@ -205,8 +187,8 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             token: ETHER_ADDRESS,
             amount: 0.1 ether,
             priorityFee: 0.01 ether,
-            nonce: 0,
-            priorityFlag: false,
+            nonce: 1001,
+            priorityFlag: true,
             executor: COMMON_USER_STAKER.Address,
             signature: signatureEVVM
         });
@@ -214,7 +196,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER.Address);
 
         vm.expectRevert();
-        evvm.payMultiple(payData);
+        evvm.batchPay(payData);
 
         vm.stopPrank();
 
@@ -224,7 +206,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
         );
     }
 
-    function test__unit_revert__payMultiple_syncExecution__bSigAtToIdentity()
+    function test__unit_revert__batchPay_asyncExecution__bSigAtToIdentity()
         public
     {
         nameService._setIdentityBaseMetadata(
@@ -256,8 +238,8 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
                 ETHER_ADDRESS,
                 0.1 ether,
                 0.01 ether,
-                0,
-                false,
+                1001,
+                true,
                 COMMON_USER_STAKER.Address
             )
         );
@@ -274,8 +256,8 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             token: ETHER_ADDRESS,
             amount: 0.1 ether,
             priorityFee: 0.01 ether,
-            nonce: 0,
-            priorityFlag: false,
+            nonce: 1001,
+            priorityFlag: true,
             executor: COMMON_USER_STAKER.Address,
             signature: signatureEVVM
         });
@@ -283,7 +265,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER.Address);
 
         vm.expectRevert();
-        evvm.payMultiple(payData);
+        evvm.batchPay(payData);
 
         vm.stopPrank();
 
@@ -293,19 +275,9 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
         );
     }
 
-    function test__unit_revert__payMultiple_syncExecution__bSigAtTokenAddress()
+    function test__unit_revert__batchPay_asyncExecution__bSigAtTokenAddress()
         public
     {
-        nameService._setIdentityBaseMetadata(
-            "dummy",
-            NameServiceStructs.IdentityBaseMetadata({
-                owner: COMMON_USER_NO_STAKER_2.Address,
-                expireDate: block.timestamp + 366 days,
-                customMetadataMaxSlots: 0,
-                offerMaxSlots: 0,
-                flagNotAUsername: 0x00
-            })
-        );
         addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             ETHER_ADDRESS,
@@ -325,8 +297,8 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
                 ETHER_ADDRESS,
                 0.1 ether,
                 0.01 ether,
-                0,
-                false,
+                1001,
+                true,
                 COMMON_USER_STAKER.Address
             )
         );
@@ -343,8 +315,8 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             token: MATE_TOKEN_ADDRESS,
             amount: 0.1 ether,
             priorityFee: 0.01 ether,
-            nonce: 0,
-            priorityFlag: false,
+            nonce: 1001,
+            priorityFlag: true,
             executor: COMMON_USER_STAKER.Address,
             signature: signatureEVVM
         });
@@ -352,7 +324,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER.Address);
 
         vm.expectRevert();
-        evvm.payMultiple(payData);
+        evvm.batchPay(payData);
 
         vm.stopPrank();
 
@@ -362,19 +334,9 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
         );
     }
 
-    function test__unit_revert__payMultiple_syncExecution__bSigAtAmount()
+    function test__unit_revert__batchPay_asyncExecution__bSigAtAmount()
         public
     {
-        nameService._setIdentityBaseMetadata(
-            "dummy",
-            NameServiceStructs.IdentityBaseMetadata({
-                owner: COMMON_USER_NO_STAKER_2.Address,
-                expireDate: block.timestamp + 366 days,
-                customMetadataMaxSlots: 0,
-                offerMaxSlots: 0,
-                flagNotAUsername: 0x00
-            })
-        );
         addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             ETHER_ADDRESS,
@@ -394,8 +356,8 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
                 ETHER_ADDRESS,
                 0.1 ether,
                 0.01 ether,
-                0,
-                false,
+                1001,
+                true,
                 COMMON_USER_STAKER.Address
             )
         );
@@ -412,8 +374,8 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             token: ETHER_ADDRESS,
             amount: 1 ether,
             priorityFee: 0.01 ether,
-            nonce: 0,
-            priorityFlag: false,
+            nonce: 1001,
+            priorityFlag: true,
             executor: COMMON_USER_STAKER.Address,
             signature: signatureEVVM
         });
@@ -421,7 +383,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER.Address);
 
         vm.expectRevert();
-        evvm.payMultiple(payData);
+        evvm.batchPay(payData);
 
         vm.stopPrank();
 
@@ -431,19 +393,9 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
         );
     }
 
-    function test__unit_revert__payMultiple_syncExecution__bSigAtPriorityFee()
+    function test__unit_revert__batchPay_asyncExecution__bSigAtPriorityFee()
         public
     {
-        nameService._setIdentityBaseMetadata(
-            "dummy",
-            NameServiceStructs.IdentityBaseMetadata({
-                owner: COMMON_USER_NO_STAKER_2.Address,
-                expireDate: block.timestamp + 366 days,
-                customMetadataMaxSlots: 0,
-                offerMaxSlots: 0,
-                flagNotAUsername: 0x00
-            })
-        );
         addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             ETHER_ADDRESS,
@@ -463,8 +415,8 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
                 ETHER_ADDRESS,
                 0.1 ether,
                 0.01 ether,
-                0,
-                false,
+                1001,
+                true,
                 COMMON_USER_STAKER.Address
             )
         );
@@ -481,145 +433,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             token: ETHER_ADDRESS,
             amount: 0.1 ether,
             priorityFee: 0.07 ether,
-            nonce: 0,
-            priorityFlag: false,
-            executor: COMMON_USER_STAKER.Address,
-            signature: signatureEVVM
-        });
-
-        vm.startPrank(COMMON_USER_STAKER.Address);
-
-        vm.expectRevert();
-        evvm.payMultiple(payData);
-
-        vm.stopPrank();
-
-        assertEq(
-            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
-            0.11 ether
-        );
-    }
-
-    function test__unit_revert__payMultiple_syncExecution__bSigAtNonce()
-        public
-    {
-        nameService._setIdentityBaseMetadata(
-            "dummy",
-            NameServiceStructs.IdentityBaseMetadata({
-                owner: COMMON_USER_NO_STAKER_2.Address,
-                expireDate: block.timestamp + 366 days,
-                customMetadataMaxSlots: 0,
-                offerMaxSlots: 0,
-                flagNotAUsername: 0x00
-            })
-        );
-        addBalance(
-            COMMON_USER_NO_STAKER_1.Address,
-            ETHER_ADDRESS,
-            0.1 ether,
-            0.01 ether
-        );
-
-        EvvmStructs.PayData[]
-            memory payData = new EvvmStructs.PayData[](1);
-
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(
-            COMMON_USER_NO_STAKER_1.PrivateKey,
-            Erc191TestBuilder.buildMessageSignedForPay(
-                evvm.getEvvmID(),
-                COMMON_USER_NO_STAKER_2.Address,
-                "",
-                ETHER_ADDRESS,
-                0.1 ether,
-                0.01 ether,
-                777,
-                false,
-                COMMON_USER_STAKER.Address
-            )
-        );
-        bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
-
-        payData[0] = EvvmStructs.PayData({
-            from: COMMON_USER_NO_STAKER_1.Address,
-            to_address: COMMON_USER_NO_STAKER_2.Address,
-            to_identity: "",
-            token: ETHER_ADDRESS,
-            amount: 0.1 ether,
-            priorityFee: 0.01 ether,
-            nonce: 0,
-            priorityFlag: false,
-            executor: COMMON_USER_STAKER.Address,
-            signature: signatureEVVM
-        });
-
-        vm.startPrank(COMMON_USER_STAKER.Address);
-
-        vm.expectRevert();
-        evvm.payMultiple(payData);
-
-        vm.stopPrank();
-
-        assertEq(
-            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
-            0.11 ether
-        );
-    }
-
-    function test__unit_revert__payMultiple_syncExecution__bSigAtFlagPriority()
-        public
-    {
-        nameService._setIdentityBaseMetadata(
-            "dummy",
-            NameServiceStructs.IdentityBaseMetadata({
-                owner: COMMON_USER_NO_STAKER_2.Address,
-                expireDate: block.timestamp + 366 days,
-                customMetadataMaxSlots: 0,
-                offerMaxSlots: 0,
-                flagNotAUsername: 0x00
-            })
-        );
-        addBalance(
-            COMMON_USER_NO_STAKER_1.Address,
-            ETHER_ADDRESS,
-            0.1 ether,
-            0.01 ether
-        );
-
-        EvvmStructs.PayData[]
-            memory payData = new EvvmStructs.PayData[](1);
-
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(
-            COMMON_USER_NO_STAKER_1.PrivateKey,
-            Erc191TestBuilder.buildMessageSignedForPay(
-                evvm.getEvvmID(),
-                COMMON_USER_NO_STAKER_2.Address,
-                "",
-                ETHER_ADDRESS,
-                0.1 ether,
-                0.01 ether,
-                0,
-                false,
-                COMMON_USER_STAKER.Address
-            )
-        );
-        bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
-            v,
-            r,
-            s
-        );
-
-        payData[0] = EvvmStructs.PayData({
-            from: COMMON_USER_NO_STAKER_1.Address,
-            to_address: COMMON_USER_NO_STAKER_2.Address,
-            to_identity: "",
-            token: ETHER_ADDRESS,
-            amount: 0.1 ether,
-            priorityFee: 0.01 ether,
-            nonce: 0,
+            nonce: 1001,
             priorityFlag: true,
             executor: COMMON_USER_STAKER.Address,
             signature: signatureEVVM
@@ -628,7 +442,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER.Address);
 
         vm.expectRevert();
-        evvm.payMultiple(payData);
+        evvm.batchPay(payData);
 
         vm.stopPrank();
 
@@ -638,19 +452,9 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
         );
     }
 
-    function test__unit_revert__payMultiple_syncExecution__bSigAtExecutor()
+    function test__unit_revert__batchPay_asyncExecution__bSigAtNonce()
         public
     {
-        nameService._setIdentityBaseMetadata(
-            "dummy",
-            NameServiceStructs.IdentityBaseMetadata({
-                owner: COMMON_USER_NO_STAKER_2.Address,
-                expireDate: block.timestamp + 366 days,
-                customMetadataMaxSlots: 0,
-                offerMaxSlots: 0,
-                flagNotAUsername: 0x00
-            })
-        );
         addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             ETHER_ADDRESS,
@@ -670,8 +474,8 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
                 ETHER_ADDRESS,
                 0.1 ether,
                 0.01 ether,
-                0,
-                false,
+                1001,
+                true,
                 COMMON_USER_STAKER.Address
             )
         );
@@ -688,8 +492,126 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             token: ETHER_ADDRESS,
             amount: 0.1 ether,
             priorityFee: 0.01 ether,
-            nonce: 0,
+            nonce: 777,
+            priorityFlag: true,
+            executor: COMMON_USER_STAKER.Address,
+            signature: signatureEVVM
+        });
+
+        vm.startPrank(COMMON_USER_STAKER.Address);
+
+        vm.expectRevert();
+        evvm.batchPay(payData);
+
+        vm.stopPrank();
+
+        assertEq(
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            0.11 ether
+        );
+    }
+
+    function test__unit_revert__batchPay_asyncExecution__bSigAtFlagPriority()
+        public
+    {
+        addBalance(
+            COMMON_USER_NO_STAKER_1.Address,
+            ETHER_ADDRESS,
+            0.1 ether,
+            0.01 ether
+        );
+
+        EvvmStructs.PayData[]
+            memory payData = new EvvmStructs.PayData[](1);
+
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(
+            COMMON_USER_NO_STAKER_1.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
+                COMMON_USER_NO_STAKER_2.Address,
+                "",
+                ETHER_ADDRESS,
+                0.1 ether,
+                0.01 ether,
+                1001,
+                true,
+                COMMON_USER_STAKER.Address
+            )
+        );
+        bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
+            v,
+            r,
+            s
+        );
+
+        payData[0] = EvvmStructs.PayData({
+            from: COMMON_USER_NO_STAKER_1.Address,
+            to_address: COMMON_USER_NO_STAKER_2.Address,
+            to_identity: "",
+            token: ETHER_ADDRESS,
+            amount: 0.1 ether,
+            priorityFee: 0.01 ether,
+            nonce: 1001,
             priorityFlag: false,
+            executor: COMMON_USER_STAKER.Address,
+            signature: signatureEVVM
+        });
+
+        vm.startPrank(COMMON_USER_STAKER.Address);
+
+        vm.expectRevert();
+        evvm.batchPay(payData);
+
+        vm.stopPrank();
+
+        assertEq(
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            0.11 ether
+        );
+    }
+
+    function test__unit_revert__batchPay_asyncExecution__bSigAtExecutor()
+        public
+    {
+        addBalance(
+            COMMON_USER_NO_STAKER_1.Address,
+            ETHER_ADDRESS,
+            0.1 ether,
+            0.01 ether
+        );
+
+        EvvmStructs.PayData[]
+            memory payData = new EvvmStructs.PayData[](1);
+
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(
+            COMMON_USER_NO_STAKER_1.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
+                COMMON_USER_NO_STAKER_2.Address,
+                "",
+                ETHER_ADDRESS,
+                0.1 ether,
+                0.01 ether,
+                1001,
+                true,
+                COMMON_USER_STAKER.Address
+            )
+        );
+        bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
+            v,
+            r,
+            s
+        );
+
+        payData[0] = EvvmStructs.PayData({
+            from: COMMON_USER_NO_STAKER_1.Address,
+            to_address: COMMON_USER_NO_STAKER_2.Address,
+            to_identity: "",
+            token: ETHER_ADDRESS,
+            amount: 0.1 ether,
+            priorityFee: 0.01 ether,
+            nonce: 1001,
+            priorityFlag: true,
             executor: address(0),
             signature: signatureEVVM
         });
@@ -697,7 +619,7 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
         vm.startPrank(COMMON_USER_STAKER.Address);
 
         vm.expectRevert();
-        evvm.payMultiple(payData);
+        evvm.batchPay(payData);
 
         vm.stopPrank();
 
@@ -707,19 +629,9 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
         );
     }
 
-    function test__unit_revert__payMultiple_syncExecution__diferentExecutor()
+    function test__unit_revert__batchPay_asyncExecution__diferentExecutor()
         public
     {
-        nameService._setIdentityBaseMetadata(
-            "dummy",
-            NameServiceStructs.IdentityBaseMetadata({
-                owner: COMMON_USER_NO_STAKER_2.Address,
-                expireDate: block.timestamp + 366 days,
-                customMetadataMaxSlots: 0,
-                offerMaxSlots: 0,
-                flagNotAUsername: 0x00
-            })
-        );
         addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             ETHER_ADDRESS,
@@ -739,8 +651,8 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
                 ETHER_ADDRESS,
                 0.1 ether,
                 0.01 ether,
-                0,
-                false,
+                1001,
+                true,
                 COMMON_USER_STAKER.Address
             )
         );
@@ -757,15 +669,15 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             token: ETHER_ADDRESS,
             amount: 0.1 ether,
             priorityFee: 0.01 ether,
-            nonce: 0,
-            priorityFlag: false,
+            nonce: 1001,
+            priorityFlag: true,
             executor: COMMON_USER_STAKER.Address,
             signature: signatureEVVM
         });
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
 
-        (,uint256 failTx,)=evvm.payMultiple(payData);
+        (, uint256 failTx, ) = evvm.batchPay(payData);
 
         vm.stopPrank();
 
@@ -777,19 +689,9 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
         );
     }
 
-    function test__unit_revert__payMultiple_syncExecution__amountMoreThanBalance()
+    function test__unit_revert__batchPay_asyncExecution__amountMoreThanBalance()
         public
     {
-        nameService._setIdentityBaseMetadata(
-            "dummy",
-            NameServiceStructs.IdentityBaseMetadata({
-                owner: COMMON_USER_NO_STAKER_2.Address,
-                expireDate: block.timestamp + 366 days,
-                customMetadataMaxSlots: 0,
-                offerMaxSlots: 0,
-                flagNotAUsername: 0x00
-            })
-        );
         addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             ETHER_ADDRESS,
@@ -809,8 +711,8 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
                 ETHER_ADDRESS,
                 1 ether,
                 0.01 ether,
-                0,
-                false,
+                1001,
+                true,
                 address(0)
             )
         );
@@ -827,15 +729,15 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             token: ETHER_ADDRESS,
             amount: 1 ether,
             priorityFee: 0.01 ether,
-            nonce: 0,
-            priorityFlag: false,
+            nonce: 1001,
+            priorityFlag: true,
             executor: address(0),
             signature: signatureEVVM
         });
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
-        (,uint256 failTx,)=evvm.payMultiple(payData);
+        (, uint256 failTx, ) = evvm.batchPay(payData);
 
         vm.stopPrank();
 
@@ -847,19 +749,9 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
         );
     }
 
-    function test__unit_revert__payMultiple_syncExecution__priorityFeeMoreThanBalance()
+    function test__unit_revert__batchPay_asyncExecution__priorityFeeMoreThanBalance()
         public
     {
-        nameService._setIdentityBaseMetadata(
-            "dummy",
-            NameServiceStructs.IdentityBaseMetadata({
-                owner: COMMON_USER_NO_STAKER_2.Address,
-                expireDate: block.timestamp + 366 days,
-                customMetadataMaxSlots: 0,
-                offerMaxSlots: 0,
-                flagNotAUsername: 0x00
-            })
-        );
         addBalance(
             COMMON_USER_NO_STAKER_1.Address,
             ETHER_ADDRESS,
@@ -879,8 +771,8 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
                 ETHER_ADDRESS,
                 0.1 ether,
                 0.1 ether,
-                0,
-                false,
+                1001,
+                true,
                 address(0)
             )
         );
@@ -897,19 +789,94 @@ contract unitTestRevert_EVVM_payMultiple_syncExecution is Test, Constants {
             token: ETHER_ADDRESS,
             amount: 0.1 ether,
             priorityFee: 0.1 ether,
-            nonce: 0,
-            priorityFlag: false,
+            nonce: 1001,
+            priorityFlag: true,
             executor: address(0),
             signature: signatureEVVM
         });
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
-        (,uint256 failTx,)=evvm.payMultiple(payData);
+        (, uint256 failTx, ) = evvm.batchPay(payData);
 
         vm.stopPrank();
 
         assertEq(failTx, 1);
+
+        assertEq(
+            evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
+            0.11 ether
+        );
+    }
+
+    function test__unit_revert__batchPay_asyncExecution__nonceAlreadyUsed()
+        public
+    {
+        addBalance(
+            COMMON_USER_NO_STAKER_1.Address,
+            ETHER_ADDRESS,
+            0.2 ether,
+            0.02 ether
+        );
+
+        EvvmStructs.PayData[]
+            memory payData = new EvvmStructs.PayData[](2);
+
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(
+            COMMON_USER_NO_STAKER_1.PrivateKey,
+            Erc191TestBuilder.buildMessageSignedForPay(
+                evvm.getEvvmID(),
+                COMMON_USER_NO_STAKER_2.Address,
+                "",
+                ETHER_ADDRESS,
+                0.1 ether,
+                0.01 ether,
+                1001,
+                true,
+                address(0)
+            )
+        );
+        bytes memory signatureEVVM = Erc191TestBuilder.buildERC191Signature(
+            v,
+            r,
+            s
+        );
+
+        payData[0] = EvvmStructs.PayData({
+            from: COMMON_USER_NO_STAKER_1.Address,
+            to_address: COMMON_USER_NO_STAKER_2.Address,
+            to_identity: "",
+            token: ETHER_ADDRESS,
+            amount: 0.1 ether,
+            priorityFee: 0.01 ether,
+            nonce: 1001,
+            priorityFlag: true,
+            executor: address(0),
+            signature: signatureEVVM
+        });
+
+        payData[1] = EvvmStructs.PayData({
+            from: COMMON_USER_NO_STAKER_1.Address,
+            to_address: COMMON_USER_NO_STAKER_2.Address,
+            to_identity: "",
+            token: ETHER_ADDRESS,
+            amount: 0.1 ether,
+            priorityFee: 0.01 ether,
+            nonce: 1001,
+            priorityFlag: true,
+            executor: address(0),
+            signature: signatureEVVM
+        });
+
+        vm.startPrank(COMMON_USER_STAKER.Address);
+
+        (, uint256 failTx, bool[] memory results) = evvm.batchPay(payData);
+
+        vm.stopPrank();
+
+        assertEq(failTx, 1);
+
+        assertEq(results[1], false);
 
         assertEq(
             evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),

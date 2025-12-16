@@ -119,7 +119,7 @@ unitTestCorrectEvvmPayStaker_sync:
 	
 unitTestCorrectEvvmPayMultiple:
 	@echo "Running PayMultiple unit correct tests"
-	@forge test --match-path test/unit/evvm/correct/unitTestCorrect_EVVM_payMultiple.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/evvm/correct/unitTestCorrect_EVVM_batchPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 unitTestCorrectEvvmDispersePaySync:
 	@echo "Running DispersePaySync unit correct tests"
@@ -165,11 +165,11 @@ unitTestRevertEvvmPayStaker_sync:
 
 unitTestRevertEvvmPayMultiple_syncExecution:
 	@echo "Running PayMultiple (sync execution) unit revert tests"
-	@forge test --match-path test/unit/evvm/revert/unitTestRevert_EVVM_payMultiple_syncExecution.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/evvm/revert/unitTestRevert_EVVM_batchPay_syncExecution.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 unitTestRevertEvvmPayMultiple_asyncExecution:
 	@echo "Running PayMultiple (async execution) unit revert tests"
-	@forge test --match-path test/unit/evvm/revert/unitTestRevert_EVVM_payMultiple_asyncExecution.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/unit/evvm/revert/unitTestRevert_EVVM_batchPay_asyncExecution.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 unitTestRevertEvvmDispersePay_syncExecution:
 	@echo "Running DispersePay (sync execution) unit revert tests"
@@ -223,7 +223,7 @@ fuzzTestEvvmPayStaker_async:
 
 fuzzTestEvvmPayMultiple:
 	@echo "Running PayMultiple unit fuzz tests"
-	@forge test --match-path test/fuzz/evvm/fuzzTest_EVVM_payMultiple.t.sol --summary --detailed --gas-report -vvv --show-progress
+	@forge test --match-path test/fuzz/evvm/fuzzTest_EVVM_batchPay.t.sol --summary --detailed --gas-report -vvv --show-progress
 
 fuzzTestEvvmDispersePay:
 	@echo "Running DispersePay unit fuzz tests"

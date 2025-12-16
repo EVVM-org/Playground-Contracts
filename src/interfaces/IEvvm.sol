@@ -105,7 +105,7 @@ interface IEvvm {
         address executor,
         bytes memory signature
     ) external;
-    function payMultiple(EvvmStructs.PayData[] memory payData)
+    function batchPay(EvvmStructs.PayData[] memory payData)
         external
         returns (uint256 successfulTransactions, uint256 failedTransactions, bool[] memory results);
     function pointStaker(address user, bytes1 answer) external;

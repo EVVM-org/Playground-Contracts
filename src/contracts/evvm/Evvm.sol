@@ -365,6 +365,21 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
         } else {
             nextSyncUsedNonce[from]++;
         }
+
+        emit PayExecuted(
+            PayData(
+                from,
+                to_address,
+                to_identity,
+                token,
+                amount,
+                priorityFee,
+                nonce,
+                priorityFlag,
+                executor,
+                signature
+            )
+        );
     }
 
     /**
@@ -386,24 +401,15 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
      *
      * Return Values:
      * - successfulTransactions: Count of completed payments
-     * - failedTransactions: Count of failed payments
      * - results: Boolean array indicating success/failure for each payment
      *
      * @param payData Array of PayData structures containing payment details
      * @return successfulTransactions Number of payments that completed successfully
-     * @return failedTransactions Number of payments that failed
      * @return results Boolean array with success status for each payment
      */
-    function payMultiple(
+    function batchPay(
         PayData[] memory payData
-    )
-        external
-        returns (
-            uint256 successfulTransactions,
-            uint256 failedTransactions,
-            bool[] memory results
-        )
-    {
+    ) external returns (uint256 successfulTransactions, bool[] memory results) {
         address to_aux;
         results = new bool[](payData.length);
         for (uint256 iteration = 0; iteration < payData.length; iteration++) {
@@ -425,7 +431,6 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
 
             if (payData[iteration].executor != address(0)) {
                 if (msg.sender != payData[iteration].executor) {
-                    failedTransactions++;
                     results[iteration] = false;
                     continue;
                 }
@@ -443,7 +448,6 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
                         payData[iteration].nonce
                     ] = true;
                 } else {
-                    failedTransactions++;
                     results[iteration] = false;
                     continue;
                 }
@@ -456,7 +460,6 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
                 ) {
                     nextSyncUsedNonce[payData[iteration].from]++;
                 } else {
-                    failedTransactions++;
                     results[iteration] = false;
                     continue;
                 }
@@ -473,7 +476,6 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
                 payData[iteration].priorityFee + payData[iteration].amount >
                 balances[payData[iteration].from][payData[iteration].token]
             ) {
-                failedTransactions++;
                 results[iteration] = false;
                 continue;
             }
@@ -486,7 +488,6 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
                     payData[iteration].amount
                 )
             ) {
-                failedTransactions++;
                 results[iteration] = false;
                 continue;
             } else {
@@ -502,7 +503,6 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
                             payData[iteration].priorityFee
                         )
                     ) {
-                        failedTransactions++;
                         results[iteration] = false;
                         continue;
                     }
@@ -516,6 +516,8 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
         if (isAddressStaker(msg.sender)) {
             _giveReward(msg.sender, successfulTransactions);
         }
+
+        emit BatchPayExecuted(payData, results);
     }
 
     /**
@@ -629,6 +631,20 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
         } else {
             nextSyncUsedNonce[from]++;
         }
+
+        emit DispersePayExecuted(
+            DispersePayData(
+                from,
+                toData,
+                token,
+                amount,
+                priorityFee,
+                nonce,
+                priorityFlag,
+                executor,
+                signature
+            )
+        );
     }
 
     /**
@@ -673,6 +689,8 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
         if (isAddressStaker(msg.sender)) {
             _giveReward(msg.sender, 1);
         }
+
+        emit CaPayExecuted(CaPayData(from, to, token, amount));
     }
 
     /**
@@ -735,6 +753,10 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
         if (isAddressStaker(msg.sender)) {
             _giveReward(msg.sender, 1);
         }
+
+        emit DisperseCaPayExecuted(
+            DisperseCaPayData(from, toData, token, amount)
+        );
     }
 
     //░▒▓█Treasury exclusive functions██████████████████████████████████████████▓▒░

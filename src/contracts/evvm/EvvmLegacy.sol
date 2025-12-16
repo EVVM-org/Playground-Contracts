@@ -599,7 +599,7 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
      * @return failedTransactions Number of payments that failed
      * @return results Boolean array with success status for each payment
      */
-    function payMultiple(
+    function batchPay(
         PayData[] memory payData
     )
         external

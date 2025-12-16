@@ -59,4 +59,10 @@ abstract contract EvvmStorage is EvvmStructs {
     mapping(address user => mapping(uint256 nonce => bool isUsed)) asyncUsedNonce;
 
     mapping(address user => uint256 nonce) nextFisherDepositNonce;
+
+    event PayExecuted(PayData indexed payData);
+    event BatchPayExecuted(PayData[] indexed payData, bool[] results);
+    event DispersePayExecuted(DispersePayData indexed dispersePayData);
+    event CaPayExecuted(CaPayData indexed caPayData);
+    event DisperseCaPayExecuted(DisperseCaPayData indexed disperseCaPayData);
 }

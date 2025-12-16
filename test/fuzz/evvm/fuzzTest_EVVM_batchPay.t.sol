@@ -34,7 +34,7 @@ import {EvvmStructs} from "@evvm/playground-contracts/contracts/evvm/lib/EvvmStr
 import {EvvmStructs} from "@evvm/playground-contracts/contracts/evvm/lib/EvvmStructs.sol";
 import {Treasury} from "@evvm/playground-contracts/contracts/treasury/Treasury.sol";
 
-contract fuzzTest_EVVM_payMultiple is Test, Constants, EvvmStructs {
+contract fuzzTest_EVVM_batchPay is Test, Constants, EvvmStructs {
     Staking staking;
     Evvm evvm;
     Estimator estimator;
@@ -145,7 +145,7 @@ contract fuzzTest_EVVM_payMultiple is Test, Constants, EvvmStructs {
         bool[2] priorityFlag;
     }
 
-    function test__fuzz__payMultiple__nonStaker(
+    function test__fuzz__batchPay__nonStaker(
         PayMultipleFuzzTestInput memory input
     ) external {
         vm.assume(
@@ -243,7 +243,7 @@ contract fuzzTest_EVVM_payMultiple is Test, Constants, EvvmStructs {
             uint256 successfulTransactions,
             uint256 failedTransactions,
             bool[] memory status
-        ) = evvm.payMultiple(payData);
+        ) = evvm.batchPay(payData);
         vm.stopPrank();
 
         assertEq(successfulTransactions, 2);

@@ -30,7 +30,7 @@ import {EvvmStorage} from "@evvm/playground-contracts/contracts/evvm/lib/EvvmSto
 import {EvvmStructs} from "@evvm/playground-contracts/contracts/evvm/lib/EvvmStructs.sol";
 import {Treasury} from "@evvm/playground-contracts/contracts/treasury/Treasury.sol";
 
-contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
+contract unitTestCorrect_EVVM_batchPay is Test, Constants, EvvmStructs {
     Staking staking;
     Evvm evvm;
     Estimator estimator;
@@ -94,7 +94,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
         bytes signatureEVVM;
     }
 
-    function test__unit_correct__payMultiple__nonStaker() external {
+    function test__unit_correct__batchPay__nonStaker() external {
         nameService._setIdentityBaseMetadata(
             "dummy",
             NameServiceStructs.IdentityBaseMetadata({
@@ -426,7 +426,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
             uint256 successfulTransactions,
             uint256 failedTransactions,
             bool[] memory status
-        ) = evvm.payMultiple(payData);
+        ) = evvm.batchPay(payData);
         vm.stopPrank();
 
         for (uint256 i = 0; i < status.length; i++) {
@@ -448,7 +448,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
         );
     }
 
-    function test_payMultiple_staker() external {
+    function test_batchPay_staker() external {
         nameService._setIdentityBaseMetadata(
             "dummy",
             NameServiceStructs.IdentityBaseMetadata({
@@ -779,7 +779,7 @@ contract unitTestCorrect_EVVM_payMultiple is Test, Constants, EvvmStructs {
             uint256 successfulTransactions,
             uint256 failedTransactions,
             bool[] memory status
-        ) = evvm.payMultiple(payData);
+        ) = evvm.batchPay(payData);
         vm.stopPrank();
 
         for (uint256 i = 0; i < status.length; i++) {
