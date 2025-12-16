@@ -1,11 +1,9 @@
 // SPDX-License-Identifier: EVVM-NONCOMMERCIAL-1.0
 // Full license terms available at: https://www.evvm.info/docs/EVVMNoncommercialLicense
+pragma solidity ^0.8.0;
 
 import {SignatureUtil} from "@evvm/playground-contracts/library/utils/SignatureUtil.sol";
 import {AdvancedStrings} from "@evvm/playground-contracts/library/utils/AdvancedStrings.sol";
-import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
-
-pragma solidity ^0.8.0;
 
 library SignatureUtils {
     /**
@@ -30,9 +28,9 @@ library SignatureUtils {
                 string.concat(
                     _isStaking ? "true" : "false",
                     ",",
-                    Strings.toString(_amountOfStaking),
+                    AdvancedStrings.uintToString(_amountOfStaking),
                     ",",
-                    Strings.toString(_nonce)
+                    AdvancedStrings.uintToString(_nonce)
                 ),
                 signature,
                 user

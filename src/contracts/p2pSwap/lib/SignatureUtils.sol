@@ -1,11 +1,9 @@
 // SPDX-License-Identifier: EVVM-NONCOMMERCIAL-1.0
 // Full license terms available at: https://www.evvm.info/docs/EVVMNoncommercialLicense
+pragma solidity ^0.8.0;
 
 import {SignatureUtil} from "@evvm/playground-contracts/library/utils/SignatureUtil.sol";
 import {AdvancedStrings} from "@evvm/playground-contracts/library/utils/AdvancedStrings.sol";
-import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
-
-pragma solidity ^0.8.0;
 
 library SignatureUtils {
     /**
@@ -29,15 +27,15 @@ library SignatureUtils {
                 evvmID,
                 "makeOrder",
                 string.concat(
-                    Strings.toString(_nonce),
+                    AdvancedStrings.uintToString(_nonce),
                     ",",
                     AdvancedStrings.addressToString(_tokenA),
                     ",",
                     AdvancedStrings.addressToString(_tokenB),
                     ",",
-                    Strings.toString(_amountA),
+                    AdvancedStrings.uintToString(_amountA),
                     ",",
-                    Strings.toString(_amountB)
+                    AdvancedStrings.uintToString(_amountB)
                 ),
                 signature,
                 signer
@@ -58,13 +56,13 @@ library SignatureUtils {
                 evvmID,
                 "cancelOrder",
                 string.concat(
-                    Strings.toString(_nonce),
+                    AdvancedStrings.uintToString(_nonce),
                     ",",
                     AdvancedStrings.addressToString(_tokenA),
                     ",",
                     AdvancedStrings.addressToString(_tokenB),
                     ",",
-                    Strings.toString(_orderId)
+                    AdvancedStrings.uintToString(_orderId)
                 ),
                 signature,
                 signer
@@ -85,13 +83,13 @@ library SignatureUtils {
                 evvmID,
                 "dispatchOrder",
                 string.concat(
-                    Strings.toString(_nonce),
+                    AdvancedStrings.uintToString(_nonce),
                     ",",
                     AdvancedStrings.addressToString(_tokenA),
                     ",",
                     AdvancedStrings.addressToString(_tokenB),
                     ",",
-                    Strings.toString(_orderId)
+                    AdvancedStrings.uintToString(_orderId)
                 ),
                 signature,
                 signer

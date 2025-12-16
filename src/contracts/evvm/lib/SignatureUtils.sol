@@ -1,11 +1,9 @@
 // SPDX-License-Identifier: EVVM-NONCOMMERCIAL-1.0
 // Full license terms available at: https://www.evvm.info/docs/EVVMNoncommercialLicense
+pragma solidity ^0.8.0;
 
 import {SignatureUtil} from "@evvm/playground-contracts/library/utils/SignatureUtil.sol";
 import {AdvancedStrings} from "@evvm/playground-contracts/library/utils/AdvancedStrings.sol";
-import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
-
-pragma solidity ^0.8.0;
 
 library SignatureUtils {
     /**
@@ -13,7 +11,6 @@ library SignatureUtils {
      *       verify messages, the next functions are used to verify the messages signed
      *       by the users
      */
-
 
     /**
      *  @notice This function is used to verify the message signed for the payment
@@ -56,11 +53,11 @@ library SignatureUtils {
                     ",",
                     AdvancedStrings.addressToString(_token),
                     ",",
-                    Strings.toString(_amount),
+                    AdvancedStrings.uintToString(_amount),
                     ",",
-                    Strings.toString(_priorityFee),
+                    AdvancedStrings.uintToString(_priorityFee),
                     ",",
-                    Strings.toString(_nonce),
+                    AdvancedStrings.uintToString(_nonce),
                     ",",
                     _priorityFlag ? "true" : "false",
                     ",",
@@ -106,11 +103,11 @@ library SignatureUtils {
                     ",",
                     AdvancedStrings.addressToString(_token),
                     ",",
-                    Strings.toString(_amount),
+                    AdvancedStrings.uintToString(_amount),
                     ",",
-                    Strings.toString(_priorityFee),
+                    AdvancedStrings.uintToString(_priorityFee),
                     ",",
-                    Strings.toString(_nonce),
+                    AdvancedStrings.uintToString(_nonce),
                     ",",
                     _priorityFlag ? "true" : "false",
                     ",",
@@ -120,5 +117,4 @@ library SignatureUtils {
                 signer
             );
     }
-
 }

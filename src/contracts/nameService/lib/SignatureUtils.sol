@@ -1,11 +1,9 @@
 // SPDX-License-Identifier: EVVM-NONCOMMERCIAL-1.0
 // Full license terms available at: https://www.evvm.info/docs/EVVMNoncommercialLicense
+pragma solidity ^0.8.0;
 
 import {SignatureUtil} from "@evvm/playground-contracts/library/utils/SignatureUtil.sol";
 import {AdvancedStrings} from "@evvm/playground-contracts/library/utils/AdvancedStrings.sol";
-import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
-
-pragma solidity ^0.8.0;
 
 library SignatureUtils {
     /**
@@ -28,7 +26,7 @@ library SignatureUtils {
                 string.concat(
                     AdvancedStrings.bytes32ToString(_hashUsername),
                     ",",
-                    Strings.toString(_nameServiceNonce)
+                    AdvancedStrings.uintToString(_nameServiceNonce)
                 ),
                 signature,
                 signer
@@ -50,9 +48,9 @@ library SignatureUtils {
                 string.concat(
                     _username,
                     ",",
-                    Strings.toString(_clowNumber),
+                    AdvancedStrings.uintToString(_clowNumber),
                     ",",
-                    Strings.toString(_nameServiceNonce)
+                    AdvancedStrings.uintToString(_nameServiceNonce)
                 ),
                 signature,
                 signer
@@ -75,11 +73,11 @@ library SignatureUtils {
                 string.concat(
                     _username,
                     ",",
-                    Strings.toString(_dateExpire),
+                    AdvancedStrings.uintToString(_dateExpire),
                     ",",
-                    Strings.toString(_amount),
+                    AdvancedStrings.uintToString(_amount),
                     ",",
-                    Strings.toString(_nameServiceNonce)
+                    AdvancedStrings.uintToString(_nameServiceNonce)
                 ),
                 signature,
                 signer
@@ -101,9 +99,9 @@ library SignatureUtils {
                 string.concat(
                     _username,
                     ",",
-                    Strings.toString(_offerId),
+                    AdvancedStrings.uintToString(_offerId),
                     ",",
-                    Strings.toString(_nameServiceNonce)
+                    AdvancedStrings.uintToString(_nameServiceNonce)
                 ),
                 signature,
                 signer
@@ -125,9 +123,9 @@ library SignatureUtils {
                 string.concat(
                     _username,
                     ",",
-                    Strings.toString(_offerId),
+                    AdvancedStrings.uintToString(_offerId),
                     ",",
-                    Strings.toString(_nameServiceNonce)
+                    AdvancedStrings.uintToString(_nameServiceNonce)
                 ),
                 signature,
                 signer
@@ -148,7 +146,7 @@ library SignatureUtils {
                 string.concat(
                     _username,
                     ",",
-                    Strings.toString(_nameServiceNonce)
+                    AdvancedStrings.uintToString(_nameServiceNonce)
                 ),
                 signature,
                 signer
@@ -172,7 +170,7 @@ library SignatureUtils {
                     ",",
                     _value,
                     ",",
-                    Strings.toString(_nameServiceNonce)
+                    AdvancedStrings.uintToString(_nameServiceNonce)
                 ),
                 signature,
                 signer
@@ -194,9 +192,9 @@ library SignatureUtils {
                 string.concat(
                     _username,
                     ",",
-                    Strings.toString(_key),
+                    AdvancedStrings.uintToString(_key),
                     ",",
-                    Strings.toString(_nonce)
+                    AdvancedStrings.uintToString(_nonce)
                 ),
                 signature,
                 signer
@@ -214,7 +212,11 @@ library SignatureUtils {
             SignatureUtil.verifySignature(
                 evvmID,
                 "flushCustomMetadata",
-                string.concat(_identity, ",", Strings.toString(_nonce)),
+                string.concat(
+                    _identity,
+                    ",",
+                    AdvancedStrings.uintToString(_nonce)
+                ),
                 signature,
                 signer
             );
@@ -231,7 +233,11 @@ library SignatureUtils {
             SignatureUtil.verifySignature(
                 evvmID,
                 "flushUsername",
-                string.concat(_username, ",", Strings.toString(_nonce)),
+                string.concat(
+                    _username,
+                    ",",
+                    AdvancedStrings.uintToString(_nonce)
+                ),
                 signature,
                 signer
             );
