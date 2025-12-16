@@ -27,7 +27,7 @@ pragma solidity ^0.8.0;
  * @dev Secure vault for ETH and ERC20 tokens with EVVM integration and input validation
  */
 
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC20} from "@evvm/playground-contracts/library/primitives/IERC20.sol";
 import {SafeTransferLib} from "@solady/utils/SafeTransferLib.sol";
 import {Evvm} from "@evvm/playground-contracts/contracts/evvm/Evvm.sol";
 import {ErrorsLib} from "@evvm/playground-contracts/contracts/treasury/lib/ErrorsLib.sol";

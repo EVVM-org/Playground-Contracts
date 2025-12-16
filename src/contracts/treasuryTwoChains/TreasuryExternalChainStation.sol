@@ -31,7 +31,7 @@ pragma solidity ^0.8.0;
  * @author Mate labs
  */
 
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC20} from "@evvm/playground-contracts/library/primitives/IERC20.sol";
 import {ErrorsLib} from "@evvm/playground-contracts/contracts/treasuryTwoChains/lib/ErrorsLib.sol";
 import {ExternalChainStationStructs} from "@evvm/playground-contracts/contracts/treasuryTwoChains/lib/ExternalChainStationStructs.sol";
 
