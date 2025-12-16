@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 
 import {IEvvm, EvvmStructs} from "@evvm/playground-contracts/interfaces/IEvvm.sol";
 
-abstract contract MakePaymentOnEvvm {
+abstract contract EvvmPayments {
     IEvvm internal evvm;
 
     constructor(address evvmAddress) {}
