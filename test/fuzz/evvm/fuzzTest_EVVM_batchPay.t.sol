@@ -241,13 +241,11 @@ contract fuzzTest_EVVM_batchPay is Test, Constants, EvvmStructs {
         vm.startPrank(FISHER.Address);
         (
             uint256 successfulTransactions,
-            uint256 failedTransactions,
             bool[] memory status
         ) = evvm.batchPay(payData);
         vm.stopPrank();
 
         assertEq(successfulTransactions, 2);
-        assertEq(failedTransactions, 0);
         assertEq(status[0], true);
         assertEq(status[1], true);
 

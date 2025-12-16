@@ -330,10 +330,8 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
             )
         ) revert ErrorsLib.InvalidSignature();
 
-        if (executor != address(0)) {
-            if (msg.sender != executor)
-                revert ErrorsLib.SenderIsNotTheExecutor();
-        }
+        if ((executor != address(0)) && (msg.sender != executor))
+            revert ErrorsLib.SenderIsNotTheExecutor();
 
         if (priorityFlag) {
             if (asyncUsedNonce[from][nonce])

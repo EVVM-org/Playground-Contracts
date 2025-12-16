@@ -34,7 +34,7 @@ contract unitTestRevert_EVVM_batchPay_syncExecution is Test, Constants {
     Estimator estimator;
     NameService nameService;
     Treasury treasury;
-    
+
     AccountData COMMON_USER_NO_STAKER_3 = WILDCARD_USER;
 
     function setUp() public {
@@ -63,8 +63,10 @@ contract unitTestRevert_EVVM_batchPay_syncExecution is Test, Constants {
 
         staking._setupEstimatorAndEvvm(address(estimator), address(evvm));
         treasury = new Treasury(address(evvm));
-        evvm._setupNameServiceAndTreasuryAddress(address(nameService), address(treasury));
-        
+        evvm._setupNameServiceAndTreasuryAddress(
+            address(nameService),
+            address(treasury)
+        );
 
         evvm.setPointStaker(COMMON_USER_STAKER.Address, 0x01);
     }
@@ -106,8 +108,7 @@ contract unitTestRevert_EVVM_batchPay_syncExecution is Test, Constants {
             0.01 ether
         );
 
-        EvvmStructs.PayData[]
-            memory payData = new EvvmStructs.PayData[](1);
+        EvvmStructs.PayData[] memory payData = new EvvmStructs.PayData[](1);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -175,8 +176,7 @@ contract unitTestRevert_EVVM_batchPay_syncExecution is Test, Constants {
             0.01 ether
         );
 
-        EvvmStructs.PayData[]
-            memory payData = new EvvmStructs.PayData[](1);
+        EvvmStructs.PayData[] memory payData = new EvvmStructs.PayData[](1);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -244,8 +244,7 @@ contract unitTestRevert_EVVM_batchPay_syncExecution is Test, Constants {
             0.01 ether
         );
 
-        EvvmStructs.PayData[]
-            memory payData = new EvvmStructs.PayData[](1);
+        EvvmStructs.PayData[] memory payData = new EvvmStructs.PayData[](1);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -313,8 +312,7 @@ contract unitTestRevert_EVVM_batchPay_syncExecution is Test, Constants {
             0.01 ether
         );
 
-        EvvmStructs.PayData[]
-            memory payData = new EvvmStructs.PayData[](1);
+        EvvmStructs.PayData[] memory payData = new EvvmStructs.PayData[](1);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -362,9 +360,7 @@ contract unitTestRevert_EVVM_batchPay_syncExecution is Test, Constants {
         );
     }
 
-    function test__unit_revert__batchPay_syncExecution__bSigAtAmount()
-        public
-    {
+    function test__unit_revert__batchPay_syncExecution__bSigAtAmount() public {
         nameService._setIdentityBaseMetadata(
             "dummy",
             NameServiceStructs.IdentityBaseMetadata({
@@ -382,8 +378,7 @@ contract unitTestRevert_EVVM_batchPay_syncExecution is Test, Constants {
             0.01 ether
         );
 
-        EvvmStructs.PayData[]
-            memory payData = new EvvmStructs.PayData[](1);
+        EvvmStructs.PayData[] memory payData = new EvvmStructs.PayData[](1);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -451,8 +446,7 @@ contract unitTestRevert_EVVM_batchPay_syncExecution is Test, Constants {
             0.01 ether
         );
 
-        EvvmStructs.PayData[]
-            memory payData = new EvvmStructs.PayData[](1);
+        EvvmStructs.PayData[] memory payData = new EvvmStructs.PayData[](1);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -500,9 +494,7 @@ contract unitTestRevert_EVVM_batchPay_syncExecution is Test, Constants {
         );
     }
 
-    function test__unit_revert__batchPay_syncExecution__bSigAtNonce()
-        public
-    {
+    function test__unit_revert__batchPay_syncExecution__bSigAtNonce() public {
         nameService._setIdentityBaseMetadata(
             "dummy",
             NameServiceStructs.IdentityBaseMetadata({
@@ -520,8 +512,7 @@ contract unitTestRevert_EVVM_batchPay_syncExecution is Test, Constants {
             0.01 ether
         );
 
-        EvvmStructs.PayData[]
-            memory payData = new EvvmStructs.PayData[](1);
+        EvvmStructs.PayData[] memory payData = new EvvmStructs.PayData[](1);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -589,8 +580,7 @@ contract unitTestRevert_EVVM_batchPay_syncExecution is Test, Constants {
             0.01 ether
         );
 
-        EvvmStructs.PayData[]
-            memory payData = new EvvmStructs.PayData[](1);
+        EvvmStructs.PayData[] memory payData = new EvvmStructs.PayData[](1);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -658,8 +648,7 @@ contract unitTestRevert_EVVM_batchPay_syncExecution is Test, Constants {
             0.01 ether
         );
 
-        EvvmStructs.PayData[]
-            memory payData = new EvvmStructs.PayData[](1);
+        EvvmStructs.PayData[] memory payData = new EvvmStructs.PayData[](1);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -727,8 +716,7 @@ contract unitTestRevert_EVVM_batchPay_syncExecution is Test, Constants {
             0.01 ether
         );
 
-        EvvmStructs.PayData[]
-            memory payData = new EvvmStructs.PayData[](1);
+        EvvmStructs.PayData[] memory payData = new EvvmStructs.PayData[](1);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -765,11 +753,11 @@ contract unitTestRevert_EVVM_batchPay_syncExecution is Test, Constants {
 
         vm.startPrank(COMMON_USER_NO_STAKER_2.Address);
 
-        (,uint256 failTx,)=evvm.batchPay(payData);
+        (uint256 successfulTransactions, ) = evvm.batchPay(payData);
 
         vm.stopPrank();
 
-        assertEq(failTx, 1);
+        assertEq(successfulTransactions - 1, 1);
 
         assertEq(
             evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
@@ -797,8 +785,7 @@ contract unitTestRevert_EVVM_batchPay_syncExecution is Test, Constants {
             0.01 ether
         );
 
-        EvvmStructs.PayData[]
-            memory payData = new EvvmStructs.PayData[](1);
+        EvvmStructs.PayData[] memory payData = new EvvmStructs.PayData[](1);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -835,11 +822,11 @@ contract unitTestRevert_EVVM_batchPay_syncExecution is Test, Constants {
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
-        (,uint256 failTx,)=evvm.batchPay(payData);
+        (uint256 successfulTransactions, ) = evvm.batchPay(payData);
 
         vm.stopPrank();
 
-        assertEq(failTx, 1);
+        assertEq(successfulTransactions - 1, 1);
 
         assertEq(
             evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
@@ -867,8 +854,7 @@ contract unitTestRevert_EVVM_batchPay_syncExecution is Test, Constants {
             0.01 ether
         );
 
-        EvvmStructs.PayData[]
-            memory payData = new EvvmStructs.PayData[](1);
+        EvvmStructs.PayData[] memory payData = new EvvmStructs.PayData[](1);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             COMMON_USER_NO_STAKER_1.PrivateKey,
@@ -905,11 +891,11 @@ contract unitTestRevert_EVVM_batchPay_syncExecution is Test, Constants {
 
         vm.startPrank(COMMON_USER_STAKER.Address);
 
-        (,uint256 failTx,)=evvm.batchPay(payData);
+        (uint256 successfulTransactions, ) = evvm.batchPay(payData);
 
         vm.stopPrank();
 
-        assertEq(failTx, 1);
+        assertEq(successfulTransactions - 1, 1);
 
         assertEq(
             evvm.getBalance(COMMON_USER_NO_STAKER_1.Address, ETHER_ADDRESS),
