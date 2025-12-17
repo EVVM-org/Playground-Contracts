@@ -5,7 +5,7 @@
     "mycli": "./cli/index.ts"
   },
   "scripts": {
-    "evvmCli": "bun run cli/index.ts",
+    "evvm": "bun run cli/index.ts",
     "buildCli": "bun build cli/index.ts --compile --outfile evvmCli"
   },
   "type": "module",

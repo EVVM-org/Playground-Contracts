@@ -15,9 +15,9 @@ import {
   showHelp,
   showVersion,
   deployEvvm,
-  fullTest,
   registerEvvm,
 } from "./commands";
+import { developer } from "./commands/developer";
 
 /**
  * Available CLI commands mapped to their handler functions
@@ -26,7 +26,7 @@ const commands = {
   help: showHelp,
   version: showVersion,
   deploy: deployEvvm,
-  fulltest: fullTest,
+  dev: developer,
   register: registerEvvm,
 };
 
@@ -65,6 +65,9 @@ async function main() {
       walletName: { type: "string", short: "w" },
       evvmAddress: { type: "string" },
       useCustomEthRpc: { type: "boolean" },
+
+      //dev command specific
+      makeInterface: { type: "boolean", short: "i"},
     },
     allowPositionals: true,
   });

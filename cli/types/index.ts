@@ -69,3 +69,8 @@ export type EvvmMetadata = {
   /** Base reward amount per transaction for stakers */
   reward: number | null;
 };
+
+export type ContractFileMetadata = {
+  contractName: string;
+  folderName: string;
+}
