@@ -11,15 +11,14 @@ import { colors } from "../constants";
 import { contractInterfacesGenerator } from "../utils/foundry";
 
 /**
- * Runs the full EVVM test suite
+ * Developer Command Handler
  *
- * Executes all unit tests for EVVM contracts with detailed output including:
- * - Test results summary
- * - Detailed test execution logs
- * - Gas usage reports
- * - Progress indicators
- *
- * @returns {Promise<void>} Resolves when tests complete
+ * Executes developer utilities such as:
+ * - Generating Solidity interfaces for EVVM contracts
+ * - Runing full test suite (to be implemented)
+ * - Runing specific service tests (fuzz and unit) (to be implemented)
+ * - Runing especific unit tests (to be implemented)
+ * - Runing epecific fuzz tests (to be implemented)
  */
 export async function developer(_args: string[], options: any) {
   const makeInterface = options.makeInterface || false;
