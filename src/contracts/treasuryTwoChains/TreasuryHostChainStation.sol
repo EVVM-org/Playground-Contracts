@@ -50,7 +50,7 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {AxelarExecutable} from "@axelar-network/axelar-gmp-sdk-solidity/contracts/executable/AxelarExecutable.sol";
 import {IAxelarGasService} from "@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IAxelarGasService.sol";
 import {IInterchainGasEstimation} from "@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IInterchainGasEstimation.sol";
-import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
+import {AdvancedStrings} from "@evvm/playground-contracts/library/utils/AdvancedStrings.sol";
 
 contract TreasuryHostChainStation is
     HostChainStationStructs,
@@ -359,7 +359,7 @@ contract TreasuryHostChainStation is
     }
 
     // Hyperlane Specific Functions //
-    
+
     /// @notice Calculates the fee required for Hyperlane cross-chain message dispatch
     /// @dev Queries the Hyperlane mailbox for accurate fee estimation
     /// @param toAddress Recipient address on the destination chain
@@ -490,11 +490,19 @@ contract TreasuryHostChainStation is
         string calldata _sourceAddress,
         bytes calldata _payload
     ) internal override {
-        if (!Strings.equal(_sourceChain, axelar.externalChainStationChainName))
-            revert ErrorsLib.ChainIdNotAuthorized();
+        if (
+            !AdvancedStrings.equal(
+                _sourceChain,
+                axelar.externalChainStationChainName
+            )
+        ) revert ErrorsLib.ChainIdNotAuthorized();
 
-        if (!Strings.equal(_sourceAddress, axelar.externalChainStationAddress))
-            revert ErrorsLib.SenderNotAuthorized();
+        if (
+            !AdvancedStrings.equal(
+                _sourceAddress,
+                axelar.externalChainStationAddress
+            )
+        ) revert ErrorsLib.SenderNotAuthorized();
 
         decodeAndDeposit(_payload);
     }
@@ -624,7 +632,7 @@ contract TreasuryHostChainStation is
     }
 
     // Getter functions //
-    
+
     /// @notice Returns the complete admin configuration including proposals and timelock
     /// @return Current admin address, proposed admin, and acceptance timestamp
     function getAdmin() external view returns (AddressTypeProposal memory) {

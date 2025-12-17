@@ -60,8 +60,9 @@ import {NameService} from "@evvm/playground-contracts/contracts/nameService/Name
 import {EvvmStorage} from "@evvm/playground-contracts/contracts/evvm/lib/EvvmStorage.sol";
 import {ErrorsLib} from "@evvm/playground-contracts/contracts/evvm/lib/ErrorsLib.sol";
 import {SignatureUtils} from "@evvm/playground-contracts/contracts/evvm/lib/SignatureUtils.sol";
-import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {EvvmPlaygroundFunctions} from "@evvm/playground-contracts/PlaygroundFunctions.sol";
+import {AdvancedStrings} from "@evvm/playground-contracts/library/utils/AdvancedStrings.sol";
+
 
 contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
     /**
@@ -337,7 +338,7 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
                 revert ErrorsLib.SenderIsNotTheExecutor();
         }
 
-        address to = !Strings.equal(to_identity, "")
+        address to = !AdvancedStrings.equal(to_identity, "")
             ? NameService(nameServiceAddress).verifyStrictAndGetOwnerOfIdentity(
                 to_identity
             )
@@ -404,7 +405,7 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
 
         if (asyncUsedNonce[from][nonce]) revert ErrorsLib.AsyncNonceAlreadyUsed();
 
-        address to = !Strings.equal(to_identity, "")
+        address to = !AdvancedStrings.equal(to_identity, "")
             ? NameService(nameServiceAddress).verifyStrictAndGetOwnerOfIdentity(
                 to_identity
             )
@@ -473,7 +474,7 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
 
         if (!isAddressStaker(msg.sender)) revert ErrorsLib.NotAnStaker();
 
-        address to = !Strings.equal(to_identity, "")
+        address to = !AdvancedStrings.equal(to_identity, "")
             ? NameService(nameServiceAddress).verifyStrictAndGetOwnerOfIdentity(
                 to_identity
             )
@@ -553,7 +554,7 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
 
         if (asyncUsedNonce[from][nonce]) revert ErrorsLib.AsyncNonceAlreadyUsed();
 
-        address to = !Strings.equal(to_identity, "")
+        address to = !AdvancedStrings.equal(to_identity, "")
             ? NameService(nameServiceAddress).verifyStrictAndGetOwnerOfIdentity(
                 to_identity
             )
@@ -669,7 +670,7 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
                 }
             }
 
-            to_aux = !Strings.equal(payData[iteration].to_identity, "")
+            to_aux = !AdvancedStrings.equal(payData[iteration].to_identity, "")
                 ? NameService(nameServiceAddress)
                     .verifyStrictAndGetOwnerOfIdentity(
                         payData[iteration].to_identity
@@ -801,7 +802,7 @@ contract Evvm is EvvmStorage, EvvmPlaygroundFunctions {
         for (uint256 i = 0; i < toData.length; i++) {
             acomulatedAmount += toData[i].amount;
 
-            if (!Strings.equal(toData[i].to_identity, "")) {
+            if (!AdvancedStrings.equal(toData[i].to_identity, "")) {
                 if (
                     NameService(nameServiceAddress).strictVerifyIfIdentityExist(
                         toData[i].to_identity

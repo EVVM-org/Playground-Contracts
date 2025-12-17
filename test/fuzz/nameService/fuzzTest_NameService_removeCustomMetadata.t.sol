@@ -33,7 +33,6 @@ import {Erc191TestBuilder} from "@evvm/playground-contracts/library/Erc191TestBu
 import {Estimator} from "@evvm/playground-contracts/contracts/staking/Estimator.sol";
 import {EvvmStorage} from "@evvm/playground-contracts/contracts/evvm/lib/EvvmStorage.sol";
 import {AdvancedStrings} from "@evvm/playground-contracts/library/utils/AdvancedStrings.sol";
-import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {EvvmStructs} from "@evvm/playground-contracts/contracts/evvm/lib/EvvmStructs.sol";
 import {Treasury} from "@evvm/playground-contracts/contracts/treasury/Treasury.sol";
 
@@ -90,7 +89,7 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
             makeAddCustomMetadata(
                 COMMON_USER_NO_STAKER_1,
                 "test",
-                string.concat("test>", Strings.toString(i)),
+                string.concat("test>", AdvancedStrings.uintToString(i)),
                 uint256(type(uint32).max) + 1 + i,
                 uint256(type(uint32).max) + 1 + i,
                 true
@@ -378,7 +377,7 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
                 bytes(
                     string.concat(
                         "test>",
-                        Strings.toString(input.indexToRemove + 1)
+                        AdvancedStrings.uintToString(input.indexToRemove + 1)
                     )
                 ).length
             );
@@ -388,7 +387,7 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
                     bytes(
                         string.concat(
                             "test>",
-                            Strings.toString(input.indexToRemove + 1)
+                            AdvancedStrings.uintToString(input.indexToRemove + 1)
                         )
                     )
                 )
@@ -492,7 +491,7 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
                 bytes(
                     string.concat(
                         "test>",
-                        Strings.toString(input.indexToRemove + 1)
+                        AdvancedStrings.uintToString(input.indexToRemove + 1)
                     )
                 ).length
             );
@@ -502,7 +501,7 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
                     bytes(
                         string.concat(
                             "test>",
-                            Strings.toString(input.indexToRemove + 1)
+                            AdvancedStrings.uintToString(input.indexToRemove + 1)
                         )
                     )
                 )
@@ -610,7 +609,7 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
                 bytes(
                     string.concat(
                         "test>",
-                        Strings.toString(input.indexToRemove + 1)
+                        AdvancedStrings.uintToString(input.indexToRemove + 1)
                     )
                 ).length
             );
@@ -620,7 +619,7 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
                     bytes(
                         string.concat(
                             "test>",
-                            Strings.toString(input.indexToRemove + 1)
+                            AdvancedStrings.uintToString(input.indexToRemove + 1)
                         )
                     )
                 )
@@ -721,7 +720,7 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
                 bytes(
                     string.concat(
                         "test>",
-                        Strings.toString(input.indexToRemove + 1)
+                        AdvancedStrings.uintToString(input.indexToRemove + 1)
                     )
                 ).length
             );
@@ -731,7 +730,7 @@ contract fuzzTest_NameService_removeCustomMetadata is Test, Constants {
                     bytes(
                         string.concat(
                             "test>",
-                            Strings.toString(input.indexToRemove + 1)
+                            AdvancedStrings.uintToString(input.indexToRemove + 1)
                         )
                     )
                 )

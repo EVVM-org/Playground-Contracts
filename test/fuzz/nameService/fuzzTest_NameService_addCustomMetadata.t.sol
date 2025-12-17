@@ -33,7 +33,6 @@ import {Erc191TestBuilder} from "@evvm/playground-contracts/library/Erc191TestBu
 import {Estimator} from "@evvm/playground-contracts/contracts/staking/Estimator.sol";
 import {EvvmStorage} from "@evvm/playground-contracts/contracts/evvm/lib/EvvmStorage.sol";
 import {AdvancedStrings} from "@evvm/playground-contracts/library/utils/AdvancedStrings.sol";
-import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {EvvmStructs} from "@evvm/playground-contracts/contracts/evvm/lib/EvvmStructs.sol";
 import {Treasury} from "@evvm/playground-contracts/contracts/treasury/Treasury.sol";
 
@@ -226,7 +225,7 @@ contract fuzzTest_NameService_addCustomMetadata is Test, Constants {
             customMetadata = string(
                 abi.encodePacked(
                     customMetadata,
-                    Strings.toString(
+                    AdvancedStrings.uintToString(
                         uint256(
                             keccak256(
                                 abi.encodePacked(

@@ -17,7 +17,7 @@ pragma solidity ^0.8.0;
 
 import {Evvm} from "@evvm/playground-contracts/contracts/evvm/Evvm.sol";
 import {Staking} from "@evvm/playground-contracts/contracts/staking/Staking.sol";
-import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import {ERC20} from "@solady/tokens/ERC20.sol";
 import {StakingServiceUtils} from "@evvm/playground-contracts/library/utils/service/StakingServiceUtils.sol";
 import {IStaking} from "@evvm/playground-contracts/interfaces/IStaking.sol";
 import {IEvvm} from "@evvm/playground-contracts/interfaces/IEvvm.sol";
@@ -212,11 +212,21 @@ contract MockContractToStake is StakingServiceUtils {
 }
 
 contract TestERC20 is ERC20 {
-    constructor() ERC20("TestToken", "TTK") {}
 
     function mint(address to, uint256 amount) public {
         _mint(to, amount);
     }
+
+
+    function name() public view override returns (string memory){
+        return "TestToken";
+    }
+
+    /// @dev Returns the symbol of the token.
+    function symbol() public view override returns (string memory){
+        return "TTK";
+    }
+
 }
 
 import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
