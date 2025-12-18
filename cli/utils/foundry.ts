@@ -21,6 +21,7 @@ import {
   colors,
   EthSepoliaPublicRpc,
   RegisteryEvvmAddress,
+  ChainData,
 } from "../constants";
 import { formatNumber, showError } from "./validators";
 
@@ -259,10 +260,18 @@ export async function showDeployContractsAndFindEvvm(
     `${colors.bright}═══════════════════════════════════════${colors.reset}\n`
   );
 
+  const chainData = ChainData[chainId];
+  const explorerUrl = chainData?.ExplorerToAddress;
+
   createdContracts.forEach((contract: CreatedContract) => {
     console.log(
       `  ${colors.green}✓${colors.reset} ${colors.blue}${contract.contractName}${colors.reset}\n    ${colors.darkGray}→${colors.reset} ${contract.contractAddress}`
     );
+    if (explorerUrl) {
+      console.log(
+        `    ${colors.darkGray}→${colors.reset} ${explorerUrl}${contract.contractAddress}`
+      );
+    }
   });
   console.log();
 

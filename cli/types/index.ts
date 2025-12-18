@@ -70,7 +70,36 @@ export type EvvmMetadata = {
   reward: number | null;
 };
 
+export type HyperlaneType = {
+  [chainID: number]: HyperlaneMetadata;
+};
+
+export type HyperlaneMetadata = {
+  hyperlaneDomainId: number | null;
+  hyperlaneMailboxAddress: `0x${string}` | null;
+};
+
+export type ChainDataType = {
+  [chainID: number]: {
+    Chain: string;
+    Hyperlane: {
+      DomainId: number;
+      MailboxAddress: string;
+    };
+    LayerZero: {
+      EId: number;
+      EndpointAddress: string;
+    };
+    Axelar: {
+      ChainName: string;
+      Gateway: string;
+      GasService: string;
+    };
+    ExplorerToAddress: string;
+  };
+};
+
 export type ContractFileMetadata = {
   contractName: string;
   folderName: string;
-}
+};
