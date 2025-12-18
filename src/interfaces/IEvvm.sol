@@ -1,10 +1,37 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.4;
+// SPDX-License-Identifier: EVVM-NONCOMMERCIAL-1.0
+// Full license terms available at: https://www.evvm.info/docs/EVVMNoncommercialLicense
+pragma solidity ^0.8.0;
 
 library EvvmStructs {
+    struct CaPayData {
+        address from;
+        address to;
+        address token;
+        uint256 amount;
+    }
+
+    struct DisperseCaPayData {
+        address from;
+        DisperseCaPayMetadata[] toData;
+        address token;
+        uint256 amount;
+    }
+
     struct DisperseCaPayMetadata {
         uint256 amount;
         address toAddress;
+    }
+
+    struct DispersePayData {
+        address from;
+        DispersePayMetadata[] toData;
+        address token;
+        uint256 totalAmount;
+        uint256 priorityFee;
+        uint256 nonce;
+        bool priorityFlag;
+        address executor;
+        bytes signature;
     }
 
     struct DispersePayMetadata {
@@ -50,6 +77,12 @@ interface IEvvm {
     error UpdateBalanceFailed();
     error WindowToChangeEvvmIDExpired();
 
+    event BatchPayExecuted(EvvmStructs.PayData[] indexed payData, bool[] results);
+    event CaPayExecuted(EvvmStructs.CaPayData indexed caPayData);
+    event DisperseCaPayExecuted(EvvmStructs.DisperseCaPayData indexed disperseCaPayData);
+    event DispersePayExecuted(EvvmStructs.DispersePayData indexed dispersePayData);
+    event PayExecuted(EvvmStructs.PayData indexed payData);
+
     fallback() external;
 
     function _addMateToTotalSupply(uint256 amount) external;
@@ -58,6 +91,9 @@ interface IEvvm {
     function acceptImplementation() external;
     function addAmountToUser(address user, address token, uint256 amount) external;
     function addBalance(address user, address token, uint256 quantity) external;
+    function batchPay(EvvmStructs.PayData[] memory payData)
+        external
+        returns (uint256 successfulTransactions, bool[] memory results);
     function caPay(address to, address token, uint256 amount) external;
     function disperseCaPay(EvvmStructs.DisperseCaPayMetadata[] memory toData, address token, uint256 amount) external;
     function dispersePay(
@@ -105,9 +141,6 @@ interface IEvvm {
         address executor,
         bytes memory signature
     ) external;
-    function batchPay(EvvmStructs.PayData[] memory payData)
-        external
-        returns (uint256 successfulTransactions, uint256 failedTransactions, bool[] memory results);
     function pointStaker(address user, bytes1 answer) external;
     function proposeAdmin(address _newOwner) external;
     function proposeImplementation(address _newImpl) external;

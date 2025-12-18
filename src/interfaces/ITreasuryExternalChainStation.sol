@@ -1,5 +1,6 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.4;
+// SPDX-License-Identifier: EVVM-NONCOMMERCIAL-1.0
+// Full license terms available at: https://www.evvm.info/docs/EVVMNoncommercialLicense
+pragma solidity ^0.8.0;
 
 library ExternalChainStationStructs {
     struct AddressTypeProposal {
@@ -38,7 +39,7 @@ library ExternalChainStationStructs {
     }
 }
 
-interface TreasuryExternalChainStation {
+interface ITreasuryExternalChainStation {
     struct EnforcedOptionParam {
         uint32 eid;
         uint16 msgType;
@@ -87,8 +88,7 @@ interface TreasuryExternalChainStation {
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
     event PeerSet(uint32 eid, bytes32 peer);
 
-    function _setHostChainAddress(address hostChainStationAddress, string memory hostChainStationAddressString)
-        external;
+    function _setHostChainAddress(address hostChainStationAddress, string memory hostChainStationAddressString) external;
     function acceptAdmin() external;
     function acceptFisherExecutor() external;
     function acceptHostChainAddress() external;
@@ -98,9 +98,7 @@ interface TreasuryExternalChainStation {
         view
         returns (bytes memory);
     function depositCoin(address toAddress, uint256 amount, bytes1 protocolToExecute) external payable;
-    function depositERC20(address toAddress, address token, uint256 amount, bytes1 protocolToExecute)
-        external
-        payable;
+    function depositERC20(address toAddress, address token, uint256 amount, bytes1 protocolToExecute) external payable;
     function endpoint() external view returns (address);
     function enforcedOptions(uint32 eid, uint16 msgType) external view returns (bytes memory enforcedOption);
     function execute(bytes32 commandId, string memory sourceChain, string memory sourceAddress, bytes memory payload)
