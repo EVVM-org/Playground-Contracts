@@ -14,7 +14,7 @@ contract DeployTestnetCrossChainExternal is Script, CrossChainInputs {
             vm.startBroadcast();
 
             treasuryExternal = new TreasuryExternalChainStation(
-                ADMIN_EXTERNAL,
+                adminExternal,
                 crosschainConfigExternal
             );
 

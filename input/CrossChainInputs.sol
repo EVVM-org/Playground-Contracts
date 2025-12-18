@@ -5,7 +5,7 @@ import {HostChainStationStructs} from "@evvm/playground-contracts/contracts/trea
 import {ExternalChainStationStructs} from "@evvm/playground-contracts/contracts/treasuryTwoChains/lib/ExternalChainStationStructs.sol";
 
 abstract contract CrossChainInputs {
-    address constant ADMIN_EXTERNAL = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
+    address constant adminExternal = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
 
     HostChainStationStructs.CrosschainConfig crosschainConfigHost =
         HostChainStationStructs.CrosschainConfig({
