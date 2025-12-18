@@ -33,24 +33,51 @@ pragma solidity ^0.8.0;
 
 import {IERC20} from "@evvm/playground-contracts/library/primitives/IERC20.sol";
 import {IEvvm} from "@evvm/playground-contracts/interfaces/IEvvm.sol";
-import {ErrorsLib} from "@evvm/playground-contracts/contracts/treasuryTwoChains/lib/ErrorsLib.sol";
-import {HostChainStationStructs} from "@evvm/playground-contracts/contracts/treasuryTwoChains/lib/HostChainStationStructs.sol";
+import {
+    ErrorsLib
+} from "@evvm/playground-contracts/contracts/treasuryTwoChains/lib/ErrorsLib.sol";
+import {
+    HostChainStationStructs
+} from "@evvm/playground-contracts/contracts/treasuryTwoChains/lib/HostChainStationStructs.sol";
 
-import {SignatureUtils} from "@evvm/playground-contracts/contracts/treasuryTwoChains/lib/SignatureUtils.sol";
-import {PayloadUtils} from "@evvm/playground-contracts/contracts/treasuryTwoChains/lib/PayloadUtils.sol";
+import {
+    SignatureUtils
+} from "@evvm/playground-contracts/contracts/treasuryTwoChains/lib/SignatureUtils.sol";
+import {
+    PayloadUtils
+} from "@evvm/playground-contracts/contracts/treasuryTwoChains/lib/PayloadUtils.sol";
 
 import {IMailbox} from "@hyperlane-xyz/core/contracts/interfaces/IMailbox.sol";
 
-import {MessagingParams, MessagingReceipt} from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
-import {OApp, Origin, MessagingFee} from "@layerzerolabs/oapp-evm/contracts/oapp/OApp.sol";
-import {OAppOptionsType3} from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OAppOptionsType3.sol";
-import {OptionsBuilder} from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OptionsBuilder.sol";
+import {
+    MessagingParams,
+    MessagingReceipt
+} from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
+import {
+    OApp,
+    Origin,
+    MessagingFee
+} from "@layerzerolabs/oapp-evm/contracts/oapp/OApp.sol";
+import {
+    OAppOptionsType3
+} from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OAppOptionsType3.sol";
+import {
+    OptionsBuilder
+} from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OptionsBuilder.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
-import {AxelarExecutable} from "@axelar-network/axelar-gmp-sdk-solidity/contracts/executable/AxelarExecutable.sol";
-import {IAxelarGasService} from "@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IAxelarGasService.sol";
-import {IInterchainGasEstimation} from "@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IInterchainGasEstimation.sol";
-import {AdvancedStrings} from "@evvm/playground-contracts/library/utils/AdvancedStrings.sol";
+import {
+    AxelarExecutable
+} from "@axelar-network/axelar-gmp-sdk-solidity/contracts/executable/AxelarExecutable.sol";
+import {
+    IAxelarGasService
+} from "@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IAxelarGasService.sol";
+import {
+    IInterchainGasEstimation
+} from "@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IInterchainGasEstimation.sol";
+import {
+    AdvancedStrings
+} from "@evvm/playground-contracts/library/utils/AdvancedStrings.sol";
 
 contract TreasuryHostChainStation is
     HostChainStationStructs,
@@ -147,9 +174,9 @@ contract TreasuryHostChainStation is
         address _admin,
         CrosschainConfig memory _crosschainConfig
     )
-        OApp(_crosschainConfig.endpointAddress, _admin)
+        OApp(_crosschainConfig.layerZero.endpointAddress, _admin)
         Ownable(_admin)
-        AxelarExecutable(_crosschainConfig.gatewayAddress)
+        AxelarExecutable(_crosschainConfig.axelar.gatewayAddress)
     {
         evvm = IEvvm(_evvmAddress);
 
@@ -160,21 +187,25 @@ contract TreasuryHostChainStation is
         });
         hyperlane = HyperlaneConfig({
             externalChainStationDomainId: _crosschainConfig
+                .hyperlane
                 .externalChainStationDomainId,
             externalChainStationAddress: "",
-            mailboxAddress: _crosschainConfig.mailboxAddress
+            mailboxAddress: _crosschainConfig.hyperlane.mailboxAddress
         });
         layerZero = LayerZeroConfig({
-            externalChainStationEid: _crosschainConfig.externalChainStationEid,
+            externalChainStationEid: _crosschainConfig
+                .layerZero
+                .externalChainStationEid,
             externalChainStationAddress: "",
-            endpointAddress: _crosschainConfig.endpointAddress
+            endpointAddress: _crosschainConfig.layerZero.endpointAddress
         });
         axelar = AxelarConfig({
             externalChainStationChainName: _crosschainConfig
+                .axelar
                 .externalChainStationChainName,
             externalChainStationAddress: "",
-            gasServiceAddress: _crosschainConfig.gasServiceAddress,
-            gatewayAddress: _crosschainConfig.gatewayAddress
+            gasServiceAddress: _crosschainConfig.axelar.gasServiceAddress,
+            gatewayAddress: _crosschainConfig.axelar.gatewayAddress
         });
     }
 
@@ -321,10 +352,8 @@ contract TreasuryHostChainStation is
         uint256 amount,
         bytes memory signature
     ) external onlyFisherExecutor {
-        if (
-            tokenAddress ==
-            evvm.getEvvmMetadata().principalTokenAddress
-        ) revert ErrorsLib.PrincipalTokenIsNotWithdrawable();
+        if (tokenAddress == evvm.getEvvmMetadata().principalTokenAddress)
+            revert ErrorsLib.PrincipalTokenIsNotWithdrawable();
 
         if (evvm.getBalance(from, tokenAddress) < amount)
             revert ErrorsLib.InsufficientBalance();
@@ -726,11 +755,7 @@ contract TreasuryHostChainStation is
             evvm.addAmountToUser(userToExecute, token, amount);
         } else {
             // false = remove
-            evvm.removeAmountFromUser(
-                userToExecute,
-                token,
-                amount
-            );
+            evvm.removeAmountFromUser(userToExecute, token, amount);
         }
     }
 
