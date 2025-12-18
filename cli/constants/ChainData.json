@@ -14,7 +14,7 @@
       "Gateway": "0xe1cE95479C84e9809269227C7F8524aE051Ae77a",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": "https://sepolia.arbiscan.io"
+    "ExplorerToAddress": "https://sepolia.arbiscan.io/address/"
   },
 
   "1098411886": {
@@ -32,7 +32,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "https://explorer.khalani.network"
+    "ExplorerToAddress": ""
   },
 
   "1313161555": {
@@ -50,7 +50,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "https://explorer.testnet.aurora.dev"
+    "ExplorerToAddress": "https://explorer.testnet.aurora.dev/address/"
   },
 
   "43113": {
@@ -68,7 +68,7 @@
       "Gateway": "0xC249632c2D40b9001FE907806902f63038B737Ab",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": "https://testnet.snowtrace.io"
+    "ExplorerToAddress": "https://testnet.snowtrace.io/address/"
   },
 
   "123420001114": {
@@ -86,7 +86,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "https://basecamp.cloud.blockscout.com"
+    "ExplorerToAddress": "https://basecamp.cloud.blockscout.com/address/"
   },
 
   "84532": {
@@ -104,7 +104,7 @@
       "Gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": "https://sepolia.basescan.org"
+    "ExplorerToAddress": "https://sepolia.basescan.org/address/"
   },
 
   "80069": {
@@ -122,7 +122,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "https://testnet.berascan.com/"
+    "ExplorerToAddress": "https://testnet.berascan.com/address/"
   },
 
   "76672": {
@@ -140,7 +140,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "https://testnet.carrscan.io"
+    "ExplorerToAddress": "https://testnet.carrscan.io/address/"
   },
 
   "168587773": {
@@ -158,7 +158,7 @@
       "Gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": "https://testnet.blastscan.io"
+    "ExplorerToAddress": "https://testnet.blastscan.io/address/"
   },
 
   "97": {
@@ -176,7 +176,7 @@
       "Gateway": "0x4D147dCb984e6affEEC47e44293DA442580A3Ec0",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": "https://testnet.bscscan.com"
+    "ExplorerToAddress": "https://testnet.bscscan.com/address/"
   },
 
   "2090": {
@@ -194,7 +194,7 @@
       "Gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": ""
+    "ExplorerToAddress": ""
   },
 
   "11142220": {
@@ -212,7 +212,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "https://celo-sepolia.blockscout.com"
+    "ExplorerToAddress": "https://sepolia.celoscan.io/address/"
   },
 
   "5115": {
@@ -230,7 +230,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "https://explorer.testnet.citrea.xyz"
+    "ExplorerToAddress": "https://explorer.testnet.citrea.xyz/address/"
   },
 
   "7082400": {
@@ -248,7 +248,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "https://testnet.cotiscan.io"
+    "ExplorerToAddress": "https://testnet.cotiscan.io/address/"
   },
 
   "545": {
@@ -266,7 +266,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "https://evm-testnet.flowscan.io/"
+    "ExplorerToAddress": "https://evm-testnet.flowscan.io/address/"
   },
 
   "17000": {
@@ -284,7 +284,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "https://holesky.etherscan.io"
+    "ExplorerToAddress": ""
   },
 
   "11155111": {
@@ -302,7 +302,7 @@
       "Gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": "https://sepolia.etherscan.io"
+    "ExplorerToAddress": "https://sepolia.etherscan.io/address/"
   },
 
   "4002": {
@@ -320,7 +320,7 @@
       "Gateway": "0x97837985Ec0494E7b9C71f5D3f9250188477ae14",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": "https://explorer.testnet.fantom.network"
+    "ExplorerToAddress": "https://explorer.testnet.fantom.network/address/"
   },
 
   "314159": {
@@ -338,11 +338,11 @@
       "Gateway": "0x999117D44220F33e0441fbAb2A5aDB8FF485c54D",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": "https://testnet.kavascan.com"
+    "ExplorerToAddress": "https://testnet.kavascan.com/address/"
   },
 
   "114": {
-    "Chain": "Flare Testnet",
+    "Chain": "Flare Coston2 Testnet",
     "Hyperlane": {
       "DomainId": 0,
       "MailboxAddress": ""
@@ -356,7 +356,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "https://coston2-explorer.flare.network"
+    "ExplorerToAddress": "https://coston2-explorer.flare.network/address/"
   },
 
   "91342": {
@@ -374,7 +374,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "https://sepolia-explorer.giwa.io"
+    "ExplorerToAddress": "https://sepolia-explorer.giwa.io/address/"
   },
 
   "2522": {
@@ -392,7 +392,7 @@
       "Gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": ""
+    "ExplorerToAddress": ""
   },
 
   "296": {
@@ -410,7 +410,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "https://hashscan.io/testnet/"
+    "ExplorerToAddress": "https://hashscan.io/testnet/contract/"
   },
 
   "998": {
@@ -428,7 +428,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "https://explorer.hyperlend.finance"
+    "ExplorerToAddress": "https://testnet.purrsec.com/address/"
   },
 
   "13473": {
@@ -446,7 +446,7 @@
       "Gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": "https://explorer.testnet.immutable.com"
+    "ExplorerToAddress": "https://explorer.testnet.immutable.com/address/"
   },
 
   "28802": {
@@ -464,7 +464,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "https://explorer-testnet.incentiv.io"
+    "ExplorerToAddress": "https://explorer-testnet.incentiv.io/address/"
   },
 
   "2221": {
@@ -482,11 +482,11 @@
       "Gateway": "0xC8D18F85cB0Cee5C95eC29c69DeaF6cea972349c",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": "https://testnet.kavascan.com"
+    "ExplorerToAddress": "https://testnet.kavascan.com/address/"
   },
 
   "59141": {
-    "Chain": "Linea Sepolia Testnet",
+    "Chain": "Linea Testnet",
     "Hyperlane": {
       "DomainId": 0,
       "MailboxAddress": ""
@@ -500,11 +500,11 @@
       "Gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": "https://sepolia.lineascan.build"
+    "ExplorerToAddress": "https://sepolia.lineascan.build/address/"
   },
 
   "5003": {
-    "Chain": "Mantle Sepolia",
+    "Chain": "Mantle Sepolia Testnet",
     "Hyperlane": {
       "DomainId": 0,
       "MailboxAddress": ""
@@ -518,11 +518,11 @@
       "Gateway": "0xC8D18F85cB0Cee5C95eC29c69DeaF6cea972349c",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": "https://sepolia.mantlescan.xyz"
+    "ExplorerToAddress": "https://sepolia.mantlescan.xyz/address/"
   },
 
   "6342": {
-    "Chain": "MegaETH Testnet",
+    "Chain": "MegaETH v1 Testnet",
     "Hyperlane": {
       "DomainId": 6342,
       "MailboxAddress": "0xF78deCe5Cf97e1bd61C202A5ba1af33b87454878"
@@ -536,7 +536,25 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "https://www.megaexplorer.xyz"
+    "ExplorerToAddress": ""
+  },
+
+  "6343": {
+    "Chain": "MegaETH v2 Testnet",
+    "Hyperlane": {
+      "DomainId": 0,
+      "MailboxAddress": ""
+    },
+    "LayerZero": {
+      "EId": 0,
+      "EndpointAddress": ""
+    },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
+    "ExplorerToAddress": "https://megaeth-testnet-v2.blockscout.com/address/"
   },
 
   "919": {
@@ -554,7 +572,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "https://testnet.modescan.io"
+    "ExplorerToAddress": "https://testnet.modescan.io/address/"
   },
 
   "10143": {
@@ -572,7 +590,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "https://testnet.monadvision.com"
+    "ExplorerToAddress": "https://testnet.monadscan.com/address/"
   },
 
   "1287": {
@@ -590,7 +608,7 @@
       "Gateway": "0x5769D84DD62a6fD969856c75c7D321b84d455929",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": "https://moonbase.moonscan.io"
+    "ExplorerToAddress": "https://moonbase.moonscan.io/address/"
   },
 
   "267": {
@@ -608,7 +626,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "https://testnet-blockscout.infra.neuraprotocol.io"
+    "ExplorerToAddress": "https://testnet-blockscout.infra.neuraprotocol.io/address/"
   },
 
   "11155420": {
@@ -626,7 +644,7 @@
       "Gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": "https://sepolia-optimistic.etherscan.io"
+    "ExplorerToAddress": "https://sepolia-optimistic.etherscan.io/address/"
   },
 
   "80002": {
@@ -644,7 +662,7 @@
       "Gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": "https://amoy.polygonscan.com"
+    "ExplorerToAddress": "https://amoy.polygonscan.com"
   },
 
   "534351": {
@@ -662,7 +680,7 @@
       "Gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": "https://sepolia.scrollscan.dev"
+    "ExplorerToAddress": "https://sepolia.scrollscan.dev/address/"
   },
 
   "50312": {
@@ -680,7 +698,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "https://shannon-explorer.somnia.network"
+    "ExplorerToAddress": "https://shannon-explorer.somnia.network/address/"
   },
 
   "64165": {
@@ -698,7 +716,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "https://testnet.soniclabs.com"
+    "ExplorerToAddress": "https://testnet.soniclabs.com/address/"
   },
 
   "33626250": {
@@ -716,7 +734,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "https://explorer.toliman.suave.flashbots.net"
+    "ExplorerToAddress": ""
   },
 
   "945": {
@@ -734,7 +752,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": ""
+    "ExplorerToAddress": ""
   },
 
   "3799": {
@@ -752,7 +770,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "https://testnet-explorer.tangle.tools"
+    "ExplorerToAddress": ""
   },
 
   "1301": {
@@ -770,7 +788,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "https://unichain-sepolia.blockscout.com"
+    "ExplorerToAddress": "https://sepolia.uniscan.xyz/address/"
   },
 
   "300": {
@@ -788,6 +806,6 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "https://sepolia.explorer.zksync.io"
+    "ExplorerToAddress": "https://sepolia.explorer.zksync.io/address/"
   }
 }
