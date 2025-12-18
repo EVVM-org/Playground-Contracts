@@ -9,8 +9,14 @@
       "EId": 40231,
       "EndpointAddress": "0x6EDCE65403992e310A62460808c4b910D972f10f"
     },
+    "Axelar": {
+      "ChainName": "arbitrum-sepolia",
+      "Gateway": "0xe1cE95479C84e9809269227C7F8524aE051Ae77a",
+      "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
+    },
     "Explorer": "[sepolia.arbiscan.io](https://sepolia.arbiscan.io)"
   },
+
   "1098411886": {
     "Chain": "Arcadia Testnet v2",
     "Hyperlane": {
@@ -21,8 +27,14 @@
       "EId": 0,
       "EndpointAddress": ""
     },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
     "Explorer": "[explorer.khalani.network](https://explorer.khalani.network)"
   },
+
   "1313161555": {
     "Chain": "Aurora Testnet",
     "Hyperlane": {
@@ -33,8 +45,14 @@
       "EId": 0,
       "EndpointAddress": ""
     },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
     "Explorer": "[explorer.testnet.aurora.dev](https://explorer.testnet.aurora.dev)"
   },
+
   "43113": {
     "Chain": "Avalanche Fuji Testnet",
     "Hyperlane": {
@@ -45,16 +63,32 @@
       "EId": 40106,
       "EndpointAddress": "0x6EDCE65403992e310A62460808c4b910D972f10f"
     },
+    "Axelar": {
+      "ChainName": "Avalanche",
+      "Gateway": "0xC249632c2D40b9001FE907806902f63038B737Ab",
+      "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
+    },
     "Explorer": "[testnet.snowtrace.io](https://testnet.snowtrace.io)"
   },
+
   "123420001114": {
     "Chain": "Basecamp Testnet",
     "Hyperlane": {
       "DomainId": 1000001114,
       "MailboxAddress": "0x589C201a07c26b4725A4A829d772f24423da480B"
     },
+    "LayerZero": {
+      "EId": 0,
+      "EndpointAddress": ""
+    },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
     "Explorer": "[basecamp.cloud.blockscout.com](https://basecamp.cloud.blockscout.com)"
   },
+
   "84532": {
     "Chain": "Base Sepolia",
     "Hyperlane": {
@@ -65,20 +99,14 @@
       "EId": 40245,
       "EndpointAddress": "0x6EDCE65403992e310A62460808c4b910D972f10f"
     },
+    "Axelar": {
+      "ChainName": "base-sepolia",
+      "Gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
+      "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
+    },
     "Explorer": "[sepolia.basescan.org](https://sepolia.basescan.org)"
   },
-  "97": {
-    "Chain": "BSC Testnet",
-    "Hyperlane": {
-      "DomainId": 97,
-      "MailboxAddress": "0xF9F6F5646F478d5ab4e20B0F910C92F1CCC9Cc6D"
-    },
-    "LayerZero": {
-      "EId": 40102,
-      "EndpointAddress": "0x6EDCE65403992e310A62460808c4b910D972f10f"
-    },
-    "Explorer": "[testnet.bscscan.com](https://testnet.bscscan.com)"
-  },
+
   "80069": {
     "Chain": "Berachain Bepolia Testnet",
     "Hyperlane": {
@@ -89,8 +117,14 @@
       "EId": 40371,
       "EndpointAddress": "0x6C7Ab2202C98C4227C5c46f1417D81144DA716Ff"
     },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
     "Explorer": "[testnet.berascan.com](https://testnet.berascan.com/)"
   },
+
   "76672": {
     "Chain": "CarrChain Testnet",
     "Hyperlane": {
@@ -101,8 +135,68 @@
       "EId": 0,
       "EndpointAddress": ""
     },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
     "Explorer": "[testnet.carrscan.io](https://testnet.carrscan.io)"
   },
+
+  "168587773": {
+    "Chain": "Blast Sepolia Testnet",
+    "Hyperlane": {
+      "DomainId": 0,
+      "MailboxAddress": ""
+    },
+    "LayerZero": {
+      "EId": 0,
+      "EndpointAddress": ""
+    },
+    "Axelar": {
+      "ChainName": "blast-sepolia",
+      "Gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
+      "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
+    },
+    "Explorer": "[testnet.blastscan.io](https://testnet.blastscan.io)"
+  },
+
+  "97": {
+    "Chain": "BNB Testnet",
+    "Hyperlane": {
+      "DomainId": 97,
+      "MailboxAddress": "0xF9F6F5646F478d5ab4e20B0F910C92F1CCC9Cc6D"
+    },
+    "LayerZero": {
+      "EId": 40102,
+      "EndpointAddress": "0x6EDCE65403992e310A62460808c4b910D972f10f"
+    },
+    "Axelar": {
+      "ChainName": "binance",
+      "Gateway": "0x4D147dCb984e6affEEC47e44293DA442580A3Ec0",
+      "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
+    },
+    "Explorer": "[testnet.bscscan.com](https://testnet.bscscan.com)"
+  },
+
+  "2090": {
+    "Chain": "Centrifuge Testnet",
+    "Hyperlane": {
+      "DomainId": 0,
+      "MailboxAddress": ""
+    },
+    "LayerZero": {
+      "EId": 0,
+      "EndpointAddress": ""
+    },
+    "Axelar": {
+      "ChainName": "centrifuge-2",
+      "Gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
+      "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
+    },
+    "Explorer": ""
+  },
+
   "11142220": {
     "Chain": "Celo Sepolia",
     "Hyperlane": {
@@ -113,8 +207,14 @@
       "EId": 0,
       "EndpointAddress": ""
     },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
     "Explorer": "[celo-sepolia.blockscout.com](https://celo-sepolia.blockscout.com)"
   },
+
   "5115": {
     "Chain": "Citrea Testnet",
     "Hyperlane": {
@@ -125,8 +225,14 @@
       "EId": 0,
       "EndpointAddress": ""
     },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
     "Explorer": "[explorer.testnet.citrea.xyz](https://explorer.testnet.citrea.xyz)"
   },
+
   "7082400": {
     "Chain": "Coti Testnet",
     "Hyperlane": {
@@ -137,8 +243,14 @@
       "EId": 0,
       "EndpointAddress": ""
     },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
     "Explorer": "[testnet.cotiscan.io](https://testnet.cotiscan.io)"
   },
+
   "545": {
     "Chain": "EVM on Flow Testnet",
     "Hyperlane": {
@@ -149,8 +261,14 @@
       "EId": 40351,
       "EndpointAddress": "0x6C7Ab2202C98C4227C5c46f1417D81144DA716Ff"
     },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
     "Explorer": "[evm-testnet.flowscan.io](https://evm-testnet.flowscan.io/)"
   },
+
   "17000": {
     "Chain": "Ethereum Holesky Testnet",
     "Hyperlane": {
@@ -161,8 +279,14 @@
       "EId": 40217,
       "EndpointAddress": "0x6EDCE65403992e310A62460808c4b910D972f10f"
     },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
     "Explorer": "[holesky.etherscan.io](https://holesky.etherscan.io)"
   },
+
   "11155111": {
     "Chain": "Ethereum Sepolia",
     "Hyperlane": {
@@ -173,8 +297,50 @@
       "EId": 40161,
       "EndpointAddress": "0x6EDCE65403992e310A62460808c4b910D972f10f"
     },
+    "Axelar": {
+      "ChainName": "ethereum-sepolia",
+      "Gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
+      "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
+    },
     "Explorer": "[sepolia.etherscan.io](https://sepolia.etherscan.io)"
   },
+
+  "4002": {
+    "Chain": "Fantom Testnet",
+    "Hyperlane": {
+      "DomainId": 0,
+      "MailboxAddress": ""
+    },
+    "LayerZero": {
+      "EId": 0,
+      "EndpointAddress": ""
+    },
+    "Axelar": {
+      "ChainName": "Fantom",
+      "Gateway": "0x97837985Ec0494E7b9C71f5D3f9250188477ae14",
+      "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
+    },
+    "Explorer": "[explorer.testnet.fantom.network](https://explorer.testnet.fantom.network)"
+  },
+
+  "314159": {
+    "Chain": "Filecoin Calibration Testnet",
+    "Hyperlane": {
+      "DomainId": 0,
+      "MailboxAddress": ""
+    },
+    "LayerZero": {
+      "EId": 0,
+      "EndpointAddress": ""
+    },
+    "Axelar": {
+      "ChainName": "filecoin-2",
+      "Gateway": "0x999117D44220F33e0441fbAb2A5aDB8FF485c54D",
+      "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
+    },
+    "Explorer": "[testnet.kavascan.com](https://testnet.kavascan.com)"
+  },
+
   "114": {
     "Chain": "Flare Testnet",
     "Hyperlane": {
@@ -185,8 +351,14 @@
       "EId": 40294,
       "EndpointAddress": "0x6EDCE65403992e310A62460808c4b910D972f10f"
     },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
     "Explorer": "[coston2-explorer.flare.network](https://coston2-explorer.flare.network)"
   },
+
   "91342": {
     "Chain": "GIWA Sepolia",
     "Hyperlane": {
@@ -197,8 +369,32 @@
       "EId": 0,
       "EndpointAddress": ""
     },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
     "Explorer": "[sepolia-explorer.giwa.io](https://sepolia-explorer.giwa.io)"
   },
+
+  "2522": {
+    "Chain": "Fraxtal Testnet",
+    "Hyperlane": {
+      "DomainId": 0,
+      "MailboxAddress": ""
+    },
+    "LayerZero": {
+      "EId": 0,
+      "EndpointAddress": ""
+    },
+    "Axelar": {
+      "ChainName": "fraxtal",
+      "Gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
+      "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
+    },
+    "Explorer": ""
+  },
+
   "296": {
     "Chain": "Hedera Testnet",
     "Hyperlane": {
@@ -209,8 +405,14 @@
       "EId": 40285,
       "EndpointAddress": "0xbD672D1562Dd32C23B563C989d8140122483631d"
     },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
     "Explorer": "[hashscan.io/testnet/](https://hashscan.io/testnet/)"
   },
+
   "998": {
     "Chain": "Hyperliquid EVM Testnet",
     "Hyperlane": {
@@ -221,8 +423,32 @@
       "EId": 40362,
       "EndpointAddress": "0xf9e1815F151024bDE4B7C10BAC10e8Ba9F6b53E1"
     },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
     "Explorer": "[explorer.hyperlend.finance](https://explorer.hyperlend.finance)"
   },
+
+  "13473": {
+    "Chain": "Immutable Testnet",
+    "Hyperlane": {
+      "DomainId": 0,
+      "MailboxAddress": ""
+    },
+    "LayerZero": {
+      "EId": 0,
+      "EndpointAddress": ""
+    },
+    "Axelar": {
+      "ChainName": "immutable",
+      "Gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
+      "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
+    },
+    "Explorer": "[explorer.testnet.immutable.com](https://explorer.testnet.immutable.com)"
+  },
+
   "28802": {
     "Chain": "Incentiv Testnet v2",
     "Hyperlane": {
@@ -233,8 +459,68 @@
       "EId": 0,
       "EndpointAddress": ""
     },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
     "Explorer": "[explorer-testnet.incentiv.io](https://explorer-testnet.incentiv.io)"
   },
+
+  "2221": {
+    "Chain": "Kava Testnet",
+    "Hyperlane": {
+      "DomainId": 0,
+      "MailboxAddress": ""
+    },
+    "LayerZero": {
+      "EId": 0,
+      "EndpointAddress": ""
+    },
+    "Axelar": {
+      "ChainName": "kava",
+      "Gateway": "0xC8D18F85cB0Cee5C95eC29c69DeaF6cea972349c",
+      "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
+    },
+    "Explorer": "[testnet.kavascan.com](https://testnet.kavascan.com)"
+  },
+
+  "59141": {
+    "Chain": "Linea Sepolia Testnet",
+    "Hyperlane": {
+      "DomainId": 0,
+      "MailboxAddress": ""
+    },
+    "LayerZero": {
+      "EId": 0,
+      "EndpointAddress": ""
+    },
+    "Axelar": {
+      "ChainName": "linea-sepolia",
+      "Gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
+      "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
+    },
+    "Explorer": "[sepolia.lineascan.build](https://sepolia.lineascan.build)"
+  },
+
+  "5003": {
+    "Chain": "Mantle Sepolia",
+    "Hyperlane": {
+      "DomainId": 0,
+      "MailboxAddress": ""
+    },
+    "LayerZero": {
+      "EId": 0,
+      "EndpointAddress": ""
+    },
+    "Axelar": {
+      "ChainName": "mantle-sepolia",
+      "Gateway": "0xC8D18F85cB0Cee5C95eC29c69DeaF6cea972349c",
+      "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
+    },
+    "Explorer": "[sepolia.mantlescan.xyz](https://sepolia.mantlescan.xyz)"
+  },
+
   "6342": {
     "Chain": "MegaETH Testnet",
     "Hyperlane": {
@@ -245,8 +531,14 @@
       "EId": 0,
       "EndpointAddress": ""
     },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
     "Explorer": "[www.megaexplorer.xyz](https://www.megaexplorer.xyz)"
   },
+
   "919": {
     "Chain": "Mode Testnet",
     "Hyperlane": {
@@ -257,8 +549,14 @@
       "EId": 0,
       "EndpointAddress": ""
     },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
     "Explorer": "[testnet.modescan.io](https://testnet.modescan.io)"
   },
+
   "10143": {
     "Chain": "Monad Testnet",
     "Hyperlane": {
@@ -269,8 +567,32 @@
       "EId": 40204,
       "EndpointAddress": "0x6C7Ab2202C98C4227C5c46f1417D81144DA716Ff"
     },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
     "Explorer": "[testnet.monadvision.com](https://testnet.monadvision.com)"
   },
+
+  "1287": {
+    "Chain": "Moonbase Alpha Testnet",
+    "Hyperlane": {
+      "DomainId": 0,
+      "MailboxAddress": ""
+    },
+    "LayerZero": {
+      "EId": 0,
+      "EndpointAddress": ""
+    },
+    "Axelar": {
+      "ChainName": "Moonbeam",
+      "Gateway": "0x5769D84DD62a6fD969856c75c7D321b84d455929",
+      "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
+    },
+    "Explorer": "[moonbase.moonscan.io](https://moonbase.moonscan.io)"
+  },
+
   "267": {
     "Chain": "Neura Testnet",
     "Hyperlane": {
@@ -281,8 +603,14 @@
       "EId": 0,
       "EndpointAddress": ""
     },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
     "Explorer": "[testnet-blockscout.infra.neuraprotocol.io](https://testnet-blockscout.infra.neuraprotocol.io)"
   },
+
   "11155420": {
     "Chain": "Optimism Sepolia Testnet",
     "Hyperlane": {
@@ -293,8 +621,14 @@
       "EId": 40232,
       "EndpointAddress": "0x6EDCE65403992e310A62460808c4b910D972f10f"
     },
+    "Axelar": {
+      "ChainName": "optimism-sepolia",
+      "Gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
+      "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
+    },
     "Explorer": "[sepolia-optimistic.etherscan.io](https://sepolia-optimistic.etherscan.io)"
   },
+
   "80002": {
     "Chain": "Polygon Amoy Testnet",
     "Hyperlane": {
@@ -305,10 +639,16 @@
       "EId": 40267,
       "EndpointAddress": "0x6EDCE65403992e310A62460808c4b910D972f10f"
     },
+    "Axelar": {
+      "ChainName": "polygon-sepolia",
+      "Gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
+      "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
+    },
     "Explorer": "[amoy.polygonscan.com](https://amoy.polygonscan.com)"
   },
+
   "534351": {
-    "Chain": "Scroll Sepolia",
+    "Chain": "Scroll Sepolia Testnet",
     "Hyperlane": {
       "DomainId": 534351,
       "MailboxAddress": "0x3C5154a193D6e2955650f9305c8d80c18C814A68"
@@ -317,8 +657,14 @@
       "EId": 0,
       "EndpointAddress": ""
     },
+    "Axelar": {
+      "ChainName": "scroll",
+      "Gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
+      "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
+    },
     "Explorer": "[sepolia.scrollscan.dev](https://sepolia.scrollscan.dev)"
   },
+
   "50312": {
     "Chain": "Somnia Testnet",
     "Hyperlane": {
@@ -329,8 +675,14 @@
       "EId": 0,
       "EndpointAddress": ""
     },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
     "Explorer": "[shannon-explorer.somnia.network](https://shannon-explorer.somnia.network)"
   },
+
   "64165": {
     "Chain": "Sonic Testnet",
     "Hyperlane": {
@@ -341,8 +693,14 @@
       "EId": 0,
       "EndpointAddress": ""
     },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
     "Explorer": "[testnet.soniclabs.com](https://testnet.soniclabs.com)"
   },
+
   "33626250": {
     "Chain": "SUAVE Toliman Testnet",
     "Hyperlane": {
@@ -353,8 +711,14 @@
       "EId": 0,
       "EndpointAddress": ""
     },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
     "Explorer": "[explorer.toliman.suave.flashbots.net](https://explorer.toliman.suave.flashbots.net)"
   },
+
   "945": {
     "Chain": "Subtensor Testnet",
     "Hyperlane": {
@@ -365,8 +729,14 @@
       "EId": 0,
       "EndpointAddress": ""
     },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
     "Explorer": ""
   },
+
   "3799": {
     "Chain": "Tangle Testnet",
     "Hyperlane": {
@@ -377,8 +747,14 @@
       "EId": 0,
       "EndpointAddress": ""
     },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
     "Explorer": "[testnet-explorer.tangle.tools](https://testnet-explorer.tangle.tools)"
   },
+
   "1301": {
     "Chain": "Unichain Testnet",
     "Hyperlane": {
@@ -389,8 +765,14 @@
       "EId": 40333,
       "EndpointAddress": "0xb8815f3f882614048CbE201a67eF9c6F10fe5035"
     },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
     "Explorer": "[unichain-sepolia.blockscout.com](https://unichain-sepolia.blockscout.com)"
   },
+
   "300": {
     "Chain": "zkSync Sepolia Testnet",
     "Hyperlane": {
@@ -400,6 +782,11 @@
     "LayerZero": {
       "EId": 40305,
       "EndpointAddress": "0xe2Ef622A13e71D9Dd2BBd12cd4b27e1516FA8a09"
+    },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
     },
     "Explorer": "[sepolia.explorer.zksync.io](https://sepolia.explorer.zksync.io)"
   }
