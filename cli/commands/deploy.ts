@@ -94,7 +94,7 @@ export async function deployEvvm(args: string[], options: any) {
 
   if (skipInputConfig) {
     console.log(
-      `${colors.yellow}⚡ Skipping input configuration (using from ./input/Inputs.sol)...${colors.reset}\n`
+      `${colors.yellow}⚡ Skipping input configuration (using from ./input/BaseInputs.sol)...${colors.reset}\n`
     );
   } else {
     while (!confirmationDone) {

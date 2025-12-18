@@ -44,7 +44,7 @@ ${colors.bright}COMMANDS:${colors.reset}
 
 ${colors.bright}DEPLOY OPTIONS:${colors.reset}
   ${colors.yellow}--skipInputConfig${colors.reset}, ${colors.yellow}-s${colors.reset}
-                      Skip interactive configuration and use existing ./input/Inputs.sol
+                      Skip interactive configuration and use existing ./input/BaseInputs.sol
   
   ${colors.yellow}--walletName${colors.reset} ${colors.darkGray}<name>${colors.reset}
                       Specify wallet name for deployment (default: defaultKey)

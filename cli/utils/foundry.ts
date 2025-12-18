@@ -25,7 +25,7 @@ import {
 import { formatNumber, showError } from "./validators";
 
 /**
- * Generates and writes the Inputs.sol file with deployment configuration
+ * Generates and writes the BaseInputs.sol file with deployment configuration
  *
  * Creates a Solidity contract containing all deployment parameters including
  * admin addresses and EVVM metadata. This file is used by the deployment script.
@@ -39,7 +39,7 @@ export async function writeInputsFile(
   evvmMetadata: EvvmMetadata
 ): Promise<boolean> {
   const inputDir = "./input";
-  const inputFile = `${inputDir}/Inputs.sol`;
+  const inputFile = `${inputDir}/BaseInputs.sol`;
 
   try {
     await Bun.file(inputFile).text();
@@ -53,7 +53,7 @@ export async function writeInputsFile(
 pragma solidity ^0.8.0;
 import {EvvmStructs} from "@evvm/playground-contracts/contracts/evvm/lib/EvvmStructs.sol";
 
-abstract contract Inputs {
+abstract contract BaseInputs {
     address admin = ${addresses.admin};
     address goldenFisher = ${addresses.goldenFisher};
     address activator = ${addresses.activator};

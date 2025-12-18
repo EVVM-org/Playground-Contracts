@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 import {EvvmStructs} from "@evvm/playground-contracts/contracts/evvm/lib/EvvmStructs.sol";
 
-abstract contract Inputs {
+abstract contract BaseInputs {
     address admin = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
     address goldenFisher = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
     address activator = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
