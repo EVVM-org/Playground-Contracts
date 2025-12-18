@@ -14,7 +14,7 @@
       "Gateway": "0xe1cE95479C84e9809269227C7F8524aE051Ae77a",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": "[sepolia.arbiscan.io](https://sepolia.arbiscan.io)"
+    "Explorer": "https://sepolia.arbiscan.io"
   },
 
   "1098411886": {
@@ -32,7 +32,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "[explorer.khalani.network](https://explorer.khalani.network)"
+    "Explorer": "https://explorer.khalani.network"
   },
 
   "1313161555": {
@@ -50,7 +50,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "[explorer.testnet.aurora.dev](https://explorer.testnet.aurora.dev)"
+    "Explorer": "https://explorer.testnet.aurora.dev"
   },
 
   "43113": {
@@ -68,7 +68,7 @@
       "Gateway": "0xC249632c2D40b9001FE907806902f63038B737Ab",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": "[testnet.snowtrace.io](https://testnet.snowtrace.io)"
+    "Explorer": "https://testnet.snowtrace.io"
   },
 
   "123420001114": {
@@ -86,7 +86,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "[basecamp.cloud.blockscout.com](https://basecamp.cloud.blockscout.com)"
+    "Explorer": "https://basecamp.cloud.blockscout.com"
   },
 
   "84532": {
@@ -104,7 +104,7 @@
       "Gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": "[sepolia.basescan.org](https://sepolia.basescan.org)"
+    "Explorer": "https://sepolia.basescan.org"
   },
 
   "80069": {
@@ -122,7 +122,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "[testnet.berascan.com](https://testnet.berascan.com/)"
+    "Explorer": "https://testnet.berascan.com/"
   },
 
   "76672": {
@@ -140,7 +140,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "[testnet.carrscan.io](https://testnet.carrscan.io)"
+    "Explorer": "https://testnet.carrscan.io"
   },
 
   "168587773": {
@@ -158,7 +158,7 @@
       "Gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": "[testnet.blastscan.io](https://testnet.blastscan.io)"
+    "Explorer": "https://testnet.blastscan.io"
   },
 
   "97": {
@@ -176,7 +176,7 @@
       "Gateway": "0x4D147dCb984e6affEEC47e44293DA442580A3Ec0",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": "[testnet.bscscan.com](https://testnet.bscscan.com)"
+    "Explorer": "https://testnet.bscscan.com"
   },
 
   "2090": {
@@ -212,7 +212,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "[celo-sepolia.blockscout.com](https://celo-sepolia.blockscout.com)"
+    "Explorer": "https://celo-sepolia.blockscout.com"
   },
 
   "5115": {
@@ -230,7 +230,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "[explorer.testnet.citrea.xyz](https://explorer.testnet.citrea.xyz)"
+    "Explorer": "https://explorer.testnet.citrea.xyz"
   },
 
   "7082400": {
@@ -248,7 +248,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "[testnet.cotiscan.io](https://testnet.cotiscan.io)"
+    "Explorer": "https://testnet.cotiscan.io"
   },
 
   "545": {
@@ -266,7 +266,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "[evm-testnet.flowscan.io](https://evm-testnet.flowscan.io/)"
+    "Explorer": "https://evm-testnet.flowscan.io/"
   },
 
   "17000": {
@@ -284,7 +284,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "[holesky.etherscan.io](https://holesky.etherscan.io)"
+    "Explorer": "https://holesky.etherscan.io"
   },
 
   "11155111": {
@@ -302,7 +302,7 @@
       "Gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": "[sepolia.etherscan.io](https://sepolia.etherscan.io)"
+    "Explorer": "https://sepolia.etherscan.io"
   },
 
   "4002": {
@@ -320,7 +320,7 @@
       "Gateway": "0x97837985Ec0494E7b9C71f5D3f9250188477ae14",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": "[explorer.testnet.fantom.network](https://explorer.testnet.fantom.network)"
+    "Explorer": "https://explorer.testnet.fantom.network"
   },
 
   "314159": {
@@ -338,7 +338,7 @@
       "Gateway": "0x999117D44220F33e0441fbAb2A5aDB8FF485c54D",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": "[testnet.kavascan.com](https://testnet.kavascan.com)"
+    "Explorer": "https://testnet.kavascan.com"
   },
 
   "114": {
@@ -356,7 +356,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "[coston2-explorer.flare.network](https://coston2-explorer.flare.network)"
+    "Explorer": "https://coston2-explorer.flare.network"
   },
 
   "91342": {
@@ -374,7 +374,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "[sepolia-explorer.giwa.io](https://sepolia-explorer.giwa.io)"
+    "Explorer": "https://sepolia-explorer.giwa.io"
   },
 
   "2522": {
@@ -410,7 +410,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "[hashscan.io/testnet/](https://hashscan.io/testnet/)"
+    "Explorer": "https://hashscan.io/testnet/"
   },
 
   "998": {
@@ -428,7 +428,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "[explorer.hyperlend.finance](https://explorer.hyperlend.finance)"
+    "Explorer": "https://explorer.hyperlend.finance"
   },
 
   "13473": {
@@ -446,7 +446,7 @@
       "Gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": "[explorer.testnet.immutable.com](https://explorer.testnet.immutable.com)"
+    "Explorer": "https://explorer.testnet.immutable.com"
   },
 
   "28802": {
@@ -464,7 +464,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "[explorer-testnet.incentiv.io](https://explorer-testnet.incentiv.io)"
+    "Explorer": "https://explorer-testnet.incentiv.io"
   },
 
   "2221": {
@@ -482,7 +482,7 @@
       "Gateway": "0xC8D18F85cB0Cee5C95eC29c69DeaF6cea972349c",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": "[testnet.kavascan.com](https://testnet.kavascan.com)"
+    "Explorer": "https://testnet.kavascan.com"
   },
 
   "59141": {
@@ -500,7 +500,7 @@
       "Gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": "[sepolia.lineascan.build](https://sepolia.lineascan.build)"
+    "Explorer": "https://sepolia.lineascan.build"
   },
 
   "5003": {
@@ -518,7 +518,7 @@
       "Gateway": "0xC8D18F85cB0Cee5C95eC29c69DeaF6cea972349c",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": "[sepolia.mantlescan.xyz](https://sepolia.mantlescan.xyz)"
+    "Explorer": "https://sepolia.mantlescan.xyz"
   },
 
   "6342": {
@@ -536,7 +536,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "[www.megaexplorer.xyz](https://www.megaexplorer.xyz)"
+    "Explorer": "https://www.megaexplorer.xyz"
   },
 
   "919": {
@@ -554,7 +554,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "[testnet.modescan.io](https://testnet.modescan.io)"
+    "Explorer": "https://testnet.modescan.io"
   },
 
   "10143": {
@@ -572,7 +572,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "[testnet.monadvision.com](https://testnet.monadvision.com)"
+    "Explorer": "https://testnet.monadvision.com"
   },
 
   "1287": {
@@ -590,7 +590,7 @@
       "Gateway": "0x5769D84DD62a6fD969856c75c7D321b84d455929",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": "[moonbase.moonscan.io](https://moonbase.moonscan.io)"
+    "Explorer": "https://moonbase.moonscan.io"
   },
 
   "267": {
@@ -608,7 +608,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "[testnet-blockscout.infra.neuraprotocol.io](https://testnet-blockscout.infra.neuraprotocol.io)"
+    "Explorer": "https://testnet-blockscout.infra.neuraprotocol.io"
   },
 
   "11155420": {
@@ -626,7 +626,7 @@
       "Gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": "[sepolia-optimistic.etherscan.io](https://sepolia-optimistic.etherscan.io)"
+    "Explorer": "https://sepolia-optimistic.etherscan.io"
   },
 
   "80002": {
@@ -644,7 +644,7 @@
       "Gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": "[amoy.polygonscan.com](https://amoy.polygonscan.com)"
+    "Explorer": "https://amoy.polygonscan.com"
   },
 
   "534351": {
@@ -662,7 +662,7 @@
       "Gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
       "GasService": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6"
     },
-    "Explorer": "[sepolia.scrollscan.dev](https://sepolia.scrollscan.dev)"
+    "Explorer": "https://sepolia.scrollscan.dev"
   },
 
   "50312": {
@@ -680,7 +680,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "[shannon-explorer.somnia.network](https://shannon-explorer.somnia.network)"
+    "Explorer": "https://shannon-explorer.somnia.network"
   },
 
   "64165": {
@@ -698,7 +698,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "[testnet.soniclabs.com](https://testnet.soniclabs.com)"
+    "Explorer": "https://testnet.soniclabs.com"
   },
 
   "33626250": {
@@ -716,7 +716,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "[explorer.toliman.suave.flashbots.net](https://explorer.toliman.suave.flashbots.net)"
+    "Explorer": "https://explorer.toliman.suave.flashbots.net"
   },
 
   "945": {
@@ -752,7 +752,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "[testnet-explorer.tangle.tools](https://testnet-explorer.tangle.tools)"
+    "Explorer": "https://testnet-explorer.tangle.tools"
   },
 
   "1301": {
@@ -770,7 +770,7 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "[unichain-sepolia.blockscout.com](https://unichain-sepolia.blockscout.com)"
+    "Explorer": "https://unichain-sepolia.blockscout.com"
   },
 
   "300": {
@@ -788,6 +788,6 @@
       "Gateway": "",
       "GasService": ""
     },
-    "Explorer": "[sepolia.explorer.zksync.io](https://sepolia.explorer.zksync.io)"
+    "Explorer": "https://sepolia.explorer.zksync.io"
   }
 }
