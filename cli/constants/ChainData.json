@@ -1,0 +1,218 @@
+{
+  "421614": {
+    "Chain": "Arbitrum Sepolia",
+    "hyperlane": {
+      "DomainId": 421614,
+      "MailboxAddress": "`0x598facE78a4302f11E3de0bee1894Da0b2Cb71F8`"
+    },
+    "Explorer": "[sepolia.arbiscan.io](https://sepolia.arbiscan.io)"
+  },
+  "1098411886": {
+    "Chain": "Arcadia Testnet v2",
+    "hyperlane": {
+      "DomainId": 1098411886,
+      "MailboxAddress": "`0x33dB966328Ea213b0f76eF96CA368AB37779F065`"
+    },
+    "Explorer": "[explorer.khalani.network](https://explorer.khalani.network)"
+  },
+  "1313161555": {
+    "Chain": "Aurora Testnet",
+    "hyperlane": {
+      "DomainId": 1313161555,
+      "MailboxAddress": "`0x04438ef7622f5412f82915F59caD4f704C61eA48`"
+    },
+    "Explorer": "[explorer.testnet.aurora.dev](https://explorer.testnet.aurora.dev)"
+  },
+  "123420001114": {
+    "Chain": "Basecamp Testnet",
+    "hyperlane": {
+      "DomainId": 1000001114,
+      "MailboxAddress": "`0x589C201a07c26b4725A4A829d772f24423da480B`"
+    },
+    "Explorer": "[basecamp.cloud.blockscout.com](https://basecamp.cloud.blockscout.com)"
+  },
+  "84532": {
+    "Chain": "Base Sepolia",
+    "hyperlane": {
+      "DomainId": 84532,
+      "MailboxAddress": "`0x6966b0E55883d49BFB24539356a2f8A673E02039`"
+    },
+    "Explorer": "[sepolia.basescan.org](https://sepolia.basescan.org)"
+  },
+  "97": {
+    "Chain": "BSC Testnet",
+    "hyperlane": {
+      "DomainId": 97,
+      "MailboxAddress": "`0xF9F6F5646F478d5ab4e20B0F910C92F1CCC9Cc6D`"
+    },
+    "Explorer": "[testnet.bscscan.com](https://testnet.bscscan.com)"
+  },
+  "76672": {
+    "Chain": "CarrChain Testnet",
+    "hyperlane": {
+      "DomainId": 76672,
+      "MailboxAddress": "`0x589C201a07c26b4725A4A829d772f24423da480B`"
+    },
+    "Explorer": "[testnet.carrscan.io](https://testnet.carrscan.io)"
+  },
+  "11142220": {
+    "Chain": "Celo Sepolia",
+    "hyperlane": {
+      "DomainId": 11142220,
+      "MailboxAddress": "`0xD0680F80F4f947968206806C2598Cbc5b6FE5b03`"
+    },
+    "Explorer": "[celo-sepolia.blockscout.com](https://celo-sepolia.blockscout.com)"
+  },
+  "5115": {
+    "Chain": "Citrea Testnet",
+    "hyperlane": {
+      "DomainId": 5115,
+      "MailboxAddress": "`0xB08d78F439e55D02C398519eef61606A5926245F`"
+    },
+    "Explorer": "[explorer.testnet.citrea.xyz](https://explorer.testnet.citrea.xyz)"
+  },
+  "7082400": {
+    "Chain": "Coti Testnet",
+    "hyperlane": {
+      "DomainId": 7082400,
+      "MailboxAddress": "`0x7FE7EA170cf08A25C2ff315814D96D93C311E692`"
+    },
+    "Explorer": "[testnet.cotiscan.io](https://testnet.cotiscan.io)"
+  },
+  "43113": {
+    "Chain": "Fuji",
+    "hyperlane": {
+      "DomainId": 43113,
+      "MailboxAddress": "`0x5b6CFf85442B851A8e6eaBd2A4E4507B5135B3B0`"
+    },
+    "Explorer": "[testnet.snowtrace.io](https://testnet.snowtrace.io)"
+  },
+  "91342": {
+    "Chain": "GIWA Sepolia",
+    "hyperlane": {
+      "DomainId": 91342,
+      "MailboxAddress": "`0x304cAb315c93B87AAdb2B826A791b2c1Bf749996`"
+    },
+    "Explorer": "[sepolia-explorer.giwa.io](https://sepolia-explorer.giwa.io)"
+  },
+  "998": {
+    "Chain": "Hyperliquid EVM Testnet",
+    "hyperlane": {
+      "DomainId": 998,
+      "MailboxAddress": "`0x589C201a07c26b4725A4A829d772f24423da480B`"
+    },
+    "Explorer": "[explorer.hyperlend.finance](https://explorer.hyperlend.finance)"
+  },
+  "28802": {
+    "Chain": "Incentiv Testnet v2",
+    "hyperlane": {
+      "DomainId": 28802,
+      "MailboxAddress": "`0xB7697612fbfb4ad02a11dCa16e9711eCB6Da4ceA`"
+    },
+    "Explorer": "[explorer-testnet.incentiv.io](https://explorer-testnet.incentiv.io)"
+  },
+  "6342": {
+    "Chain": "MegaETH Testnet",
+    "hyperlane": {
+      "DomainId": 6342,
+      "MailboxAddress": "`0xF78deCe5Cf97e1bd61C202A5ba1af33b87454878`"
+    },
+    "Explorer": "[www.megaexplorer.xyz](https://www.megaexplorer.xyz)"
+  },
+  "919": {
+    "Chain": "Mode Testnet",
+    "hyperlane": {
+      "DomainId": 919,
+      "MailboxAddress": "`0x589C201a07c26b4725A4A829d772f24423da480B`"
+    },
+    "Explorer": "[testnet.modescan.io](https://testnet.modescan.io)"
+  },
+  "10143": {
+    "Chain": "Monad Testnet",
+    "hyperlane": {
+      "DomainId": 10143,
+      "MailboxAddress": "`0x589C201a07c26b4725A4A829d772f24423da480B`"
+    },
+    "Explorer": "[explorer.monad-testnet.category.xyz](https://explorer.monad-testnet.category.xyz)"
+  },
+  "267": {
+    "Chain": "Neura Testnet",
+    "hyperlane": {
+      "DomainId": 267,
+      "MailboxAddress": "`0x589C201a07c26b4725A4A829d772f24423da480B`"
+    },
+    "Explorer": "[testnet-blockscout.infra.neuraprotocol.io](https://testnet-blockscout.infra.neuraprotocol.io)"
+  },
+  "11155420": {
+    "Chain": "Optimism Sepolia",
+    "hyperlane": {
+      "DomainId": 11155420,
+      "MailboxAddress": "`0x6966b0E55883d49BFB24539356a2f8A673E02039`"
+    },
+    "Explorer": "[sepolia-optimistic.etherscan.io](https://sepolia-optimistic.etherscan.io)"
+  },
+  "80002": {
+    "Chain": "Polygon Amoy",
+    "hyperlane": {
+      "DomainId": 80002,
+      "MailboxAddress": "`0x54148470292C24345fb828B003461a9444414517`"
+    },
+    "Explorer": "[amoy.polygonscan.com](https://amoy.polygonscan.com)"
+  },
+  "534351": {
+    "Chain": "Scroll Sepolia",
+    "hyperlane": {
+      "DomainId": 534351,
+      "MailboxAddress": "`0x3C5154a193D6e2955650f9305c8d80c18C814A68`"
+    },
+    "Explorer": "[sepolia.scrollscan.dev](https://sepolia.scrollscan.dev)"
+  },
+  "11155111": {
+    "Chain": "Ethereum Sepolia",
+    "hyperlane": {
+      "DomainId": 11155111,
+      "MailboxAddress": "`0xfFAEF09B3cd11D9b20d1a19bECca54EEC2884766`"
+    },
+    "Explorer": "[sepolia.etherscan.io](https://sepolia.etherscan.io)"
+  },
+  "50312": {
+    "Chain": "Somnia Testnet",
+    "hyperlane": {
+      "DomainId": 50312,
+      "MailboxAddress": "`0x7d498740A4572f2B5c6b0A1Ba9d1d9DbE207e89E`"
+    },
+    "Explorer": "[shannon-explorer.somnia.network](https://shannon-explorer.somnia.network)"
+  },
+  "64165": {
+    "Chain": "Sonic Testnet",
+    "hyperlane": {
+      "DomainId": 64165,
+      "MailboxAddress": "`0xDDcFEcF17586D08A5740B7D91735fcCE3dfe3eeD`"
+    },
+    "Explorer": "[testnet.soniclabs.com](https://testnet.soniclabs.com)"
+  },
+  "33626250": {
+    "Chain": "SUAVE Toliman Testnet",
+    "hyperlane": {
+      "DomainId": 33626250,
+      "MailboxAddress": "`0xDDcFEcF17586D08A5740B7D91735fcCE3dfe3eeD`"
+    },
+    "Explorer": "[explorer.toliman.suave.flashbots.net](https://explorer.toliman.suave.flashbots.net)"
+  },
+  "945": {
+    "Chain": "Subtensor Testnet",
+    "hyperlane": {
+      "DomainId": 945,
+      "MailboxAddress": "`0x589C201a07c26b4725A4A829d772f24423da480B`"
+    },
+    "Explorer": "N/A"
+  },
+  "3799": {
+    "Chain": "Tangle Testnet",
+    "hyperlane": {
+      "DomainId": 3799,
+      "MailboxAddress": "`0x87100b0E64B3baBD43F3FCB26A6edc4395e2D9df`"
+    },
+    "Explorer": "[testnet-explorer.tangle.tools](https://testnet-explorer.tangle.tools)"
+  }
+}
