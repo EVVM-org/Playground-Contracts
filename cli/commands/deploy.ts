@@ -1,15 +1,15 @@
 /**
  * EVVM Deployment Command
- * 
+ *
  * Comprehensive deployment wizard for EVVM ecosystem contracts.
  * Handles configuration, validation, deployment, verification, and registration.
- * 
+ *
  * @module cli/commands/deploy
  */
 
 import { $ } from "bun";
 import type { ConfirmAnswer, InputAddresses, EvvmMetadata } from "../types";
-import { colors } from "../constants";
+import { ChainData, colors } from "../constants";
 import {
   promptString,
   promptNumber,
@@ -29,7 +29,7 @@ import { explorerVerification } from "../utils/explorerVerification";
 
 /**
  * Deploys a complete EVVM instance with interactive configuration
- * 
+ *
  * Deployment process:
  * 1. Validates prerequisites (Foundry, wallet)
  * 2. Collects deployment configuration (addresses, metadata)
@@ -37,7 +37,7 @@ import { explorerVerification } from "../utils/explorerVerification";
  * 4. Configures block explorer verification
  * 5. Deploys all EVVM contracts
  * 6. Optionally registers EVVM in registry
- * 
+ *
  * @param {string[]} args - Command arguments (unused)
  * @param {any} options - Command options including skipInputConfig, walletName
  * @returns {Promise<void>}
@@ -256,9 +256,6 @@ export async function deployEvvm(args: string[], options: any) {
     }
   }
 
-  const privateKey =
-    "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
-
   console.log(
     `\n${colors.bright}═══════════════════════════════════════${colors.reset}`
   );
@@ -267,7 +264,15 @@ export async function deployEvvm(args: string[], options: any) {
     `${colors.bright}═══════════════════════════════════════${colors.reset}\n`
   );
 
-  console.log(`${colors.blue} Chain ID:${colors.reset} ${chainId}`);
+  const chainData = ChainData[chainId];
+
+  // si encuentra el dato solo muestra deploying on ${ChainData.Chain} si no solo ${colors.blue} Chain ID:${colors.reset} ${chainId}
+  if (chainData)
+    console.log(
+      `${colors.blue} Deploying on ${chainData.Chain}  (${colors.darkGray}${chainId})${colors.reset}`
+    );
+  else console.log(`${colors.blue} Deploying on Chain ID:${colors.reset} ${chainId}`);
+
   console.log(`${colors.evvmGreen}Starting deployment...${colors.reset}\n`);
   try {
     await $`forge clean`.quiet();
@@ -368,7 +373,6 @@ export async function deployEvvm(args: string[], options: any) {
   // If user decides, add --useCustomEthRpc flag to the registerEvvm call
   const ethRPCAns =
     confirmAnswer.useCustomEthRpc.toLowerCase() === "y" ? true : false;
-  
 
   registerEvvm([], {
     evvmAddress: evvmAddress,
@@ -376,6 +380,3 @@ export async function deployEvvm(args: string[], options: any) {
     useCustomEthRpc: ethRPCAns,
   });
 }
-
-
-
