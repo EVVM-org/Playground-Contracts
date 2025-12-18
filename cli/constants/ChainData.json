@@ -1,6 +1,6 @@
 {
   "421614": {
-    "Chain": "Arbitrum Sepolia",
+    "Chain": "Arbitrum Sepolia Testnet",
     "Hyperlane": {
       "DomainId": 421614,
       "MailboxAddress": "0x598facE78a4302f11E3de0bee1894Da0b2Cb71F8"
@@ -18,7 +18,7 @@
   },
 
   "1098411886": {
-    "Chain": "Arcadia Testnet v2",
+    "Chain": "Arcadia v2 Testnet",
     "Hyperlane": {
       "DomainId": 1098411886,
       "MailboxAddress": "0x33dB966328Ea213b0f76eF96CA368AB37779F065"
@@ -90,7 +90,7 @@
   },
 
   "84532": {
-    "Chain": "Base Sepolia",
+    "Chain": "Base Sepolia Testnet",
     "Hyperlane": {
       "DomainId": 84532,
       "MailboxAddress": "0x6966b0E55883d49BFB24539356a2f8A673E02039"
@@ -198,7 +198,7 @@
   },
 
   "11142220": {
-    "Chain": "Celo Sepolia",
+    "Chain": "Celo Sepolia Testnet",
     "Hyperlane": {
       "DomainId": 11142220,
       "MailboxAddress": "0xD0680F80F4f947968206806C2598Cbc5b6FE5b03"
@@ -288,7 +288,7 @@
   },
 
   "11155111": {
-    "Chain": "Ethereum Sepolia",
+    "Chain": "Ethereum Sepolia Testnet",
     "Hyperlane": {
       "DomainId": 11155111,
       "MailboxAddress": "0xfFAEF09B3cd11D9b20d1a19bECca54EEC2884766"
@@ -360,7 +360,7 @@
   },
 
   "91342": {
-    "Chain": "GIWA Sepolia",
+    "Chain": "GIWA Sepolia Testnet",
     "Hyperlane": {
       "DomainId": 91342,
       "MailboxAddress": "0x304cAb315c93B87AAdb2B826A791b2c1Bf749996"
@@ -450,7 +450,7 @@
   },
 
   "28802": {
-    "Chain": "Incentiv Testnet v2",
+    "Chain": "Incentiv v2 Testnet",
     "Hyperlane": {
       "DomainId": 28802,
       "MailboxAddress": "0xB7697612fbfb4ad02a11dCa16e9711eCB6Da4ceA"
@@ -807,5 +807,220 @@
       "GasService": ""
     },
     "ExplorerToAddress": "https://sepolia.explorer.zksync.io/address/"
+  },
+  "2442": {
+    "Chain": "Polygon zkEVM Cardona Testnet",
+    "Hyperlane": {
+      "DomainId": 0,
+      "MailboxAddress": ""
+    },
+    "LayerZero": {
+      "EId": 0,
+      "EndpointAddress": ""
+    },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
+    "ExplorerToAddress": "https://cardona-zkevm.polygonscan.com/address/"
+  },
+
+  "10200": {
+    "Chain": "Gnosis Chiado Testnet",
+    "Hyperlane": {
+      "DomainId": 0,
+      "MailboxAddress": ""
+    },
+    "LayerZero": {
+      "EId": 0,
+      "EndpointAddress": ""
+    },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
+    "ExplorerToAddress": "https://gnosis-chiado.blockscout.com/address/"
+  },
+
+  "167009": {
+    "Chain": "Taiko Hekla Testnet",
+    "Hyperlane": {
+      "DomainId": 0,
+      "MailboxAddress": ""
+    },
+    "LayerZero": {
+      "EId": 0,
+      "EndpointAddress": ""
+    },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
+    "ExplorerToAddress": "https://hekla.taikoscan.network/address/"
+  },
+
+  "999999999": {
+    "Chain": "Zora Sepolia Testnet",
+    "Hyperlane": {
+      "DomainId": 0,
+      "MailboxAddress": ""
+    },
+    "LayerZero": {
+      "EId": 0,
+      "EndpointAddress": ""
+    },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
+    "ExplorerToAddress": "https://sepolia.explorer.zora.energy/address/"
+  },
+
+  "59902": {
+    "Chain": "Metis Sepolia Testnet",
+    "Hyperlane": {
+      "DomainId": 0,
+      "MailboxAddress": ""
+    },
+    "LayerZero": {
+      "EId": 0,
+      "EndpointAddress": ""
+    },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
+    "ExplorerToAddress": "https://sepolia-explorer.metisdevops.link/address/"
+  },
+
+  "31": {
+    "Chain": "Rootstock Testnet",
+    "Hyperlane": {
+      "DomainId": 0,
+      "MailboxAddress": ""
+    },
+    "LayerZero": {
+      "EId": 0,
+      "EndpointAddress": ""
+    },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
+    "ExplorerToAddress": "https://explorer.testnet.rsk.co/address/"
+  },
+
+  "111": {
+    "Chain": "BOB Testnet",
+    "Hyperlane": {
+      "DomainId": 0,
+      "MailboxAddress": ""
+    },
+    "LayerZero": {
+      "EId": 0,
+      "EndpointAddress": ""
+    },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
+    "ExplorerToAddress": "https://testnet-explorer.gobob.xyz/address/"
+  },
+
+  "2710": {
+    "Chain": "Morph Testnet",
+    "Hyperlane": {
+      "DomainId": 0,
+      "MailboxAddress": ""
+    },
+    "LayerZero": {
+      "EId": 0,
+      "EndpointAddress": ""
+    },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
+    "ExplorerToAddress": "https://explorer-testnet.morphl2.io/address/"
+  },
+
+  "2810": {
+    "Chain": "Morph Holesky Testnet",
+    "Hyperlane": {
+      "DomainId": 0,
+      "MailboxAddress": ""
+    },
+    "LayerZero": {
+      "EId": 0,
+      "EndpointAddress": ""
+    },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
+    "ExplorerToAddress": "https://explorer-holesky.morphl2.io/address/"
+  },
+
+  "3441005": {
+    "Chain": "Manta Pacific Testnet",
+    "Hyperlane": {
+      "DomainId": 0,
+      "MailboxAddress": ""
+    },
+    "LayerZero": {
+      "EId": 0,
+      "EndpointAddress": ""
+    },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
+    "ExplorerToAddress": "https://pacific-explorer.testnet.manta.network/address/"
+  },
+
+  "3441006": {
+    "Chain": "Manta Pacific Sepolia Testnet",
+    "Hyperlane": {
+      "DomainId": 0,
+      "MailboxAddress": ""
+    },
+    "LayerZero": {
+      "EId": 0,
+      "EndpointAddress": ""
+    },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
+    "ExplorerToAddress": "https://manta-testnet.caldera.dev/address/"
+  },
+
+  "111557560": {
+    "Chain": "Cyber Testnet",
+    "Hyperlane": {
+      "DomainId": 0,
+      "MailboxAddress": ""
+    },
+    "LayerZero": {
+      "EId": 0,
+      "EndpointAddress": ""
+    },
+    "Axelar": {
+      "ChainName": "",
+      "Gateway": "",
+      "GasService": ""
+    },
+    "ExplorerToAddress": "https://testnet.cyberscan.co/address/"
   }
 }
