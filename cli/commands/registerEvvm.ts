@@ -43,9 +43,9 @@ export async function registerEvvm(_args: string[], options: any) {
 
   let ethRPC: string | undefined;
 
-  // If --useCustomEthRpc is present, look for ETH_SEPOLIA_RPC in .env or prompt user
+  // If --useCustomEthRpc is present, look for EVVM_REGISTRATION_RPC_URL in .env or prompt user
   if (useCustomEthRpc) {
-    ethRPC = process.env.ETH_SEPOLIA_RPC;
+    ethRPC = process.env.EVVM_REGISTRATION_RPC_URL;
     if (!ethRPC) {
       ethRPC = promptString(
         `${colors.yellow}Enter the custom Ethereum Sepolia RPC URL:${colors.reset}`

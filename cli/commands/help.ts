@@ -61,7 +61,7 @@ ${colors.bright}REGISTER OPTIONS:${colors.reset}
 
   ${colors.yellow}--useCustomEthRpc${colors.reset}
                       Use custom Ethereum Sepolia RPC for registry contract calls
-                      ${colors.darkGray}Read from ETH_SEPOLIA_RPC in .env or prompts if not found${colors.reset}
+                      ${colors.darkGray}Read from EVVM_REGISTRATION_RPC_URL in .env or prompts if not found${colors.reset}
                       ${colors.darkGray}Default: Uses public RPC${colors.reset}
 
   ${colors.darkGray}Note: Host chain RPC URL is read from RPC_URL in .env file${colors.reset}
