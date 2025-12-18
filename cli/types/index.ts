@@ -1,15 +1,15 @@
 /**
  * Type Definitions Module
- * 
+ *
  * Contains all TypeScript type definitions and interfaces used throughout the CLI.
  * These types ensure type safety for configuration, user inputs, and contract data.
- * 
+ *
  * @module cli/types
  */
 
 /**
  * User confirmation responses for various CLI prompts
- * 
+ *
  * Tracks user decisions during the deployment and registration workflow.
  */
 export type ConfirmAnswer = {
@@ -22,7 +22,7 @@ export type ConfirmAnswer = {
 
 /**
  * Required addresses for EVVM deployment
- * 
+ *
  * Contains all admin addresses needed to initialize the EVVM ecosystem.
  */
 export type BaseInputAddresses = {
@@ -36,7 +36,7 @@ export type BaseInputAddresses = {
 
 /**
  * EVVM metadata configuration
- * 
+ *
  * Defines the economic parameters and token information for an EVVM instance.
  */
 export type EvvmMetadata = {
@@ -58,9 +58,43 @@ export type EvvmMetadata = {
   reward: number | null;
 };
 
+export type CrossChainInputs = {
+  adminExternal: `0x${string}`;
+  crosschainConfigHost: {
+    hyperlane: {
+      externalChainStationDomainId: number;
+      mailboxAddress: `0x${string}`;
+    };
+    layerZero: {
+      externalChainStationEid: number;
+      endpointAddress: `0x${string}`;
+    };
+    axelar: {
+      externalChainStationChainName: string;
+      gasServiceAddress: `0x${string}`;
+      gatewayAddress: `0x${string}`;
+    };
+  };
+  crosschainConfigExternal: {
+    hyperlane: {
+      hostChainStationDomainId: number;
+      mailboxAddress: `0x${string}`;
+    };
+    layerZero: {
+      hostChainStationEid: number;
+      endpointAddress: `0x${string}`;
+    };
+    axelar: {
+      hostChainStationChainName: string;
+      gasServiceAddress: `0x${string}`;
+      gatewayAddress: `0x${string}`;
+    };
+  };
+};
+
 /**
  * Deployed contract information
- * 
+ *
  * Represents a contract that was successfully deployed during the deployment process.
  */
 export interface CreatedContract {

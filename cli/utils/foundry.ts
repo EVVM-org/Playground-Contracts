@@ -16,6 +16,7 @@ import type {
   EvvmMetadata,
   CreatedContract,
   ContractFileMetadata,
+  CrossChainInputs,
 } from "../types";
 import {
   colors,
@@ -70,6 +71,84 @@ abstract contract BaseInputs {
             totalSupply: ${formatNumber(evvmMetadata.totalSupply)},
             eraTokens: ${formatNumber(evvmMetadata.eraTokens)},
             reward: ${formatNumber(evvmMetadata.reward)}
+        });
+}
+`;
+
+  await Bun.write(inputFile, inputFileContent);
+  return true;
+}
+
+/**
+ * Generates and writes the CrossChainInputs.sol file with cross-chain configuration
+ *
+ * Creates a Solidity contract containing all cross-chain messaging parameters for
+ * both host and external chain stations. Used by cross-chain deployment scripts.
+ *
+ * @param {CrossChainInputs} crossChainInputs - Cross-chain configuration for Hyperlane, LayerZero, and Axelar
+ * @returns {Promise<boolean>} True if file was written successfully
+ */
+export async function writeCrossChainInputsFile(
+  crossChainInputs: CrossChainInputs
+): Promise<boolean> {
+  const inputDir = "./input";
+  const inputFile = `${inputDir}/CrossChainInputs.sol`;
+
+  try {
+    await Bun.file(inputFile).text();
+  } catch {
+    await $`mkdir -p ${inputDir}`.quiet();
+    await Bun.write(inputFile, "");
+    console.log(`${colors.blue}Created ${inputFile}${colors.reset}`);
+  }
+
+  const inputFileContent = `// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.0;
+import {EvvmStructs} from "@evvm/playground-contracts/contracts/evvm/lib/EvvmStructs.sol";
+import {HostChainStationStructs} from "@evvm/playground-contracts/contracts/treasuryTwoChains/lib/HostChainStationStructs.sol";
+import {ExternalChainStationStructs} from "@evvm/playground-contracts/contracts/treasuryTwoChains/lib/ExternalChainStationStructs.sol";
+
+abstract contract CrossChainInputs {
+    address constant adminExternal = ${crossChainInputs.adminExternal};
+
+    HostChainStationStructs.CrosschainConfig crosschainConfigHost =
+        HostChainStationStructs.CrosschainConfig({
+            hyperlane: HostChainStationStructs.HyperlaneConfig({
+                externalChainStationDomainId: ${crossChainInputs.crosschainConfigHost.hyperlane.externalChainStationDomainId}, //Domain ID for External on Hyperlane
+                externalChainStationAddress: bytes32(0), //External Chain Station Address on Hyperlane
+                mailboxAddress: ${crossChainInputs.crosschainConfigHost.hyperlane.mailboxAddress} //Mailbox for Host on Hyperlane
+            }),
+            layerZero: HostChainStationStructs.LayerZeroConfig({
+                externalChainStationEid: ${crossChainInputs.crosschainConfigHost.layerZero.externalChainStationEid}, //EID for External on LayerZero
+                externalChainStationAddress: bytes32(0), //External Chain Station Address on LayerZero
+                endpointAddress: ${crossChainInputs.crosschainConfigHost.layerZero.endpointAddress} //Endpoint for Host on LayerZero
+            }),
+            axelar: HostChainStationStructs.AxelarConfig({
+                externalChainStationChainName: "${crossChainInputs.crosschainConfigHost.axelar.externalChainStationChainName}", //Chain Name for External on Axelar
+                externalChainStationAddress: "", //External Chain Station Address on Axelar
+                gasServiceAddress: ${crossChainInputs.crosschainConfigHost.axelar.gasServiceAddress}, //Gas Service for External on Axelar
+                gatewayAddress: ${crossChainInputs.crosschainConfigHost.axelar.gatewayAddress} //Gateway for Host on Axelar
+            })
+        });
+
+    ExternalChainStationStructs.CrosschainConfig crosschainConfigExternal =
+        ExternalChainStationStructs.CrosschainConfig({
+            hyperlane: ExternalChainStationStructs.HyperlaneConfig({
+                hostChainStationDomainId: ${crossChainInputs.crosschainConfigExternal.hyperlane.hostChainStationDomainId}, //Domain ID for Host on Hyperlane
+                hostChainStationAddress: bytes32(0), //Host Chain Station Address on Hyperlane
+                mailboxAddress: ${crossChainInputs.crosschainConfigExternal.hyperlane.mailboxAddress} //Mailbox for External on Hyperlane
+            }),
+            layerZero: ExternalChainStationStructs.LayerZeroConfig({
+                hostChainStationEid: ${crossChainInputs.crosschainConfigExternal.layerZero.hostChainStationEid}, //EID for Host on LayerZero
+                hostChainStationAddress: bytes32(0), //Host Chain Station Address on LayerZero
+                endpointAddress: ${crossChainInputs.crosschainConfigExternal.layerZero.endpointAddress} //Endpoint for External on LayerZero
+            }),
+            axelar: ExternalChainStationStructs.AxelarConfig({
+                hostChainStationChainName: "${crossChainInputs.crosschainConfigExternal.axelar.hostChainStationChainName}", //Chain Name for Host on Axelar
+                hostChainStationAddress: "", //Host Chain Station Address on Axelar
+                gasServiceAddress: ${crossChainInputs.crosschainConfigExternal.axelar.gasServiceAddress}, //Gas Service for External on Axelar
+                gatewayAddress: ${crossChainInputs.crosschainConfigExternal.axelar.gatewayAddress} //Gateway for External on Axelar
+            })
         });
 }
 `;
