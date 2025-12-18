@@ -12,7 +12,7 @@
 
 import { $ } from "bun";
 import type {
-  InputAddresses,
+  BaseInputAddresses,
   EvvmMetadata,
   CreatedContract,
   ContractFileMetadata,
@@ -31,12 +31,12 @@ import { formatNumber, showError } from "./validators";
  * Creates a Solidity contract containing all deployment parameters including
  * admin addresses and EVVM metadata. This file is used by the deployment script.
  *
- * @param {InputAddresses} addresses - Admin, golden fisher, and activator addresses
+ * @param {BaseInputAddresses} addresses - Admin, golden fisher, and activator addresses
  * @param {EvvmMetadata} evvmMetadata - EVVM configuration including token economics
  * @returns {Promise<boolean>} True if file was written successfully
  */
-export async function writeInputsFile(
-  addresses: InputAddresses,
+export async function writeBaseInputsFile(
+  addresses: BaseInputAddresses,
   evvmMetadata: EvvmMetadata
 ): Promise<boolean> {
   const inputDir = "./input";

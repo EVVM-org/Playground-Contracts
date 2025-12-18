@@ -25,7 +25,7 @@ export type ConfirmAnswer = {
  * 
  * Contains all admin addresses needed to initialize the EVVM ecosystem.
  */
-export type InputAddresses = {
+export type BaseInputAddresses = {
   /** Administrator address with full system privileges */
   admin: `0x${string}` | null;
   /** Golden Fisher address for privileged staking operations */
@@ -33,18 +33,6 @@ export type InputAddresses = {
   /** Activator address for estimator epoch management */
   activator: `0x${string}` | null;
 };
-
-/**
- * Deployed contract information
- * 
- * Represents a contract that was successfully deployed during the deployment process.
- */
-export interface CreatedContract {
-  /** Name of the deployed contract */
-  contractName: string;
-  /** On-chain address of the deployed contract */
-  contractAddress: `0x${string}`;
-}
 
 /**
  * EVVM metadata configuration
@@ -69,6 +57,18 @@ export type EvvmMetadata = {
   /** Base reward amount per transaction for stakers */
   reward: number | null;
 };
+
+/**
+ * Deployed contract information
+ * 
+ * Represents a contract that was successfully deployed during the deployment process.
+ */
+export interface CreatedContract {
+  /** Name of the deployed contract */
+  contractName: string;
+  /** On-chain address of the deployed contract */
+  contractAddress: `0x${string}`;
+}
 
 export type HyperlaneType = {
   [chainID: number]: HyperlaneMetadata;

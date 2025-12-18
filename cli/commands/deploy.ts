@@ -8,7 +8,7 @@
  */
 
 import { $ } from "bun";
-import type { ConfirmAnswer, InputAddresses, EvvmMetadata } from "../types";
+import type { ConfirmAnswer, BaseInputAddresses, EvvmMetadata } from "../types";
 import { ChainData, colors } from "../constants";
 import {
   promptString,
@@ -18,7 +18,7 @@ import {
 } from "../utils/prompts";
 import { formatNumber, showError } from "../utils/validators";
 import {
-  writeInputsFile,
+  writeBaseInputsFile,
   isChainIdRegistered,
   showDeployContractsAndFindEvvm,
   verifyFoundryInstalledAndAccountSetup,
@@ -71,7 +71,7 @@ export async function deployEvvm(args: string[], options: any) {
     reward: 5000000000000000000,
   };
 
-  let addresses: InputAddresses = {
+  let addresses: BaseInputAddresses = {
     admin: null,
     goldenFisher: null,
     activator: null,
@@ -98,7 +98,9 @@ export async function deployEvvm(args: string[], options: any) {
     );
   } else {
     while (!confirmationDone) {
-      for (const key of Object.keys(addresses) as (keyof InputAddresses)[]) {
+      for (const key of Object.keys(
+        addresses
+      ) as (keyof BaseInputAddresses)[]) {
         addresses[key] = promptAddress(
           `${colors.yellow}Enter the ${key} address:${colors.reset}`
         );
@@ -158,7 +160,9 @@ export async function deployEvvm(args: string[], options: any) {
       );
 
       console.log(`${colors.bright}Addresses:${colors.reset}`);
-      for (const key of Object.keys(addresses) as (keyof InputAddresses)[]) {
+      for (const key of Object.keys(
+        addresses
+      ) as (keyof BaseInputAddresses)[]) {
         console.log(`  ${colors.blue}${key}:${colors.reset} ${addresses[key]}`);
       }
 
@@ -187,7 +191,7 @@ export async function deployEvvm(args: string[], options: any) {
       }
     }
 
-    if (!(await writeInputsFile(addresses, evvmMetadata))) {
+    if (!(await writeBaseInputsFile(addresses, evvmMetadata))) {
       showError(
         "Failed to write inputs file.",
         `Please try again. If the issue persists, create an issue on GitHub:\n${colors.blue}https://github.com/EVVM-org/Playgrounnd-Contracts/issues${colors.reset}`
@@ -271,7 +275,10 @@ export async function deployEvvm(args: string[], options: any) {
     console.log(
       `${colors.blue} Deploying on ${chainData.Chain}  (${colors.darkGray}${chainId})${colors.reset}`
     );
-  else console.log(`${colors.blue} Deploying on Chain ID:${colors.reset} ${chainId}`);
+  else
+    console.log(
+      `${colors.blue} Deploying on Chain ID:${colors.reset} ${chainId}`
+    );
 
   console.log(`${colors.evvmGreen}Starting deployment...${colors.reset}\n`);
   try {
