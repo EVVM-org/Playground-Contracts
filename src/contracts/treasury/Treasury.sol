@@ -29,19 +29,21 @@ pragma solidity ^0.8.0;
 
 import {IERC20} from "@evvm/playground-contracts/library/primitives/IERC20.sol";
 import {SafeTransferLib} from "@solady/utils/SafeTransferLib.sol";
-import {Evvm} from "@evvm/playground-contracts/contracts/evvm/Evvm.sol";
-import {ErrorsLib} from "@evvm/playground-contracts/contracts/treasury/lib/ErrorsLib.sol";
+import {IEvvm} from "@evvm/playground-contracts/interfaces/IEvvm.sol";
+import {
+    ErrorsLib
+} from "@evvm/playground-contracts/contracts/treasury/lib/ErrorsLib.sol";
 
 contract Treasury {
-    /// @notice Address of the EVVM core contract
-    address public evvmAddress;
+
+    IEvvm evvm;
 
     /**
      * @notice Initialize Treasury with EVVM contract address
      * @param _evvmAddress Address of the EVVM core contract
      */
     constructor(address _evvmAddress) {
-        evvmAddress = _evvmAddress;
+        evvm = IEvvm(_evvmAddress);
     }
 
     /**
@@ -56,11 +58,7 @@ contract Treasury {
                 revert ErrorsLib.DepositAmountMustBeGreaterThanZero();
             if (amount != msg.value) revert ErrorsLib.InvalidDepositAmount();
 
-            Evvm(evvmAddress).addAmountToUser(
-                msg.sender,
-                address(0),
-                msg.value
-            );
+            evvm.addAmountToUser(msg.sender, address(0), msg.value);
         } else {
             /// user is sending ERC20 tokens
 
@@ -69,7 +67,7 @@ contract Treasury {
                 revert ErrorsLib.DepositAmountMustBeGreaterThanZero();
 
             IERC20(token).transferFrom(msg.sender, address(this), amount);
-            Evvm(evvmAddress).addAmountToUser(msg.sender, token, amount);
+            evvm.addAmountToUser(msg.sender, token, amount);
         }
     }
 
@@ -79,26 +77,26 @@ contract Treasury {
      * @param amount Amount to withdraw
      */
     function withdraw(address token, uint256 amount) external {
-        if (token == Evvm(evvmAddress).getEvvmMetadata().principalTokenAddress)
+        if (token == evvm.getEvvmMetadata().principalTokenAddress)
             revert ErrorsLib.PrincipalTokenIsNotWithdrawable();
 
-        if (Evvm(evvmAddress).getBalance(msg.sender, token) < amount)
+        if (evvm.getBalance(msg.sender, token) < amount)
             revert ErrorsLib.InsufficientBalance();
 
         if (token == address(0)) {
             /// user is trying to withdraw native coin
 
-            Evvm(evvmAddress).removeAmountFromUser(
-                msg.sender,
-                address(0),
-                amount
-            );
+            evvm.removeAmountFromUser(msg.sender, address(0), amount);
             SafeTransferLib.safeTransferETH(msg.sender, amount);
         } else {
             /// user is trying to withdraw ERC20 tokens
 
-            Evvm(evvmAddress).removeAmountFromUser(msg.sender, token, amount);
+            evvm.removeAmountFromUser(msg.sender, token, amount);
             IERC20(token).transfer(msg.sender, amount);
         }
+    }
+
+    function getEvvmAddress() external view returns (address) {
+        return address(evvm);
     }
 }

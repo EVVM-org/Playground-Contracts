@@ -32,7 +32,7 @@ pragma solidity ^0.8.0;
  */
 
 import {IERC20} from "@evvm/playground-contracts/library/primitives/IERC20.sol";
-import {Evvm} from "@evvm/playground-contracts/contracts/evvm/Evvm.sol";
+import {IEvvm} from "@evvm/playground-contracts/interfaces/IEvvm.sol";
 import {ErrorsLib} from "@evvm/playground-contracts/contracts/treasuryTwoChains/lib/ErrorsLib.sol";
 import {HostChainStationStructs} from "@evvm/playground-contracts/contracts/treasuryTwoChains/lib/HostChainStationStructs.sol";
 
@@ -58,9 +58,9 @@ contract TreasuryHostChainStation is
     OAppOptionsType3,
     AxelarExecutable
 {
-    /// @notice Address of the EVVM core contract for balance operations
+    /// @notice EVVM core contract for balance operations
     /// @dev Used to integrate with EVVM's balance management and token operations
-    address evvmAddress;
+    IEvvm evvm;
 
     /// @notice Admin address management with time-delayed proposals
     /// @dev Stores current admin, proposed admin, and acceptance timestamp
@@ -151,7 +151,8 @@ contract TreasuryHostChainStation is
         Ownable(_admin)
         AxelarExecutable(_crosschainConfig.gatewayAddress)
     {
-        evvmAddress = _evvmAddress;
+        evvm = IEvvm(_evvmAddress);
+
         admin = AddressTypeProposal({
             current: _admin,
             proposal: address(0),
@@ -214,10 +215,10 @@ contract TreasuryHostChainStation is
         uint256 amount,
         bytes1 protocolToExecute
     ) external payable {
-        if (token == Evvm(evvmAddress).getEvvmMetadata().principalTokenAddress)
+        if (token == evvm.getEvvmMetadata().principalTokenAddress)
             revert ErrorsLib.PrincipalTokenIsNotWithdrawable();
 
-        if (Evvm(evvmAddress).getBalance(msg.sender, token) < amount)
+        if (evvm.getBalance(msg.sender, token) < amount)
             revert ErrorsLib.InsufficientBalance();
 
         executerEVVM(false, msg.sender, token, amount);
@@ -285,7 +286,7 @@ contract TreasuryHostChainStation is
     ) external onlyFisherExecutor {
         if (
             !SignatureUtils.verifyMessageSignedForFisherBridge(
-                Evvm(evvmAddress).getEvvmID(),
+                evvm.getEvvmID(),
                 from,
                 addressToReceive,
                 nextFisherExecutionNonce[from],
@@ -322,15 +323,15 @@ contract TreasuryHostChainStation is
     ) external onlyFisherExecutor {
         if (
             tokenAddress ==
-            Evvm(evvmAddress).getEvvmMetadata().principalTokenAddress
+            evvm.getEvvmMetadata().principalTokenAddress
         ) revert ErrorsLib.PrincipalTokenIsNotWithdrawable();
 
-        if (Evvm(evvmAddress).getBalance(from, tokenAddress) < amount)
+        if (evvm.getBalance(from, tokenAddress) < amount)
             revert ErrorsLib.InsufficientBalance();
 
         if (
             !SignatureUtils.verifyMessageSignedForFisherBridge(
-                Evvm(evvmAddress).getEvvmID(),
+                evvm.getEvvmID(),
                 from,
                 addressToReceive,
                 nextFisherExecutionNonce[from],
@@ -662,7 +663,7 @@ contract TreasuryHostChainStation is
     /// @notice Returns the EVVM core contract address
     /// @return Address of the EVVM contract used for balance operations
     function getEvvmAddress() external view returns (address) {
-        return evvmAddress;
+        return address(evvm);
     }
 
     /// @notice Returns the complete Hyperlane protocol configuration
@@ -722,10 +723,10 @@ contract TreasuryHostChainStation is
     ) internal {
         if (typeOfExecution) {
             // true = add
-            Evvm(evvmAddress).addAmountToUser(userToExecute, token, amount);
+            evvm.addAmountToUser(userToExecute, token, amount);
         } else {
             // false = remove
-            Evvm(evvmAddress).removeAmountFromUser(
+            evvm.removeAmountFromUser(
                 userToExecute,
                 token,
                 amount
