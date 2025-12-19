@@ -113,24 +113,26 @@ export type HyperlaneMetadata = {
   hyperlaneMailboxAddress: `0x${string}` | null;
 };
 
-export type ChainDataType = {
-  [chainID: number]: {
-    Chain: string;
-    Hyperlane: {
-      DomainId: number;
-      MailboxAddress: string;
-    };
-    LayerZero: {
-      EId: number;
-      EndpointAddress: string;
-    };
-    Axelar: {
-      ChainName: string;
-      Gateway: string;
-      GasService: string;
-    };
-    ExplorerToAddress: string;
+export type ChainData = {
+  Chain: string;
+  Hyperlane: {
+    DomainId: number;
+    MailboxAddress: string;
   };
+  LayerZero: {
+    EId: number;
+    EndpointAddress: string;
+  };
+  Axelar: {
+    ChainName: string;
+    Gateway: string;
+    GasService: string;
+  };
+  ExplorerToAddress: string;
+};
+
+export type ChainDataType = {
+  [chainID: number]: ChainData;
 };
 
 export type ContractFileMetadata = {

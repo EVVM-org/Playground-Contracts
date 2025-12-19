@@ -169,9 +169,11 @@ abstract contract CrossChainInputs {
 export async function isChainIdRegistered(
   chainId: number
 ): Promise<boolean | undefined> {
+  const ethRpcUrl =
+    process.env.EVVM_REGISTRATION_RPC_URL?.trim() || EthSepoliaPublicRpc;
   try {
     const result =
-      await $`cast call ${RegisteryEvvmAddress} --rpc-url ${EthSepoliaPublicRpc} "isChainIdRegistered(uint256)(bool)" ${chainId}`.quiet();
+      await $`cast call ${RegisteryEvvmAddress} --rpc-url ${ethRpcUrl} "isChainIdRegistered(uint256)(bool)" ${chainId}`.quiet();
     const isSupported = result.stdout.toString().trim() === "true";
     return isSupported;
   } catch (error) {
@@ -360,6 +362,113 @@ export async function showDeployContractsAndFindEvvm(
     )?.contractAddress ?? null
   );
 }
+
+export async function showDeployContractsAndFindEvvmWithTreasuryHostChainStation(
+  chainIdHost: number
+): Promise<{
+  evvmAddress: `0x${string}` | null;
+  treasuryHostChainStationAddress: `0x${string}` | null;
+}> {
+  const broadcastFile = `./broadcast/Deploy.s.sol/${chainIdHost}/run-latest.json`;
+  const broadcastContent = await Bun.file(broadcastFile).text();
+  const broadcastJson = JSON.parse(broadcastContent);
+
+  const createdContracts = broadcastJson.transactions
+    .filter((tx: any) => tx.transactionType === "CREATE")
+    .map(
+      (tx: any) =>
+        ({
+          contractName: tx.contractName,
+          contractAddress: tx.contractAddress,
+        } as CreatedContract)
+    );
+
+  console.log(
+    `\n${colors.bright}═══════════════════════════════════════${colors.reset}`
+  );
+  console.log(`${colors.bright}          Deployed Contracts${colors.reset}`);
+  console.log(
+    `${colors.bright}═══════════════════════════════════════${colors.reset}\n`
+  );
+
+  const chainData = ChainData[chainIdHost];
+  const explorerUrl = chainData?.ExplorerToAddress;
+
+  createdContracts.forEach((contract: CreatedContract) => {
+    console.log(
+      `  ${colors.green}✓${colors.reset} ${colors.blue}${contract.contractName}${colors.reset}\n    ${colors.darkGray}→${colors.reset} ${contract.contractAddress}`
+    );
+    if (explorerUrl) {
+      console.log(
+        `    ${colors.darkGray}→${colors.reset} ${explorerUrl}${contract.contractAddress}`
+      );
+    }
+  });
+  console.log();
+
+  const evvmAddress =
+    createdContracts.find(
+      (contract: CreatedContract) => contract.contractName === "Evvm"
+    )?.contractAddress ?? null;
+
+  const treasuryHostChainStationAddress =
+    createdContracts.find(
+      (contract: CreatedContract) =>
+        contract.contractName === "TreasuryHostChainStation"
+    )?.contractAddress ?? null;
+
+  return { evvmAddress, treasuryHostChainStationAddress };
+}
+
+
+export async function showDeployTreasuryExternalChainStation(
+  chainIdExternal: number
+): Promise<`0x${string}` | null> {
+  const broadcastFile = `./broadcast/Deploy.s.sol/${chainIdExternal}/run-latest.json`;
+  const broadcastContent = await Bun.file(broadcastFile).text();
+  const broadcastJson = JSON.parse(broadcastContent);
+
+  const createdContracts = broadcastJson.transactions
+    .filter((tx: any) => tx.transactionType === "CREATE")
+    .map(
+      (tx: any) =>
+        ({
+          contractName: tx.contractName,
+          contractAddress: tx.contractAddress,
+        } as CreatedContract)
+    );
+
+  console.log(
+    `\n${colors.bright}═══════════════════════════════════════${colors.reset}`
+  );
+  console.log(`${colors.bright}          Deployed Contracts${colors.reset}`);
+  console.log(
+    `${colors.bright}═══════════════════════════════════════${colors.reset}\n`
+  );
+
+  const chainData = ChainData[chainIdExternal];
+  const explorerUrl = chainData?.ExplorerToAddress;
+
+  createdContracts.forEach((contract: CreatedContract) => {
+    console.log(
+      `  ${colors.green}✓${colors.reset} ${colors.blue}${contract.contractName}${colors.reset}\n    ${colors.darkGray}→${colors.reset} ${contract.contractAddress}`
+    );
+    if (explorerUrl) {
+      console.log(
+        `    ${colors.darkGray}→${colors.reset} ${explorerUrl}${contract.contractAddress}`
+      );
+    }
+  });
+  console.log();
+
+  return (
+    createdContracts.find(
+      (contract: CreatedContract) =>
+        contract.contractName === "TreasuryExternalChainStation"
+    )?.contractAddress ?? null
+  );
+}
+
 
 /**
  * Generates Solidity interfaces for EVVM contracts

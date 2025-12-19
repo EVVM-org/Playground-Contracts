@@ -30,7 +30,7 @@ import {
 import {BaseInputs} from "../input/BaseInputs.sol";
 import {CrossChainInputs} from "../input/CrossChainInputs.sol";
 
-contract DeployTestnetCrossChain is Script, BaseInputs, CrossChainInputs {
+contract DeployCrossChainHostScript is Script, BaseInputs, CrossChainInputs {
     Staking staking;
     Evvm evvm;
     Estimator estimator;

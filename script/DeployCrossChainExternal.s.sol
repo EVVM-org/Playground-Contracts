@@ -5,7 +5,7 @@ import {Script, console2} from "forge-std/Script.sol";
 import {TreasuryExternalChainStation} from "@evvm/playground-contracts/contracts/treasuryTwoChains/TreasuryExternalChainStation.sol";
 import {CrossChainInputs} from "../input/CrossChainInputs.sol";
 
-contract DeployTestnetCrossChainExternal is Script, CrossChainInputs {
+contract DeployCrossChainExternalScript is Script, CrossChainInputs {
     TreasuryExternalChainStation treasuryExternal;
     function setUp() public {}
 
