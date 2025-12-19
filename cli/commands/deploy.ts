@@ -199,6 +199,10 @@ export async function deployEvvm(args: string[], options: any) {
       return;
     }
 
+    console.log(
+      `\n${colors.green}✓${colors.reset} Input configuration saved to ${colors.darkGray}./input/BaseInputs.sol${colors.reset}`
+    );
+
     console.log(`\n${colors.bright}Ready to Deploy${colors.reset}\n`);
     confirmAnswer.deploy = promptYesNo(
       `${colors.yellow}Proceed with deployment? (y/n):${colors.reset}`
@@ -212,9 +216,8 @@ export async function deployEvvm(args: string[], options: any) {
 
   const { rpcUrl, chainId } = await getRPCUrlAndChainId(process.env.RPC_URL);
 
-  isDeployingOnLocalBlockchain = chainId === 31337 || chainId === 1337;
 
-  if (isDeployingOnLocalBlockchain) {
+  if (chainId === 31337 || chainId === 1337) {
     console.log(
       `\n${colors.orange}Local blockchain detected (Chain ID: ${chainId})${colors.reset}`
     );
