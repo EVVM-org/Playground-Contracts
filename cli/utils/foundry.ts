@@ -228,13 +228,13 @@ export async function callRegisterEvvm(
  * @returns {Promise<boolean>} True if successfully set, false on error
  */
 export async function callSetEvvmID(
-  evvmAddress: `0x${string}`,
+  contractAddress: `0x${string}`,
   evvmID: number,
   hostChainRpcUrl: string,
   walletName: string = "defaultKey"
 ): Promise<boolean> {
   try {
-    await $`cast send ${evvmAddress} --rpc-url ${hostChainRpcUrl} "setEvvmID(uint256)" ${evvmID} --account ${walletName} `;
+    await $`cast send ${contractAddress} --rpc-url ${hostChainRpcUrl} "setEvvmID(uint256)" ${evvmID} --account ${walletName} `;
     console.log(
       `${colors.evvmGreen}EVVM ID set successfully on the EVVM contract.${colors.reset}`
     );

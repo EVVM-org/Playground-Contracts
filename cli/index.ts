@@ -20,6 +20,7 @@ import {
 import { developer } from "./commands/developer";
 import { deployEvvmCrossChain } from "./commands/deployCrossChain";
 import { setUpCrossChainTreasuries } from "./commands/setUpCrossChainTreasuries";
+import { registerEvvmCrossChain } from "./commands/registerEvvmCrossChain";
 
 /**
  * Available CLI commands mapped to their handler functions
@@ -32,6 +33,7 @@ const commands = {
   setUpCrossChainTreasuries: setUpCrossChainTreasuries,
   dev: developer,
   register: registerEvvm,
+  registerCrossChain: registerEvvmCrossChain,
 };
 
 /**

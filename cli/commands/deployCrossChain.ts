@@ -32,6 +32,7 @@ import { getRPCUrlAndChainId } from "../utils/rpc";
 import { explorerVerification } from "../utils/explorerVerification";
 import { checkCrossChainSupport } from "../utils/crossChain";
 import { setUpCrossChainTreasuries } from "./setUpCrossChainTreasuries";
+import { registerEvvmCrossChain } from "./registerEvvmCrossChain";
 
 /**
  * Deploys a complete EVVM instance with interactive configuration for
@@ -562,23 +563,35 @@ export async function deployEvvmCrossChain(args: string[], options: any) {
     `${colors.bright}═══════════════════════════════════════${colors.reset}`
   );
   console.log(
-    `${colors.bright}          Next Step: Cross-Chain Communication${colors.reset}`
+    `${colors.bright}   Next Step: EVVM Registration and Cross-Chain Communication${colors.reset}`
   );
   console.log(
     `${colors.bright}═══════════════════════════════════════${colors.reset}`
   );
 
-  console.log(`${colors.blue}Your EVVM instance is ready for cross-chain communication setup.${colors.reset}`);
+  console.log(`${colors.blue}Your EVVM instance is ready for cross-chain communication setup and registration.${colors.reset}`);
   console.log();
   console.log(`${colors.yellow}Important:${colors.reset}`);
   console.log(
-    `   To register now, your Admin for both chains address must match the ${walletName} wallet.`
+    `   To complete setup now, your Admin for both chains address must match the ${walletName} wallet.`
+  );
+  console.log();
+  console.log(
+    `   ${colors.darkGray}Otherwise, you can set up later using these commands:${colors.reset}`
+  );
+  console.log();
+  console.log(
+    `   ${colors.bright}1. Cross-Chain Communication:${colors.reset}`
   );
   console.log(
-    `   ${colors.darkGray}Otherwise, you can register later using:${colors.reset}`
+    `   ${colors.evvmGreen}evvm setUpCrossChainTreasuries  \\\n     --treasuryHostStationAddress ${treasuryHostChainStationAddress}  \\\n     --treasuryExternalStationAddress ${treasuryExternalStationAddress}  \\\n     --walletNameHost <walletNameHost>  \\\n     --walletNameExternal <walletNameExternal>  \\\n     --hostRpcUrl <hostRpcUrl>  \\\n     --externalRpcUrl <externalRpcUrl>${colors.reset}`
+  );
+  console.log();
+  console.log(
+    `   ${colors.bright}2. EVVM Registration:${colors.reset}`
   );
   console.log(
-    `   ${colors.evvmGreen}evvm setUpCrossChainTreasuries  \\\n--treasuryHostStationAddress ${treasuryHostChainStationAddress}  \\\n--treasuryExternalStationAddress ${treasuryExternalStationAddress}  \\\n--walletNameHost <walletNameHost>  \\\n--walletNameExternal <walletNameExternal>  \\\n--hostRpcUrl <hostRpcUrl>  \\\n--externalRpcUrl <externalRpcUrl>${colors.reset}`
+    `   ${colors.evvmGreen}evvm registerCrossChain --evvmAddress ${evvmAddress} --walletName ${walletName}${colors.reset}`
   );
   console.log();
   console.log(
@@ -591,11 +604,11 @@ export async function deployEvvmCrossChain(args: string[], options: any) {
 
   if (
     promptYesNo(
-      `${colors.yellow}Do you want to communicate both contracts now? (y/n):${colors.reset}`
+      `${colors.yellow}Do you want to set up cross-chain communication now? (y/n):${colors.reset}`
     ).toLowerCase() !== "y"
   ) {
     console.log(
-      `${colors.red}Registration skipped. You can register later using the command above.${colors.reset}`
+      `${colors.red}Setup skipped. You can complete setup later using the commands above.${colors.reset}`
     );
     return;
   }
@@ -607,6 +620,30 @@ export async function deployEvvmCrossChain(args: string[], options: any) {
     walletNameExternal: walletName,
     hostRpcUrl: hostRpcUrl,
     externalRpcUrl: externalRpcUrl,
+  });
+
+  console.log();
+  if (
+    promptYesNo(
+      `${colors.yellow}Do you want to register the EVVM instance now? (y/n):${colors.reset}`
+    ).toLowerCase() !== "y"
+  ) {
+    console.log(
+      `${colors.red}Registration skipped. You can register later using the command above.${colors.reset}`
+    );
+    return;
+  }
+
+  // If user decides, add --useCustomEthRpc flag to the registerEvvm call
+  const ethRPCAns =
+    promptYesNo(
+      `${colors.yellow}Use custom Ethereum Sepolia RPC for registry calls? (y/n):${colors.reset}`
+    ).toLowerCase() === "y";
+
+  registerEvvmCrossChain([], {
+    evvmAddress: evvmAddress,
+    walletName: walletName,
+    useCustomEthRpc: ethRPCAns,
   });
 
 }
