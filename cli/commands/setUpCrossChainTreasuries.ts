@@ -43,16 +43,12 @@ export async function setUpCrossChainTreasuries(_args: string[], options: any) {
     options.treasuryExternalStationAddress;
   let walletNameHost: string = options.walletNameHost || "defaultKey";
   let walletNameExternal: string = options.walletNameExternal || "defaultKey";
-  let hostRpcUrl: string | undefined = options.hostRpcUrl;
-  let externalRpcUrl: string | undefined = options.externalRpcUrl;
 
-  let hostRPC: string | undefined;
-  let externalRPC: string | undefined;
 
   if (!(await foundryIsInstalled())) {
     return showError(
       "Foundry is not installed.",
-      "Please install Foundry to proceed with deployment."
+      "Please install Foundry to proceed with setup."
     );
   }
 
@@ -66,19 +62,6 @@ export async function setUpCrossChainTreasuries(_args: string[], options: any) {
   }
 
   // If --useCustomEthRpc is present, look for EVVM_REGISTRATION_RPC_URL in .env or prompt user
-  hostRPC =
-    hostRpcUrl ||
-    process.env.HOST_RPC_URL ||
-    promptString(`${colors.yellow}Enter the host RPC URL:${colors.reset}`) ||
-    EthSepoliaPublicRpc;
-
-  externalRPC =
-    externalRpcUrl ||
-    process.env.EXTERNAL_RPC_URL ||
-    promptString(
-      `${colors.yellow}Enter the external RPC URL:${colors.reset}`
-    ) ||
-    EthSepoliaPublicRpc;
 
   // Validate or prompt for missing values
   treasuryHostStationAddress ||= promptAddress(
@@ -89,8 +72,8 @@ export async function setUpCrossChainTreasuries(_args: string[], options: any) {
     `${colors.yellow}Enter the External Station Address:${colors.reset}`
   );
 
-  let { chainId: hostChainId } = await getRPCUrlAndChainId(hostRPC);
-  let { chainId: externalChainId } = await getRPCUrlAndChainId(externalRPC);
+  const { rpcUrl: hostRPC, chainId: hostChainId } = await getRPCUrlAndChainId(process.env.HOST_RPC_URL);
+  const { rpcUrl: externalRPC, chainId: externalChainId } = await getRPCUrlAndChainId(process.env.EXTERNAL_RPC_URL);
 
   for (const [chainId, chainType] of [
     [hostChainId, "Host"],

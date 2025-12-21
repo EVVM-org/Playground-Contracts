@@ -76,8 +76,6 @@ async function main() {
       treasuryExternalStationAddress: { type: "string", short: "te" },
       walletNameHost: { type: "string", short: "wh" },
       walletNameExternal: { type: "string", short: "we" },
-      hostRpcUrl: { type: "string", short: "hrpc" },
-      externalRpcUrl: { type: "string", short: "erpc" },
 
       // register command specific
       evvmAddress: { type: "string" },
