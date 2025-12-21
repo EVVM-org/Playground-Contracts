@@ -8,7 +8,7 @@
  */
 
 import { colors, EthSepoliaPublicRpc } from "../constants";
-import { promptAddress, promptNumber, promptString } from "../utils/prompts";
+import { promptAddress, promptString } from "../utils/prompts";
 import {
   callRegisterEvvm,
   callSetEvvmID,
@@ -44,34 +44,25 @@ export async function registerEvvm(_args: string[], options: any) {
   let ethRPC: string | undefined;
 
   // If --useCustomEthRpc is present, look for EVVM_REGISTRATION_RPC_URL in .env or prompt user
-  if (useCustomEthRpc) {
-    ethRPC = process.env.EVVM_REGISTRATION_RPC_URL;
-    if (!ethRPC) {
-      ethRPC = promptString(
+  ethRPC = useCustomEthRpc
+    ? process.env.EVVM_REGISTRATION_RPC_URL || promptString(
         `${colors.yellow}Enter the custom Ethereum Sepolia RPC URL:${colors.reset}`
-      );
-    }
-  } else {
-    ethRPC = EthSepoliaPublicRpc;
-  }
+      )
+    : EthSepoliaPublicRpc;
 
   if (!(await verifyFoundryInstalledAndAccountSetup(walletName))) {
     return;
   }
 
   // Validate or prompt for missing values
-  if (!evvmAddress) {
-    evvmAddress = promptAddress(
-      `${colors.yellow}Enter the EVVM Address:${colors.reset}`
-    );
-  }
+  evvmAddress ||= promptAddress(
+    `${colors.yellow}Enter the EVVM Address:${colors.reset}`
+  );
 
   let { rpcUrl, chainId } = await getRPCUrlAndChainId(process.env.RPC_URL);
 
-  const isDeployingOnLocalBlockchain: boolean =
-    chainId === 31337 || chainId === 1337;
 
-  if (isDeployingOnLocalBlockchain) {
+  if (chainId === 31337 || chainId === 1337) {
     console.log(`\n${colors.orange}Local Blockchain Detected${colors.reset}`);
     console.log(
       `${colors.darkGray}Skipping registry contract registration for local development${colors.reset}`
