@@ -8,19 +8,6 @@
  */
 
 /**
- * User confirmation responses for various CLI prompts
- *
- * Tracks user decisions during the deployment and registration workflow.
- */
-export type ConfirmAnswer = {
-  configureAdvancedMetadata: string;
-  confirmInputs: string;
-  deploy: string;
-  register: string;
-  useCustomEthRpc: string;
-};
-
-/**
  * Required addresses for EVVM deployment
  *
  * Contains all admin addresses needed to initialize the EVVM ecosystem.

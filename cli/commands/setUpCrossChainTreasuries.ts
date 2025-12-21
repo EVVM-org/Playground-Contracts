@@ -1,0 +1,181 @@
+/**
+ * EVVM Registration Command
+ *
+ * Handles registration of deployed EVVM instances in the EVVM Registry.
+ * Performs chain validation, generates EVVM ID, and updates the contract.
+ *
+ * @module cli/commands/registerEvvm
+ */
+
+import { colors, EthSepoliaPublicRpc } from "../constants";
+import { promptAddress, promptString } from "../utils/prompts";
+import {
+  callSetExternalChainAddress,
+  foundryIsInstalled,
+  isChainIdRegistered,
+  walletIsSetup,
+} from "../utils/foundry";
+import { showError } from "../utils/validators";
+import { getRPCUrlAndChainId } from "../utils/rpc";
+
+/**
+ * Registers an EVVM instance in the registry contract
+ *
+ * Process:
+ * 1. Validates Foundry installation and wallet setup
+ * 2. Verifies EVVM address and host chain support
+ * 3. Calls registry contract to obtain EVVM ID
+ * 4. Updates EVVM contract with assigned ID
+ *
+ * @param {string[]} _args - Command arguments (unused)
+ * @param {any} options - Command options including evvmAddress, walletName, useCustomEthRpc
+ * @returns {Promise<void>}
+ */
+export async function setUpCrossChainTreasuries(_args: string[], options: any) {
+  console.log(
+    `${colors.evvmGreen}Registering a new EVVM instance...${colors.reset}`
+  );
+
+  // Get values from optional flags
+  let treasuryHostStationAddress: `0x${string}` | undefined =
+    options.treasuryHostStationAddress;
+  let treasuryExternalStationAddress: `0x${string}` | undefined =
+    options.treasuryExternalStationAddress;
+  let walletNameHost: string = options.walletNameHost || "defaultKey";
+  let walletNameExternal: string = options.walletNameExternal || "defaultKey";
+  let hostRpcUrl: string | undefined = options.hostRpcUrl;
+  let externalRpcUrl: string | undefined = options.externalRpcUrl;
+
+  let hostRPC: string | undefined;
+  let externalRPC: string | undefined;
+
+  if (!(await foundryIsInstalled())) {
+    return showError(
+      "Foundry is not installed.",
+      "Please install Foundry to proceed with deployment."
+    );
+  }
+
+  for (const walletName of [walletNameHost, walletNameExternal]) {
+    if (!(await walletIsSetup(walletName))) {
+      return showError(
+        `Wallet '${walletName}' is not available.`,
+        `Please import your wallet using:\n   ${colors.evvmGreen}cast wallet import ${walletName} --interactive${colors.reset}\n\n   You'll be prompted to enter your private key securely.`
+      );
+    }
+  }
+
+  // If --useCustomEthRpc is present, look for EVVM_REGISTRATION_RPC_URL in .env or prompt user
+  hostRPC =
+    hostRpcUrl ||
+    process.env.HOST_RPC_URL ||
+    promptString(`${colors.yellow}Enter the host RPC URL:${colors.reset}`) ||
+    EthSepoliaPublicRpc;
+
+  externalRPC =
+    externalRpcUrl ||
+    process.env.EXTERNAL_RPC_URL ||
+    promptString(
+      `${colors.yellow}Enter the external RPC URL:${colors.reset}`
+    ) ||
+    EthSepoliaPublicRpc;
+
+  // Validate or prompt for missing values
+  treasuryHostStationAddress ||= promptAddress(
+    `${colors.yellow}Enter the Host Station Address:${colors.reset}`
+  );
+
+  treasuryExternalStationAddress ||= promptAddress(
+    `${colors.yellow}Enter the External Station Address:${colors.reset}`
+  );
+
+  let { chainId: hostChainId } = await getRPCUrlAndChainId(hostRPC);
+  let { chainId: externalChainId } = await getRPCUrlAndChainId(externalRPC);
+
+  for (const [chainId, chainType] of [
+    [hostChainId, "Host"],
+    [externalChainId, "External"],
+  ]) {
+    if (chainId === undefined) {
+      showError(
+        `Invalid chain ID.`,
+        `The chain ID for ${chainType} is undefined. Please check your RPC URL or configuration.`
+      );
+      return;
+    }
+    const isSupported = await isChainIdRegistered(Number(chainId));
+    if (isSupported === undefined) {
+      showError(
+        `EVVM registration failed.`,
+        `Please try again or if the issue persists, make an issue on GitHub.`
+      );
+      return;
+    }
+    if (!isSupported) {
+      showError(
+        `${chainType} Chain ID ${chainId} is not supported.`,
+        `\n${colors.yellow}Possible solutions:${colors.reset}
+  ${colors.bright}• Testnet chains:${colors.reset}
+    Request support by creating an issue at:
+    ${colors.blue}https://github.com/EVVM-org/evvm-registry-contracts${colors.reset}
+    
+  ${colors.bright}• Mainnet chains:${colors.reset}
+    EVVM currently does not support mainnet deployments.
+    
+  ${colors.bright}• Local blockchains (Anvil/Hardhat):${colors.reset}
+    Use an unregistered chain ID.
+    ${colors.darkGray}Example: Chain ID 31337 is registered, use 1337 instead.${colors.reset}`
+      );
+      return;
+    }
+  }
+
+  console.log(
+    `${colors.blue}Setting Treasury Host conexion with Treasury External on contract...${colors.reset}\n`
+  );
+
+  const isSetOnHost = await callSetExternalChainAddress(
+    treasuryHostStationAddress,
+    treasuryExternalStationAddress,
+    hostRPC,
+    walletNameHost
+  );
+
+  if (!isSetOnHost) {
+    showError(
+      `EVVM registration failed.`,
+      `Please try again or if the issue persists, make an issue on GitHub.`
+    );
+    return;
+  }
+
+  console.log(
+    `${colors.blue}Setting Treasury External conexion with Treasury Host on contract...${colors.reset}\n`
+  );
+
+  const isSetOnExternal = await callSetExternalChainAddress(
+    treasuryExternalStationAddress,
+    treasuryHostStationAddress,
+    externalRPC,
+    walletNameExternal
+  );
+
+  if (!isSetOnExternal) {
+    showError(
+      `External setting failed.`,
+      `\n${colors.yellow}You can try manually with:${colors.reset}\n${colors.blue}cast send ${treasuryExternalStationAddress} \\\n--rpc-url ${externalRPC} \\\n"_setHostChainAddress(address,string)"${treasuryHostStationAddress} "${treasuryHostStationAddress}"  \\\n--account ${walletNameExternal}${colors.reset}`
+    );
+    return;
+  }
+
+  console.log(
+    `\n${colors.bright}═══════════════════════════════════════${colors.reset}`
+  );
+  console.log(`${colors.bright}        Conexion Complete${colors.reset}`);
+  console.log(
+    `${colors.bright}═══════════════════════════════════════${colors.reset}\n`
+  );
+  console.log(
+    `${colors.darkGray}\nYour Treasury contracts are now ready to use!${colors.reset}\n`
+  );
+}

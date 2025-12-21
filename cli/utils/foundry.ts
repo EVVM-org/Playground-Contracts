@@ -244,6 +244,59 @@ export async function callSetEvvmID(
   }
 }
 
+
+/**
+ * Sets the host chain station address on the external chain station contract
+ *
+ * @param {`0x${string}`} treasuryExternalChainAddress - Address of the External Chain Station contract
+ * @param {`0x${string}`} treasuryHostChainStationAddress - Address of the Host Chain Station
+ * @param {string} externalChainRpcUrl - RPC URL for the external chain
+ * @param {string} walletName - Foundry wallet name to use for the transaction
+ * @returns {Promise<boolean>} True if successfully set, false on error
+ */
+export async function callSetHostChainAddress(
+  treasuryExternalChainAddress: `0x${string}`,
+  treasuryHostChainStationAddress: `0x${string}`,
+  externalChainRpcUrl: string,
+  walletName: string = "defaultKey"
+): Promise<boolean> {
+  try {
+    await $`cast send ${treasuryExternalChainAddress} --rpc-url ${externalChainRpcUrl} "_setHostChainAddress(address,string)" ${treasuryHostChainStationAddress} "${treasuryHostChainStationAddress}" --account ${walletName}`;
+    console.log(
+      `${colors.evvmGreen}Host chain address set successfully on External Chain Station.${colors.reset}`
+    );
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+/**
+ * Sets the host chain station address on the external chain station contract
+ *
+ * @param {`0x${string}`} treasuryHostChainStationAddress - Address of the Host Chain Station
+ * @param {`0x${string}`} treasuryExternalChainAddress - Address of the External Chain Station contract
+ * @param {string} hostChainRpcUrl - RPC URL for the host chain
+ * @param {string} walletName - Foundry wallet name to use for the transaction
+ * @returns {Promise<boolean>} True if successfully set, false on error
+ */
+export async function callSetExternalChainAddress(
+  treasuryHostChainStationAddress: `0x${string}`,
+  treasuryExternalChainAddress: `0x${string}`,
+  hostChainRpcUrl: string,
+  walletName: string = "defaultKey"
+): Promise<boolean> {
+  try {
+    await $`cast send ${treasuryHostChainStationAddress} --rpc-url ${hostChainRpcUrl} "_setExternalChainAddress(address,string)" ${treasuryExternalChainAddress} "${treasuryExternalChainAddress}" --account ${walletName}`;
+    console.log(
+      `${colors.evvmGreen}Host chain address set successfully on Host Chain Station.${colors.reset}`
+    );
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
 /**
  * Verifies Foundry installation and wallet setup
  *

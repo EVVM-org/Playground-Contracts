@@ -9,7 +9,6 @@
 
 import { $ } from "bun";
 import type {
-  ConfirmAnswer,
   BaseInputAddresses,
   EvvmMetadata,
   CrossChainInputs,
@@ -24,17 +23,15 @@ import {
 import { formatNumber, showError } from "../utils/validators";
 import {
   writeBaseInputsFile,
-  isChainIdRegistered,
-  showDeployContractsAndFindEvvm,
   verifyFoundryInstalledAndAccountSetup,
   writeCrossChainInputsFile,
   showDeployTreasuryExternalChainStation,
   showDeployContractsAndFindEvvmWithTreasuryHostChainStation,
 } from "../utils/foundry";
 import { getRPCUrlAndChainId } from "../utils/rpc";
-import { registerEvvm } from "./registerEvvm";
 import { explorerVerification } from "../utils/explorerVerification";
 import { checkCrossChainSupport } from "../utils/crossChain";
+import { setUpCrossChainTreasuries } from "./setUpCrossChainTreasuries";
 
 /**
  * Deploys a complete EVVM instance with interactive configuration for
@@ -52,17 +49,9 @@ import { checkCrossChainSupport } from "../utils/crossChain";
  * @param {any} options - Command options including skipInputConfig, walletName
  * @returns {Promise<void>}
  */
-export async function deployEvvm(args: string[], options: any) {
+export async function deployEvvmCrossChain(args: string[], options: any) {
   const skipInputConfig = options.skipInputConfig || false;
   const walletName = options.walletName || "defaultKey";
-
-  let confirmAnswer: ConfirmAnswer = {
-    configureAdvancedMetadata: "",
-    confirmInputs: "",
-    deploy: "",
-    register: "",
-    useCustomEthRpc: "",
-  };
 
   let confirmationBasicDone: boolean = false;
   let confirmationCrossChainDone: boolean = false;
@@ -180,11 +169,12 @@ export async function deployEvvm(args: string[], options: any) {
       );
 
       console.log();
-      confirmAnswer.configureAdvancedMetadata = promptYesNo(
-        `${colors.yellow}Configure advanced metadata (totalSupply, eraTokens, reward)? (y/n):${colors.reset}`
-      );
 
-      if (confirmAnswer.configureAdvancedMetadata.toLowerCase() === "y") {
+      if (
+        promptYesNo(
+          `${colors.yellow}Configure advanced metadata (totalSupply, eraTokens, reward)? (y/n):${colors.reset}`
+        ).toLowerCase() === "y"
+      ) {
         evvmMetadata.totalSupply = promptNumber(
           `${colors.yellow}Total Supply ${colors.darkGray}[${formatNumber(
             evvmMetadata.totalSupply
@@ -240,11 +230,11 @@ export async function deployEvvm(args: string[], options: any) {
       }
       console.log();
 
-      confirmAnswer.confirmInputs = promptYesNo(
-        `${colors.yellow}Confirm configuration? (y/n):${colors.reset}`
-      );
-
-      if (confirmAnswer.confirmInputs.toLowerCase() === "y") {
+      if (
+        promptYesNo(
+          `${colors.yellow}Confirm configuration? (y/n):${colors.reset}`
+        ).toLowerCase() === "y"
+      ) {
         confirmationBasicDone = true;
       }
     }
@@ -394,11 +384,11 @@ export async function deployEvvm(args: string[], options: any) {
     );
     console.log();
 
-    confirmAnswer.confirmInputs = promptYesNo(
-      `${colors.yellow}Confirm cross-chain configuration? (y/n):${colors.reset}`
-    );
-
-    if (confirmAnswer.confirmInputs.toLowerCase() !== "y") {
+    if (
+      promptYesNo(
+        `${colors.yellow}Confirm cross-chain configuration? (y/n):${colors.reset}`
+      ).toLowerCase() !== "y"
+    ) {
       console.log(`\n${colors.red}✗ Configuration cancelled${colors.reset}`);
       return;
     }
@@ -417,11 +407,12 @@ export async function deployEvvm(args: string[], options: any) {
   );
 
   console.log(`\n${colors.bright}Ready to Deploy${colors.reset}\n`);
-  confirmAnswer.deploy = promptYesNo(
-    `${colors.yellow}Proceed with deployment? (y/n):${colors.reset}`
-  );
 
-  if (confirmAnswer.deploy.toLowerCase() !== "y") {
+  if (
+    promptYesNo(
+      `${colors.yellow}Proceed with deployment? (y/n):${colors.reset}`
+    ).toLowerCase() !== "y"
+  ) {
     console.log(`\n${colors.red}✗ Deployment cancelled${colors.reset}`);
     return;
   }
@@ -553,4 +544,69 @@ export async function deployEvvm(args: string[], options: any) {
     await showDeployContractsAndFindEvvmWithTreasuryHostChainStation(
       hostChainId
     );
+
+  console.log(
+    `\n${colors.bright}═══════════════════════════════════════${colors.reset}`
+  );
+  console.log(`${colors.bright}            Deployment Success${colors.reset}`);
+  console.log(
+    `${colors.bright}═══════════════════════════════════════${colors.reset}\n`
+  );
+
+  console.log(
+    `${colors.green}✓ EVVM deployed successfully at: ${evvmAddress}${colors.reset}\n`
+  );
+
+
+  console.log(
+    `${colors.bright}═══════════════════════════════════════${colors.reset}`
+  );
+  console.log(
+    `${colors.bright}          Next Step: Cross-Chain Communication${colors.reset}`
+  );
+  console.log(
+    `${colors.bright}═══════════════════════════════════════${colors.reset}`
+  );
+
+  console.log(`${colors.blue}Your EVVM instance is ready for cross-chain communication setup.${colors.reset}`);
+  console.log();
+  console.log(`${colors.yellow}Important:${colors.reset}`);
+  console.log(
+    `   To register now, your Admin for both chains address must match the ${walletName} wallet.`
+  );
+  console.log(
+    `   ${colors.darkGray}Otherwise, you can register later using:${colors.reset}`
+  );
+  console.log(
+    `   ${colors.evvmGreen}evvm setUpCrossChainTreasuries  \\\n--treasuryHostStationAddress ${treasuryHostChainStationAddress}  \\\n--treasuryExternalStationAddress ${treasuryExternalStationAddress}  \\\n--walletNameHost <walletNameHost>  \\\n--walletNameExternal <walletNameExternal>  \\\n--hostRpcUrl <hostRpcUrl>  \\\n--externalRpcUrl <externalRpcUrl>${colors.reset}`
+  );
+  console.log();
+  console.log(
+    `   ${colors.darkGray}📖 For more details, visit:${colors.reset}`
+  );
+  console.log(
+    `   ${colors.blue}https://www.evvm.info/docs/QuickStart#7-register-in-registry-evvm${colors.reset}`
+  );
+  console.log();
+
+  if (
+    promptYesNo(
+      `${colors.yellow}Do you want to communicate both contracts now? (y/n):${colors.reset}`
+    ).toLowerCase() !== "y"
+  ) {
+    console.log(
+      `${colors.red}Registration skipped. You can register later using the command above.${colors.reset}`
+    );
+    return;
+  }
+
+  setUpCrossChainTreasuries([], {
+    treasuryHostStationAddress: treasuryHostChainStationAddress,
+    treasuryExternalStationAddress: treasuryExternalStationAddress,
+    walletNameHost: walletName,
+    walletNameExternal: walletName,
+    hostRpcUrl: hostRpcUrl,
+    externalRpcUrl: externalRpcUrl,
+  });
+
 }

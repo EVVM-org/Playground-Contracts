@@ -8,7 +8,7 @@
  */
 
 import { $ } from "bun";
-import type { ConfirmAnswer, BaseInputAddresses, EvvmMetadata } from "../types";
+import type { BaseInputAddresses, EvvmMetadata } from "../types";
 import { ChainData, colors } from "../constants";
 import {
   promptString,
@@ -45,16 +45,6 @@ import { explorerVerification } from "../utils/explorerVerification";
 export async function deployEvvm(args: string[], options: any) {
   const skipInputConfig = options.skipInputConfig || false;
   const walletName = options.walletName || "defaultKey";
-
-  let isDeployingOnLocalBlockchain = false;
-
-  let confirmAnswer: ConfirmAnswer = {
-    configureAdvancedMetadata: "",
-    confirmInputs: "",
-    deploy: "",
-    register: "",
-    useCustomEthRpc: "",
-  };
 
   let confirmationDone: boolean = false;
 
@@ -121,12 +111,11 @@ export async function deployEvvm(args: string[], options: any) {
         evvmMetadata.principalTokenSymbol ?? undefined
       );
 
-      console.log();
-      confirmAnswer.configureAdvancedMetadata = promptYesNo(
-        `${colors.yellow}Configure advanced metadata (totalSupply, eraTokens, reward)? (y/n):${colors.reset}`
-      );
-
-      if (confirmAnswer.configureAdvancedMetadata.toLowerCase() === "y") {
+      if (
+        promptYesNo(
+          `${colors.yellow}Configure advanced metadata (totalSupply, eraTokens, reward)? (y/n):${colors.reset}`
+        ).toLowerCase() === "y"
+      ) {
         evvmMetadata.totalSupply = promptNumber(
           `${colors.yellow}Total Supply ${colors.darkGray}[${formatNumber(
             evvmMetadata.totalSupply
@@ -182,13 +171,10 @@ export async function deployEvvm(args: string[], options: any) {
       }
       console.log();
 
-      confirmAnswer.confirmInputs = promptYesNo(
-        `${colors.yellow}Confirm configuration? (y/n):${colors.reset}`
-      );
-
-      if (confirmAnswer.confirmInputs.toLowerCase() === "y") {
-        confirmationDone = true;
-      }
+      confirmationDone =
+        promptYesNo(
+          `${colors.yellow}Confirm configuration? (y/n):${colors.reset}`
+        ).toLowerCase() === "y";
     }
 
     if (!(await writeBaseInputsFile(addresses, evvmMetadata))) {
@@ -204,18 +190,18 @@ export async function deployEvvm(args: string[], options: any) {
     );
 
     console.log(`\n${colors.bright}Ready to Deploy${colors.reset}\n`);
-    confirmAnswer.deploy = promptYesNo(
-      `${colors.yellow}Proceed with deployment? (y/n):${colors.reset}`
-    );
 
-    if (confirmAnswer.deploy.toLowerCase() !== "y") {
+    if (
+      promptYesNo(
+        `${colors.yellow}Proceed with deployment? (y/n):${colors.reset}`
+      ).toLowerCase() !== "y"
+    ) {
       console.log(`\n${colors.red}✗ Deployment cancelled${colors.reset}`);
       return;
     }
   }
 
   const { rpcUrl, chainId } = await getRPCUrlAndChainId(process.env.RPC_URL);
-
 
   if (chainId === 31337 || chainId === 1337) {
     console.log(
@@ -244,7 +230,7 @@ export async function deployEvvm(args: string[], options: any) {
     ${colors.blue}https://github.com/EVVM-org/evvm-registry-contracts${colors.reset}
     
   ${colors.bright}• Mainnet chains:${colors.reset}
-    EVVM currently does not support mainnet deployments.
+    EVVM currently does not support mainnet deployments, do it manually at you own risk.
     
   ${colors.bright}• Local blockchains (Anvil/Hardhat):${colors.reset}
     Use an unregistered chain ID.
@@ -349,13 +335,13 @@ export async function deployEvvm(args: string[], options: any) {
   console.log();
   console.log(`${colors.yellow}Important:${colors.reset}`);
   console.log(
-    `   To register now, your Admin address must match the defaultKey wallet.`
+    `   To register now, your Admin address must match the ${walletName} wallet.`
   );
   console.log(
     `   ${colors.darkGray}Otherwise, you can register later using:${colors.reset}`
   );
   console.log(
-    `   ${colors.evvmGreen}evvm register --evvmAddress ${evvmAddress}${colors.reset}`
+    `   ${colors.evvmGreen}evvm register --evvmAddress ${evvmAddress} --walletName ${walletName}${colors.reset}`
   );
   console.log();
   console.log(
@@ -366,23 +352,22 @@ export async function deployEvvm(args: string[], options: any) {
   );
   console.log();
 
-  confirmAnswer.register = promptYesNo(
-    `${colors.yellow}Do you want to register the EVVM instance now? (y/n):${colors.reset}`
-  );
-
-  if (confirmAnswer.register.toLowerCase() !== "y") {
+  if (
+    promptYesNo(
+      `${colors.yellow}Do you want to register the EVVM instance now? (y/n):${colors.reset}`
+    ).toLowerCase() !== "y"
+  ) {
     console.log(
       `${colors.red}Registration skipped. You can register later using the command above.${colors.reset}`
     );
     return;
   }
 
-  confirmAnswer.useCustomEthRpc = promptYesNo(
-    `${colors.yellow}Do you want to use custom Ethereum Sepolia RPC for registry contract calls? (y/n):${colors.reset}`
-  );
   // If user decides, add --useCustomEthRpc flag to the registerEvvm call
   const ethRPCAns =
-    confirmAnswer.useCustomEthRpc.toLowerCase() === "y" ? true : false;
+    promptYesNo(
+      `${colors.yellow}Use custom Ethereum Sepolia RPC for registry calls? (y/n):${colors.reset}`
+    ).toLowerCase() === "y";
 
   registerEvvm([], {
     evvmAddress: evvmAddress,
