@@ -8,17 +8,12 @@
  */
 
 import { $ } from "bun";
-import type { BaseInputAddresses, EvvmMetadata } from "../types";
 import { ChainData, colors } from "../constants";
 import {
-  promptString,
-  promptNumber,
-  promptAddress,
   promptYesNo,
 } from "../utils/prompts";
-import { formatNumber, showError } from "../utils/validators";
+import { showError } from "../utils/validators";
 import {
-  writeBaseInputsFile,
   isChainIdRegistered,
   showDeployContractsAndFindEvvm,
   verifyFoundryInstalledAndAccountSetup,
@@ -26,6 +21,7 @@ import {
 import { getRPCUrlAndChainId } from "../utils/rpc";
 import { registerEvvm } from "./registerEvvm";
 import { explorerVerification } from "../utils/explorerVerification";
+import { configurationBasic } from "../utils/configurationInputs";
 
 /**
  * Deploys a complete EVVM instance with interactive configuration
@@ -50,23 +46,6 @@ export async function deployEvvm(args: string[], options: any) {
 
   let verificationflag: string | undefined = "";
 
-  let evvmMetadata: EvvmMetadata = {
-    EvvmName: "EVVM",
-    EvvmID: 0,
-    principalTokenName: "Mate Token",
-    principalTokenSymbol: "MATE",
-    principalTokenAddress: "0x0000000000000000000000000000000000000001",
-    totalSupply: 2033333333000000000000000000,
-    eraTokens: 1016666666500000000000000000,
-    reward: 5000000000000000000,
-  };
-
-  let addresses: BaseInputAddresses = {
-    admin: null,
-    goldenFisher: null,
-    activator: null,
-  };
-
   // Banner
   console.log(`${colors.evvmGreen}`);
   console.log("░▒▓████████▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓██████████████▓▒░  ");
@@ -87,118 +66,16 @@ export async function deployEvvm(args: string[], options: any) {
       `${colors.yellow}⚡ Skipping input configuration (using from ./input/BaseInputs.sol)...${colors.reset}\n`
     );
   } else {
-    while (!confirmationDone) {
-      for (const key of Object.keys(
-        addresses
-      ) as (keyof BaseInputAddresses)[]) {
-        addresses[key] = promptAddress(
-          `${colors.yellow}Enter the ${key} address:${colors.reset}`
-        );
-      }
+    if (!await configurationBasic()) return;
+  }
 
-      evvmMetadata.EvvmName = promptString(
-        `${colors.yellow}EVVM Name ${colors.darkGray}[${evvmMetadata.EvvmName}]:${colors.reset}`,
-        evvmMetadata.EvvmName ?? undefined
-      );
-
-      evvmMetadata.principalTokenName = promptString(
-        `${colors.yellow}Principal Token Name ${colors.darkGray}[${evvmMetadata.principalTokenName}]:${colors.reset}`,
-        evvmMetadata.principalTokenName ?? undefined
-      );
-
-      evvmMetadata.principalTokenSymbol = promptString(
-        `${colors.yellow}Principal Token Symbol ${colors.darkGray}[${evvmMetadata.principalTokenSymbol}]:${colors.reset}`,
-        evvmMetadata.principalTokenSymbol ?? undefined
-      );
-
-      if (
-        promptYesNo(
-          `${colors.yellow}Configure advanced metadata (totalSupply, eraTokens, reward)? (y/n):${colors.reset}`
-        ).toLowerCase() === "y"
-      ) {
-        evvmMetadata.totalSupply = promptNumber(
-          `${colors.yellow}Total Supply ${colors.darkGray}[${formatNumber(
-            evvmMetadata.totalSupply
-          )}]:${colors.reset}`,
-          evvmMetadata.totalSupply ?? undefined
-        );
-
-        evvmMetadata.eraTokens = promptNumber(
-          `${colors.yellow}Era Tokens ${colors.darkGray}[${formatNumber(
-            evvmMetadata.eraTokens
-          )}]:${colors.reset}`,
-          evvmMetadata.eraTokens ?? undefined
-        );
-
-        evvmMetadata.reward = promptNumber(
-          `${colors.yellow}Reward ${colors.darkGray}[${formatNumber(
-            evvmMetadata.reward
-          )}]:${colors.reset}`,
-          evvmMetadata.reward ?? undefined
-        );
-      }
-
-      console.log(
-        `\n${colors.bright}═══════════════════════════════════════${colors.reset}`
-      );
-      console.log(
-        `${colors.bright}          Configuration Summary${colors.reset}`
-      );
-      console.log(
-        `${colors.bright}═══════════════════════════════════════${colors.reset}\n`
-      );
-
-      console.log(`${colors.bright}Addresses:${colors.reset}`);
-      for (const key of Object.keys(
-        addresses
-      ) as (keyof BaseInputAddresses)[]) {
-        console.log(`  ${colors.blue}${key}:${colors.reset} ${addresses[key]}`);
-      }
-
-      console.log(`\n${colors.bright}EVVM Metadata:${colors.reset}`);
-      for (const [metaKey, metaValue] of Object.entries(evvmMetadata)) {
-        if (metaKey === "EvvmID") continue;
-
-        let displayValue = metaValue;
-        if (typeof metaValue === "number" && metaValue > 1e15) {
-          displayValue = metaValue.toLocaleString("fullwide", {
-            useGrouping: false,
-          });
-        }
-        console.log(
-          `  ${colors.blue}${metaKey}:${colors.reset} ${displayValue}`
-        );
-      }
-      console.log();
-
-      confirmationDone =
-        promptYesNo(
-          `${colors.yellow}Confirm configuration? (y/n):${colors.reset}`
-        ).toLowerCase() === "y";
-    }
-
-    if (!(await writeBaseInputsFile(addresses, evvmMetadata))) {
-      showError(
-        "Failed to write inputs file.",
-        `Please try again. If the issue persists, create an issue on GitHub:\n${colors.blue}https://github.com/EVVM-org/Playgrounnd-Contracts/issues${colors.reset}`
-      );
-      return;
-    }
-
-    console.log(
-      `\n${colors.green}✓${colors.reset} Input configuration saved to ${colors.darkGray}./input/BaseInputs.sol${colors.reset}`
-    );
-
-    console.log(`\n${colors.bright}Ready to Deploy${colors.reset}\n`);
-
-    if (
-      promptYesNo(
-        `${colors.yellow}Proceed with deployment? (y/n):${colors.reset}`
-      ).toLowerCase() !== "y"
-    ) {
-      console.log(`\n${colors.red}✗ Deployment cancelled${colors.reset}`);
-      return;
-    }
+  if (
+    promptYesNo(
+      `${colors.yellow}Proceed with deployment? (y/n):${colors.reset}`
+    ).toLowerCase() !== "y"
+  ) {
+    console.log(`\n${colors.red}✗ Deployment cancelled${colors.reset}`);
+    return;
   }
 
   const { rpcUrl, chainId } = await getRPCUrlAndChainId(process.env.RPC_URL);

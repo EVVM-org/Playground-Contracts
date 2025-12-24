@@ -10,7 +10,7 @@
 import { colors, EthSepoliaPublicRpc } from "../constants";
 import { promptAddress, promptString } from "../utils/prompts";
 import {
-  callSetExternalChainAddress,
+  callConnectStations,
   foundryIsInstalled,
   isChainIdRegistered,
   walletIsSetup,
@@ -32,9 +32,7 @@ import { getRPCUrlAndChainId } from "../utils/rpc";
  * @returns {Promise<void>}
  */
 export async function setUpCrossChainTreasuries(_args: string[], options: any) {
-  console.log(
-    `${colors.evvmGreen}Registering a new EVVM instance...${colors.reset}`
-  );
+  console.log(`${colors.bright}Connecting cross-chain treasury stations...${colors.reset}\n`);
 
   // Get values from optional flags
   let treasuryHostStationAddress: `0x${string}` | undefined =
@@ -43,7 +41,6 @@ export async function setUpCrossChainTreasuries(_args: string[], options: any) {
     options.treasuryExternalStationAddress;
   let walletNameHost: string = options.walletNameHost || "defaultKey";
   let walletNameExternal: string = options.walletNameExternal || "defaultKey";
-
 
   if (!(await foundryIsInstalled())) {
     return showError(
@@ -61,8 +58,6 @@ export async function setUpCrossChainTreasuries(_args: string[], options: any) {
     }
   }
 
-  // If --useCustomEthRpc is present, look for EVVM_REGISTRATION_RPC_URL in .env or prompt user
-
   // Validate or prompt for missing values
   treasuryHostStationAddress ||= promptAddress(
     `${colors.yellow}Enter the Host Station Address:${colors.reset}`
@@ -72,8 +67,11 @@ export async function setUpCrossChainTreasuries(_args: string[], options: any) {
     `${colors.yellow}Enter the External Station Address:${colors.reset}`
   );
 
-  const { rpcUrl: hostRPC, chainId: hostChainId } = await getRPCUrlAndChainId(process.env.HOST_RPC_URL);
-  const { rpcUrl: externalRPC, chainId: externalChainId } = await getRPCUrlAndChainId(process.env.EXTERNAL_RPC_URL);
+  const { rpcUrl: hostRPC, chainId: hostChainId } = await getRPCUrlAndChainId(
+    process.env.HOST_RPC_URL
+  );
+  const { rpcUrl: externalRPC, chainId: externalChainId } =
+    await getRPCUrlAndChainId(process.env.EXTERNAL_RPC_URL);
 
   for (const [chainId, chainType] of [
     [hostChainId, "Host"],
@@ -113,15 +111,15 @@ export async function setUpCrossChainTreasuries(_args: string[], options: any) {
     }
   }
 
-  console.log(
-    `${colors.blue}Setting Treasury Host conexion with Treasury External on contract...${colors.reset}\n`
-  );
+  console.log(`${colors.blue}Setting conections...${colors.reset}\n`);
 
-  const isSetOnHost = await callSetExternalChainAddress(
-    treasuryHostStationAddress,
-    treasuryExternalStationAddress,
+  const isSetOnHost = await callConnectStations(
+    treasuryHostStationAddress as string,
     hostRPC,
-    walletNameHost
+    walletNameHost,
+    treasuryExternalStationAddress as string,
+    externalRPC,
+    walletNameExternal
   );
 
   if (!isSetOnHost) {
@@ -131,34 +129,7 @@ export async function setUpCrossChainTreasuries(_args: string[], options: any) {
     );
     return;
   }
-
   console.log(
-    `${colors.blue}Setting Treasury External conexion with Treasury Host on contract...${colors.reset}\n`
-  );
-
-  const isSetOnExternal = await callSetExternalChainAddress(
-    treasuryExternalStationAddress,
-    treasuryHostStationAddress,
-    externalRPC,
-    walletNameExternal
-  );
-
-  if (!isSetOnExternal) {
-    showError(
-      `External setting failed.`,
-      `\n${colors.yellow}You can try manually with:${colors.reset}\n${colors.blue}cast send ${treasuryExternalStationAddress} \\\n--rpc-url ${externalRPC} \\\n"_setHostChainAddress(address,string)"${treasuryHostStationAddress} "${treasuryHostStationAddress}"  \\\n--account ${walletNameExternal}${colors.reset}`
-    );
-    return;
-  }
-
-  console.log(
-    `\n${colors.bright}═══════════════════════════════════════${colors.reset}`
-  );
-  console.log(`${colors.bright}        Conexion Complete${colors.reset}`);
-  console.log(
-    `${colors.bright}═══════════════════════════════════════${colors.reset}\n`
-  );
-  console.log(
-    `${colors.darkGray}\nYour Treasury contracts are now ready to use!${colors.reset}\n`
+    `${colors.darkGray}\nYour Treasury contracts are now connected!${colors.reset}\n`
   );
 }

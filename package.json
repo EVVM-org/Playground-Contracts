@@ -14,6 +14,7 @@
     "@types/node": "^25.0.1"
   },
   "dependencies": {
-    "@hyperlane-xyz/core": "^10.1.1"
+    "@hyperlane-xyz/core": "^10.1.1",
+    "viem": "^2.43.3"
   }
 }

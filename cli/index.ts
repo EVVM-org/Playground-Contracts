@@ -74,10 +74,10 @@ async function main() {
       walletName: { type: "string", short: "w" },
 
       // setUpCrossChainTreasuries command specific
-      treasuryHostStationAddress: { type: "string", short: "th" },
-      treasuryExternalStationAddress: { type: "string", short: "te" },
-      walletNameHost: { type: "string", short: "wh" },
-      walletNameExternal: { type: "string", short: "we" },
+      treasuryHostStationAddress: { type: "string"},
+      treasuryExternalStationAddress: { type: "string"},
+      walletNameHost: { type: "string"},
+      walletNameExternal: { type: "string"},
 
       // register command specific
       evvmAddress: { type: "string" },

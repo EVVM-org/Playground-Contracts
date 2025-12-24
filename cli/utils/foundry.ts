@@ -12,11 +12,8 @@
 
 import { $ } from "bun";
 import type {
-  BaseInputAddresses,
-  EvvmMetadata,
   CreatedContract,
   ContractFileMetadata,
-  CrossChainInputs,
 } from "../types";
 import {
   colors,
@@ -24,138 +21,10 @@ import {
   RegisteryEvvmAddress,
   ChainData,
 } from "../constants";
-import { formatNumber, showError } from "./validators";
+import {showError } from "./validators";
+import { getAddress } from "viem/utils";
 
-/**
- * Generates and writes the BaseInputs.sol file with deployment configuration
- *
- * Creates a Solidity contract containing all deployment parameters including
- * admin addresses and EVVM metadata. This file is used by the deployment script.
- *
- * @param {BaseInputAddresses} addresses - Admin, golden fisher, and activator addresses
- * @param {EvvmMetadata} evvmMetadata - EVVM configuration including token economics
- * @returns {Promise<boolean>} True if file was written successfully
- */
-export async function writeBaseInputsFile(
-  addresses: BaseInputAddresses,
-  evvmMetadata: EvvmMetadata
-): Promise<boolean> {
-  const inputDir = "./input";
-  const inputFile = `${inputDir}/BaseInputs.sol`;
 
-  try {
-    await Bun.file(inputFile).text();
-  } catch {
-    await $`mkdir -p ${inputDir}`.quiet();
-    await Bun.write(inputFile, "");
-    console.log(`${colors.blue}Created ${inputFile}${colors.reset}`);
-  }
-
-  const inputFileContent = `// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
-import {EvvmStructs} from "@evvm/playground-contracts/contracts/evvm/lib/EvvmStructs.sol";
-
-abstract contract BaseInputs {
-    address admin = ${addresses.admin};
-    address goldenFisher = ${addresses.goldenFisher};
-    address activator = ${addresses.activator};
-
-    EvvmStructs.EvvmMetadata inputMetadata =
-        EvvmStructs.EvvmMetadata({
-            EvvmName: "${evvmMetadata.EvvmName}",
-            // evvmID will be set to 0, and it will be assigned when you register the evvm
-            EvvmID: 0,
-            principalTokenName: "${evvmMetadata.principalTokenName}",
-            principalTokenSymbol: "${evvmMetadata.principalTokenSymbol}",
-            principalTokenAddress: ${evvmMetadata.principalTokenAddress},
-            totalSupply: ${formatNumber(evvmMetadata.totalSupply)},
-            eraTokens: ${formatNumber(evvmMetadata.eraTokens)},
-            reward: ${formatNumber(evvmMetadata.reward)}
-        });
-}
-`;
-
-  await Bun.write(inputFile, inputFileContent);
-  return true;
-}
-
-/**
- * Generates and writes the CrossChainInputs.sol file with cross-chain configuration
- *
- * Creates a Solidity contract containing all cross-chain messaging parameters for
- * both host and external chain stations. Used by cross-chain deployment scripts.
- *
- * @param {CrossChainInputs} crossChainInputs - Cross-chain configuration for Hyperlane, LayerZero, and Axelar
- * @returns {Promise<boolean>} True if file was written successfully
- */
-export async function writeCrossChainInputsFile(
-  crossChainInputs: CrossChainInputs
-): Promise<boolean> {
-  const inputDir = "./input";
-  const inputFile = `${inputDir}/CrossChainInputs.sol`;
-
-  try {
-    await Bun.file(inputFile).text();
-  } catch {
-    await $`mkdir -p ${inputDir}`.quiet();
-    await Bun.write(inputFile, "");
-    console.log(`${colors.blue}Created ${inputFile}${colors.reset}`);
-  }
-
-  const inputFileContent = `// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
-import {EvvmStructs} from "@evvm/playground-contracts/contracts/evvm/lib/EvvmStructs.sol";
-import {HostChainStationStructs} from "@evvm/playground-contracts/contracts/treasuryTwoChains/lib/HostChainStationStructs.sol";
-import {ExternalChainStationStructs} from "@evvm/playground-contracts/contracts/treasuryTwoChains/lib/ExternalChainStationStructs.sol";
-
-abstract contract CrossChainInputs {
-    address constant adminExternal = ${crossChainInputs.adminExternal};
-
-    HostChainStationStructs.CrosschainConfig crosschainConfigHost =
-        HostChainStationStructs.CrosschainConfig({
-            hyperlane: HostChainStationStructs.HyperlaneConfig({
-                externalChainStationDomainId: ${crossChainInputs.crosschainConfigHost.hyperlane.externalChainStationDomainId}, //Domain ID for External on Hyperlane
-                externalChainStationAddress: bytes32(0), //External Chain Station Address on Hyperlane
-                mailboxAddress: ${crossChainInputs.crosschainConfigHost.hyperlane.mailboxAddress} //Mailbox for Host on Hyperlane
-            }),
-            layerZero: HostChainStationStructs.LayerZeroConfig({
-                externalChainStationEid: ${crossChainInputs.crosschainConfigHost.layerZero.externalChainStationEid}, //EID for External on LayerZero
-                externalChainStationAddress: bytes32(0), //External Chain Station Address on LayerZero
-                endpointAddress: ${crossChainInputs.crosschainConfigHost.layerZero.endpointAddress} //Endpoint for Host on LayerZero
-            }),
-            axelar: HostChainStationStructs.AxelarConfig({
-                externalChainStationChainName: "${crossChainInputs.crosschainConfigHost.axelar.externalChainStationChainName}", //Chain Name for External on Axelar
-                externalChainStationAddress: "", //External Chain Station Address on Axelar
-                gasServiceAddress: ${crossChainInputs.crosschainConfigHost.axelar.gasServiceAddress}, //Gas Service for External on Axelar
-                gatewayAddress: ${crossChainInputs.crosschainConfigHost.axelar.gatewayAddress} //Gateway for Host on Axelar
-            })
-        });
-
-    ExternalChainStationStructs.CrosschainConfig crosschainConfigExternal =
-        ExternalChainStationStructs.CrosschainConfig({
-            hyperlane: ExternalChainStationStructs.HyperlaneConfig({
-                hostChainStationDomainId: ${crossChainInputs.crosschainConfigExternal.hyperlane.hostChainStationDomainId}, //Domain ID for Host on Hyperlane
-                hostChainStationAddress: bytes32(0), //Host Chain Station Address on Hyperlane
-                mailboxAddress: ${crossChainInputs.crosschainConfigExternal.hyperlane.mailboxAddress} //Mailbox for External on Hyperlane
-            }),
-            layerZero: ExternalChainStationStructs.LayerZeroConfig({
-                hostChainStationEid: ${crossChainInputs.crosschainConfigExternal.layerZero.hostChainStationEid}, //EID for Host on LayerZero
-                hostChainStationAddress: bytes32(0), //Host Chain Station Address on LayerZero
-                endpointAddress: ${crossChainInputs.crosschainConfigExternal.layerZero.endpointAddress} //Endpoint for External on LayerZero
-            }),
-            axelar: ExternalChainStationStructs.AxelarConfig({
-                hostChainStationChainName: "${crossChainInputs.crosschainConfigExternal.axelar.hostChainStationChainName}", //Chain Name for Host on Axelar
-                hostChainStationAddress: "", //Host Chain Station Address on Axelar
-                gasServiceAddress: ${crossChainInputs.crosschainConfigExternal.axelar.gasServiceAddress}, //Gas Service for External on Axelar
-                gatewayAddress: ${crossChainInputs.crosschainConfigExternal.axelar.gatewayAddress} //Gateway for External on Axelar
-            })
-        });
-}
-`;
-
-  await Bun.write(inputFile, inputFileContent);
-  return true;
-}
 
 /**
  * Checks if a chain ID is registered in the EVVM Registry
@@ -199,7 +68,7 @@ export async function isChainIdRegistered(
  */
 export async function callRegisterEvvm(
   hostChainId: number,
-  evvmAddress: `0x${string}`,
+  evvmAddress: string,
   walletName: string = "defaultKey",
   ethRpcUrl: string = EthSepoliaPublicRpc
 ): Promise<number | undefined> {
@@ -228,7 +97,7 @@ export async function callRegisterEvvm(
  * @returns {Promise<boolean>} True if successfully set, false on error
  */
 export async function callSetEvvmID(
-  contractAddress: `0x${string}`,
+  contractAddress: string,
   evvmID: number,
   hostChainRpcUrl: string,
   walletName: string = "defaultKey"
@@ -244,7 +113,6 @@ export async function callSetEvvmID(
   }
 }
 
-
 /**
  * Sets the host chain station address on the external chain station contract
  *
@@ -254,42 +122,59 @@ export async function callSetEvvmID(
  * @param {string} walletName - Foundry wallet name to use for the transaction
  * @returns {Promise<boolean>} True if successfully set, false on error
  */
-export async function callSetHostChainAddress(
-  treasuryExternalChainAddress: `0x${string}`,
-  treasuryHostChainStationAddress: `0x${string}`,
-  externalChainRpcUrl: string,
-  walletName: string = "defaultKey"
-): Promise<boolean> {
-  try {
-    await $`cast send ${treasuryExternalChainAddress} --rpc-url ${externalChainRpcUrl} "_setHostChainAddress(address,string)" ${treasuryHostChainStationAddress} "${treasuryHostChainStationAddress}" --account ${walletName}`;
-    console.log(
-      `${colors.evvmGreen}Host chain address set successfully on External Chain Station.${colors.reset}`
-    );
-    return true;
-  } catch (error) {
-    return false;
-  }
-}
-
-/**
- * Sets the host chain station address on the external chain station contract
- *
- * @param {`0x${string}`} treasuryHostChainStationAddress - Address of the Host Chain Station
- * @param {`0x${string}`} treasuryExternalChainAddress - Address of the External Chain Station contract
- * @param {string} hostChainRpcUrl - RPC URL for the host chain
- * @param {string} walletName - Foundry wallet name to use for the transaction
- * @returns {Promise<boolean>} True if successfully set, false on error
- */
-export async function callSetExternalChainAddress(
-  treasuryHostChainStationAddress: `0x${string}`,
-  treasuryExternalChainAddress: `0x${string}`,
+export async function callConnectStations(
+  treasuryHostChainStationAddress: string,
   hostChainRpcUrl: string,
-  walletName: string = "defaultKey"
+  hostWalletName: string = "defaultKey",
+  treasuryExternalChainAddress: string,
+  externalChainRpcUrl: string,
+  externalWalletName: string = "defaultKey"
 ): Promise<boolean> {
+
   try {
-    await $`cast send ${treasuryHostChainStationAddress} --rpc-url ${hostChainRpcUrl} "_setExternalChainAddress(address,string)" ${treasuryExternalChainAddress} "${treasuryExternalChainAddress}" --account ${walletName}`;
+    const commandHost = [
+      "cast",
+      "send",
+      treasuryHostChainStationAddress,
+      "--rpc-url",
+      hostChainRpcUrl,
+      "_setExternalChainAddress(address,string)",
+      treasuryExternalChainAddress,
+      `"${getAddress(treasuryExternalChainAddress)}"`,
+      "--account",
+      hostWalletName,
+    ];
+
+    const commandExternal = [
+      "cast",
+      "send",
+      treasuryExternalChainAddress,
+      "--rpc-url",
+      externalChainRpcUrl,
+      "_setHostChainAddress(address,string)",
+      treasuryHostChainStationAddress,
+      `"${getAddress(treasuryHostChainStationAddress)}"`,
+      "--account",
+      externalWalletName,
+    ];
     console.log(
-      `${colors.evvmGreen}Host chain address set successfully on Host Chain Station.${colors.reset}`
+      `${colors.bright}→ Establishing connection: Host Station → External Station...${colors.reset}`
+    );
+
+    await $`${commandHost}`;
+
+    console.log(
+      `${colors.green}✓ Host Station → External Station: Connection established${colors.reset}\n`
+    );
+
+    console.log(
+      `${colors.bright}→ Establishing connection: External Station → Host Station...${colors.reset}`
+    );
+
+    await $`${commandExternal}`;
+
+    console.log(
+      `${colors.green}✓ External Station → Host Station: Connection established${colors.reset}\n`
     );
     return true;
   } catch (error) {
@@ -382,7 +267,7 @@ export async function showDeployContractsAndFindEvvm(
       (tx: any) =>
         ({
           contractName: tx.contractName,
-          contractAddress: tx.contractAddress,
+          contractAddress: getAddress(tx.contractAddress),
         } as CreatedContract)
     );
 
@@ -416,23 +301,41 @@ export async function showDeployContractsAndFindEvvm(
   );
 }
 
-export async function showDeployContractsAndFindEvvmWithTreasuryHostChainStation(
-  chainIdHost: number
+export async function showAllCrossChainDeployedContracts(
+  chainIdHost: number,
+  chainNameHost: string | undefined,
+  chainIdExternal: number,
+  chainNameExternal: string | undefined
 ): Promise<{
   evvmAddress: `0x${string}` | null;
   treasuryHostChainStationAddress: `0x${string}` | null;
+  treasuryExternalChainStationAddress: `0x${string}` | null;
 }> {
-  const broadcastFile = `./broadcast/Deploy.s.sol/${chainIdHost}/run-latest.json`;
-  const broadcastContent = await Bun.file(broadcastFile).text();
-  const broadcastJson = JSON.parse(broadcastContent);
+  const broadcastFileHost = `./broadcast/DeployCrossChainHost.s.sol/${chainIdHost}/run-latest.json`;
+  const broadcastContentHost = await Bun.file(broadcastFileHost).text();
+  const broadcastJsonHost = JSON.parse(broadcastContentHost);
 
-  const createdContracts = broadcastJson.transactions
+  const broadcastFileExternal = `./broadcast/DeployCrossChainExternal.s.sol/${chainIdExternal}/run-latest.json`;
+  const broadcastContentExternal = await Bun.file(broadcastFileExternal).text();
+  const broadcastJsonExternal = JSON.parse(broadcastContentExternal);
+
+  const createdContractsHost = broadcastJsonHost.transactions
     .filter((tx: any) => tx.transactionType === "CREATE")
     .map(
       (tx: any) =>
         ({
           contractName: tx.contractName,
-          contractAddress: tx.contractAddress,
+          contractAddress: getAddress(tx.contractAddress),
+        } as CreatedContract)
+    );
+
+  const createdContractsExternal = broadcastJsonExternal.transactions
+    .filter((tx: any) => tx.transactionType === "CREATE")
+    .map(
+      (tx: any) =>
+        ({
+          contractName: tx.contractName,
+          contractAddress: getAddress(tx.contractAddress),
         } as CreatedContract)
     );
 
@@ -444,82 +347,80 @@ export async function showDeployContractsAndFindEvvmWithTreasuryHostChainStation
     `${colors.bright}═══════════════════════════════════════${colors.reset}\n`
   );
 
-  const chainData = ChainData[chainIdHost];
-  const explorerUrl = chainData?.ExplorerToAddress;
+  if (chainNameHost) {
+    console.log(
+      `${colors.blue}Deployed on ${chainNameHost} (${colors.darkGray}${chainIdHost}${colors.reset})${colors.reset}`
+    );
+  } else {
+    console.log(
+      `${colors.blue}Deployed on Chain ID: ${colors.darkGray}${chainIdHost}${colors.reset}${colors.reset}`
+    );
+  }
 
-  createdContracts.forEach((contract: CreatedContract) => {
+  const chainDataHost = ChainData[chainIdHost];
+  const explorerUrlHost = chainDataHost?.ExplorerToAddress;
+
+  createdContractsHost.forEach((contract: CreatedContract) => {
     console.log(
       `  ${colors.green}✓${colors.reset} ${colors.blue}${contract.contractName}${colors.reset}\n    ${colors.darkGray}→${colors.reset} ${contract.contractAddress}`
     );
-    if (explorerUrl) {
+    if (explorerUrlHost) {
       console.log(
-        `    ${colors.darkGray}→${colors.reset} ${explorerUrl}${contract.contractAddress}`
+        `    ${colors.darkGray}→${colors.reset} ${explorerUrlHost}${contract.contractAddress}`
       );
     }
   });
+
+  console.log();
+
+  if (chainNameExternal) {
+    console.log(
+      `${colors.blue}Deployed on ${chainNameExternal} (${colors.darkGray}${chainIdExternal}${colors.reset})${colors.reset}`
+    );
+  } else {
+    console.log(
+      `${colors.blue}Deployed on Chain ID: ${colors.darkGray}${chainIdExternal}${colors.reset}${colors.reset}`
+    );
+  }
+
+  const chainDataExternal = ChainData[chainIdExternal];
+  const explorerUrlExternal = chainDataExternal?.ExplorerToAddress;
+
+  createdContractsExternal.forEach((contract: CreatedContract) => {
+    console.log(
+      `  ${colors.green}✓${colors.reset} ${colors.blue}${contract.contractName}${colors.reset}\n    ${colors.darkGray}→${colors.reset} ${contract.contractAddress}`
+    );
+    if (explorerUrlExternal) {
+      console.log(
+        `    ${colors.darkGray}→${colors.reset} ${explorerUrlExternal}${contract.contractAddress}`
+      );
+    }
+  });
+
   console.log();
 
   const evvmAddress =
-    createdContracts.find(
+    createdContractsHost.find(
       (contract: CreatedContract) => contract.contractName === "Evvm"
     )?.contractAddress ?? null;
 
   const treasuryHostChainStationAddress =
-    createdContracts.find(
+    createdContractsHost.find(
       (contract: CreatedContract) =>
         contract.contractName === "TreasuryHostChainStation"
     )?.contractAddress ?? null;
 
-  return { evvmAddress, treasuryHostChainStationAddress };
-}
-
-
-export async function showDeployTreasuryExternalChainStation(
-  chainIdExternal: number
-): Promise<`0x${string}` | null> {
-  const broadcastFile = `./broadcast/Deploy.s.sol/${chainIdExternal}/run-latest.json`;
-  const broadcastContent = await Bun.file(broadcastFile).text();
-  const broadcastJson = JSON.parse(broadcastContent);
-
-  const createdContracts = broadcastJson.transactions
-    .filter((tx: any) => tx.transactionType === "CREATE")
-    .map(
-      (tx: any) =>
-        ({
-          contractName: tx.contractName,
-          contractAddress: tx.contractAddress,
-        } as CreatedContract)
-    );
-
-  console.log(
-    `\n${colors.bright}═══════════════════════════════════════${colors.reset}`
-  );
-  console.log(`${colors.bright}          Deployed Contracts${colors.reset}`);
-  console.log(
-    `${colors.bright}═══════════════════════════════════════${colors.reset}\n`
-  );
-
-  const chainData = ChainData[chainIdExternal];
-  const explorerUrl = chainData?.ExplorerToAddress;
-
-  createdContracts.forEach((contract: CreatedContract) => {
-    console.log(
-      `  ${colors.green}✓${colors.reset} ${colors.blue}${contract.contractName}${colors.reset}\n    ${colors.darkGray}→${colors.reset} ${contract.contractAddress}`
-    );
-    if (explorerUrl) {
-      console.log(
-        `    ${colors.darkGray}→${colors.reset} ${explorerUrl}${contract.contractAddress}`
-      );
-    }
-  });
-  console.log();
-
-  return (
-    createdContracts.find(
+  const treasuryExternalChainStationAddress =
+    createdContractsExternal.find(
       (contract: CreatedContract) =>
         contract.contractName === "TreasuryExternalChainStation"
-    )?.contractAddress ?? null
-  );
+    )?.contractAddress ?? null;
+
+  return {
+    evvmAddress,
+    treasuryHostChainStationAddress,
+    treasuryExternalChainStationAddress,
+  };
 }
 
 

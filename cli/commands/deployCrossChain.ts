@@ -8,31 +8,21 @@
  */
 
 import { $ } from "bun";
-import type {
-  BaseInputAddresses,
-  EvvmMetadata,
-  CrossChainInputs,
-} from "../types";
 import { ChainData, colors } from "../constants";
+import { promptYesNo } from "../utils/prompts";
+import { showError } from "../utils/validators";
 import {
-  promptString,
-  promptNumber,
-  promptAddress,
-  promptYesNo,
-} from "../utils/prompts";
-import { formatNumber, showError } from "../utils/validators";
-import {
-  writeBaseInputsFile,
   verifyFoundryInstalledAndAccountSetup,
-  writeCrossChainInputsFile,
-  showDeployTreasuryExternalChainStation,
-  showDeployContractsAndFindEvvmWithTreasuryHostChainStation,
+  showAllCrossChainDeployedContracts,
 } from "../utils/foundry";
 import { getRPCUrlAndChainId } from "../utils/rpc";
 import { explorerVerification } from "../utils/explorerVerification";
-import { checkCrossChainSupport } from "../utils/crossChain";
 import { setUpCrossChainTreasuries } from "./setUpCrossChainTreasuries";
 import { registerEvvmCrossChain } from "./registerEvvmCrossChain";
+import {
+  configurationBasic,
+  configurationCrossChain,
+} from "../utils/configurationInputs";
 
 /**
  * Deploys a complete EVVM instance with interactive configuration for
@@ -54,67 +44,10 @@ export async function deployEvvmCrossChain(args: string[], options: any) {
   const skipInputConfig = options.skipInputConfig || false;
   const walletName = options.walletName || "defaultKey";
 
-  let confirmationBasicDone: boolean = false;
-  let confirmationCrossChainDone: boolean = false;
-
-  let verificationflagExternal: string | undefined = "";
-  let verificationflagHost: string | undefined = "";
-
-  let externalChainId: number = 0;
-  let hostChainId: number = 0;
-  let externalRpcUrl: string = "";
-  let hostRpcUrl: string = "";
-
-  let evvmMetadata: EvvmMetadata = {
-    EvvmName: "EVVM",
-    EvvmID: 0,
-    principalTokenName: "Mate Token",
-    principalTokenSymbol: "MATE",
-    principalTokenAddress: "0x0000000000000000000000000000000000000001",
-    totalSupply: 2033333333000000000000000000,
-    eraTokens: 1016666666500000000000000000,
-    reward: 5000000000000000000,
-  };
-
-  let crossChainInputs: CrossChainInputs = {
-    adminExternal: "0x0000000000000000000000000000000000000000",
-    crosschainConfigHost: {
-      hyperlane: {
-        externalChainStationDomainId: 0,
-        mailboxAddress: "0x0000000000000000000000000000000000000000",
-      },
-      layerZero: {
-        externalChainStationEid: 0,
-        endpointAddress: "0x0000000000000000000000000000000000000000",
-      },
-      axelar: {
-        externalChainStationChainName: "",
-        gatewayAddress: "0x0000000000000000000000000000000000000000",
-        gasServiceAddress: "0x0000000000000000000000000000000000000000",
-      },
-    },
-    crosschainConfigExternal: {
-      hyperlane: {
-        hostChainStationDomainId: 0,
-        mailboxAddress: "0x0000000000000000000000000000000000000000",
-      },
-      layerZero: {
-        hostChainStationEid: 0,
-        endpointAddress: "0x0000000000000000000000000000000000000000",
-      },
-      axelar: {
-        hostChainStationChainName: "",
-        gatewayAddress: "0x0000000000000000000000000000000000000000",
-        gasServiceAddress: "0x0000000000000000000000000000000000000000",
-      },
-    },
-  };
-
-  let addresses: BaseInputAddresses = {
-    admin: null,
-    goldenFisher: null,
-    activator: null,
-  };
+  let externalRpcUrl: string | null = null;
+  let externalChainId: number | null = null;
+  let hostRpcUrl: string | null = null;
+  let hostChainId: number | null = null;
 
   // Banner
   console.log(`${colors.evvmGreen}`);
@@ -141,273 +74,35 @@ export async function deployEvvmCrossChain(args: string[], options: any) {
     console.log(
       `  ${colors.green}✓${colors.reset} Cross-chain inputs ${colors.darkGray}→ ./input/CrossChainInputs.sol${colors.reset}\n`
     );
+
+    ({ rpcUrl: externalRpcUrl, chainId: externalChainId } =
+      await getRPCUrlAndChainId(process.env.EXTERNAL_RPC_URL));
+    ({ rpcUrl: hostRpcUrl, chainId: hostChainId } = await getRPCUrlAndChainId(
+      process.env.HOST_RPC_URL
+    ));
   } else {
+    console.log(`\n${colors.bright}Base Configuration:${colors.reset}\n`);
+    if (!(await configurationBasic())) return;
     console.log(
-      `\n${colors.bright}EVVM basic metadata configuration${colors.reset}\n`
+      `\n${colors.bright}Cross-Chain Configuration:${colors.reset}\n`
     );
-    while (!confirmationBasicDone) {
-      for (const key of Object.keys(
-        addresses
-      ) as (keyof BaseInputAddresses)[]) {
-        addresses[key] = promptAddress(
-          `${colors.yellow}Enter the ${key} address:${colors.reset}`
-        );
-      }
 
-      evvmMetadata.EvvmName = promptString(
-        `${colors.yellow}EVVM Name ${colors.darkGray}[${evvmMetadata.EvvmName}]:${colors.reset}`,
-        evvmMetadata.EvvmName ?? undefined
-      );
+    const ccConfig = await configurationCrossChain();
+    if (typeof ccConfig === "boolean" && ccConfig === false) return;
 
-      evvmMetadata.principalTokenName = promptString(
-        `${colors.yellow}Principal Token Name ${colors.darkGray}[${evvmMetadata.principalTokenName}]:${colors.reset}`,
-        evvmMetadata.principalTokenName ?? undefined
-      );
-
-      evvmMetadata.principalTokenSymbol = promptString(
-        `${colors.yellow}Principal Token Symbol ${colors.darkGray}[${evvmMetadata.principalTokenSymbol}]:${colors.reset}`,
-        evvmMetadata.principalTokenSymbol ?? undefined
-      );
-
-      console.log();
-
-      if (
-        promptYesNo(
-          `${colors.yellow}Configure advanced metadata (totalSupply, eraTokens, reward)? (y/n):${colors.reset}`
-        ).toLowerCase() === "y"
-      ) {
-        evvmMetadata.totalSupply = promptNumber(
-          `${colors.yellow}Total Supply ${colors.darkGray}[${formatNumber(
-            evvmMetadata.totalSupply
-          )}]:${colors.reset}`,
-          evvmMetadata.totalSupply ?? undefined
-        );
-
-        evvmMetadata.eraTokens = promptNumber(
-          `${colors.yellow}Era Tokens ${colors.darkGray}[${formatNumber(
-            evvmMetadata.eraTokens
-          )}]:${colors.reset}`,
-          evvmMetadata.eraTokens ?? undefined
-        );
-
-        evvmMetadata.reward = promptNumber(
-          `${colors.yellow}Reward ${colors.darkGray}[${formatNumber(
-            evvmMetadata.reward
-          )}]:${colors.reset}`,
-          evvmMetadata.reward ?? undefined
-        );
-      }
-
-      console.log(
-        `\n${colors.bright}═══════════════════════════════════════${colors.reset}`
-      );
-      console.log(
-        `${colors.bright}          Basic Configuration Summary${colors.reset}`
-      );
-      console.log(
-        `${colors.bright}═══════════════════════════════════════${colors.reset}\n`
-      );
-
-      console.log(`${colors.bright}Addresses:${colors.reset}`);
-      for (const key of Object.keys(
-        addresses
-      ) as (keyof BaseInputAddresses)[]) {
-        console.log(`  ${colors.blue}${key}:${colors.reset} ${addresses[key]}`);
-      }
-
-      console.log(`\n${colors.bright}EVVM Metadata:${colors.reset}`);
-      for (const [metaKey, metaValue] of Object.entries(evvmMetadata)) {
-        if (metaKey === "EvvmID") continue;
-
-        let displayValue = metaValue;
-        if (typeof metaValue === "number" && metaValue > 1e15) {
-          displayValue = metaValue.toLocaleString("fullwide", {
-            useGrouping: false,
-          });
-        }
-        console.log(
-          `  ${colors.blue}${metaKey}:${colors.reset} ${displayValue}`
-        );
-      }
-      console.log();
-
-      if (
-        promptYesNo(
-          `${colors.yellow}Confirm configuration? (y/n):${colors.reset}`
-        ).toLowerCase() === "y"
-      ) {
-        confirmationBasicDone = true;
-      }
-    }
-
-    if (!(await writeBaseInputsFile(addresses, evvmMetadata))) {
-      showError(
-        "Failed to write inputs file.",
-        `Please try again. If the issue persists, create an issue on GitHub:\n${colors.blue}https://github.com/EVVM-org/Playgrounnd-Contracts/issues${colors.reset}`
-      );
-      return;
-    }
-
-    console.log(
-      `\n${colors.green}✓${colors.reset} Input configuration saved to ${colors.darkGray}./input/BaseInputs.sol${colors.reset}`
-    );
+    externalRpcUrl = ccConfig.externalRpcUrl;
+    externalChainId = ccConfig.externalChainId;
+    hostRpcUrl = ccConfig.hostRpcUrl;
+    hostChainId = ccConfig.hostChainId;
   }
 
-  while (!confirmationCrossChainDone) {
-    console.log(
-      `\n${colors.bright}EVVM cross-chain metadata configuration${colors.reset}\n`
-    );
-
-    console.log(`Checking External Chain configuration:`);
-
-    let { rpcUrl: externalRpcUrl, chainId: externalChainId } =
-      await getRPCUrlAndChainId(process.env.EXTERNAL_RPC_URL);
-
-    let externalChainData = await checkCrossChainSupport(externalChainId);
-
-    if (!externalChainData) return;
-
-    console.log(`\nChecking Host Chain configuration:`);
-
-    let { rpcUrl: hostRpcUrl, chainId: hostChainId } =
-      await getRPCUrlAndChainId(process.env.HOST_RPC_URL);
-
-    let hostChainData = await checkCrossChainSupport(hostChainId);
-
-    if (!hostChainData) return;
-
-    let addressAdminExternal = promptAddress(
-      `${colors.yellow}Enter the external admin address:${colors.reset}`
-    );
-
-    crossChainInputs = {
-      adminExternal: addressAdminExternal,
-      crosschainConfigHost: {
-        hyperlane: {
-          externalChainStationDomainId: externalChainData.Hyperlane.DomainId,
-          mailboxAddress: externalChainData.Hyperlane
-            .MailboxAddress as `0x${string}`,
-        },
-        layerZero: {
-          externalChainStationEid: externalChainData.LayerZero.EId,
-          endpointAddress: externalChainData.LayerZero
-            .EndpointAddress as `0x${string}`,
-        },
-        axelar: {
-          externalChainStationChainName: externalChainData.Axelar.ChainName,
-          gatewayAddress: externalChainData.Axelar.Gateway as `0x${string}`,
-          gasServiceAddress: externalChainData.Axelar
-            .GasService as `0x${string}`,
-        },
-      },
-      crosschainConfigExternal: {
-        hyperlane: {
-          hostChainStationDomainId: hostChainData.Hyperlane.DomainId,
-          mailboxAddress: hostChainData.Hyperlane
-            .MailboxAddress as `0x${string}`,
-        },
-        layerZero: {
-          hostChainStationEid: hostChainData.LayerZero.EId,
-          endpointAddress: hostChainData.LayerZero
-            .EndpointAddress as `0x${string}`,
-        },
-        axelar: {
-          hostChainStationChainName: hostChainData.Axelar.ChainName,
-          gatewayAddress: hostChainData.Axelar.Gateway as `0x${string}`,
-          gasServiceAddress: hostChainData.Axelar.GasService as `0x${string}`,
-        },
-      },
-    };
-
-    console.log(
-      `\n${colors.bright}═══════════════════════════════════════${colors.reset}`
-    );
-    console.log(
-      `${colors.bright}      Cross-Chain Configuration Summary${colors.reset}`
-    );
-    console.log(
-      `${colors.bright}═══════════════════════════════════════${colors.reset}\n`
-    );
-
-    console.log(`${colors.bright}External Admin:${colors.reset}`);
-    console.log(
-      `  ${colors.blue}${crossChainInputs.adminExternal}${colors.reset}`
-    );
-
-    console.log(
-      `\n${colors.bright}Host Chain Station (${hostChainData.Chain}):${colors.reset}`
-    );
-    console.log(
-      `  ${colors.darkGray}→${colors.reset} Hyperlane External Domain ID: ${colors.blue}${crossChainInputs.crosschainConfigHost.hyperlane.externalChainStationDomainId}${colors.reset}`
-    );
-    console.log(
-      `  ${colors.darkGray}→${colors.reset} Hyperlane Mailbox: ${colors.blue}${crossChainInputs.crosschainConfigHost.hyperlane.mailboxAddress}${colors.reset}`
-    );
-    console.log(
-      `  ${colors.darkGray}→${colors.reset} LayerZero External EId: ${colors.blue}${crossChainInputs.crosschainConfigHost.layerZero.externalChainStationEid}${colors.reset}`
-    );
-    console.log(
-      `  ${colors.darkGray}→${colors.reset} LayerZero Endpoint: ${colors.blue}${crossChainInputs.crosschainConfigHost.layerZero.endpointAddress}${colors.reset}`
-    );
-    console.log(
-      `  ${colors.darkGray}→${colors.reset} Axelar External Chain: ${colors.blue}${crossChainInputs.crosschainConfigHost.axelar.externalChainStationChainName}${colors.reset}`
-    );
-    console.log(
-      `  ${colors.darkGray}→${colors.reset} Axelar Gateway: ${colors.blue}${crossChainInputs.crosschainConfigHost.axelar.gatewayAddress}${colors.reset}`
-    );
-    console.log(
-      `  ${colors.darkGray}→${colors.reset} Axelar Gas Service: ${colors.blue}${crossChainInputs.crosschainConfigHost.axelar.gasServiceAddress}${colors.reset}`
-    );
-
-    console.log(
-      `\n${colors.bright}External Chain Station (${externalChainData.Chain}):${colors.reset}`
-    );
-    console.log(
-      `  ${colors.darkGray}→${colors.reset} Hyperlane Host Domain ID: ${colors.blue}${crossChainInputs.crosschainConfigExternal.hyperlane.hostChainStationDomainId}${colors.reset}`
-    );
-    console.log(
-      `  ${colors.darkGray}→${colors.reset} Hyperlane Mailbox: ${colors.blue}${crossChainInputs.crosschainConfigExternal.hyperlane.mailboxAddress}${colors.reset}`
-    );
-    console.log(
-      `  ${colors.darkGray}→${colors.reset} LayerZero Host EId: ${colors.blue}${crossChainInputs.crosschainConfigExternal.layerZero.hostChainStationEid}${colors.reset}`
-    );
-    console.log(
-      `  ${colors.darkGray}→${colors.reset} LayerZero Endpoint: ${colors.blue}${crossChainInputs.crosschainConfigExternal.layerZero.endpointAddress}${colors.reset}`
-    );
-    console.log(
-      `  ${colors.darkGray}→${colors.reset} Axelar Host Chain: ${colors.blue}${crossChainInputs.crosschainConfigExternal.axelar.hostChainStationChainName}${colors.reset}`
-    );
-    console.log(
-      `  ${colors.darkGray}→${colors.reset} Axelar Gateway: ${colors.blue}${crossChainInputs.crosschainConfigExternal.axelar.gatewayAddress}${colors.reset}`
-    );
-    console.log(
-      `  ${colors.darkGray}→${colors.reset} Axelar Gas Service: ${colors.blue}${crossChainInputs.crosschainConfigExternal.axelar.gasServiceAddress}${colors.reset}`
-    );
-    console.log();
-
-    if (
-      promptYesNo(
-        `${colors.yellow}Confirm cross-chain configuration? (y/n):${colors.reset}`
-      ).toLowerCase() !== "y"
-    ) {
-      console.log(`\n${colors.red}✗ Configuration cancelled${colors.reset}`);
-      return;
-    }
-  }
-
-  if (!(await writeCrossChainInputsFile(crossChainInputs))) {
+  if (!externalRpcUrl && !externalChainId && !hostRpcUrl && !hostChainId) {
     showError(
-      "Failed to write cross-chain inputs file.",
+      "Failed to write inputs file.",
       `Please try again. If the issue persists, create an issue on GitHub:\n${colors.blue}https://github.com/EVVM-org/Playgrounnd-Contracts/issues${colors.reset}`
     );
     return;
   }
-
-  console.log(
-    `${colors.green}✓${colors.reset} Cross-chain input configuration saved to ${colors.darkGray}./input/CrossChainInputs.sol${colors.reset}\n`
-  );
-
-  console.log(`\n${colors.bright}Ready to Deploy${colors.reset}\n`);
 
   if (
     promptYesNo(
@@ -418,27 +113,17 @@ export async function deployEvvmCrossChain(args: string[], options: any) {
     return;
   }
 
-  console.log(
-    `\n${colors.bright}Block Explorer Verification Setup for Host Chain${colors.reset}\n`
-  );
-  verificationflagHost = await explorerVerification();
+  const verificationflagHost = await explorerVerification("Host Chain:");
   if (verificationflagHost === undefined) {
-    showError(
-      `Explorer verification setup failed.`,
-      `Please try again or if the issue persists, make an issue on GitHub.`
-    );
+    showError("Explorer verification setup failed.");
     return;
   }
 
-  console.log(
-    `\n${colors.bright}Block Explorer Verification Setup for External Chain${colors.reset}\n`
+  const verificationflagExternal = await explorerVerification(
+    "External Chain:"
   );
-  verificationflagExternal = await explorerVerification();
   if (verificationflagExternal === undefined) {
-    showError(
-      `Explorer verification setup failed.`,
-      `Please try again or if the issue persists, make an issue on GitHub.`
-    );
+    showError("Explorer verification setup failed.");
     return;
   }
 
@@ -450,16 +135,19 @@ export async function deployEvvmCrossChain(args: string[], options: any) {
     `${colors.bright}═══════════════════════════════════════${colors.reset}\n`
   );
 
-  const chainDataExternal = ChainData[externalChainId];
+  const chainDataExternal = ChainData[externalChainId!];
 
   if (chainDataExternal)
     console.log(
-      `${colors.blue} Deploying on ${chainDataExternal.Chain}  (${colors.darkGray}${externalChainId})${colors.reset}`
+      `${colors.blue}Deploying on ${chainDataExternal.Chain}  ${colors.darkGray}(${externalChainId})${colors.reset}`
     );
   else
     console.log(
-      `${colors.blue} Deploying on Chain ID:${colors.reset} ${externalChainId}`
+      `${colors.blue}Deploying on Chain ID:${colors.reset} ${externalChainId}`
     );
+  console.log(
+    `  ${colors.green}•${colors.reset} Treasury cross-chain contract  ${colors.darkGray}(TreasuryExternalChainStation.sol)${colors.reset}\n`
+  );
 
   try {
     await $`forge clean`.quiet();
@@ -494,18 +182,35 @@ export async function deployEvvmCrossChain(args: string[], options: any) {
     );
     return;
   }
-  const treasuryExternalStationAddress =
-    await showDeployTreasuryExternalChainStation(externalChainId);
 
-  const chainDataHost = ChainData[hostChainId];
+  const chainDataHost = ChainData[hostChainId!];
   if (chainDataHost)
     console.log(
-      `\n${colors.blue} Deploying on ${chainDataHost.Chain}  (${colors.darkGray}${hostChainId})${colors.reset}`
+      `\n${colors.blue}Deploying on ${chainDataHost.Chain}  ${colors.darkGray}(${hostChainId})${colors.reset}`
     );
   else
     console.log(
-      `\n${colors.blue} Deploying on Chain ID:${colors.reset} ${hostChainId}`
+      `\n${colors.blue}Deploying on Chain ID:${colors.reset} ${hostChainId}`
     );
+
+  console.log(
+    `  ${colors.green}•${colors.reset} Treasury cross-chain contract ${colors.darkGray}(TreasuryHostChainStation.sol)${colors.reset}`
+  );
+  console.log(
+    `  ${colors.green}•${colors.reset} EVVM core contract ${colors.darkGray}(Evvm.sol)${colors.reset}`
+  );
+  console.log(
+    `  ${colors.green}•${colors.reset} Staking contract ${colors.darkGray}(Staking.sol)${colors.reset}`
+  );
+  console.log(
+    `  ${colors.green}•${colors.reset} Estimator contract ${colors.darkGray}(Estimator.sol)${colors.reset}`
+  );
+  console.log(
+    `  ${colors.green}•${colors.reset} Name Service contract ${colors.darkGray}(NameService.sol)${colors.reset}`
+  );
+  console.log(
+    `  ${colors.green}•${colors.reset} P2P Swap service ${colors.darkGray}(P2PSwap.sol)${colors.reset}\n`
+  );
 
   try {
     await $`forge clean`.quiet();
@@ -541,67 +246,51 @@ export async function deployEvvmCrossChain(args: string[], options: any) {
     return;
   }
 
-  const { evvmAddress, treasuryHostChainStationAddress } =
-    await showDeployContractsAndFindEvvmWithTreasuryHostChainStation(
-      hostChainId
-    );
-
+  const {
+    evvmAddress,
+    treasuryHostChainStationAddress,
+    treasuryExternalChainStationAddress,
+  } = await showAllCrossChainDeployedContracts(
+    hostChainId!,
+    chainDataHost && chainDataHost.Chain ? chainDataHost.Chain : undefined,
+    externalChainId!,
+    chainDataExternal && chainDataExternal.Chain
+      ? chainDataExternal.Chain
+      : undefined
+  );
   console.log(
     `\n${colors.bright}═══════════════════════════════════════${colors.reset}`
   );
-  console.log(`${colors.bright}            Deployment Success${colors.reset}`);
+  console.log(
+    `${colors.bright}          Deployment Complete${colors.reset}`
+  );
   console.log(
     `${colors.bright}═══════════════════════════════════════${colors.reset}\n`
   );
 
-  console.log(
-    `${colors.green}✓ EVVM deployed successfully at: ${evvmAddress}${colors.reset}\n`
-  );
+  console.log(`${colors.green}EVVM:             ${evvmAddress}${colors.reset}`);
+  console.log(`${colors.green}Host Station:     ${treasuryHostChainStationAddress}${colors.reset}`);
+  console.log(`${colors.green}External Station: ${treasuryExternalChainStationAddress}${colors.reset}\n`);
 
+  console.log(`${colors.yellow}⚠ Important:${colors.reset} Admin addresses on both chains must match wallet ${colors.bright}'${walletName}'${colors.reset}`);
+  console.log(`${colors.darkGray}   → If not configured or mismatched: Skip setup and run commands manually later${colors.reset}`);
+  console.log(`${colors.darkGray}   → If already matching: Proceed with setup now${colors.reset}\n`);
 
-  console.log(
-    `${colors.bright}═══════════════════════════════════════${colors.reset}`
-  );
-  console.log(
-    `${colors.bright}   Next Step: EVVM Registration and Cross-Chain Communication${colors.reset}`
-  );
-  console.log(
-    `${colors.bright}═══════════════════════════════════════${colors.reset}`
-  );
+  console.log(`${colors.bright}Manual setup commands:${colors.reset}`);
+  console.log(`${colors.darkGray}1. Cross-chain communication:${colors.reset}`);
+  console.log(`   ${colors.evvmGreen}evvm setUpCrossChainTreasuries \\${colors.reset}`);
+  console.log(`   ${colors.evvmGreen}  --treasuryHostStationAddress ${treasuryHostChainStationAddress} \\${colors.reset}`);
+  console.log(`   ${colors.evvmGreen}  --treasuryExternalStationAddress ${treasuryExternalChainStationAddress} \\${colors.reset}`);
+  console.log(`   ${colors.evvmGreen}  --walletNameHost <wallet> --walletNameExternal <wallet>${colors.reset}\n`);
 
-  console.log(`${colors.blue}Your EVVM instance is ready for cross-chain communication setup and registration.${colors.reset}`);
-  console.log();
-  console.log(`${colors.yellow}Important:${colors.reset}`);
-  console.log(
-    `   To complete setup now, your Admin for both chains address must match the ${walletName} wallet.`
-  );
-  console.log();
-  console.log(
-    `   ${colors.darkGray}Otherwise, you can set up later using these commands:${colors.reset}`
-  );
-  console.log();
-  console.log(
-    `   ${colors.bright}1. Cross-Chain Communication:${colors.reset}`
-  );
-  console.log(
-    `   ${colors.evvmGreen}evvm setUpCrossChainTreasuries  \\\n     --treasuryHostStationAddress ${treasuryHostChainStationAddress}  \\\n     --treasuryExternalStationAddress ${treasuryExternalStationAddress}  \\\n     --walletNameHost <walletNameHost>  \\\n     --walletNameExternal <walletNameExternal>  \\\n     --hostRpcUrl <hostRpcUrl>  \\\n     --externalRpcUrl <externalRpcUrl>${colors.reset}`
-  );
-  console.log();
-  console.log(
-    `   ${colors.bright}2. EVVM Registration:${colors.reset}`
-  );
-  console.log(
-    `   ${colors.evvmGreen}evvm registerCrossChain --evvmAddress ${evvmAddress} --walletName ${walletName}${colors.reset}`
-  );
-  console.log();
-  console.log(
-    `   ${colors.darkGray}📖 For more details, visit:${colors.reset}`
-  );
-  console.log(
-    `   ${colors.blue}https://www.evvm.info/docs/QuickStart#7-register-in-registry-evvm${colors.reset}`
-  );
-  console.log();
+  console.log(`${colors.darkGray}2. EVVM registration:${colors.reset}`);
+  console.log(`   ${colors.evvmGreen}evvm registerCrossChain \\${colors.reset}`);
+  console.log(`   ${colors.evvmGreen}  --evvmAddress ${evvmAddress} \\${colors.reset}`);
+  console.log(`   ${colors.evvmGreen}  --treasuryExternalStationAddress ${treasuryExternalChainStationAddress} \\${colors.reset}`);
+  console.log(`   ${colors.evvmGreen}  --walletName <wallet>${colors.reset}\n`);
 
+  console.log(`${colors.darkGray}More info: ${colors.blue}https://www.evvm.info/docs/QuickStart#7-register-in-registry-evvm${colors.reset}\n`);
+  
   if (
     promptYesNo(
       `${colors.yellow}Do you want to set up cross-chain communication now? (y/n):${colors.reset}`
@@ -613,13 +302,13 @@ export async function deployEvvmCrossChain(args: string[], options: any) {
     return;
   }
 
-  setUpCrossChainTreasuries([], {
-    treasuryHostStationAddress: treasuryHostChainStationAddress,
-    treasuryExternalStationAddress: treasuryExternalStationAddress,
+  await setUpCrossChainTreasuries([], {
+    treasuryHostStationAddress:
+      treasuryHostChainStationAddress as `0x${string}`,
+    treasuryExternalStationAddress:
+      treasuryExternalChainStationAddress as `0x${string}`,
     walletNameHost: walletName,
     walletNameExternal: walletName,
-    hostRpcUrl: hostRpcUrl,
-    externalRpcUrl: externalRpcUrl,
   });
 
   console.log();
@@ -640,10 +329,10 @@ export async function deployEvvmCrossChain(args: string[], options: any) {
       `${colors.yellow}Use custom Ethereum Sepolia RPC for registry calls? (y/n):${colors.reset}`
     ).toLowerCase() === "y";
 
-  registerEvvmCrossChain([], {
+  await registerEvvmCrossChain([], {
     evvmAddress: evvmAddress,
+    treasuryExternalStationAddress: treasuryExternalChainStationAddress,
     walletName: walletName,
     useCustomEthRpc: ethRPCAns,
   });
-
 }
