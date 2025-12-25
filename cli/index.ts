@@ -12,15 +12,13 @@
 import { parseArgs } from "util";
 import { colors } from "./constants";
 import {
+  register,
   showHelp,
   showVersion,
-  deployEvvm,
-  registerEvvm,
 } from "./commands";
 import { developer } from "./commands/developer";
-import { deployEvvmCrossChain } from "./commands/deployCrossChain";
 import { setUpCrossChainTreasuries } from "./commands/setUpCrossChainTreasuries";
-import { registerEvvmCrossChain } from "./commands/registerEvvmCrossChain";
+import { deploy } from "./commands/deploy";
 
 /**
  * Available CLI commands mapped to their handler functions
@@ -28,12 +26,10 @@ import { registerEvvmCrossChain } from "./commands/registerEvvmCrossChain";
 const commands = {
   help: showHelp,
   version: showVersion,
-  deploy: deployEvvm,
-  deployCrossChain: deployEvvmCrossChain,
+  deploy: deploy,
+  register: register,
   setUpCrossChainTreasuries: setUpCrossChainTreasuries,
   dev: developer,
-  register: registerEvvm,
-  registerCrossChain: registerEvvmCrossChain,
 };
 
 /**
@@ -68,6 +64,7 @@ async function main() {
       version: { type: "boolean", short: "v" },
       name: { type: "string", short: "n" },
       verbose: { type: "boolean" },
+      crossChain: { type: "boolean", short: "c" },
       
       // general deploy command options
       skipInputConfig: { type: "boolean", short: "s" },

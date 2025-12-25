@@ -8,21 +8,21 @@
  */
 
 import { $ } from "bun";
-import { ChainData, colors } from "../constants";
-import { promptYesNo } from "../utils/prompts";
-import { showError } from "../utils/validators";
+import { ChainData, colors } from "../../constants";
+import { promptYesNo } from "../../utils/prompts";
+import { showError } from "../../utils/validators";
 import {
   verifyFoundryInstalledAndAccountSetup,
   showAllCrossChainDeployedContracts,
-} from "../utils/foundry";
-import { getRPCUrlAndChainId } from "../utils/rpc";
-import { explorerVerification } from "../utils/explorerVerification";
-import { setUpCrossChainTreasuries } from "./setUpCrossChainTreasuries";
-import { registerEvvmCrossChain } from "./registerEvvmCrossChain";
+} from "../../utils/foundry";
+import { getRPCUrlAndChainId } from "../../utils/rpc";
+import { explorerVerification } from "../../utils/explorerVerification";
+import { setUpCrossChainTreasuries } from "../setUpCrossChainTreasuries";
 import {
   configurationBasic,
   configurationCrossChain,
-} from "../utils/configurationInputs";
+} from "../../utils/configurationInputs";
+import { registerCross } from "../register/registerCross";
 
 /**
  * Deploys a complete EVVM instance with interactive configuration for
@@ -40,7 +40,7 @@ import {
  * @param {any} options - Command options including skipInputConfig, walletName
  * @returns {Promise<void>}
  */
-export async function deployEvvmCrossChain(args: string[], options: any) {
+export async function deployCross(args: string[], options: any) {
   const skipInputConfig = options.skipInputConfig || false;
   const walletName = options.walletName || "defaultKey";
 
@@ -329,7 +329,7 @@ export async function deployEvvmCrossChain(args: string[], options: any) {
       `${colors.yellow}Use custom Ethereum Sepolia RPC for registry calls? (y/n):${colors.reset}`
     ).toLowerCase() === "y";
 
-  await registerEvvmCrossChain([], {
+  await registerCross([], {
     evvmAddress: evvmAddress,
     treasuryExternalStationAddress: treasuryExternalChainStationAddress,
     walletName: walletName,

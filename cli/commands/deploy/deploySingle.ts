@@ -8,20 +8,21 @@
  */
 
 import { $ } from "bun";
-import { ChainData, colors } from "../constants";
+import { ChainData, colors } from "../../constants";
 import {
   promptYesNo,
-} from "../utils/prompts";
-import { showError } from "../utils/validators";
+} from "../../utils/prompts";
+import { showError } from "../../utils/validators";
 import {
   isChainIdRegistered,
   showDeployContractsAndFindEvvm,
   verifyFoundryInstalledAndAccountSetup,
-} from "../utils/foundry";
-import { getRPCUrlAndChainId } from "../utils/rpc";
-import { registerEvvm } from "./registerEvvm";
-import { explorerVerification } from "../utils/explorerVerification";
-import { configurationBasic } from "../utils/configurationInputs";
+} from "../../utils/foundry";
+import { getRPCUrlAndChainId } from "../../utils/rpc";
+import { explorerVerification } from "../../utils/explorerVerification";
+import { configurationBasic } from "../../utils/configurationInputs";
+import { register } from "module";
+import { registerSingle } from "../register/registerSingle";
 
 /**
  * Deploys a complete EVVM instance with interactive configuration
@@ -38,7 +39,7 @@ import { configurationBasic } from "../utils/configurationInputs";
  * @param {any} options - Command options including skipInputConfig, walletName
  * @returns {Promise<void>}
  */
-export async function deployEvvm(args: string[], options: any) {
+export async function deploySingle(args: string[], options: any) {
   const skipInputConfig = options.skipInputConfig || false;
   const walletName = options.walletName || "defaultKey";
 
@@ -246,7 +247,7 @@ export async function deployEvvm(args: string[], options: any) {
       `${colors.yellow}Use custom Ethereum Sepolia RPC for registry calls? (y/n):${colors.reset}`
     ).toLowerCase() === "y";
 
-  registerEvvm([], {
+  await registerSingle([], {
     evvmAddress: evvmAddress,
     walletName: walletName,
     useCustomEthRpc: ethRPCAns,

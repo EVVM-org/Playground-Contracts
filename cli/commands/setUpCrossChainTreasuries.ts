@@ -7,8 +7,8 @@
  * @module cli/commands/registerEvvm
  */
 
-import { colors, EthSepoliaPublicRpc } from "../constants";
-import { promptAddress, promptString } from "../utils/prompts";
+import { colors } from "../constants";
+import { promptAddress } from "../utils/prompts";
 import {
   callConnectStations,
   foundryIsInstalled,

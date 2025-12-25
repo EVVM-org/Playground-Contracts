@@ -9,6 +9,6 @@
 
 export { showHelp } from "./help";
 export { showVersion } from "./version";
-export { deployEvvm } from "./deploy";
 export { developer } from "./developer";
-export { registerEvvm } from "./registerEvvm";
+export {deploy} from "./deploy";
+export {register} from "./register";

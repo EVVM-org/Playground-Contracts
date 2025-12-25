@@ -7,16 +7,16 @@
  * @module cli/commands/registerEvvm
  */
 
-import { colors, EthSepoliaPublicRpc } from "../constants";
-import { promptAddress, promptString } from "../utils/prompts";
+import { colors, EthSepoliaPublicRpc } from "../../constants";
+import { promptAddress, promptString } from "../../utils/prompts";
 import {
   callRegisterEvvm,
   callSetEvvmID,
   isChainIdRegistered,
   verifyFoundryInstalledAndAccountSetup,
-} from "../utils/foundry";
-import { showError } from "../utils/validators";
-import { getRPCUrlAndChainId } from "../utils/rpc";
+} from "../../utils/foundry";
+import { showError } from "../../utils/validators";
+import { getRPCUrlAndChainId } from "../../utils/rpc";
 
 /**
  * Registers an EVVM instance in the registry contract
@@ -31,13 +31,11 @@ import { getRPCUrlAndChainId } from "../utils/rpc";
  * @param {any} options - Command options including evvmAddress, walletName, useCustomEthRpc
  * @returns {Promise<void>}
  */
-export async function registerEvvmCrossChain(_args: string[], options: any) {
+export async function registerSingle(_args: string[], options: any) {
   console.log(`${colors.bright}Starting EVVM registration...${colors.reset}\n`);
 
   // Get values from optional flags
   let evvmAddress: `0x${string}` | undefined = options.evvmAddress;
-  let treasuryExternalStationAddress: `0x${string}` | undefined =
-    options.treasuryExternalStationAddress;
   let walletName: string = options.walletName || "defaultKey";
   let useCustomEthRpc: boolean = options.useCustomEthRpc || false;
 
@@ -60,22 +58,17 @@ export async function registerEvvmCrossChain(_args: string[], options: any) {
     `${colors.yellow}Enter the EVVM Address:${colors.reset}`
   );
 
-  treasuryExternalStationAddress ||= promptAddress(
-    `${colors.yellow}Enter the Treasury External Station Address:${colors.reset}`
-  );
+  let { rpcUrl, chainId } = await getRPCUrlAndChainId(process.env.RPC_URL);
 
-  let { rpcUrl: hostRpcUrl, chainId: hostChainId } = await getRPCUrlAndChainId(
-    process.env.HOST_RPC_URL
-  );
-  let { rpcUrl: externalRpcUrl, chainId: externalChainId } =
-    await getRPCUrlAndChainId(process.env.EXTERNAL_RPC_URL);
-
-  if (hostChainId === 31337 || hostChainId === 1337) {
-    console.log(`${colors.orange}Local blockchain detected - skipping registry registration${colors.reset}`);
+  if (chainId === 31337 || chainId === 1337) {
+    console.log(`\n${colors.orange}Local Blockchain Detected${colors.reset}`);
+    console.log(
+      `${colors.darkGray}Skipping registry contract registration for local development${colors.reset}`
+    );
     return;
   }
 
-  const isSupported = await isChainIdRegistered(hostChainId);
+  const isSupported = await isChainIdRegistered(chainId);
   if (isSupported === undefined) {
     showError(
       `EVVM registration failed.`,
@@ -85,7 +78,7 @@ export async function registerEvvmCrossChain(_args: string[], options: any) {
   }
   if (!isSupported) {
     showError(
-      `Host Chain ID ${hostChainId} is not supported.`,
+      `Host Chain ID ${chainId} is not supported.`,
       `\n${colors.yellow}Possible solutions:${colors.reset}
   ${colors.bright}• Testnet chains:${colors.reset}
     Request support by creating an issue at:
@@ -101,43 +94,52 @@ export async function registerEvvmCrossChain(_args: string[], options: any) {
     return;
   }
 
+  console.log(
+    `${colors.blue}Setting EVVM ID directly on contract...${colors.reset}\n`
+  );
+
   const evvmID: number | undefined = await callRegisterEvvm(
-    Number(hostChainId),
+    Number(chainId),
     evvmAddress,
     walletName,
     ethRPC
   );
   if (!evvmID) {
-    showError("EVVM registration failed.");
+    showError(
+      `EVVM registration failed.`,
+      `Please try again or if the issue persists, make an issue on GitHub.`
+    );
     return;
   }
-  console.log(`${colors.green}Generated EVVM ID: ${colors.bright}${evvmID}${colors.reset}\n`);
+  console.log(
+    `${colors.green}EVVM ID generated: ${colors.bright}${evvmID}${colors.reset}`
+  );
+  console.log(`${colors.blue}Setting EVVM ID on contract...${colors.reset}\n`);
 
-  if (
-    !(await callSetEvvmID(
-      evvmAddress as `0x${string}`,
-      evvmID,
-      hostRpcUrl,
-      walletName
-    ))
-  ) {
-    showError(`Failed to set EVVM ID on host chain.`);
-  }
+  const isSet = await callSetEvvmID(evvmAddress, evvmID, rpcUrl, walletName);
 
-  if (
-    !(await callSetEvvmID(
-      treasuryExternalStationAddress as `0x${string}`,
-      evvmID,
-      externalRpcUrl,
-      walletName
-    ))
-  ) {
-    showError("Failed to set EVVM ID on external chain.");
+  if (!isSet) {
+    showError(
+      `EVVM ID setting failed.`,
+      `\n${colors.yellow}You can try manually with:${colors.reset}\n${colors.blue}cast send ${evvmAddress} \\\n  --rpc-url ${rpcUrl} \\\n  "setEvvmID(uint256)" ${evvmID} \\\n  --account ${walletName}${colors.reset}`
+    );
     return;
   }
 
-  console.log(`\n${colors.bright}Registration complete${colors.reset}\n`);
-  console.log(`${colors.green}EVVM ID:  ${colors.bright}${evvmID}${colors.reset}`);
-  console.log(`${colors.green}Contract: ${evvmAddress}${colors.reset}`);
-  console.log(`${colors.darkGray}\nYour EVVM instance is ready to use.${colors.reset}\n`);
+  console.log(
+    `\n${colors.bright}═══════════════════════════════════════${colors.reset}`
+  );
+  console.log(`${colors.bright}        Registration Complete${colors.reset}`);
+  console.log(
+    `${colors.bright}═══════════════════════════════════════${colors.reset}\n`
+  );
+  console.log(
+    `${colors.green}EVVM ID: ${colors.bright}${evvmID}${colors.reset}`
+  );
+  console.log(
+    `${colors.green}Contract: ${colors.bright}${evvmAddress}${colors.reset}`
+  );
+  console.log(
+    `${colors.darkGray}\nYour EVVM instance is now ready to use!${colors.reset}\n`
+  );
 }
